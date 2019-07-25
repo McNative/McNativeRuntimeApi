@@ -19,5 +19,38 @@
 
 package net.prematic.mcnative.service.inventory;
 
-public class PlayerInventory {
+import net.prematic.mcnative.service.inventory.item.ItemStack;
+
+public interface PlayerInventory extends Inventory{
+
+    ItemStack getHelmet();
+
+    ItemStack getChestplate();
+
+    ItemStack getLeggings();
+
+    ItemStack getBoots();
+
+    ItemStack[] getArmorContents();
+
+    ItemStack getItemInHand();
+
+    int getHeldItemSlot();
+
+    void setHelmet(ItemStack helmet);
+
+    void setChestplate(ItemStack chestplate);
+
+    void setLeggings(ItemStack leggings);
+
+    void setBoots(ItemStack boots);
+
+    void setArmorContents(ItemStack... items);
+
+    void setItemInHand(ItemStack stack);
+
+    void setHeldItemSlot(int slot);
+
+    void clearArmor();
+
 }

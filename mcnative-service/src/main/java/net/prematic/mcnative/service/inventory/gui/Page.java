@@ -19,5 +19,12 @@
 
 package net.prematic.mcnative.service.inventory.gui;
 
-public class Page {
+import net.prematic.mcnative.service.inventory.item.ItemStack;
+
+public interface Page {
+
+    String getName();
+
+    ItemStack getIcon();
+
 }

@@ -30,7 +30,7 @@ public interface Chunk {
 
     void fill(int z, Material material);
 
-    void fill(int startZ,,int endZ, Material material);
+    void fill(int startZ,int endZ, Material material);
 
     void clear();
 

@@ -19,5 +19,16 @@
 
 package net.prematic.mcnative.service.scoreboard.sidebar;
 
-public class SidebarScoreboard {
+import net.prematic.mcnative.service.scoreboard.sidebar.module.ScoreboardModule;
+
+public interface SidebarScoreboard {
+
+    ScoreboardModule getModules();
+
+
+    void addModule(ScoreboardModule module);
+
+    void removeModule(ScoreboardModule module);
+
+
 }

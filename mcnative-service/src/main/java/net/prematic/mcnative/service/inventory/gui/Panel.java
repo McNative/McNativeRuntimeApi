@@ -19,5 +19,20 @@
 
 package net.prematic.mcnative.service.inventory.gui;
 
-public class Panel {
+import net.prematic.mcnative.service.inventory.gui.navigator.Navigator;
+
+import java.util.Collection;
+
+public interface Panel extends Page{
+
+    Navigator getNavigator();
+
+    Collection<Page> getPages();
+
+    void addPage(Page page);
+
+    void removePage(Page page);
+
+
+
 }

@@ -19,5 +19,32 @@
 
 package net.prematic.mcnative.service.world;
 
-public class World {
+import net.prematic.mcnative.service.world.block.Block;
+
+import java.util.Collection;
+
+public interface World {
+
+    Chunk getChunk(int x, int y, int z);
+
+    Chunk getChunk(Location location);
+
+    Collection<Chunk> getLoadedChunks();
+
+    boolean isChunkInUse(int x, int z);
+
+
+
+    void loadChunk(int x, int y);
+
+    void loadChunk(Location location);
+
+    void loadChunk(Chunk chunk);
+
+
+    void unloadChunk(int x, int y);
+
+    void unloadChunk(Location location);
+
+    void unloadChunk(Chunk chunk);
 }

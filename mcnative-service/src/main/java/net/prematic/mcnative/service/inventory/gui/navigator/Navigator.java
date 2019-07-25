@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 23.07.19 14:23
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,23 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.scoreboard.sidebar.module;
+package net.prematic.mcnative.service.inventory.gui.navigator;
 
-import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.inventory.gui.Page;
 
-public interface ScoreboardModule {
+public interface Navigator {
 
-    String getName();
+    NavigatorType getType();
 
-    String[] render(Player player);
+    void setType(NavigatorType type);
 
+    Page nextPage();
+
+    Page previousPage();
+
+    Page showPage(String name);
+
+    Page showPage(int number);
+
+    void setIconAre(int startIndex, int endIndex);
 }

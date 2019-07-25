@@ -3,7 +3,7 @@
   ~ (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
   ~
   ~ @author Davide Wietlisbach
-  ~ @since 22.07.19 22:26
+  ~ @since 23.07.19 12:56
   ~
   ~ The McNative Project is under the Apache License, version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -21,19 +21,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>McNative</artifactId>
+        <groupId>net.prematic.mvnative</groupId>
+        <version>1.0.0</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.prematic.mvnative</groupId>
-    <artifactId>McNative</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>mcnative-wrapper</artifactId>
     <version>1.0.0</version>
 
-    <modules>
-        <module>mcnative-common</module>
-        <module>mcnative-proxy</module>
-        <module>mcnative-service</module>
-        <module>mcnative-wrapper</module>
-    </modules>
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>

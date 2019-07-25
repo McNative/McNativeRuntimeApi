@@ -17,14 +17,25 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.scoreboard.sidebar.module;
+package net.prematic.mcnative.service.entity;
 
-import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.world.Location;
+import net.prematic.mcnative.service.world.World;
 
-public interface ScoreboardModule {
+public interface Entity {
 
-    String getName();
+    World getWorld();
 
-    String[] render(Player player);
+    Location getLocation();
+
+    void teleport(Location location);
+
+    void teleport(int x,int y ,int z);
+
+    void teleport(int x,int y ,int z, short pitch, short yaw);
+
+    void teleport(World world, int x, int y , int z);
+
+    void teleport(World world, int x,int y ,int z, short pitch, short yaw);
 
 }

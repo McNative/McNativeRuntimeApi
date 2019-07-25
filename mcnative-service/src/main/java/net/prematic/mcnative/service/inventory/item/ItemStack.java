@@ -19,7 +19,8 @@
 
 package net.prematic.mcnative.service.inventory.item;
 
-import net.prematic.mcnative.service.inventory.item.enchantment.Enchantment;
+
+import net.prematic.mcnative.service.material.Enchantment;
 import net.prematic.mcnative.service.material.Material;
 
 import java.util.Collection;

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 23.07.19 08:54
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,13 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.entity;
+package net.prematic.mcnative.service.entity.animal;
 
-import net.prematic.mcnative.service.world.Location;
-import net.prematic.mcnative.service.world.World;
+import net.prematic.mcnative.service.entity.Ageable;
+import net.prematic.mcnative.service.entity.Entity;
 
-public interface Entitiy {
+public interface Animal extends Entity, Ageable {
 
-    World getWorld();
 
-    Location getLocation();
-
-    void teleport(Location location);
-
-    void teleport(int x,int y ,int z);
-
-    void teleport(int x,int y ,int z, short pitch, short yaw);
-
-    void teleport(World world, int x, int y , int z);
-
-    void teleport(World world, int x,int y ,int z, short pitch, short yaw);
 
 }

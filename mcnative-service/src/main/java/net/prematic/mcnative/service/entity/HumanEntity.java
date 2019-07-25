@@ -19,5 +19,30 @@
 
 package net.prematic.mcnative.service.entity;
 
-public interface HumanEntity {
+import net.prematic.mcnative.service.inventory.Inventory;
+import net.prematic.mcnative.service.inventory.PlayerInventory;
+import net.prematic.mcnative.service.inventory.item.ItemStack;
+
+public interface HumanEntity extends Entity {
+
+    PlayerInventory getInventory();
+
+    ItemStack getCurser();
+
+    ItemStack getItemInHand();
+
+    boolean isBlocking();
+
+    boolean isSleeping();
+
+    void setItemInHand(ItemStack item);
+
+    void openInventory(Inventory inventory);
+
+    void openInventory();
+
+    void closeInventory();
+
+
+
 }

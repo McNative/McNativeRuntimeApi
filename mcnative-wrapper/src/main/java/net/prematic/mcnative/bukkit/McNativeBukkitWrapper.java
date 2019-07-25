@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 23.07.19 12:56
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,24 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.scoreboard.sidebar.module;
+package net.prematic.mcnative.bukkit;
 
-import net.prematic.mcnative.service.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public interface ScoreboardModule {
+public class McNativeBukkitWrapper extends JavaPlugin {
 
-    String getName();
+    @Override
+    public void onLoad() {
+        System.out.println("Load");
+    }
 
-    String[] render(Player player);
+    @Override
+    public void onDisable() {
+        System.out.println("Disable");
+    }
 
+    @Override
+    public void onEnable() {
+        System.out.println("Enable");
+    }
 }
