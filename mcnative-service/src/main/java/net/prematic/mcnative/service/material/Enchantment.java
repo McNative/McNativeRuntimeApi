@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.inventory.item.enchantment;
+package net.prematic.mcnative.service.material;
 
 import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
 
