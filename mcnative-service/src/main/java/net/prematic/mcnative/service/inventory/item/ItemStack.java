@@ -24,12 +24,17 @@ import net.prematic.mcnative.service.material.Enchantment;
 import net.prematic.mcnative.service.material.Material;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface ItemStack {
 
     Material getMaterial();
 
-    Collection<Enchantment> getEntchantments();
+    Map<Enchantment, Integer> getEntchantments();
+
+    void addEnchantment(Enchantment enchantment, int level);
+
+    void removeEnchantment(Enchantment enchantment);
 
     int getAmount();
 

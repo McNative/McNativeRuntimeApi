@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 11:40
+ * @since 22.07.19 22:26
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,30 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.material;
+package net.prematic.mcnative.service.inventory.item.enchantment;
 
-public enum  Enchantment {
+import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
+
+public enum Enchantment {
+    ;
+
+
+    private final MinecraftProtocolVersion since;
+
+    Enchantment(MinecraftProtocolVersion since) {
+        this.since = since;
+    }
+
+    Enchantment() {
+        this.since = null;
+    }
+
+    public MinecraftProtocolVersion getSince() {
+        return since;
+    }
+
+    //@Todo with current service version
+    public boolean isAvailable() {
+        return true;
+    }
 }

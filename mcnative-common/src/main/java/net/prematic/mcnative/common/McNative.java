@@ -32,4 +32,17 @@ public interface McNative {
     //EventManager getEventManager();
 
     //PluginManager gePluginManager();
+
+    static McNative getInstance() {
+        return Registry.INSTANCE;
+    }
+
+    static void setInstance(McNative instance) {
+        Registry.INSTANCE = instance;
+    }
+
+    class Registry {
+
+        private static McNative INSTANCE;
+    }
 }

@@ -19,8 +19,5 @@
 
 package net.prematic.mcnative.service.material;
 
-public class Material {
-
-
-
+public enum Material {
 }

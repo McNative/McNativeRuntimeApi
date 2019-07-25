@@ -54,7 +54,7 @@ public interface MinecraftPlayer {
 
     void sendActionbar(TextComponent message, short duration);
 
-
+    BossBar getBossBar();
 
     void sendData(String channel, InputStream stream);
 
