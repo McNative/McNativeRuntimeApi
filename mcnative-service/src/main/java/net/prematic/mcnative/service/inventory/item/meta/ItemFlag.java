@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 25.07.19 14:54
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,7 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.entity;
+package net.prematic.mcnative.service.inventory.item.meta;
 
-import net.prematic.mcnative.common.player.MinecraftPlayer;
-import net.prematic.mcnative.service.GameMode;
-import net.prematic.mcnative.service.inventory.PlayerInventory;
-
-public interface Player extends MinecraftPlayer, HumanEntity {
-
-    PlayerInventory getInventory();
-
-    GameMode getGameMode();
-
-
-    void setGameMode(GameMode mode);
-
+public enum  ItemFlag {
 }

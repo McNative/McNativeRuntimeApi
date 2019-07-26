@@ -19,5 +19,44 @@
 
 package net.prematic.mcnative.service.world.region;
 
-public class Region {
+import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.world.Location;
+import net.prematic.mcnative.service.world.Point;
+import net.prematic.mcnative.service.world.World;
+import net.prematic.mcnative.service.world.WorldSequence;
+import net.prematic.mcnative.service.world.block.Block;
+
+public interface Region extends WorldSequence {
+
+    String getName();
+
+    World getWorld();
+
+    Point getPointA();
+
+    Point getPointB();
+
+    Location[] getCorners();
+
+    Block[] getCornerBlocks();
+
+    default boolean isInside(Player player){
+        return isInside(player.getLocation());
+    }
+
+    boolean isInside(Location player);
+
+    default boolean isOutside(Player player){
+        return isOutside(player.getLocation());
+    }
+
+    boolean isOutside(Location player);
+
+    void setName(String name);
+
+    void setLocationA(Location location);
+
+    void setLocationB(Location location);
+
+
 }

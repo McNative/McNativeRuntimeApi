@@ -20,6 +20,7 @@
 package net.prematic.mcnative.service.world.block;
 
 import net.prematic.mcnative.service.material.Material;
+import net.prematic.mcnative.service.world.Chunk;
 import net.prematic.mcnative.service.world.Location;
 
 public interface Block {
@@ -27,4 +28,13 @@ public interface Block {
     Material getMaterial();
 
     Location getLocation();
+
+    Chunk getChunk();
+
+    byte getLightLevel();
+
+    byte getLightFromSky();
+
+    byte getLightFromBlocks();
+
 }

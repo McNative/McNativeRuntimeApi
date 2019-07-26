@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:24
+ * @since 25.07.19 14:41
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,21 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.inventory.item;
+package net.prematic.mcnative.service.world;
 
-public class ItemMeta {
+public interface Point {
+
+    int getX();
+
+    int getY();
+
+    int getZ();
+
+    void setX(int x);
+
+    void setY(int x);
+
+    void setZ(int x);
+
+    Location toLocation(World world);
 }

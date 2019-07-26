@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 25.07.19 15:58
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,22 @@
 
 package net.prematic.mcnative.service.material;
 
-import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
-import net.prematic.mcnative.common.protocol.ProtocolSupport;
+public class Materials {
 
-public class Material {
+    public final Material AIR = createDefault("Air","air",0);
 
-    private final String name, textType;
-    private final LegacyData legacyData;
+    public final Material STONE = createDefault("Stone","stone",1);
 
-    public Material(String name, String textType, LegacyData legacyData) {
-        this.name = name;
-        this.textType = textType;
-        this.legacyData = legacyData;
+
+    private Material createDefault(String name, String textType, int id){
+        return createDefault(name,textType, id, (byte) 0,name);
     }
 
-    public String getName() {
-        return name;
+    private Material createDefault(String name, String textType, int id, byte subId){
+        return createDefault(name,textType, id, subId,name);
     }
 
-    public String getTextType() {
-        return textType;
-    }
-
-    @ProtocolSupport(max=MinecraftProtocolVersion.V1_12_2)
-    public LegacyData getLegacyData() {
-        return legacyData;
+    private Material createDefault(String name, String textType, int id, byte subId, String legacyName){
+        return new Material(name,textType,new LegacyData(legacyName,id,subId));
     }
 }

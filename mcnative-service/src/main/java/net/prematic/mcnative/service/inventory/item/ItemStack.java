@@ -20,15 +20,17 @@
 package net.prematic.mcnative.service.inventory.item;
 
 
+import net.prematic.mcnative.service.inventory.item.meta.ItemMeta;
 import net.prematic.mcnative.service.material.Enchantment;
 import net.prematic.mcnative.service.material.Material;
 
-import java.util.Collection;
 import java.util.Map;
 
 public interface ItemStack {
 
     Material getMaterial();
+
+    ItemMeta getMeta();
 
     Map<Enchantment, Integer> getEntchantments();
 
@@ -41,6 +43,8 @@ public interface ItemStack {
     short getDurability();
 
     void setMaterial(Material material);
+
+    void setMeta(ItemMeta meta);
 
     void setAmount(int amount);
 

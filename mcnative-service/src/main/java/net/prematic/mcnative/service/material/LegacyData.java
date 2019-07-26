@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 25.07.19 16:12
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,33 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.entity;
+package net.prematic.mcnative.service.material;
 
-import net.prematic.mcnative.common.player.MinecraftPlayer;
-import net.prematic.mcnative.service.GameMode;
-import net.prematic.mcnative.service.inventory.PlayerInventory;
+import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
+import net.prematic.mcnative.common.protocol.ProtocolSupport;
 
-public interface Player extends MinecraftPlayer, HumanEntity {
+@ProtocolSupport(max= MinecraftProtocolVersion.V1_12_2)
+public class LegacyData {
 
-    PlayerInventory getInventory();
+    private final String name;
+    private final int id;
+    private final byte subId;
 
-    GameMode getGameMode();
+    public LegacyData(String name, int id, byte subId) {
+        this.name = name;
+        this.id = id;
+        this.subId = subId;
+    }
 
+    public String getName() {
+        return name;
+    }
 
-    void setGameMode(GameMode mode);
+    public int getId() {
+        return id;
+    }
 
+    public byte getSubId() {
+        return subId;
+    }
 }

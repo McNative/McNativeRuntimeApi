@@ -19,5 +19,35 @@
 
 package net.prematic.mcnative.service.world;
 
-public class Location {
+public interface Location extends Point{
+
+    float getPitch();
+
+    float getYaw();
+
+    World getWorld();
+
+    Chunk getChunk();
+
+    Location calculateMiddle(Location location);
+
+    double distance(Location location);
+
+    double distanceSquared(Location location);
+
+    void setPitch(float pitch);
+
+    void setYaw(float yaw);
+
+    void setWorld(World world);
+
+    void add(Location location);
+
+    void subtract(Location location);
+
+    void multiply(Location multiplier);
+
+    void divide(Location divider);
+
+    Point toPoint();
 }

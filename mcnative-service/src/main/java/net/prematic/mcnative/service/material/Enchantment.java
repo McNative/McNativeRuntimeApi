@@ -19,28 +19,31 @@
 
 package net.prematic.mcnative.service.material;
 
-import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
+public class Enchantment {
 
-public enum Enchantment {
-    ;
+    private String name;
+    private int id, startLevel, maxLevel;
 
-
-    private final MinecraftProtocolVersion since;
-
-    Enchantment(MinecraftProtocolVersion since) {
-        this.since = since;
+    public Enchantment(String name, int id, int startLevel, int maxLevel) {
+        this.name = name;
+        this.id = id;
+        this.startLevel = startLevel;
+        this.maxLevel = maxLevel;
     }
 
-    Enchantment() {
-        this.since = null;
+    public String getName() {
+        return name;
     }
 
-    public MinecraftProtocolVersion getSince() {
-        return since;
+    public int getId() {
+        return id;
     }
 
-    //@Todo with current service version
-    public boolean isAvailable() {
-        return true;
+    public int getStartLevel() {
+        return startLevel;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
     }
 }
