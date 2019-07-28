@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 22.07.19 22:26
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,21 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.service.scoreboard.sidebar.module;
 
-public enum GameMode {
+import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.scoreboard.sidebar.Sidebar;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+public interface SidebarModule {
 
-    private final String name;
-    private final int id;
+    String getName();
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    Sidebar getSidebar();
 
-    public String getName() {
-        return name;
-    }
+    String[] render(Player player);
 
-    public int getId() {
-        return id;
-    }
+    void update();
+
+    @SuppressWarnings("Do not use this method in the api.")
+    void initialize(Sidebar scoreboard);
 }

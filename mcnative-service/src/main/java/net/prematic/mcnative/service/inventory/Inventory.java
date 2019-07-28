@@ -19,7 +19,9 @@
 
 package net.prematic.mcnative.service.inventory;
 
+import net.prematic.mcnative.service.MinecraftService;
 import net.prematic.mcnative.service.entity.HumanEntity;
+import net.prematic.mcnative.service.inventory.animation.InventoryAnimation;
 import net.prematic.mcnative.service.inventory.item.ItemStack;
 import net.prematic.mcnative.service.material.Material;
 
@@ -150,5 +152,11 @@ public interface Inventory extends Iterable<ItemStack>{
 
     static int toIndex(int x, int y){
         return y*9+x;//-1 Start item index by 0 or 1?
+    }
+
+
+
+    static Inventory newInventory(){
+        return MinecraftService.getInstance().getObjectCreator().newInventory();
     }
 }

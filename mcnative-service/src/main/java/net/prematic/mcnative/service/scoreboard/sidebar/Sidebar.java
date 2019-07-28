@@ -19,16 +19,22 @@
 
 package net.prematic.mcnative.service.scoreboard.sidebar;
 
-import net.prematic.mcnative.service.scoreboard.sidebar.module.ScoreboardModule;
+import net.prematic.mcnative.service.scoreboard.sidebar.module.SidebarModule;
 
-public interface SidebarScoreboard {
+import java.util.Collection;
 
-    ScoreboardModule getModules();
+public interface Sidebar {
 
+    Collection<SidebarModule> getModules();
 
-    void addModule(ScoreboardModule module);
+    SidebarModule getModule(String name);
 
-    void removeModule(ScoreboardModule module);
+    void addModule(SidebarModule module);
 
+    void removeModule(SidebarModule module);
+
+    void update();
+
+    void update(SidebarModule module);
 
 }

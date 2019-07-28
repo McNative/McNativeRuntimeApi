@@ -19,7 +19,6 @@
 
 package net.prematic.mcnative.service.inventory.animation;
 
-import net.prematic.mcnative.service.inventory.InventoryAnimation;
 import net.prematic.mcnative.service.inventory.item.ItemStack;
 
 import java.util.Collection;

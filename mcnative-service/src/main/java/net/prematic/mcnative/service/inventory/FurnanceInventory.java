@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 27.07.19 20:30
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,22 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.service.inventory;
 
-public enum GameMode {
+import net.prematic.mcnative.service.inventory.item.ItemStack;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+public interface FurnanceInventory extends Inventory{
 
-    private final String name;
-    private final int id;
+    ItemStack getSmelting();
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    ItemStack getFuel();
 
-    public String getName() {
-        return name;
-    }
+    ItemStack getResult();
 
-    public int getId() {
-        return id;
-    }
+    void setSmelting(ItemStack smelting);
+
+    void setFuel(ItemStack fuel);
+
+    void setResult(ItemStack result);
+
 }

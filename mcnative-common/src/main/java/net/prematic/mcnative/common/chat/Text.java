@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 27.07.19 14:32
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,11 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.chat;
 
-public enum GameMode {
+public class Text {
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
 
-    private final String name;
-    private final int id;
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getId() {
-        return id;
-    }
 }

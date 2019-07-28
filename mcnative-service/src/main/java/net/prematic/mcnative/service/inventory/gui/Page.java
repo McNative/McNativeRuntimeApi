@@ -19,9 +19,10 @@
 
 package net.prematic.mcnative.service.inventory.gui;
 
+import net.prematic.mcnative.service.inventory.Inventory;
 import net.prematic.mcnative.service.inventory.item.ItemStack;
 
-public interface Page {
+public interface Page extends Inventory {
 
     String getName();
 

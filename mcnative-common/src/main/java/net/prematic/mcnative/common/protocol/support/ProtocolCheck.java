@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 28.07.19 18:12
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,30 @@
  * under the License.
  */
 
-package net.prematic.mcnative.common;
+package net.prematic.mcnative.common.protocol.support;
 
 import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
-import net.prematic.mcnative.common.protocol.support.ProtocolCheck;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.function.Consumer;
 
-public interface MinecraftPlatform {
+public interface ProtocolCheck {
 
-    String getName();
+    ProtocolCheck execute(MinecraftProtocolVersion version, Runnable execute);
 
-    String getVersion();
 
-    MinecraftProtocolVersion getProtocolVersion();
+    ProtocolCheck min(MinecraftProtocolVersion version, Runnable execute);
 
-    Collection<MinecraftProtocolVersion> getJoinableProtocolVersions();
+    ProtocolCheck min(MinecraftProtocolVersion version,MinecraftProtocolVersion version2, Runnable execute);
 
-    boolean isProxy();
 
-    ProtocolCheck check();
+    ProtocolCheck max(MinecraftProtocolVersion version, Runnable execute);
+
+    ProtocolCheck max(MinecraftProtocolVersion version,MinecraftProtocolVersion version2, Runnable execute);
+
+
+    ProtocolCheck range(MinecraftProtocolVersion min,MinecraftProtocolVersion max, Runnable execute);
+
+
+    ProtocolCheck orElse(Consumer<MinecraftProtocolVersion> execute);
 
 }

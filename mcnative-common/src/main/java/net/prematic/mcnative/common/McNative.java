@@ -20,10 +20,17 @@
 package net.prematic.mcnative.common;
 
 import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.mcnative.common.player.MinecraftPlayer;
+import net.prematic.mcnative.common.protocol.support.ProtocolCheck;
+import net.prematic.mcnative.common.registry.Registry;
+
+import java.util.UUID;
 
 public interface McNative {
 
     MinecraftPlatform getPlatform();
+
+    Registry getRegistry();
 
     TaskScheduler getScheduler();
 
@@ -33,15 +40,31 @@ public interface McNative {
 
     //PluginManager gePluginManager();
 
+
+
+    MinecraftPlayer getPlayer(UUID uniqueId);
+
+    MinecraftPlayer getPlayer(long xBoxId);
+
+    MinecraftPlayer getPlayer(String name);
+
+
+
+
+    default ProtocolCheck check(){
+        return getPlatform().check();
+    }
+
     static McNative getInstance() {
-        return Registry.INSTANCE;
+        return InstanceHolder.INSTANCE;
     }
 
     static void setInstance(McNative instance) {
-        Registry.INSTANCE = instance;
+        if(InstanceHolder.INSTANCE != null) throw new IllegalArgumentException("Instance is already set.");
+        InstanceHolder.INSTANCE = instance;
     }
 
-    class Registry {
+    class InstanceHolder {
 
         private static McNative INSTANCE;
     }

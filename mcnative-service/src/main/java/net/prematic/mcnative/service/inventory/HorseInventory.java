@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 16:11
+ * @since 27.07.19 20:29
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,17 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.scoreboard.sidebar.module;
+package net.prematic.mcnative.service.inventory;
 
-import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.inventory.item.ItemStack;
 
-public class TextScoreBoardModule implements ScoreboardModule{
+public interface HorseInventory extends Inventory{
 
-    private final String name;
-    private String text;
+    ItemStack getSaddle();
 
-    public TextScoreBoardModule(String name, String text) {
-        this.name = name;
-        this.text = text;
-    }
+    ItemStack getArmor();
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
+    void setSaddle(ItemStack stack);
 
-    @Override
-    public String[] render(Player player) {
-        return new String[]{text};
-    }
+    void setArmor(ItemStack stack);
 }

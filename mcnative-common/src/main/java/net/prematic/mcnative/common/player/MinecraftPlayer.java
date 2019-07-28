@@ -19,14 +19,9 @@
 
 package net.prematic.mcnative.common.player;
 
-import java.awt.*;
-import java.io.InputStream;
-import java.util.Locale;
 import java.util.UUID;
 
 public interface MinecraftPlayer {
-
-    String getClientVersion();
 
     String getName();
 
@@ -34,31 +29,14 @@ public interface MinecraftPlayer {
 
     UUID getUniqueId();
 
-    Locale getLocale();
+    long getXBoxId();
 
-    int getPing();
+    OnlineMinecraftPlayer getAsOnlinePlayer();
 
-    byte getViewDistance();
+    boolean isOnline();
+
+    boolean isBanned();
 
     boolean hasPermission(String permission);
 
-    boolean hasPermissionGroup(String group);
-
-    void sendMessage(String message);
-
-    void sendMessage(TextComponent... components);
-
-    void sendTitle(String title, String subTitle, short duration);
-
-    void sendTitle(String TextComponent, TextComponent subTitle, short duration);
-
-    void sendActionbar(TextComponent message, short duration);
-
-    BossBar getBossBar();
-
-    void sendData(String channel, InputStream stream);
-
-    void sendData(String channel,String data);
-
-    void sendData(String channel, byte[] data);
 }

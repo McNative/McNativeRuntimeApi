@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 27.07.19 14:27
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,23 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.inventory;
+package net.prematic.mcnative.common.chat.event;
 
-public interface InventoryAnimation {
+public class TextEvent<A> {
+
+    private final A action;
+    private final Object value;
+
+    public TextEvent(A action, Object value) {
+        this.action = action;
+        this.value = value;
+    }
+
+    public A getAction() {
+        return action;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }

@@ -19,5 +19,28 @@
 
 package net.prematic.mcnative.common.chat;
 
-public class TextComponent {
+import net.prematic.mcnative.common.chat.event.ClickAction;
+import net.prematic.mcnative.common.chat.event.HoverAction;
+import net.prematic.mcnative.common.chat.event.TextEvent;
+
+public interface TextComponent {
+
+    TextComponent setClickEvent(TextEvent<ClickAction> event);
+
+    TextComponent setHoverEvent(TextEvent<HoverAction> event);
+
+
+
+    default TextComponent setClickEvent(ClickAction action, Object value){
+        return setClickEvent(new TextEvent<>(action, value));
+    }
+
+    default TextComponent setHoverEvent(HoverAction action, Object value){
+        return setHoverEvent(new TextEvent<>(action, value));
+    }
+
+    default void onClick(Runnable runnable){
+        setClickEvent(ClickAction.EXECUTE,runnable);
+    }
+
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 28.07.19 18:19
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,28 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.registry;
 
-public enum GameMode {
+import java.util.function.Supplier;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+public interface Registry {
 
-    private final String name;
-    private final int id;
+    <T, S extends T> S getService(Class<T> serviceClass);
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
+    default <T, S extends T> void registerService(Class<T> serviceClass, S service){
+        registerService(ServicePriority.NORMAL,serviceClass,service);
     }
 
-    public String getName() {
-        return name;
-    }
+    <T, S extends T> void registerService(byte priority, Class<T> serviceClass, S service);
 
-    public int getId() {
-        return id;
-    }
+    void unregisterService(Class<?> serviceClass);
+
+    void unregisterService(Object service);
+
+
+    <T> T create(Class<T> classToCreate);
+
+    <T> void registerCreator(Class<T> clazz, Supplier<T> creator);
+
+
 }

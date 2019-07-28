@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 27.07.19 21:36
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,23 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.permission;
 
-public enum GameMode {
+import java.util.Collection;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+public interface PermissionHandler {
 
-    private final String name;
-    private final int id;
+    Collection<String> getPermissions();
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    boolean isPermissionSet(String permission);
 
-    public String getName() {
-        return name;
-    }
+    boolean hasPermission(String permission);
 
-    public int getId() {
-        return id;
-    }
+    boolean isOperator();
+
+    void addPermission(String permission);
+
+    void removePermission(String permission);
+
+    void setOperator(boolean operator);
 }

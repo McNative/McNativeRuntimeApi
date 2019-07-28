@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 28.07.19 16:49
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,18 @@
 
 package net.prematic.mcnative.service;
 
-public enum GameMode {
+import net.prematic.mcnative.common.McNative;
+import net.prematic.mcnative.service.world.World;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+public interface MinecraftService extends McNative {
 
-    private final String name;
-    private final int id;
+    ObjectCreator getObjectCreator();
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    World getDefaultWorld();
 
-    public String getName() {
-        return name;
-    }
+    World getWorld(String name);
 
-    public int getId() {
-        return id;
+    static MinecraftService getInstance(){
+        return (MinecraftService) McNative.getInstance();
     }
 }

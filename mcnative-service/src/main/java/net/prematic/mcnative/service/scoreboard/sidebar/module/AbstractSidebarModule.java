@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 27.07.19 21:12
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,38 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.material;
+package net.prematic.mcnative.service.scoreboard.sidebar.module;
 
-public class Material {
+import net.prematic.mcnative.service.entity.Player;
+import net.prematic.mcnative.service.scoreboard.sidebar.Sidebar;
 
-    public static final Material AIR = createDefault("Air");
-
-    public static final Material STONE = createDefault("Stone");
-
-
+public abstract class AbstractSidebarModule implements SidebarModule {
 
     private final String name;
-    private final Class<?> materialClass;
+    private Sidebar sidebar;
 
-    public Material(String name) {
-        this(name,Material.class);
-    }
-
-    public Material(String name,Class<?> materialClass) {
+    public AbstractSidebarModule(String name) {
         this.name = name;
-        this.materialClass = materialClass;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
-    public static Material getAIR() {
-        return AIR;
+    @Override
+    public Sidebar getSidebar() {
+        return sidebar;
     }
 
-    private static Material createDefault(String name){
-        return createDefault(name,Material.class);
+    @Override
+    public void update() {
+        sidebar.update(this);
     }
 
-    private static Material createDefault(String name, Class<?> materialClass){
-        return new Material(name, materialClass);
+    @Override
+    public void initialize(Sidebar sidebar) {
+        if(sidebar != null) throw new IllegalArgumentException("Sidebar module is already initialized");
+        this.sidebar = sidebar;
     }
 }

@@ -23,7 +23,7 @@ import net.prematic.mcnative.service.inventory.gui.navigator.Navigator;
 
 import java.util.Collection;
 
-public interface Panel extends Page{
+public interface Panel extends Page {
 
     Navigator getNavigator();
 
@@ -32,7 +32,5 @@ public interface Panel extends Page{
     void addPage(Page page);
 
     void removePage(Page page);
-
-
 
 }

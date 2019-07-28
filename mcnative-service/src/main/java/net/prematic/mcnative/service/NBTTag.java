@@ -19,6 +19,8 @@
 
 package net.prematic.mcnative.service;
 
+import net.prematic.mcnative.common.McNative;
+
 public interface NBTTag {
 
     byte getByte(String key);
@@ -64,6 +66,6 @@ public interface NBTTag {
     void setIntArray(String key, int[] value);
 
     static NBTTag newTag(){
-        return null;
+        return McNative.getInstance().getRegistry().create(NBTTag.class);
     }
 }

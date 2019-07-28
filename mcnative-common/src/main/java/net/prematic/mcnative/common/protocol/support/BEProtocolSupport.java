@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 28.07.19 18:11
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,22 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.protocol.support;
 
-public enum GameMode {
+import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    private final String name;
-    private final int id;
+@Target({ElementType.FIELD,ElementType.ANNOTATION_TYPE,ElementType.CONSTRUCTOR,ElementType.METHOD
+        ,ElementType.TYPE,ElementType.TYPE_PARAMETER,ElementType.PACKAGE})
+@Retention(RetentionPolicy.CLASS)
+public @interface BEProtocolSupport {
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    MinecraftProtocolVersion min() default MinecraftProtocolVersion.V1_7;
 
-    public String getName() {
-        return name;
-    }
+    MinecraftProtocolVersion max() default MinecraftProtocolVersion.V1_14_4;
 
-    public int getId() {
-        return id;
-    }
 }

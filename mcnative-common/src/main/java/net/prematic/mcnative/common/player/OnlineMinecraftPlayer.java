@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 28.07.19 17:54
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,47 @@
  * under the License.
  */
 
-package net.prematic.mcnative.common;
+package net.prematic.mcnative.common.player;
 
 import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
 import net.prematic.mcnative.common.protocol.support.ProtocolCheck;
 
-import java.util.Collection;
-import java.util.List;
+import java.awt.*;
+import java.io.InputStream;
+import java.util.Locale;
 
-public interface MinecraftPlatform {
+public interface OnlineMinecraftPlayer extends MinecraftPlayer{
 
-    String getName();
+    DeviceInfo getDevice();
 
-    String getVersion();
+    MinecraftProtocolVersion getClientVersion();
 
-    MinecraftProtocolVersion getProtocolVersion();
+    String getClientName();
 
-    Collection<MinecraftProtocolVersion> getJoinableProtocolVersions();
+    Locale getLocale();
 
-    boolean isProxy();
+    int getPing();
+
+    byte getViewDistance();
+
+    BossBar getBossBar();
 
     ProtocolCheck check();
+
+    void sendMessage(String message);
+
+    void sendMessage(TextComponent... components);
+
+    void sendTitle(String title, String subTitle, short duration);
+
+    void sendTitle(String TextComponent, TextComponent subTitle, short duration);
+
+    void sendActionbar(TextComponent message, short duration);
+
+    void sendData(String channel, InputStream stream);
+
+    void sendData(String channel,String data);
+
+    void sendData(String channel, byte[] data);
 
 }

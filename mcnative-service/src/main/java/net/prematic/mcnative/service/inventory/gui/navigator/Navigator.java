@@ -35,5 +35,5 @@ public interface Navigator {
 
     Page showPage(int number);
 
-    void setIconAre(int startIndex, int endIndex);
+    void setIconArea(int startIndex, int endIndex);
 }

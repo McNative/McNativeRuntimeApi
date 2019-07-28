@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 27.07.19 20:54
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,13 @@
  * under the License.
  */
 
-package net.prematic.mcnative.common.protocol;
+package net.prematic.mcnative.service.inventory.gui.form;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public interface Checkbox extends FormElement{
 
-@Target({ElementType.FIELD,ElementType.ANNOTATION_TYPE,ElementType.CONSTRUCTOR,ElementType.METHOD,ElementType.TYPE,ElementType.TYPE_PARAMETER,ElementType.PACKAGE})
-@Retention(RetentionPolicy.CLASS)
-public @interface ProtocolSupport {
+    boolean isActive();
 
-    MinecraftProtocolVersion min() default MinecraftProtocolVersion.V1_7;
+    boolean setActive(boolean active);
 
-    MinecraftProtocolVersion max() default MinecraftProtocolVersion.V1_14_4;
+
 }

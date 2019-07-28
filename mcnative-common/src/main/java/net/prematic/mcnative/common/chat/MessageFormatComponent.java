@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 27.07.19 14:33
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,39 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.chat;
 
-public enum GameMode {
+public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+    String getText();
 
-    private final String name;
-    private final int id;
+    ChatColor getColor();
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    boolean isBold();
 
-    public String getName() {
-        return name;
-    }
+    boolean isItalic();
 
-    public int getId() {
-        return id;
-    }
+    boolean isUnderlined();
+
+    boolean isStrikeThrough();
+
+    boolean isObfuscated();
+
+    T setText(String text);
+
+    T setColor(ChatColor color);
+
+    T setBold(boolean bold);
+
+    T setItalic(boolean italic);
+
+    T setUnderlined(boolean underlined);
+
+    T setStrikeThrough(boolean strikeThrough);
+
+    T setObfuscated(boolean obfuscated);
+
+
+
+
 }

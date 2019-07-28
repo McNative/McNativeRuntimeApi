@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.07.19 16:12
+ * @since 27.07.19 15:58
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,33 +17,56 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.material;
+package net.prematic.mcnative.common.player;
 
-import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
-import net.prematic.mcnative.common.protocol.ProtocolSupport;
+public class DeviceInfo {
 
-@ProtocolSupport(max= MinecraftProtocolVersion.V1_12_2)
-public class LegacyData {
+    private final String name, id;
+    private final OperatingSystem operatingSystem;
+    private final UIType uiType;
 
-    private final String name;
-    private final int id;
-    private final byte subId;
-
-    public LegacyData(String name, int id, byte subId) {
+    public DeviceInfo(String name, String id, OperatingSystem operatingSystem, UIType uiType) {
         this.name = name;
         this.id = id;
-        this.subId = subId;
+        this.operatingSystem = operatingSystem;
+        this.uiType = uiType;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public byte getSubId() {
-        return subId;
+    public OperatingSystem getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public UIType getUiType() {
+        return uiType;
+    }
+
+    public enum OperatingSystem {
+
+        UNKNOWN(),
+        ANDROID(),
+        IOS(),
+        WINDOWS(),
+        MAC_OS(),
+        XBOX(),
+        NINTENDO_SWITCH();
+
+    }
+
+    public enum UIType {
+
+        JAVA(),
+
+        CLASSIC(),
+
+        POCKET();
+
     }
 }

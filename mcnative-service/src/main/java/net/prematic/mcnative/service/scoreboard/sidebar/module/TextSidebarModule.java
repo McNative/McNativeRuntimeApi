@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.07.19 15:58
+ * @since 23.07.19 16:11
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,25 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.material;
+package net.prematic.mcnative.service.scoreboard.sidebar.module;
 
-public class Materials {
+import net.prematic.mcnative.service.entity.Player;
 
-    public final Material AIR = createDefault("Air","air",0);
+public class TextSidebarModule extends AbstractSidebarModule {
 
-    public final Material STONE = createDefault("Stone","stone",1);
+    private String text;
 
-
-    private Material createDefault(String name, String textType, int id){
-        return createDefault(name,textType, id, (byte) 0,name);
+    public TextSidebarModule(String name, String text) {
+        super(name);
+        this.text = text;
     }
 
-    private Material createDefault(String name, String textType, int id, byte subId){
-        return createDefault(name,textType, id, subId,name);
+    public String getText() {
+        return text;
     }
 
-    private Material createDefault(String name, String textType, int id, byte subId, String legacyName){
-        return new Material(name,textType,new LegacyData(legacyName,id,subId));
+    @Override
+    public String[] render(Player player) {
+        return new String[]{text};
     }
 }

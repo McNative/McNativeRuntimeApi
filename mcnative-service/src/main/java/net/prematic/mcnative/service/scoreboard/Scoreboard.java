@@ -19,5 +19,11 @@
 
 package net.prematic.mcnative.service.scoreboard;
 
-public class Scoreboard {
+public interface Scoreboard {
+
+    Objective registerNewObjective(String name, String criteria);
+
+    Objective getObjective(String name);
+
+
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 14:13
+ * @since 27.07.19 11:14
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,14 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.service.inventory.anvil;
 
-public enum GameMode {
+public class AnvilSlot {
 
-    SURVIVAL("Survival",0),
-    CREATIVE("Creative",1),
-    ADVENTURE("Adventure",2),
-    SPECTATOR("Spectator",3);
+    public static final int INPUT_LEFT = 0;
 
-    private final String name;
-    private final int id;
+    public static final int INPUT_RIGHT = 1;
 
-    GameMode(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    public static final int OUTPUT = 2;
 
-    public String getName() {
-        return name;
-    }
-
-    public int getId() {
-        return id;
-    }
 }
