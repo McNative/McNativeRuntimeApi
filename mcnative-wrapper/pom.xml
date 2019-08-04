@@ -23,7 +23,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>McNative</artifactId>
-        <groupId>net.prematic.mvnative</groupId>
+        <groupId>net.prematic.mcnative</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -39,6 +39,20 @@
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>net.prematic.libraries</groupId>
+            <artifactId>prematiclibraries-utility</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.prematic.libraries</groupId>
+            <artifactId>prematiclibraries-document</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>

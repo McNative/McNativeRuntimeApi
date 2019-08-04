@@ -19,13 +19,36 @@
 
 package net.prematic.mcnative.bukkit;
 
+import net.prematic.mcnative.loader.McNativeLoader;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public class McNativeBukkitWrapper extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        System.out.println("Load");
+        try {
+            if(!McNativeLoader.isAvailable()){
+                File location = McNativeLoader.install("bukkit");
+                if(location != null){
+                    Plugin plugin = Bukkit.getPluginManager().loadPlugin(location);
+                    Bukkit.getPluginManager().enablePlugin(plugin);
+                }else{
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            }
+        } catch (Exception exception) {
+            //Print McNative load exception
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
+
+        //execute plugin load
     }
 
     @Override

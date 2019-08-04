@@ -23,7 +23,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.prematic.mvnative</groupId>
+    <groupId>net.prematic.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
@@ -33,6 +33,9 @@
         <module>mcnative-proxy</module>
         <module>mcnative-service</module>
         <module>mcnative-wrapper</module>
+        <module>mcnative-test-plugin-service</module>
+        <module>mcnative-buildtool-maven</module>
+        <module>mcnative-bukkit</module>
     </modules>
 
 
