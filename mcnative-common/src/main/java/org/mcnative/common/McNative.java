@@ -1,0 +1,81 @@
+/*
+ * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ *
+ * @author Davide Wietlisbach
+ * @since 04.08.19 10:44
+ *
+ * The McNative Project is under the Apache License, version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.mcnative.common;
+
+import net.prematic.libraries.command.manager.CommandManager;
+import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.plugin.manager.PluginManager;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.protocol.support.ProtocolCheck;
+import org.mcnative.common.registry.Registry;
+
+import java.util.UUID;
+
+public interface McNative {
+
+    MinecraftPlatform getPlatform();
+
+    PrematicLogger getLogger();
+
+    Registry getRegistry();
+
+    TaskScheduler getScheduler();
+
+    CommandManager getCommandManager();
+
+    EventManager getEventManager();
+
+    PluginManager<McNative> getPluginManager();
+
+
+
+    MinecraftPlayer getPlayer(UUID uniqueId);
+
+    MinecraftPlayer getPlayer(long xBoxId);
+
+    MinecraftPlayer getPlayer(String name);
+
+
+
+
+    default ProtocolCheck check(){
+        return getPlatform().check();
+    }
+
+    static boolean isAvailable(){
+        return getInstance() != null;
+    }
+
+    static McNative getInstance() {
+        return InstanceHolder.INSTANCE;
+    }
+
+    static void setInstance(McNative instance) {
+        if(InstanceHolder.INSTANCE != null) throw new IllegalArgumentException("Instance is already set.");
+        InstanceHolder.INSTANCE = instance;
+    }
+
+    class InstanceHolder {
+
+        private static McNative INSTANCE;
+    }
+}
