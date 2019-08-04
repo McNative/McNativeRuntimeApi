@@ -63,7 +63,6 @@ public class PermissionPack {
         return player.hasPermission(permission);
     }
 
-
     public static Collection<PermissionPack> getPacks() {
         return PACKS;
     }

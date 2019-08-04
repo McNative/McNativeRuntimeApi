@@ -23,7 +23,7 @@ import net.prematic.mcnative.common.chat.event.ClickAction;
 import net.prematic.mcnative.common.chat.event.HoverAction;
 import net.prematic.mcnative.common.chat.event.TextEvent;
 
-public interface TextComponent {
+public interface TextComponent extends MessageFormatComponent<TextComponent> {
 
     TextComponent setClickEvent(TextEvent<ClickAction> event);
 

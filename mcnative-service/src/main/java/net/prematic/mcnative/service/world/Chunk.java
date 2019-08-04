@@ -21,7 +21,7 @@ package net.prematic.mcnative.service.world;
 
 import net.prematic.mcnative.service.material.Material;
 
-public interface Chunk {
+public interface Chunk extends WorldSequence{
 
 
 

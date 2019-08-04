@@ -19,7 +19,7 @@
 
 package net.prematic.mcnative.common.chat;
 
-public class Text {
+public interface Text extends TextComponent{
 
 
 

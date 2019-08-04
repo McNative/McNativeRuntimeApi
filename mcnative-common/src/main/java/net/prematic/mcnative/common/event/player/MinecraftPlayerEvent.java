@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.07.19 22:26
+ * @since 03.08.19 13:54
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,37 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.entity;
+package net.prematic.mcnative.common.event.player;
 
+import net.prematic.mcnative.common.event.MinecraftEvent;
+import net.prematic.mcnative.common.player.MinecraftPlayer;
 import net.prematic.mcnative.common.player.OnlineMinecraftPlayer;
-import net.prematic.mcnative.service.GameMode;
-import net.prematic.mcnative.service.inventory.PlayerInventory;
 
-public interface Player extends OnlineMinecraftPlayer, HumanEntity {
+public class MinecraftPlayerEvent extends MinecraftEvent {
 
-    PlayerInventory getInventory();
+    private final MinecraftPlayer player;
 
-    GameMode getGameMode();
+    public MinecraftPlayerEvent(MinecraftPlayer player) {
+        this.player = player;
+    }
+
+    public MinecraftPlayer getPlayer() {
+        return player;
+    }
+
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player.getAsOnlinePlayer();
+    }
+
+    /*
+    PreLoginEvent
+    LoginEvent
+    PostLoginEvent
+    PlayerJoinServerEvent - OnlyProxy
+    JoinEvent - OnlyService
 
 
-    void setGameMode(GameMode mode);
+
+     */
 
 }

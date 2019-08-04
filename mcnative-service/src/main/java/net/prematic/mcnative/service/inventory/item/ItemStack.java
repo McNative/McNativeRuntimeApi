@@ -20,37 +20,77 @@
 package net.prematic.mcnative.service.inventory.item;
 
 
-import net.prematic.mcnative.service.inventory.item.meta.ItemMeta;
+import net.prematic.mcnative.service.NBTTag;
 import net.prematic.mcnative.service.material.Enchantment;
 import net.prematic.mcnative.service.material.Material;
+import net.prematic.mcnative.service.inventory.item.data.ItemData;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ItemStack {
 
     Material getMaterial();
 
-    ItemMeta getMeta();
-
-    Map<Enchantment, Integer> getEntchantments();
-
-    void addEnchantment(Enchantment enchantment, int level);
-
-    void removeEnchantment(Enchantment enchantment);
+    ItemData getData();
 
     int getAmount();
 
     short getDurability();
 
+    String getDisplayName();
+
+    NBTTag getTag();
+
+    Map<Enchantment, Integer> getEntchantments();
+
+    List<String> getLore();
+
+    List<ItemFlag> getFlags();
+
+
+    boolean hasDisplayName();
+
+    boolean hasTag();
+
+    boolean hasLore();
+
+    boolean hasFlag(ItemFlag flag);
+
+    boolean isUnbreakable();
+
+
     void setMaterial(Material material);
 
-    void setMeta(ItemMeta meta);
+    void setData(ItemData data);
 
     void setAmount(int amount);
 
     void setDurability(short durability);
 
+    void setDisplayName(String name);
+
+    void setTag(NBTTag tag);
+
     void addEntchantment(Enchantment enchantment);
 
     void addEntchantment(Enchantment enchantment, int level);
+
+    void setLore(List<String> lore);
+
+    void setLore(String... lore);
+
+    void setLore(int index, String lore);
+
+    void addLore(List<String> lore);
+
+    void addLore(String... lore);
+
+    void addLore(String lore);
+
+    void setFlags(ItemFlag... flags);
+
+    void addFlags(ItemFlag... flags);
+
+    void setUnbreakable(boolean unbreakable);
 }

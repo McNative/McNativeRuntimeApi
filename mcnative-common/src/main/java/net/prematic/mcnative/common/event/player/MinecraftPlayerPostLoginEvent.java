@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 28.07.19 16:49
+ * @since 03.08.19 17:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,42 +17,24 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.event.player;
 
-import net.prematic.mcnative.common.McNative;
-import net.prematic.mcnative.service.world.World;
+import net.prematic.libraries.event.Cancellable;
+import net.prematic.mcnative.common.player.MinecraftPlayer;
 
-public interface MinecraftService extends McNative {
+public class MinecraftPlayerPostLoginEvent extends MinecraftPlayerEvent implements Cancellable {
 
-    /*
-    Inventory
-        GUI
-        Animation
-    Recipe
-    Enchantment
-    Material
-    Scoreboard
-        Tablist
+    public MinecraftPlayerPostLoginEvent(MinecraftPlayer player) {
+        super(player);
+    }
 
-    Entity
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
 
-    World
-        Generation
-        Biom
+    @Override
+    public void setCancelled(boolean b) {
 
-    Boss
-    Event
-
-     */
-
-
-    ObjectCreator getObjectCreator();
-
-    World getDefaultWorld();
-
-    World getWorld(String name);
-
-    static MinecraftService getInstance(){
-        return (MinecraftService) McNative.getInstance();
     }
 }

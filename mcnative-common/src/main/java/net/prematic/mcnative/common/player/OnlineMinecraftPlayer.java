@@ -19,11 +19,16 @@
 
 package net.prematic.mcnative.common.player;
 
+import net.prematic.mcnative.common.player.sound.Instrument;
+import net.prematic.mcnative.common.player.sound.Note;
+import net.prematic.mcnative.common.player.sound.Sound;
+import net.prematic.mcnative.common.player.sound.SoundCategory;
 import net.prematic.mcnative.common.protocol.MinecraftProtocolVersion;
 import net.prematic.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.Locale;
 
 public interface OnlineMinecraftPlayer extends MinecraftPlayer{
@@ -33,6 +38,8 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
     MinecraftProtocolVersion getClientVersion();
 
     String getClientName();
+
+    InetSocketAddress getAddress();
 
     Locale getLocale();
 
@@ -44,13 +51,34 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
 
     ProtocolCheck check();
 
+
+    default void kick(){
+        kick("Kicked by an operator.");
+    }
+
+    void kick(String reason);
+
+
+    void performCommand(String command);
+
+    void chat(String message);
+
+
+    void setTablistHeader(String header);
+
+    void setTablistFooter(String footer);
+
+
     void sendMessage(String message);
 
     void sendMessage(TextComponent... components);
 
+
     void sendTitle(String title, String subTitle, short duration);
 
     void sendTitle(String TextComponent, TextComponent subTitle, short duration);
+
+    void resetTitle();
 
     void sendActionbar(TextComponent message, short duration);
 
@@ -59,5 +87,25 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
     void sendData(String channel,String data);
 
     void sendData(String channel, byte[] data);
+
+
+    void playNote(Instrument instrument, Note note);
+
+    void playSound(Sound sound, SoundCategory category, float volume, float pitch);
+
+    void stopSound(Sound sound);
+
+    void stopSound(String sound, SoundCategory category);
+
+    void setResourcePack(String url);
+
+    void setResourcePack(String url, String hash);
+
+
+    /*
+        Xp
+        Tablist
+
+     */
 
 }

@@ -60,6 +60,4 @@ public interface WorldSequence {
 
     DroppedItem dropItemNaturally(Location location, ItemStack item);
 
-
-
 }

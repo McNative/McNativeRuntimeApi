@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 27.07.19 14:11
+ * @since 03.08.19 18:11
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package net.prematic.mcnative.common.chat;
+package net.prematic.mcnative.common;
 
-public enum ChatColor {
+public enum MinecraftColor {
 
     BLACK( '0', "black" ),
 
@@ -73,7 +73,7 @@ public enum ChatColor {
     private char code;
     private String name;
 
-    ChatColor(char code, String name) {
+    MinecraftColor(char code, String name) {
         this.code = code;
         this.name = name;
     }
@@ -91,8 +91,8 @@ public enum ChatColor {
         return name;
     }
 
-    public static ChatColor fromCode(char code){
-        for(ChatColor color : values()) if(color.code == code) return color;
+    public static MinecraftColor fromCode(char code){
+        for(MinecraftColor color : values()) if(color.code == code) return color;
         return null;
     }
 

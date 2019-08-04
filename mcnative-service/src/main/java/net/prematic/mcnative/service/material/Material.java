@@ -19,12 +19,13 @@
 
 package net.prematic.mcnative.service.material;
 
+import net.prematic.mcnative.service.inventory.item.data.ItemData;
+
 public class Material {
 
     public static final Material AIR = createDefault("Air");
 
     public static final Material STONE = createDefault("Stone");
-
 
 
     private final String name;
@@ -43,9 +44,23 @@ public class Material {
         return name;
     }
 
-    public static Material getAIR() {
-        return AIR;
+    private BlockData newBlockData(){
+        return null;
     }
+
+    private ItemData newItemData(){
+        return null;
+    }
+
+
+
+    /*
+
+        Extra data
+
+
+     */
+
 
     private static Material createDefault(String name){
         return createDefault(name,Material.class);
@@ -54,4 +69,5 @@ public class Material {
     private static Material createDefault(String name, Class<?> materialClass){
         return new Material(name, materialClass);
     }
+
 }

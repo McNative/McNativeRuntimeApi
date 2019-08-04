@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.07.19 14:54
+ * @since 03.08.19 17:47
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service.inventory.item.meta;
+package net.prematic.mcnative.common.event.player;
 
-public enum  ItemFlag {
+public class MinecraftPlayerResourcePackStatusChangeEvent {
 }

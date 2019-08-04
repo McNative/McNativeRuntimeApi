@@ -19,7 +19,11 @@
 
 package net.prematic.mcnative.common;
 
+import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.mcnative.common.player.MinecraftPlayer;
 import net.prematic.mcnative.common.protocol.support.ProtocolCheck;
 import net.prematic.mcnative.common.registry.Registry;
@@ -30,15 +34,17 @@ public interface McNative {
 
     MinecraftPlatform getPlatform();
 
+    PrematicLogger getLogger();
+
     Registry getRegistry();
 
     TaskScheduler getScheduler();
 
-    //CommandManager getCommandManager();
+    CommandManager getCommandManager();
 
-    //EventManager getEventManager();
+    EventManager getEventManager();
 
-    //PluginManager gePluginManager();
+    PluginManager<McNative> getPluginManager();
 
 
 
@@ -53,6 +59,10 @@ public interface McNative {
 
     default ProtocolCheck check(){
         return getPlatform().check();
+    }
+
+    static boolean isAvailable(){
+        return getInstance() != null;
     }
 
     static McNative getInstance() {

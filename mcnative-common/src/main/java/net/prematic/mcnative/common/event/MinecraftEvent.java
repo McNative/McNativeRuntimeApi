@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 28.07.19 16:49
+ * @since 28.07.19 21:33
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,42 +17,14 @@
  * under the License.
  */
 
-package net.prematic.mcnative.service;
+package net.prematic.mcnative.common.event;
 
 import net.prematic.mcnative.common.McNative;
-import net.prematic.mcnative.service.world.World;
 
-public interface MinecraftService extends McNative {
+public class MinecraftEvent{
 
-    /*
-    Inventory
-        GUI
-        Animation
-    Recipe
-    Enchantment
-    Material
-    Scoreboard
-        Tablist
-
-    Entity
-
-    World
-        Generation
-        Biom
-
-    Boss
-    Event
-
-     */
-
-
-    ObjectCreator getObjectCreator();
-
-    World getDefaultWorld();
-
-    World getWorld(String name);
-
-    static MinecraftService getInstance(){
-        return (MinecraftService) McNative.getInstance();
+    public McNative getRuntime(){
+        return McNative.getInstance();
     }
+
 }

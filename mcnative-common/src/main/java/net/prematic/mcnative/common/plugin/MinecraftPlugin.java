@@ -19,5 +19,11 @@
 
 package net.prematic.mcnative.common.plugin;
 
-public class MinecraftPlugin {
+import net.prematic.libraries.plugin.Plugin;
+import net.prematic.mcnative.common.McNative;
+
+public class MinecraftPlugin extends Plugin<McNative> {
+
+
+
 }

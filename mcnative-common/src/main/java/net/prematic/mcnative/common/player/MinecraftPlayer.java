@@ -19,9 +19,14 @@
 
 package net.prematic.mcnative.common.player;
 
-import java.util.UUID;
+import net.prematic.libraries.command.sender.CommandSender;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.utility.annonations.Nullable;
 
-public interface MinecraftPlayer {
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+public interface MinecraftPlayer extends CommandSender {
 
     String getName();
 
@@ -31,12 +36,57 @@ public interface MinecraftPlayer {
 
     long getXBoxId();
 
+    long getFirstPlayed();
+
+    long getLastPlayed();
+
+    @Nullable
+    GameProfile getGameProfile();
+
+    Document getProperties();
+
+
+    @Nullable
     OnlineMinecraftPlayer getAsOnlinePlayer();
 
     boolean isOnline();
 
-    boolean isBanned();
+    default boolean hasPlayedBefore(){
+        return getFirstPlayed() != 0 || getFirstPlayed() == getLastPlayed();
+    }
+
+
+    boolean isWhitelisted();
+
+    void setWhitelisted(boolean whitelisted);
+
+
+    boolean isOperator();
+
+    void setOperator(boolean operator);
+
 
     boolean hasPermission(String permission);
 
+    void addPermission(String permission);
+
+    void removePermission(String permission);
+
+
+    boolean isBanned();
+
+    void ban(String reason);
+
+    void ban(String reason, long time, TimeUnit unit);
+
+    void unban();
+
+
+    boolean isMuted();
+
+    void mute(String reason);
+
+    void mute(String reason, long time, TimeUnit unit);
+
+    void unmute();
 }

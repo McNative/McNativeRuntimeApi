@@ -22,4 +22,7 @@ package net.prematic.mcnative.service.inventory.item;
 import net.prematic.mcnative.service.entity.Entity;
 
 public interface DroppedItem extends Entity {
+
+    ItemStack getItemStack();
+
 }

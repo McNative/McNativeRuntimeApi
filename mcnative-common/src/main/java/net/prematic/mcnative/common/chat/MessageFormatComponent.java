@@ -19,11 +19,13 @@
 
 package net.prematic.mcnative.common.chat;
 
+import net.prematic.mcnative.common.MinecraftColor;
+
 public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
     String getText();
 
-    ChatColor getColor();
+    MinecraftColor getColor();
 
     boolean isBold();
 
@@ -37,7 +39,7 @@ public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
     T setText(String text);
 
-    T setColor(ChatColor color);
+    T setColor(MinecraftColor color);
 
     T setBold(boolean bold);
 
