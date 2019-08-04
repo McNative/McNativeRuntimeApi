@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 23.07.19 12:56
+ * @since 03.08.19 14:00
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,17 @@
  * under the License.
  */
 
-package net.prematic.mcnative;
+package net.prematic.mcnative.testplugin.service.listener;
 
-public class asd {
+
+import net.prematic.libraries.event.Listener;
+import net.prematic.mcnative.common.event.player.MinecraftPlayerLoginEvent;
+
+public class PlayerLoginListener {
+
+    @Listener
+    public void onLogin(MinecraftPlayerLoginEvent event){
+        event.getOnlinePlayer().sendMessage("Welcome on a "+event.getRuntime().getPlatform().getName()+" server.");
+    }
+
 }

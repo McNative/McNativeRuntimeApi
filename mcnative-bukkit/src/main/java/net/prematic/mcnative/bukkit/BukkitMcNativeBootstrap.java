@@ -1,0 +1,50 @@
+/*
+ * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ *
+ * @author Davide Wietlisbach
+ * @since 03.08.19 12:44
+ *
+ * The McNative Project is under the Apache License, version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+package net.prematic.mcnative.bukkit;
+
+import net.prematic.libraries.event.EventManager;
+import net.prematic.mcnative.bukkit.plugin.BukkitEventManager;
+import net.prematic.mcnative.common.McNative;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class BukkitMcNativeBootstrap extends JavaPlugin {
+
+    private BukkitService serviceInstance;
+
+    @Override
+    public void onLoad() {
+        if(McNative.isAvailable()) return;
+
+        getLogger().info("McNative is starting, please wait...");
+
+        EventManager eventManager = BukkitEventManager.initialize();
+
+        this.serviceInstance = new BukkitService();
+        McNative.setInstance(serviceInstance);
+
+        getLogger().info("McNative successfully started.");
+    }
+
+    @Override
+    public void onDisable() {
+
+        getLogger().info("McNative successfully shut down.");
+    }
+}
