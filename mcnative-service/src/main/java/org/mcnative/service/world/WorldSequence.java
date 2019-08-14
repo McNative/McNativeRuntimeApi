@@ -19,12 +19,16 @@
 
 package org.mcnative.service.world;
 
+import org.mcnative.service.Effect;
 import org.mcnative.service.entity.Entity;
-import org.mcnative.service.entity.Player;
+import org.mcnative.service.entity.player.Player;
 import org.mcnative.service.entity.animal.Animal;
 import org.mcnative.service.entity.monster.Monster;
 import org.mcnative.service.inventory.item.DroppedItem;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.material.BlockData;
+import org.mcnative.service.material.Material;
+import org.mcnative.service.material.MaterialData;
 import org.mcnative.service.world.block.Block;
 
 import java.util.Collection;
@@ -33,15 +37,15 @@ public interface WorldSequence {
 
     Block getBlock(int x, int y, int z);
 
-    Block getBlock(Location location);
+    Block getBlock(Point location);
 
     Block getHighestBlock(int x, int y);
 
-    Block getHighestBlock(Location location);
+    Block getHighestBlock(Point location);
 
-    Block getLoewstBlock(int x, int y);
+    Block getLowestBlock(int x, int y);
 
-    Block getLoewstBlock(Location location);
+    Block getLowestBlock(Point location);
 
     Collection<Entity> getEntities();
 
@@ -56,8 +60,29 @@ public interface WorldSequence {
     <E extends Entity>Collection<E> getEntities(Class<E> entityClass);
 
 
-    DroppedItem dropItem(Location location, ItemStack item);
+    DroppedItem dropItem(Point location, ItemStack item);
 
-    DroppedItem dropItemNaturally(Location location, ItemStack item);
+    DroppedItem dropItemNaturally(Point location, ItemStack item);
 
+
+    boolean createExplosion(Point point, float power);//Explosion builder?
+
+    boolean createExplosion(Point point, float power, boolean fire);
+
+    boolean createExplosion(Point point, float power, boolean fire, boolean destroyBlocks);
+
+
+    <E extends Entity> E spawnEntity(Location location,Class<?> clazz);//entity builder ?
+
+    <E extends Entity> E spawnFreezedEntity(Location location,Class<?> clazz);
+
+    //return FallingBlock
+    void createFallingBlock(Point point, Material material);
+
+    void createFallingBlock(Point point, BlockData data);
+
+
+    void playEffect(Location location, Effect effect);
+
+    void playEffect(Location location, Effect effect, int radius);
 }

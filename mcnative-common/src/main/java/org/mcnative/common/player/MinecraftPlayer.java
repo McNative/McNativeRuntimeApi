@@ -22,6 +22,7 @@ package org.mcnative.common.player;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
+import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -29,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 public interface MinecraftPlayer extends CommandSender {
 
     String getName();
-
-    String getDisplayName();
 
     UUID getUniqueId();
 
@@ -46,8 +45,23 @@ public interface MinecraftPlayer extends CommandSender {
     Document getProperties();
 
 
+    String getDisplayName();
+
+    String getDisplayName(MinecraftPlayer player);//Extra display name for another player (Good for Nick).
+
+    PlayerDesign getDesign();
+
+    PlayerDesign getDesign(MinecraftPlayer player);
+
+    void setDesign(PlayerDesign design);
+
+
+    @Nullable
+    <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass);
+
     @Nullable
     OnlineMinecraftPlayer getAsOnlinePlayer();
+
 
     boolean isOnline();
 

@@ -19,5 +19,13 @@
 
 package org.mcnative.common.event.player;
 
-public class MinecraftPlayerLocaleChangeEvent {
+import java.util.Locale;
+
+public interface MinecraftPlayerLocaleChangeEvent extends MinecraftOnlinePlayerEvent {
+
+    Locale getOldLocale();
+
+    Locale getNewLocale();
+
+
 }

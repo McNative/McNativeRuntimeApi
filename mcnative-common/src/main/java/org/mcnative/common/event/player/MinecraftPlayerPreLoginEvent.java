@@ -20,21 +20,15 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.text.MessageComponent;
 
-public class MinecraftPlayerPreLoginEvent extends MinecraftPlayerEvent implements Cancellable {
+import java.net.InetSocketAddress;
 
-    public MinecraftPlayerPreLoginEvent(MinecraftPlayer player) {
-        super(player);
-    }
+public interface MinecraftPlayerPreLoginEvent extends MinecraftPlayerEvent, Cancellable {
 
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
+    InetSocketAddress getAddress();
 
-    @Override
-    public void setCancelled(boolean b) {
+    void setCancelReason(String message);
 
-    }
+    void setCancelReason(MessageComponent... cancelReason);
 }

@@ -19,5 +19,10 @@
 
 package org.mcnative.common.event.player;
 
-public class MinecraftPlayerResourcePackStatusChangeEvent {
+import org.mcnative.common.player.ResourcePackStatus;
+
+public interface MinecraftPlayerResourcePackStatusChangeEvent extends MinecraftOnlinePlayerEvent {
+
+    ResourcePackStatus getStatus();
+
 }

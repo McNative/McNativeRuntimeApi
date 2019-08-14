@@ -21,28 +21,93 @@ package org.mcnative.service.world;
 
 import java.util.Collection;
 
-public interface World {
+public interface World extends WorldSequence{
+
+    //WorldSettings?
+
+    long getSeed();
+
+    WorldBorder getBorder();
+
+    int getMaximumHeight();
+
+
+    Location getSpawnLocation();
+
+    void setSpawnLocation(Location spawnLocation);
+
+
+    long getTime();
+
+    void setTime(Long time);
+
+    long getFullTime();
+
+    void setFullTime(Long time);
+
+
+    boolean hasStorm();
+
+    void setStorm(boolean storm);
+
+    boolean isThundering();
+
+    void setThundering(boolean thundering);
+
 
     Chunk getChunk(int x, int y, int z);
 
-    Chunk getChunk(Location location);
+    Chunk getChunk(Point location);
 
     Collection<Chunk> getLoadedChunks();
 
     boolean isChunkInUse(int x, int z);
 
+    boolean isChunkGenerated(int x, int z);
+
+
+    Biome getBiom(int x, int y);
+
+    Biome getBiom(Point point);
+
+    void setBiom(int x, int y,Biome biome);
+
+    void setBiom(Point point,Biome biome);
 
 
     void loadChunk(int x, int y);
 
-    void loadChunk(Location location);
+    void loadChunk(Point location);
 
     void loadChunk(Chunk chunk);
 
 
     void unloadChunk(int x, int y);
 
-    void unloadChunk(Location location);
+    void unloadChunk(Point location);
 
     void unloadChunk(Chunk chunk);
+
+    void tryUnloadChunk(int x, int y);
+
+    void tryUnloadChunk(Point location);
+
+    void tryUnloadChunk(Chunk chunk);
+
+
+    void regenerateChunk(int x, int y);
+
+    void regenerateChunk(Point point);
+
+    void regenerateChunk(Chunk chunk);
+
+
+    void refreshChunk(int x, int y);
+
+    void refreshChunk(Point point);
+
+    void refreshChunk(Chunk chunk);
+
+
+    void save();
 }

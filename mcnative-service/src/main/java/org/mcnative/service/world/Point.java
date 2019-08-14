@@ -21,17 +21,21 @@ package org.mcnative.service.world;
 
 public interface Point {
 
-    int getX();
+    double getX();
 
-    int getY();
+    double getY();
 
-    int getZ();
+    double getZ();
 
-    void setX(int x);
+    void setX(double x);
 
-    void setY(int x);
+    void setY(double x);
 
-    void setZ(int x);
+    void setZ(double x);
 
     Location toLocation(World world);
+
+    static Point of(double x, double y, double z){
+        return null;
+    }
 }

@@ -19,19 +19,27 @@
 
 package org.mcnative.common.player;
 
+import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.scoreboard.Scoreboard;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.ProtocolCheck;
+import org.mcnative.common.text.MessageComponent;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.variable.Variable;
+import org.mcnative.common.text.variable.VariableSet;
 
-import java.awt.*;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.Collection;
 
-public interface OnlineMinecraftPlayer extends MinecraftPlayer{
+
+public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnection {
 
     DeviceInfo getDevice();
 
@@ -39,17 +47,16 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
 
     String getClientName();
 
-    InetSocketAddress getAddress();
+    boolean isOnlineMode();
 
-    Locale getLocale();
+    PlayerSettings getSettings();
 
     int getPing();
 
-    byte getViewDistance();
+    Scoreboard getScoreboard();
 
-    BossBar getBossBar();
-
-    ProtocolCheck check();
+    @SuppressWarnings("Before setting a new scoreboard, make sure another plugin is not using another scoreboard.")
+    void setScoreboard(Scoreboard scoreboard);
 
 
     default void kick(){
@@ -69,24 +76,54 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
     void setTablistFooter(String footer);
 
 
+    Collection<ChatChannel> getChatChannels();
+
+    void addChatChannel(ChatChannel channel);
+
+    void removeChatChannel(ChatChannel channel);
+
+
     void sendMessage(String message);
 
-    void sendMessage(TextComponent... components);
+    void sendMessage(MessageComponent... components);
 
 
-    void sendTitle(String title, String subTitle, short duration);
+    default void sendMessage(MessageComponent component, Variable... variables){
+        sendMessage(component,new VariableSet(Arrays.asList(variables)));
+    }
 
-    void sendTitle(String TextComponent, TextComponent subTitle, short duration);
+    void sendMessage(MessageComponent component, VariableSet variables);
+
+
+    default void sendMessageKey(String key, Variable... variables){
+        sendMessageKey(key,new VariableSet(Arrays.asList(variables)));
+    }
+
+    default void sendMessageKey(String key, VariableSet variables){
+        sendMessage(Text.ofKey(key),variables);
+    }
+
+
+
+    void sendTitle(String title, String subTitle, int stayTime);
+
+    void sendTitle(TextComponent title, MessageComponent subTitle, int stayTime);
+
+    void sendTitle(Title title);
 
     void resetTitle();
 
-    void sendActionbar(TextComponent message, short duration);
 
-    void sendData(String channel, InputStream stream);
+    void sendActionbar(MessageComponent... message);
 
-    void sendData(String channel,String data);
+    void sendActionbar(long seconds, MessageComponent... message);
 
-    void sendData(String channel, byte[] data);
+
+    Collection<BossBar> getActiveBossBars();
+
+    void addBossBar(BossBar bossBar);
+
+    void removeBossBar(BossBar bossBar);
 
 
     void playNote(Instrument instrument, Note note);
@@ -101,6 +138,9 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer{
 
     void setResourcePack(String url, String hash);
 
+
+
+    ProtocolCheck check();
 
     /*
         Xp

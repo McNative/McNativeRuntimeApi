@@ -30,6 +30,7 @@ public class TestPlugin extends MinecraftPlugin {
     public void onEnable(LifecycleState state){
         System.out.println("McNative plugin started");
 
+        getConfiguration().add("test.test","Hallo");
 
 
         getRuntime().getEventManager().registerListener(this,new PlayerLoginListener());

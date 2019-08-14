@@ -23,6 +23,8 @@ import java.util.function.Supplier;
 
 public interface Registry {
 
+    String DEFAULT_INSTANCE = "DEFAULT";
+
     <T, S extends T> S getService(Class<T> serviceClass);
 
     default <T, S extends T> void registerService(Class<T> serviceClass, S service){
@@ -40,5 +42,14 @@ public interface Registry {
 
     <T> void registerCreator(Class<T> clazz, Supplier<T> creator);
 
+
+
+    default <T> T getInstance(Class<T> instanceClass){
+        return getInstance(instanceClass,DEFAULT_INSTANCE);
+    }
+
+    <T> T getInstance(Class<T> instanceClass, String name);
+
+    <T,O extends T> T registerInstance(Class<T> instanceClass, O instance);
 
 }

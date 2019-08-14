@@ -19,12 +19,4 @@
 
 package org.mcnative.common.event;
 
-import org.mcnative.common.McNative;
-
-public class MinecraftEvent{
-
-    public McNative getRuntime(){
-        return McNative.getInstance();
-    }
-
-}
+public interface MinecraftEvent{}

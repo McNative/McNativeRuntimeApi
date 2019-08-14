@@ -19,5 +19,10 @@
 
 package org.mcnative.common.event.player;
 
-public class MinecraftPlayerKickEvent {
+import org.graalvm.compiler.nodes.Cancellable;
+
+public interface MinecraftPlayerKickEvent extends MinecraftOnlinePlayerEvent, Cancellable {
+
+    String getReason();
+
 }

@@ -31,8 +31,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface BEProtocolSupport {
 
-    MinecraftProtocolVersion min() default MinecraftProtocolVersion.V1_7;
+    MinecraftProtocolVersion min() default MinecraftProtocolVersion.BE_1_12;
 
-    MinecraftProtocolVersion max() default MinecraftProtocolVersion.V1_14_4;
+    MinecraftProtocolVersion max() default MinecraftProtocolVersion.BE_1_12;
 
+    boolean supported() default true;
 }

@@ -1,0 +1,26 @@
+tablist:
+    enabled: true
+    header: '&6McNative §ais a cool Minecraft Application Framework (MAF)'
+    footer: '§aWebsite: Https://mcnative.org'
+    playerFormat: '%prefix%%name%%suffix%'
+chat:
+    permission: 'chat.use'
+    worldBased: false
+    colors:
+        enabled: true
+        permission: 'chat.use.color'
+        symbol: '&'
+    markdown:
+        enabled: true
+        permission: 'chat.use.markdown'
+    format: '%display%%name% &8: &7%message%'
+player:
+    displayName: '%color%%name%'
+command:
+    
+JoinMessage
+SpawnLocation - OnJoin
+Time/Weather
+EntitySpawn
+helpCommand
+CommandNotFoundMessage     

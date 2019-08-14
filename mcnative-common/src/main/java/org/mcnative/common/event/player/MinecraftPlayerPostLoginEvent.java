@@ -19,22 +19,4 @@
 
 package org.mcnative.common.event.player;
 
-import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.player.MinecraftPlayer;
-
-public class MinecraftPlayerPostLoginEvent extends MinecraftPlayerEvent implements Cancellable {
-
-    public MinecraftPlayerPostLoginEvent(MinecraftPlayer player) {
-        super(player);
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-
-    }
-}
+public interface MinecraftPlayerPostLoginEvent extends MinecraftOnlinePlayerEvent {}

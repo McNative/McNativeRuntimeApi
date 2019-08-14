@@ -19,5 +19,5 @@
 
 package org.mcnative.common.event.player;
 
-public class MinecraftPlayerLogoutEvent {
+public interface MinecraftPlayerLogoutEvent extends MinecraftOnlinePlayerEvent {
 }

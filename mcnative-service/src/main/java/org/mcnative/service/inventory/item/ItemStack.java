@@ -42,7 +42,7 @@ public interface ItemStack {
 
     NBTTag getTag();
 
-    Map<Enchantment, Integer> getEntchantments();
+    Map<Enchantment, Integer> getEnchantments();
 
     List<String> getLore();
 
@@ -72,9 +72,9 @@ public interface ItemStack {
 
     void setTag(NBTTag tag);
 
-    void addEntchantment(Enchantment enchantment);
+    void addEnchantment(Enchantment enchantment);
 
-    void addEntchantment(Enchantment enchantment, int level);
+    void addEnchantment(Enchantment enchantment, int level);
 
     void setLore(List<String> lore);
 

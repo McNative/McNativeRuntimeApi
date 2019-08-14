@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world.region;
 
-import org.mcnative.service.entity.Player;
+import org.mcnative.service.entity.player.Player;
 import org.mcnative.service.world.Location;
 import org.mcnative.service.world.Point;
 import org.mcnative.service.world.World;
@@ -36,7 +36,7 @@ public interface Region extends WorldSequence {
 
     Point getPointB();
 
-    Location[] getCorners();
+    Point[] getCorners();
 
     Block[] getCornerBlocks();
 
@@ -54,9 +54,9 @@ public interface Region extends WorldSequence {
 
     void setName(String name);
 
-    void setLocationA(Location location);
+    void setPointA(Point location);
 
-    void setLocationB(Location location);
+    void setPointB(Point location);
 
 
 }

@@ -21,9 +21,17 @@ package org.mcnative.common.plugin;
 
 import net.prematic.libraries.plugin.Plugin;
 import org.mcnative.common.McNative;
+import org.mcnative.common.Configuration;
+
+import java.io.File;
 
 public class MinecraftPlugin extends Plugin<McNative> {
 
+    public File getDataFolder(){
+        return null;
+    }
 
-
+    public Configuration getConfiguration(){
+          return null;
+    }
 }

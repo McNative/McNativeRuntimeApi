@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 12.08.19, 19:02
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,10 @@ import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-public class MinecraftPlayerEvent extends MinecraftEvent {
+public interface MinecraftPlayerEvent extends MinecraftEvent {
 
-    private final MinecraftPlayer player;
 
-    public MinecraftPlayerEvent(MinecraftPlayer player) {
-        this.player = player;
-    }
-
-    public MinecraftPlayer getPlayer() {
-        return player;
-    }
-
-    public OnlineMinecraftPlayer getOnlinePlayer() {
-        return player.getAsOnlinePlayer();
-    }
+    MinecraftPlayer getPlayer();
 
     /*
     PreLoginEvent

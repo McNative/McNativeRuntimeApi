@@ -23,11 +23,17 @@ import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.event.EventManager;
 import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import org.mcnative.common.messaging.PluginMessageListener;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface McNative {
@@ -47,6 +53,12 @@ public interface McNative {
     PluginManager<McNative> getPluginManager();
 
 
+    ChatChannel getServerChat();
+
+    void setServerChat(ChatChannel channel);
+
+
+    int getOnlineCount();
 
     MinecraftPlayer getPlayer(UUID uniqueId);
 
@@ -54,8 +66,36 @@ public interface McNative {
 
     MinecraftPlayer getPlayer(String name);
 
+    OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId);
+
+    OnlineMinecraftPlayer getOnlinePlayer(long xBoxId);
+
+    OnlineMinecraftPlayer getOnlinePlayer(String name);
+
+    Collection<OnlineMinecraftPlayer> getOnlinePlayers();
 
 
+    void broadcast(String message);
+
+    void broadcast(TextComponent... components);
+
+    void broadcast(String permission, String message);
+
+    void broadcast(String permission,TextComponent... components);
+
+
+    Collection<String> getOpenChannels();
+
+    void registerChannel(String name, Plugin owner, PluginMessageListener listener);
+
+    void unregisterChannel(String name);
+
+    void unregisterChannel(PluginMessageListener listener);
+
+    void unregisterChannels(Plugin owner);
+
+
+    void shutdown();
 
     default ProtocolCheck check(){
         return getPlatform().check();

@@ -23,7 +23,9 @@ import org.mcnative.service.material.Material;
 
 public interface Chunk extends WorldSequence{
 
+    World getWorld();
 
+    Biome getBiome();
 
 
     void fill(Material material);
@@ -33,5 +35,7 @@ public interface Chunk extends WorldSequence{
     void fill(int startZ,int endZ, Material material);
 
     void clear();
+
+    void regenerate();
 
 }

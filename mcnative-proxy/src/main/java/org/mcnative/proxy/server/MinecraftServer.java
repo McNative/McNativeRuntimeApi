@@ -19,5 +19,25 @@
 
 package org.mcnative.proxy.server;
 
-public class MinecraftServer {
+import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.ServerPing;
+import org.mcnative.proxy.ProxiedPlayer;
+
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+
+public interface MinecraftServer extends MinecraftConnection {
+
+    String getName();
+
+    String getPermission();
+
+    Collection<ProxiedPlayer> getConnectedPlayers();
+
+    boolean isOnline();
+
+    ServerPing ping();
+
+    CompletableFuture<ServerPing> pingAsync();
+
 }
