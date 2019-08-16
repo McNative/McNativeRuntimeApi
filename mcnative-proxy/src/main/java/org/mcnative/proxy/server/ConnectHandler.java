@@ -24,6 +24,4 @@ import org.mcnative.proxy.ProxiedPlayer;
 public interface ConnectHandler {
 
     MinecraftServer getServer(ProxiedPlayer player);
-
-    void setServer(ProxiedPlayer player);
 }

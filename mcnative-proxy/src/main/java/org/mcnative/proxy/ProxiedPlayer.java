@@ -19,7 +19,6 @@
 
 package org.mcnative.proxy;
 
-import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.ServerConnectResult;
@@ -31,10 +30,9 @@ public interface ProxiedPlayer extends OnlineMinecraftPlayer {
     MinecraftServer getServer();
 
 
-    @Nullable
-    MinecraftServer getReconnectServer();
+    MinecraftServer getDefaultConnectServer();
 
-    void setReconnectServer(MinecraftServer target);
+    MinecraftServer getDefaultFallbackServer();
 
 
     void connect(MinecraftServer target);

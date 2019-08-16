@@ -22,6 +22,7 @@ package org.mcnative.common;
 import java.util.UUID;
 
 public class ServerPing {
+
 /*
     private final TextComponent[] motd;
     private final String icon;
@@ -29,7 +30,7 @@ public class ServerPing {
     private final PlayerInfo[] playerInfo;
  */
 
-    class PlayerInfo{
+    class PlayerInfo {
 
         private UUID uniqueId;
         private String name;

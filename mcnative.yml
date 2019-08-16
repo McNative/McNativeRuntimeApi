@@ -14,8 +14,35 @@ chat:
         enabled: true
         permission: 'chat.use.markdown'
     format: '%display%%name% &8: &7%message%'
+motd:
+    enabled: false
+    lines:
+        1: 'Motd line 1'
+        2: 'Line 2'
+    playerInfo: -|
+    - 'Info 1'
+    - 'Info 2'
+
+
 player:
     displayName: '%color%%name%'
+
+
+maxplayers:
+    mode: 'GROW / NORMAL '
+    max: 10
+    limit: 20
+    permissions:
+
+whitelist:
+    enabled: false
+    message: 'You are not whitelisted on this server.'
+    permission: 'mcnative.whitelist.join'
+    players:
+        - Dkrieger
+        - FridiousHD
+
+
 command:
     
 JoinMessage
