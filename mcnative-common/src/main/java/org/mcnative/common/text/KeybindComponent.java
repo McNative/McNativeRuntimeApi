@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 13:31
+ * @since 17.08.19, 10:34
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard.tablist;
+package org.mcnative.common.text;
 
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.player.MinecraftPlayer;
+public class KeybindComponent {
 
-public interface Tablist {
+    private String keybind;
 
-    void setHeader(String message);
+    public String getKeybind() {
+        return keybind;
+    }
 
-    void setHeader(TextComponent... components);
-
-
-    void setFooter(String message);
-
-    void setFooter(TextComponent... components);
-
-
-    void clearHeaderAndFooter();
-
-    void addPlayer(MinecraftPlayer player,String prefix, String suffix, int priority);
-
-    void addEntry(String entry,String prefix, String suffix, int priority);
-
+    public void setKeybind(String keybind) {
+        this.keybind = keybind;
+    }
 }

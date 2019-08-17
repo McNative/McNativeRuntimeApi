@@ -19,43 +19,7 @@
 
 package org.mcnative.common.text;
 
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.event.ClickAction;
-import org.mcnative.common.text.event.HoverAction;
-import org.mcnative.common.text.event.TextEvent;
-
-import java.util.Collection;
-import java.util.function.Consumer;
-
-public interface MessageComponent<T extends MessageComponent> {
-
-    TextEvent<ClickAction> getClickEvent();
-
-    TextEvent<HoverAction> getHoverEvent();
-
-    T setClickEvent(TextEvent<ClickAction> event);
-
-    T setHoverEvent(TextEvent<HoverAction> event);
-
-    default T setClickEvent(ClickAction action, Object value){
-        return setClickEvent(new TextEvent<>(action, value));
-    }
-
-    default T setHoverEvent(HoverAction action, Object value){
-        return setHoverEvent(new TextEvent<>(action, value));
-    }
-
-    default T onClick(Consumer<OnlineMinecraftPlayer> callback){
-        return setClickEvent(ClickAction.EXECUTE,callback);
-    }
-
-
-    Collection<MessageComponent> getExtras();
-
-    T addExtra(MessageComponent component);
-
-    T removeExtra(MessageComponent component);
-
+public interface MessageComponent {
 
     default String toPlainText(){
         StringBuilder builder = new StringBuilder();

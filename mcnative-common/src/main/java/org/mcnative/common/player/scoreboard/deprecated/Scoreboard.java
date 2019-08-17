@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.08.19, 13:11
+ * @since 17.08.19, 14:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard;
+package org.mcnative.common.player.scoreboard.deprecated;
 
 import org.mcnative.common.McNative;
 
 import java.util.Collection;
 
+@Deprecated
 public interface Scoreboard {
 
     Collection<ScoreboardObjective> getObjectives();
@@ -61,21 +62,11 @@ public interface Scoreboard {
 
 
     static Scoreboard newScoreboard(){
-        return McNative.getInstance().getRegistry().create(Scoreboard.class);
+        return null;
     }
 
     static Scoreboard getMainScoreboard(){
         return McNative.getInstance().getRegistry().getInstance(Scoreboard.class,"MAIN");
     }
-
-    /*
-    Fragen:
-    TextComponent - with extra
-    Event - interface
-    Scoreboard -
-    Packets - interface
-
-
-     */
 
 }

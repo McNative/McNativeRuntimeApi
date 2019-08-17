@@ -19,13 +19,15 @@
 
 package org.mcnative.common.messaging;
 
+import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.MinecraftConnection;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 public interface PluginMessageListener {
 
-    void onMessageReceive(MinecraftConnection sender, InputStream request, OutputStream response);//With response?
+    void onMessageReceive(MinecraftConnection sender, @Nullable UUID requestId, InputStream request, OutputStream response);
 
 }

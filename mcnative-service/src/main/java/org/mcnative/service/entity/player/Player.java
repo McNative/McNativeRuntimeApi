@@ -31,6 +31,13 @@ public interface Player extends OnlineMinecraftPlayer, HumanEntity {
     PlayerInventory getInventory();
 
 
+    void hide(OnlineMinecraftPlayer forPlayer);
+
+    void show(OnlineMinecraftPlayer forPlayer);
+
+    void canSee(OnlineMinecraftPlayer forPlayer);
+
+
     boolean isSneaking();
 
     void setSneaking(boolean sneak);

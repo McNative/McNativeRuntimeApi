@@ -19,33 +19,82 @@
 
 package org.mcnative.common.messaging;
 
-import javax.swing.text.Document;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.type.DocumentFileType;
+import net.prematic.libraries.utility.io.IORuntimeException;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 public class PluginMessageHelper {
 
     public static String getAsString(InputStream input){
-        return null;
+        return new String(getAsBytes(input));
+    }
+
+    public static String getAsString(InputStream input, Charset charset){
+        return new String(getAsBytes(input),charset);
     }
 
     public static Document getAsDocument(InputStream input){
-        return null;
+        return DocumentFileType.BINARY.getReader().read(input);
     }
 
     public static byte[] getAsBytes(InputStream input){
-        return null;
+        try {
+            byte[] data = new byte[input.available()];
+            input.read(data);
+            return data;
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
     }
 
 
     public static byte[] fromString(String source){
-        return null;
+        return source.getBytes();
+    }
+
+    public static byte[] fromString(String source,Charset charset){
+        return source.getBytes(charset);
     }
 
     public static byte[] fromDocument(Document source){
-        return null;
+        return DocumentFileType.BINARY.getWriter().write(source);
     }
 
-    public static byte[] fromStream(InputStream source){
-        return null;
+
+    public void writeString(OutputStream stream, String source){
+        try {
+            stream.write(fromString(source));
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
+    }
+
+    public void writeString(OutputStream stream, String source, Charset charset){
+        try {
+            stream.write(fromString(source,charset));
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
+    }
+
+    public void writeDocument(OutputStream stream,Document source){
+        DocumentFileType.BINARY.getWriter().write(stream,source,false);
+    }
+
+    public void writeStream(OutputStream output,InputStream input){
+        byte[] buffer = new byte[1024];
+        int count;
+        try{
+            while((count = input.read(buffer)) > 0){
+                output.write(buffer,0,count);
+            }
+        }catch (IOException exception){
+            throw new IORuntimeException(exception);
+        }
     }
 }

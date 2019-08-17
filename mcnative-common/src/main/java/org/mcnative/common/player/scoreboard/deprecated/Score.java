@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.08.19, 13:15
+ * @since 17.08.19, 14:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,26 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard;
+package org.mcnative.common.player.scoreboard.deprecated;
 
-public enum DisplayMode {
+import net.prematic.libraries.utility.annonations.NotNull;
 
-    BELOW_NAME,
-    TABLIST,
-    SIDEBAR;
+public interface Score {
+
+    @NotNull
+    String getEntry();
+
+    @NotNull
+    ScoreboardObjective getObjective();
+
+    default Scoreboard getScoreboard(){
+        return getObjective().getScoreboard();
+    }
+
+    int getScore();
+
+    void setScore(int score);
+
+    boolean isScoreSet();
 
 }

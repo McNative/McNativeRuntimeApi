@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 11.08.19, 16:21
+ * @since 17.08.19, 14:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard;
+package org.mcnative.common.player.scoreboard.deprecated;
 
-import net.prematic.libraries.utility.annonations.NotNull;
+public final class Criterias {
 
-public interface Score {
-
-    @NotNull
-    String getEntry();
-
-    @NotNull
-    ScoreboardObjective getObjective();
-
-    default Scoreboard getScoreboard(){
-        return getObjective().getScoreboard();
-    }
-
-    int getScore();
-
-    void setScore(int score);
-
-    boolean isScoreSet();
+    public static final String HEALTH = "health";
+    public static final String PLAYER_KILLS = "playerKillCount";
+    public static final String TOTAL_KILLS = "totalKillCount";
+    public static final String DEATHS = "deathCount";
+    public static final String DUMMY = "dummy";
 
 }

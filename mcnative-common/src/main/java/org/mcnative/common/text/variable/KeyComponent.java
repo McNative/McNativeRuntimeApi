@@ -20,30 +20,50 @@
 package org.mcnative.common.text.variable;
 
 
-import org.mcnative.common.text.MessageComponent;
-import org.mcnative.common.text.event.ClickAction;
-import org.mcnative.common.text.event.HoverAction;
-import org.mcnative.common.text.event.TextEvent;
+import org.mcnative.common.text.AbstractChatComponent;
+import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.format.MessageFormatComponent;
+import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.text.format.TextStyle;
 
-public class KeyComponent implements MessageComponent<KeyComponent> {
+import java.util.Arrays;
+import java.util.Collection;
+
+public class KeyComponent extends AbstractChatComponent<KeyComponent> {
 
     private final String key;
     private final VariableSet variables;
-
-    private TextEvent<ClickAction> clickEvent;
-    private TextEvent<HoverAction> hoverEvent;
 
     public KeyComponent(String key) {
         this(key,new VariableSet());
     }
 
     public KeyComponent(String key, VariableSet variables) {
+        this(key,variables,TextColor.WHITE);
+    }
+
+    public KeyComponent(String key, VariableSet variables,TextColor color) {
+        super(color);
         this.key = key;
         this.variables = variables;
     }
 
+    public KeyComponent(String key, VariableSet variables, TextColor color, Collection<TextStyle> styling) {
+        super(color, styling);
+        this.key = key;
+        this.variables = variables;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
     public VariableSet getVariables() {
         return variables;
+    }
+
+    public KeyComponent addVariable(String name, Object value){
+        return addVariable(new Variable(name,value));
     }
 
     public KeyComponent addVariable(Variable variable){
@@ -51,29 +71,8 @@ public class KeyComponent implements MessageComponent<KeyComponent> {
         return this;
     }
 
-    public KeyComponent addVariable(String name, Object source){
-        return addVariable(new Variable(name,source));
-    }
-
-    @Override
-    public TextEvent<ClickAction> getClickEvent() {
-        return clickEvent;
-    }
-
-    @Override
-    public TextEvent<HoverAction> getHoverEvent() {
-        return hoverEvent;
-    }
-
-    @Override
-    public KeyComponent setClickEvent(TextEvent<ClickAction> event) {
-        this.clickEvent = event;
-        return this;
-    }
-
-    @Override
-    public KeyComponent setHoverEvent(TextEvent<HoverAction> event) {
-        this.hoverEvent = event;
+    public KeyComponent addVariable(Variable... variables){
+        this.variables.addAll(Arrays.asList(variables));
         return this;
     }
 
@@ -86,4 +85,5 @@ public class KeyComponent implements MessageComponent<KeyComponent> {
     public void compile(StringBuilder builder) {
 
     }
+
 }

@@ -19,18 +19,11 @@
 
 package org.mcnative.common.text;
 
-import org.mcnative.common.text.event.ClickAction;
-import org.mcnative.common.text.event.HoverAction;
-import org.mcnative.common.text.event.TextEvent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class MessageComponentSet extends ArrayList<MessageComponent> implements MessageComponent<MessageComponentSet> {
-
-    private TextEvent<ClickAction> clickEvent;
-    private TextEvent<HoverAction> hoverEvent;
+public class MessageComponentSet extends ArrayList<MessageComponent> implements MessageComponent{
 
     public MessageComponentSet() {}
 
@@ -38,50 +31,25 @@ public class MessageComponentSet extends ArrayList<MessageComponent> implements 
         super(c);
     }
 
-    @Override
-    public TextEvent<ClickAction> getClickEvent() {
-        return clickEvent;
-    }
-
-    @Override
-    public TextEvent<HoverAction> getHoverEvent() {
-        return hoverEvent;
-    }
-
-    @Override
-    public MessageComponentSet setClickEvent(TextEvent<ClickAction> event) {
-        this.clickEvent = event;
-        return this;
-    }
-
-    @Override
-    public MessageComponentSet setHoverEvent(TextEvent<HoverAction> event) {
-        this.hoverEvent = event;
-        return null;
-    }
-
-    public MessageComponentSet add(MessageComponent... components){
-        addAll(Arrays.asList(components));
-        return this;
-    }
-
-    @Override
-    public Collection<MessageComponent> getExtras() {
-        return this;
-    }
-
-    @Override
-    public MessageComponentSet addExtra(MessageComponent component) {
+    public MessageComponentSet addComponent(MessageComponent component){
         add(component);
         return this;
     }
 
-    @Override
-    public MessageComponentSet removeExtra(MessageComponent component) {
+    public MessageComponentSet addComponent(MessageComponent... component){
+        addAll(Arrays.asList(component));
+        return this;
+    }
+
+    public MessageComponentSet removeComponent(MessageComponent component){
         remove(component);
         return this;
     }
 
+    public MessageComponentSet removeComponent(MessageComponent... component){
+        removeAll(Arrays.asList(component));
+        return this;
+    }
 
     @Override
     public void compile(StringBuilder builder) {

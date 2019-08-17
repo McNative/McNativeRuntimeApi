@@ -19,12 +19,12 @@
 
 package org.mcnative.common.event;
 
-import org.mcnative.common.ServerPing;
+import org.mcnative.common.ServerPingResponse;
 
 public interface ServerListPingEvent extends MinecraftEvent{
 
-    ServerPing getResponse();
+    ServerPingResponse getResponse();
 
-    void setResponse(ServerPing ping);
+    void setResponse(ServerPingResponse ping);
 
 }

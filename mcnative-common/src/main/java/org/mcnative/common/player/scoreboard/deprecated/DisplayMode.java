@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.08.19, 17:56
+ * @since 17.08.19, 14:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,12 @@
  * under the License.
  */
 
-package org.mcnative.common;
+package org.mcnative.common.player.scoreboard.deprecated;
 
-import java.util.UUID;
+public enum DisplayMode {
 
-public class ServerPing {
+    BELOW_NAME,
+    TABLIST,
+    SIDEBAR;
 
-/*
-    private final TextComponent[] motd;
-    private final String icon;
-    private final int maxPlayers, onlinePlayers;
-    private final PlayerInfo[] playerInfo;
- */
-
-    class PlayerInfo {
-
-        private UUID uniqueId;
-        private String name;
-
-    }
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.08.19, 13:11
+ * @since 17.08.19, 14:33
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,45 +19,15 @@
 
 package org.mcnative.common.player.scoreboard;
 
-import net.prematic.libraries.utility.annonations.NotNull;
+public interface BelowNameInfo {
 
-import java.util.Collection;
+    String getTitle();
 
-public interface ScoreboardObjective {
+    void setTitle(String title);
 
-    @NotNull
-    String getName();
+    void addEntry(String name, int score);
 
-    @NotNull
-    Scoreboard getScoreboard();
-
-
-    @NotNull
-    String getDisplayName();
-
-    void setDisplayName(@NotNull String displayName);
-
-
-    @NotNull
-    DisplayMode getDisplayMode();
-
-    void setDisplayMode(@NotNull DisplayMode slot);
-
-    @NotNull
-    String getCriteria();
-
-    void setCriteria(@NotNull String criteria);
-
-    @NotNull
-    Collection<Score> getScores();
-    //change to int?
-    @NotNull
-    Score getScore(String entry);
-
-    boolean hasScore(String entry);
-
-    void resetScore(String entry);
-
-
-    void unregister();
+    static BelowNameInfo newBelowNameInfo(){
+        return null;
+    }
 }

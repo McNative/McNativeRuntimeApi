@@ -27,6 +27,7 @@ import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -56,6 +57,11 @@ public interface McNative {
     ChatChannel getServerChat();
 
     void setServerChat(ChatChannel channel);
+
+
+    Tablist getDefaultTablist();
+
+    void setDefaultTablist(Tablist tablist);
 
 
     int getOnlineCount();
@@ -95,7 +101,15 @@ public interface McNative {
     void unregisterChannels(Plugin owner);
 
 
+    ServerPingResponse getPingResponse();
+
+    void setPingResponse(ServerPingResponse ping);
+
+
     void shutdown();
+
+    void restart();
+
 
     default ProtocolCheck check(){
         return getPlatform().check();

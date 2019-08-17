@@ -25,7 +25,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public interface MinecraftConnection {
 
@@ -44,19 +44,20 @@ public interface MinecraftConnection {
     void sendPacketAsync(MinecraftPacket packet);
 
 
-    //Use helpers  byte or stream
+    OutputStream sendData(String channel);//requires flush and close
 
-    OutputStream sendData(String channel);//requires flush
+    void sendData(String channel,Consumer<OutputStream> output);
 
-    void sendData(String channel, byte[] data);
-
-
-    InputStream sendDataQuery(String channel, byte[] data);
+    void sendData(String channel, byte[] output);
 
 
-    OutputStream sendDataAsync(String channel);
+    InputStream sendDataQuery(String channel, byte[] output);
 
-    void sendDataAsync(String channel, byte[] data);
+    InputStream sendDataQuery(String channel,Consumer<OutputStream> output);//Always receives same id (Multiple flushable)
 
-    CompletableFuture<InputStream> sendDataQueryAsync(String channel, byte[] data);
+
+
+
+
+
 }
