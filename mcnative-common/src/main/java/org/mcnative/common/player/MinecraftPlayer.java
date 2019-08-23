@@ -25,6 +25,8 @@ import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.player.profile.GameProfile;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -80,6 +82,13 @@ public interface MinecraftPlayer extends CommandSender, ServerPingResponse.Playe
 
     void setOperator(boolean operator);
 
+    Collection<String> getPermissions();
+
+    Collection<String> getAllPermissions();
+
+    Collection<String> getGroups();
+
+    boolean isPermissionSet(String permission);
 
     boolean hasPermission(String permission);
 

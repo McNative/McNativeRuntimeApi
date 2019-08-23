@@ -59,6 +59,9 @@ public interface Tablist {
     void removeEntry(String entry);
 
 
+    void update();
+
+
     static Tablist newTablist(){
         return null;
     }

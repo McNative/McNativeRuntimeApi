@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 17.08.19, 21:13
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.permission;
+package org.mcnative.common.storage;
 
-import java.util.Collection;
-
-public interface PermissionHandler {
-
-    Collection<String> getPermissions();
-
-    boolean isPermissionSet(String permission);
-
-    boolean hasPermission(String permission);
-
-    boolean isOperator();
-
-    void addPermission(String permission);
-
-    void removePermission(String permission);
-
-    void setOperator(boolean operator);
+public class PlayerStorage {
 }

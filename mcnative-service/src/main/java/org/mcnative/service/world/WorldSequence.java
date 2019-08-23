@@ -21,14 +21,13 @@ package org.mcnative.service.world;
 
 import org.mcnative.service.Effect;
 import org.mcnative.service.entity.Entity;
-import org.mcnative.service.entity.player.Player;
-import org.mcnative.service.entity.animal.Animal;
-import org.mcnative.service.entity.monster.Monster;
+import org.mcnative.service.entity.living.player.Player;
+import org.mcnative.service.entity.living.animal.Animal;
+import org.mcnative.service.entity.living.monster.Monster;
 import org.mcnative.service.inventory.item.DroppedItem;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.material.BlockData;
 import org.mcnative.service.material.Material;
-import org.mcnative.service.material.MaterialData;
 import org.mcnative.service.world.block.Block;
 
 import java.util.Collection;

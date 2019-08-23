@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 17.08.19, 21:10
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,31 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.animal;
+package org.mcnative.common.player;
 
-import org.mcnative.service.entity.Ageable;
-import org.mcnative.service.entity.Entity;
+import java.util.concurrent.TimeUnit;
 
-public interface Animal extends Entity, Ageable {
+public interface PunishmentHandler {
+
+    boolean isBanned(MinecraftPlayer player);
+
+    String getBanReason(MinecraftPlayer player);
+
+    void ban(MinecraftPlayer player, String reason);
+
+    void ban(MinecraftPlayer player, String reason, long time, TimeUnit unit);
+
+    void unban(MinecraftPlayer player);
 
 
+    boolean isMuted(MinecraftPlayer player);
+
+    String getMuteReason(MinecraftPlayer player);
+
+    void mute(MinecraftPlayer player, String reason);
+
+    void mute(MinecraftPlayer player, String reason, long time, TimeUnit unit);
+
+    void unmute(MinecraftPlayer player);
 
 }

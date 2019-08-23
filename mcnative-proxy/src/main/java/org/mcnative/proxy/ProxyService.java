@@ -30,19 +30,23 @@ import java.util.UUID;
 
 public interface ProxyService extends McNative {
 
+
     Collection<MinecraftServer> getServers();
 
     MinecraftServer getServer(String name);
 
+    MinecraftServer getServer(InetSocketAddress address);
+
+    MinecraftServer registerServer(String name, InetSocketAddress address);
+
+    //MinecraftServer registerServer(MinecraftServer server);//Register custom server?
 
 
-    ProxiedPlayer getOnlinePlayer(UUID uniqueId);//Add Async method
+    void unregisterServer(String name);
 
-    ProxiedPlayer getOnlinePlayer(long xBoxId);
+    void unregisterServer(InetSocketAddress address);
 
-    ProxiedPlayer getOnlinePlayer(String name);
-
-    Collection<ProxiedPlayer> getOnlineProxiedPlayers();
+    void unregisterServer(MinecraftServer server);
 
 
     ConnectHandler getConnectHandler();
@@ -55,13 +59,17 @@ public interface ProxyService extends McNative {
     void setFallbackHandler(FallbackHandler handler);
 
 
-    MinecraftServer registerServer(String name, InetSocketAddress address);
+    Collection<ProxiedPlayer> getOnlineProxiedPlayers();
 
-    void unregisterServer(String name);
+    ProxiedPlayer getOnlinePlayer(UUID uniqueId);//Add Async method
 
-    void unregisterServer(InetSocketAddress address);
+    ProxiedPlayer getOnlinePlayer(long xBoxId);
 
-    void unregisterServer(MinecraftServer server);
+    ProxiedPlayer getOnlinePlayer(String name);
+
+
+
+
 
 
     static ProxyService getInstance(){

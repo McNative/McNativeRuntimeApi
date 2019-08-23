@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.permission;
+package org.mcnative.common.player.permission;
 
 import org.mcnative.common.player.MinecraftPlayer;
 

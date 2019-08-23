@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.08.19, 19:20
+ * @since 17.08.19, 21:36
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,24 @@
  * under the License.
  */
 
-package org.mcnative.proxy.event;
+package org.mcnative.service.entity;
 
-import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.proxy.server.MinecraftServer;
+public interface Damageable {
 
-public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent, Cancellable {
+    double getHealth();
 
-    MinecraftServer getServer();
+    void setHealth(double health);
 
-    MinecraftServer getPreviousServer();
+    void heal();
+
+
+    double getMaximumHealth();
+
+    void setMaximumHealth(double health);
+
+
+    void damage(double amount);
+
+
 
 }

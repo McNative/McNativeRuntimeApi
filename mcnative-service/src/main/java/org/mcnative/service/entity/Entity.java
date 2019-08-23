@@ -22,11 +22,27 @@ package org.mcnative.service.entity;
 import org.mcnative.service.world.Location;
 import org.mcnative.service.world.World;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 public interface Entity {
+
+    int getId();
+
+    UUID getUniqueId();
 
     World getWorld();
 
     Location getLocation();
+
+    boolean isOnGround();
+
+
+    List<Entity> getNeighbors(double radius);
+
+    List<Entity> getNeighbors(double x, double y, double z);
+
 
     void teleport(Location location);
 
@@ -38,4 +54,5 @@ public interface Entity {
 
     void teleport(World world, int x,int y ,int z, short pitch, short yaw);
 
+    void despawn();
 }

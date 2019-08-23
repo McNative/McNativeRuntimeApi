@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.08.19, 19:20
+ * @since 17.08.19, 20:43
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,11 @@
 package org.mcnative.proxy.event;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.proxy.server.MinecraftServer;
 
-public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent, Cancellable {
+public interface ServerUnregisterEvent extends MinecraftEvent, Cancellable {
 
     MinecraftServer getServer();
-
-    MinecraftServer getPreviousServer();
 
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 18.08.19, 20:19
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,29 @@
  * under the License.
  */
 
-package org.mcnative.proxy.server;
+package org.mcnative.common.player.permission;
 
-import org.mcnative.common.MinecraftConnection;
-import org.mcnative.common.ServerPingResponse;
-import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
 
-public interface MinecraftServer extends MinecraftConnection {
+public interface PermissionHandler {
 
-    String getName();
+    Collection<String> getGroups(MinecraftPlayer player);
 
-    String getPermission();
+    Collection<String> getPermissions(MinecraftPlayer player);
 
-    void setPermission(String permission);
+    Collection<String> getAllPermissions(MinecraftPlayer player);
 
+    boolean isPermissionSet(MinecraftPlayer player,String permission);
 
-    MinecraftServerType getType();
+    boolean hasPermission(MinecraftPlayer player, String permission);
 
-    void setType(MinecraftServerType type);
+    boolean isOperator(MinecraftPlayer player);
 
+    void addPermission(MinecraftPlayer player, String permission);
 
-    Collection<ProxiedPlayer> getConnectedPlayers();
+    void removePermission(MinecraftPlayer player, String permission);
 
-    boolean isOnline();
-
-
-    ServerPingResponse ping();
-
-    CompletableFuture<ServerPingResponse> pingAsync();
-
+    void setOperator(MinecraftPlayer player, boolean operator);
 }

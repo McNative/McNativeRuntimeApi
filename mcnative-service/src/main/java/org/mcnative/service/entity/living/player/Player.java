@@ -17,18 +17,26 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.player;
+package org.mcnative.service.entity.living.player;
 
+import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
-import org.mcnative.service.entity.HumanEntity;
+import org.mcnative.service.entity.Entity;
+import org.mcnative.service.entity.living.HumanEntity;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.PlayerInventory;
+import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.world.Location;
 
-public interface Player extends OnlineMinecraftPlayer, HumanEntity {
+public interface Player extends HumanEntity,OnlineMinecraftPlayer {
 
     PlayerInventory getInventory();
+
+    void openInventory(Inventory inventory);
+
+    void openBook(ItemStack book);
 
 
     void hide(OnlineMinecraftPlayer forPlayer);
@@ -61,6 +69,78 @@ public interface Player extends OnlineMinecraftPlayer, HumanEntity {
     Location getCompassTarget();
 
     void setCompassTarget(Location location);
+
+
+    long getPlayerTime();
+
+    void setPlayerTime(long time, boolean relative);
+
+    void resetPlayerTime();
+
+    boolean isPlayerTimeRelative();
+
+
+    //Weather
+
+
+    float getExperience();
+
+    void setExperience(float xp);
+
+    void addExperience(float xp);
+
+    void removeExperience(float xp);
+
+    int getLevel();
+
+    void setLevel(int level);
+
+    void addLevel(int level);
+
+    void removeLevel(int level);
+
+    int getTotalExperience();
+
+    void setTotalExperience(int exp);
+
+
+    int getFoodLevel(int food);
+
+    void setFoodLevel(int food);
+
+    float getSaturation();
+
+    void setSaturation(float value);
+
+
+    float getExhaustion();
+
+    void setExhaustion(float value);
+
+
+    boolean isAllowedFlight();
+
+    void setAllowFlight(boolean flight);
+
+    boolean isFlying();
+
+    void setFlying(boolean value);
+
+
+    float getFlySpeed();
+
+    void setFlySpeed(float value);
+
+    float getWalkSpeed();
+
+    void setWalkSpeed(float value);
+
+
+    @Nullable
+    Entity getSpectatorTarget();
+
+    void setSpectatorTarget(Entity entity);
+
 
     void playEffect(Location location, Effect effect, int data);
 

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.08.19, 19:20
+ * @since 17.08.19, 21:40
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,32 @@
  * under the License.
  */
 
-package org.mcnative.proxy.event;
+package org.mcnative.service.entity.living;
 
-import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.proxy.server.MinecraftServer;
+import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.PlayerInventory;
+import org.mcnative.service.inventory.item.ItemStack;
 
-public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent, Cancellable {
+public interface HumanEntity extends LivingEntity {
 
-    MinecraftServer getServer();
+    PlayerInventory getInventory();
 
-    MinecraftServer getPreviousServer();
+    ItemStack getCursor();
+
+    ItemStack getItemInHand();
+
+    boolean isBlocking();
+
+    boolean isSleeping();
+
+    void setItemInHand(ItemStack item);
+
+    void openInventory(Inventory inventory);
+
+    void openInventory();
+
+    void closeInventory();
+
+
 
 }

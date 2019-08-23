@@ -1,0 +1,347 @@
+/*
+ * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ *
+ * @author Davide Wietlisbach
+ * @since 17.08.19, 18:19
+ *
+ * The McNative Project is under the Apache License, version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.mcnative.bungeecord;
+
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ConfigurationAdapter;
+import net.prematic.libraries.command.manager.CommandManager;
+import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.plugin.Plugin;
+import net.prematic.libraries.plugin.manager.PluginManager;
+import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.bungeecord.server.BungeeMinecraftServer;
+import org.mcnative.common.McNative;
+import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.messaging.PluginMessageListener;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.player.PunishmentHandler;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.registry.Registry;
+import org.mcnative.common.text.TextComponent;
+import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.proxy.ProxyService;
+import org.mcnative.proxy.server.ConnectHandler;
+import org.mcnative.proxy.server.FallbackHandler;
+import org.mcnative.proxy.server.MinecraftServer;
+
+import java.net.InetSocketAddress;
+import java.util.Collection;
+import java.util.UUID;
+
+public class BungeeCordService implements ProxyService {
+
+    private BungeeCordPlatform platform;
+
+    private Collection<PluginMessageListenerEntry> pluginMessageListeners;
+    private Collection<MinecraftServer> servers;
+
+    private ChatChannel serverChannel;
+
+    private PermissionHandler permissionHandler;
+    private PunishmentHandler punishmentHandler;
+    private ConnectHandler connectHandler;
+    private FallbackHandler fallbackHandler;
+
+    private ServerPingResponse serverPingResponse;
+    private Tablist tablist;
+
+    @Override
+    public String getServiceName() {
+        return ProxyServer.getInstance().getName();
+    }
+
+    @Override
+    public MinecraftPlatform getPlatform() {
+        return platform;
+    }
+
+    @Override
+    public PrematicLogger getLogger() {
+        return null;
+    }
+
+    @Override
+    public Registry getRegistry() {
+        return null;
+    }
+
+    @Override
+    public TaskScheduler getScheduler() {
+        return null;
+    }
+
+    @Override
+    public CommandManager getCommandManager() {
+        return null;
+    }
+
+    @Override
+    public EventManager getEventManager() {
+        return null;
+    }
+
+    @Override
+    public PluginManager<McNative> getPluginManager() {
+        return null;
+    }
+
+
+    @Override
+    public PermissionHandler getPermissionHandler() {
+        return permissionHandler;
+    }
+
+    @Override
+    public void setPermissionHandler(PermissionHandler handler) {
+        permissionHandler = handler;
+    }
+
+    @Override
+    public PunishmentHandler getPunishmentHandler() {
+        return punishmentHandler;
+    }
+
+    @Override
+    public void setPunishmentHandler(PunishmentHandler handler) {
+        punishmentHandler = handler;
+    }
+
+    @Override
+    public ConnectHandler getConnectHandler() {
+        return this.connectHandler;
+    }
+
+    @Override
+    public void setConnectHandler(ConnectHandler handler) {
+        this.connectHandler = handler;
+    }
+
+    @Override
+    public FallbackHandler getFallbackHandler() {
+        return this.fallbackHandler;
+    }
+
+    @Override
+    public void setFallbackHandler(FallbackHandler handler) {
+        this.fallbackHandler = handler;
+    }
+
+
+    @Override
+    public ChatChannel getServerChat() {
+        return serverChannel;
+    }
+
+    @Override
+    public void setServerChat(ChatChannel channel) {
+        serverChannel = channel;
+    }
+
+    @Override
+    public Tablist getDefaultTablist() {
+        return tablist;
+    }
+
+    @Override
+    public void setDefaultTablist(Tablist tablist) {
+        this.tablist = tablist;
+    }
+
+    @Override
+    public ServerPingResponse getPingResponse() {
+        return serverPingResponse;
+    }
+
+    @Override
+    public void setPingResponse(ServerPingResponse ping) {
+        this.serverPingResponse = ping;
+    }
+
+
+    @Override
+    public Collection<MinecraftServer> getServers() {
+        return this.servers;
+    }
+
+    @Override
+    public MinecraftServer getServer(String name) {
+        return Iterators.findOne(servers, server -> server.getName().equalsIgnoreCase(name));
+    }
+
+    @Override
+    public MinecraftServer getServer(InetSocketAddress address) {
+        return Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
+    }
+
+    @Override
+    public MinecraftServer registerServer(String name, InetSocketAddress address) {
+        if(Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name) || server.getAddress().equals(address)) != null){
+            throw new IllegalArgumentException("A server with the "+name+" or address "+address+" is already registered");
+        }
+        MinecraftServer server = new BungeeMinecraftServer(name, address);
+        this.servers.add(server);
+        return server;
+    }
+
+    @Override
+    public void unregisterServer(String name) {
+        Iterators.removeOne(this.servers, server -> server.getName().equalsIgnoreCase(name));
+    }
+
+    @Override
+    public void unregisterServer(InetSocketAddress address) {
+        Iterators.removeOne(this.servers, server -> server.getAddress().equals(address));
+    }
+
+    @Override
+    public void unregisterServer(MinecraftServer server) {
+        Iterators.removeOne(this.servers, server1 -> server1.equals(server));
+    }
+
+
+    @Override
+    public ProxiedPlayer getOnlinePlayer(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public ProxiedPlayer getOnlinePlayer(long xBoxId) {
+        return null;
+    }
+
+    @Override
+    public ProxiedPlayer getOnlinePlayer(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<ProxiedPlayer> getOnlineProxiedPlayers() {
+        return null;
+    }
+
+    @Override
+    public int getOnlineCount() {
+        return ProxyServer.getInstance().getOnlineCount();
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer(long xBoxId) {
+        return null;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
+        return null;
+    }
+
+    @Override
+    public void broadcast(String message) {
+    }
+
+    @Override
+    public void broadcast(TextComponent... components) {
+
+    }
+
+    @Override
+    public void broadcast(String permission, String message) {
+
+    }
+
+    @Override
+    public void broadcast(String permission, TextComponent... components) {
+
+    }
+
+    @Override
+    public Collection<String> getOpenChannels() {
+        return ProxyServer.getInstance().getChannels();
+    }
+
+    public Collection<PluginMessageListenerEntry> getPluginMessageListeners() {
+        return pluginMessageListeners;
+    }
+
+    @Override
+    public void registerChannel(String name, Plugin owner, PluginMessageListener listener) {
+        ProxyServer.getInstance().registerChannel(name);//open channel
+        this.pluginMessageListeners.add(new PluginMessageListenerEntry(owner,name,listener));
+    }
+
+    @Override
+    public void unregisterChannel(String name) {
+        ProxyServer.getInstance().unregisterChannel(name);//Close channel
+        Iterators.remove(this.pluginMessageListeners, entry -> entry.name.equalsIgnoreCase(name));
+    }
+
+    @Override
+    public void unregisterChannel(PluginMessageListener listener) {
+        PluginMessageListenerEntry entry =Iterators.removeOne(this.pluginMessageListeners, entry1 -> entry1.listener.equals(listener));
+        ProxyServer.getInstance().unregisterChannel(entry.name);
+    }
+
+    @Override
+    public void unregisterChannels(Plugin owner) {
+        PluginMessageListenerEntry entry = Iterators.removeOne(this.pluginMessageListeners, entry1 -> entry1.owner.equals(owner));
+        ProxyServer.getInstance().unregisterChannel(entry.name);
+    }
+
+    @Override
+    public void shutdown() {
+        ProxyServer.getInstance().stop();
+    }
+
+    @Override
+    public void restart() {
+
+    }
+
+
+    public static class PluginMessageListenerEntry {
+
+        public String name;
+        public Plugin owner;
+        public PluginMessageListener listener;
+
+        public PluginMessageListenerEntry(Plugin owner,String name, PluginMessageListener listener) {
+            this.owner = owner;
+            this.name = name;
+            this.listener = listener;
+        }
+    }
+}
+

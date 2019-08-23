@@ -86,4 +86,11 @@ public class KeyComponent extends AbstractChatComponent<KeyComponent> {
 
     }
 
+    //&5Hallo klick doch &9bitte auf folgenden &8Link https://test.com
+    //&8Hallo [player]
+
+    //{&8Hallo [player]}
+
+
+
 }

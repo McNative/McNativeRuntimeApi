@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.monster;
+package org.mcnative.service.entity.living.monster;
 
 import org.mcnative.service.entity.Entity;
 

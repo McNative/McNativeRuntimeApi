@@ -19,9 +19,11 @@
 
 package org.mcnative.common;
 
+import net.prematic.libraries.utility.io.IORuntimeException;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -44,9 +46,19 @@ public interface MinecraftConnection {
     void sendPacketAsync(MinecraftPacket packet);
 
 
-    OutputStream sendData(String channel);//requires flush and close
+    default OutputStream sendData(String channel){
+        return new MinecraftOutputStream(channel,this);
+    }//requires flush and close
 
-    void sendData(String channel,Consumer<OutputStream> output);
+    default void sendData(String channel,Consumer<OutputStream> output){
+        MinecraftOutputStream stream = new MinecraftOutputStream(channel,this);
+        output.accept(stream);
+        try {
+            stream.flush();
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
+    }
 
     void sendData(String channel, byte[] output);
 

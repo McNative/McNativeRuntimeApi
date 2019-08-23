@@ -26,8 +26,10 @@ import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import org.mcnative.common.messaging.PluginMessageListener;
+import org.mcnative.common.player.PunishmentHandler;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -38,6 +40,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface McNative {
+
+    String getServiceName();
 
     MinecraftPlatform getPlatform();
 
@@ -52,6 +56,16 @@ public interface McNative {
     EventManager getEventManager();
 
     PluginManager<McNative> getPluginManager();
+
+
+    PermissionHandler getPermissionHandler();
+
+    void setPermissionHandler(PermissionHandler handler);
+
+
+    PunishmentHandler getPunishmentHandler();
+
+    void setPunishmentHandler(PunishmentHandler handler);
 
 
     ChatChannel getServerChat();
