@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 12.08.19, 19:38
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory;
+package org.mcnative.service.inventory.type;
 
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.protocol.support.BEProtocolSupport;
-import org.mcnative.common.protocol.support.JEProtocolSupport;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-@JEProtocolSupport(min= MinecraftProtocolVersion.JE_1_14)
-@BEProtocolSupport(min=MinecraftProtocolVersion.BE_1_10)
-public interface LecternInventory {
+public interface FurnanceInventory extends Inventory {
 
-    ItemStack getItem();
+    ItemStack getSmelting();
 
-    void setItem(ItemStack item);
+    ItemStack getFuel();
 
-    //Lectern
+    ItemStack getResult();
+
+    void setSmelting(ItemStack smelting);
+
+    void setFuel(ItemStack fuel);
+
+    void setResult(ItemStack result);
 
 }

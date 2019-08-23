@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory;
+package org.mcnative.service.inventory.type;
 
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface HorseInventory extends Inventory{
+public interface BeaconInventory extends Inventory {
 
-    ItemStack getSaddle();
+    ItemStack getItem();
 
-    ItemStack getArmor();
-
-    void setSaddle(ItemStack stack);
-
-    void setArmor(ItemStack stack);
+    void setItem(ItemStack item);
 }

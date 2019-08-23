@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.HumanEntity;
 import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.type.InventoryHolder;
 import org.mcnative.service.material.Material;
 
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public interface Inventory extends Iterable<ItemStack>{
+public interface Inventory extends Iterable<ItemStack> {
 
     String getName();
 

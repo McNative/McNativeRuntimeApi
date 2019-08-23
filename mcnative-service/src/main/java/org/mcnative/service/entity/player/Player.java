@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:51
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
 import org.mcnative.service.entity.HumanEntity;
-import org.mcnative.service.inventory.PlayerInventory;
+import org.mcnative.service.inventory.type.PlayerInventory;
 import org.mcnative.service.world.Location;
 
 public interface Player extends OnlineMinecraftPlayer, HumanEntity {

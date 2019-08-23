@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 12.08.19, 19:39
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory;
+package org.mcnative.service.inventory.type;
 
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.protocol.support.BEProtocolSupport;
-import org.mcnative.common.protocol.support.JEProtocolSupport;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-@JEProtocolSupport(min=MinecraftProtocolVersion.JE_1_11)
-@BEProtocolSupport(min=MinecraftProtocolVersion.BE_1_1)
-public interface LlamaInventory extends Inventory{
+public interface BrewerInventory extends Inventory {
 
-    ItemStack getDecor();
+    ItemStack getIngredient();
 
-    void setDecor(ItemStack stack);
+    void setIngredient(ItemStack ingredient);
 
+    ItemStack getFuel();
+
+    void setFuel(ItemStack fuel);
+
+
+    ItemStack getOutput(int index);
+
+    void setOutput(int index, ItemStack item);
 }

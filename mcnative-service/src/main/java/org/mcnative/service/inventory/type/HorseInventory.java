@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,40 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory;
+package org.mcnative.service.inventory.type;
 
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface PlayerInventory extends Inventory{
+public interface HorseInventory extends Inventory {
 
-    ItemStack getHelmet();
+    ItemStack getSaddle();
 
-    ItemStack getChestplate();
+    ItemStack getArmor();
 
-    ItemStack getLeggings();
+    void setSaddle(ItemStack stack);
 
-    ItemStack getBoots();
-
-    ItemStack[] getArmorContents();
-
-    ItemStack getItemInHand();
-
-    int getHeldItemSlot();
-
-    void setHelmet(ItemStack helmet);
-
-    void setChestplate(ItemStack chestplate);
-
-    void setLeggings(ItemStack leggings);
-
-    void setBoots(ItemStack boots);
-
-    void setArmorContents(ItemStack... items);
-
-    void setItemInHand(ItemStack stack);
-
-    void setHeldItemSlot(int slot);
-
-    void clearArmor();
-
+    void setArmor(ItemStack stack);
 }

@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,30 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory;
+package org.mcnative.service.inventory.type;
 
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.support.BEProtocolSupport;
+import org.mcnative.common.protocol.support.JEProtocolSupport;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface EnchantingInventory extends Inventory{
+@JEProtocolSupport(min= MinecraftProtocolVersion.JE_1_14)
+@BEProtocolSupport(supported = false)
+public interface GrindstoneInventory extends Inventory {
 
-    ItemStack getInputLeft();
+    ItemStack getInputAbove();
 
-    ItemStack getInputRight();
+    void setInputAbove(ItemStack item);
 
-    void setInputLeft(ItemStack input);
+    ItemStack getInputBelow();
 
-    void setInputRight(ItemStack input);
+    void setInputBelow(ItemStack item);
+
+    ItemStack getOutput();
+
+    void setOutput(ItemStack item);
 
     void clearItemsOnClose(boolean clear);
+
 }
