@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world.region;
 
-import org.mcnative.service.entity.player.Player;
+import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.world.Location;
 import org.mcnative.service.world.Point;
 import org.mcnative.service.world.World;

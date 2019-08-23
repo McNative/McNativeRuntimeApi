@@ -25,8 +25,6 @@ import java.util.Collection;
 
 public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
-    String getText();
-
     TextColor getColor();
 
     Collection<TextStyle> getStyling();
@@ -41,8 +39,6 @@ public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
     boolean isObfuscated();
 
-    T setText(String text);
-
     T setColor(TextColor color);
 
     T setBold(boolean bold);
@@ -55,18 +51,15 @@ public interface MessageFormatComponent<T extends MessageFormatComponent> {
 
     T setObfuscated(boolean obfuscated);
 
-    void setStyling(Collection<TextStyle> styling);
+    T setStyling(Collection<TextStyle> styling);
 
-    void addStyle(TextStyle... style);
+    T addStyle(TextStyle... style);
 
-    void removeStyle(TextStyle... styles);
+    T removeStyle(TextStyle... styles);
 
-    void clearStyling();
+    T clearStyling();
 
     void copyFormatting(TextComponent component);
-
-
-
 
 
 }

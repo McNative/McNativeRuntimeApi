@@ -19,10 +19,11 @@
 
 package org.mcnative.proxy.event;
 
+import net.prematic.libraries.event.Cancellable;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.proxy.server.MinecraftServer;
 
-public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent {
+public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 
     MinecraftServer getServer();
 

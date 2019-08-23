@@ -28,15 +28,17 @@ public interface Sidebar {
 
     String getTitle();
 
+    void setTitle(String title);
+
+
     Collection<SidebarModule> getModules();
 
     SidebarModule getModule(String name);
 
-    void setTitle(String title);
-
     void addModule(SidebarModule module);
 
     void removeModule(SidebarModule module);
+
 
     void update();
 
@@ -45,4 +47,13 @@ public interface Sidebar {
     void updateModule(SidebarModule module);
 
     void updateModule(SidebarModule module, OnlineMinecraftPlayer player);
+
+    static PrivateSidebar newPrivateSidebar(){
+        return null;
+    }
+
+    static GlobalSidebar newGlobalSidebar(){
+        return null;
+    }
+
 }

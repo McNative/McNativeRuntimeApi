@@ -1,0 +1,27 @@
+mcnative -> Shows info
+mcnative chanelog -> Shows changelog
+mcnative update -> Creats a update
+mcnative pastelog -> pasts the server log and gets a link
+mcnative reload -> Reload
+
+mcnative plugins -> shows all mcnative plugins
+mcnative marketplace
+mcnative install <plugin>
+
+
+
+Extra commands (Enable / Disable)
+ban
+mute
+kick
+kill
+
+heal
+gamemode
+fly
+speed
+teleport
+
+send
+global / list
+join

@@ -22,7 +22,10 @@ package org.mcnative.common.player;
 import org.mcnative.common.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.chat.ChatChannel;
-import org.mcnative.common.player.scoreboard.Scoreboard;
+import org.mcnative.common.player.scoreboard.BelowNameInfo;
+import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.player.scoreboard.deprecated.Scoreboard;
+import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
@@ -53,10 +56,20 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
 
     int getPing();
 
-    Scoreboard getScoreboard();
 
-    @SuppressWarnings("Before setting a new scoreboard, make sure another plugin is not using another scoreboard.")
-    void setScoreboard(Scoreboard scoreboard);
+    //Scoreboard
+
+    Sidebar getSidebar();
+
+    void setSidebar(Sidebar sidebar);
+
+    Tablist getTablist();
+
+    void setTablist(Tablist tablist);
+
+    BelowNameInfo getBelowNameInfo();
+
+    void setBelowNameInfo(BelowNameInfo info);
 
 
     default void kick(){

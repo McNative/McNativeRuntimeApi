@@ -20,7 +20,7 @@
 package org.mcnative.common.event;
 
 import net.prematic.libraries.command.sender.CommandSender;
-import org.graalvm.compiler.nodes.Cancellable;
+import net.prematic.libraries.event.Cancellable;
 
 import java.util.List;
 

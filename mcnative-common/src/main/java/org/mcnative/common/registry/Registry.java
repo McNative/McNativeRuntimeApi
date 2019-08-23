@@ -19,28 +19,26 @@
 
 package org.mcnative.common.registry;
 
-import java.util.function.Supplier;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 public interface Registry {
 
     String DEFAULT_INSTANCE = "DEFAULT";
 
+
     <T, S extends T> S getService(Class<T> serviceClass);
 
-    default <T, S extends T> void registerService(Class<T> serviceClass, S service){
-        registerService(ServicePriority.NORMAL,serviceClass,service);
+    default <T, S extends T> void registerService(ObjectOwner owner, Class<T> serviceClass, S service){
+        registerService(owner,serviceClass,service,ServicePriority.NORMAL);
     }
 
-    <T, S extends T> void registerService(byte priority, Class<T> serviceClass, S service);
+    <T, S extends T> void registerService(ObjectOwner owner, Class<T> serviceClass, S service,byte priority);
 
     void unregisterService(Class<?> serviceClass);
 
     void unregisterService(Object service);
 
-
-    <T> T create(Class<T> classToCreate);
-
-    <T> void registerCreator(Class<T> clazz, Supplier<T> creator);
+    void unregisterServices(ObjectOwner owner);
 
 
 

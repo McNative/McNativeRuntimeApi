@@ -35,173 +35,40 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Text implements TextComponent{
+public class Text extends AbstractChatComponent<Text> implements TextComponent<Text>{
 
     public static final char FORMAT_CHAR = '\u00A7';
     public static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
 
     private String text;
-    private TextColor color;
-    private Collection<TextStyle> styling;
-    private TextEvent<ClickAction> clickEvent;
-    private TextEvent<HoverAction> hoverEvent;
 
-    public Text() {
+    public Text(){
         this(null);
     }
 
-    public Text(String text) {
-        this(text,null);
+    public Text(String text){
+        this(text,TextColor.WHITE);
     }
 
-    public Text(String text, TextColor color){
-        this(text,color,new ArrayList<>());
-    }
-
-    public Text(String text, TextColor color, Collection<TextStyle> styling) {
+    public Text(String text, TextColor color) {
+        super(color);
         this.text = text;
-        this.color = color;
-        this.styling = styling;
-    }
-    @Override
-    public TextEvent<ClickAction> getClickEvent() {
-        return clickEvent;
     }
 
-    @Override
-    public TextEvent<HoverAction> getHoverEvent() {
-        return hoverEvent;
-    }
-
-    @Override
-    public TextComponent setClickEvent(TextEvent<ClickAction> event) {
-        this.clickEvent = event;
-        return this;
-    }
-
-    @Override
-    public TextComponent setHoverEvent(TextEvent<HoverAction> event) {
-        this.hoverEvent = event;
-        return this;
+    public Text(String text,TextColor color, Collection<TextStyle> styling) {
+        super(color, styling);
+        this.text = text;
     }
 
     @Override
     public String getText() {
-        return this.text;
+        return text!=null?text:"";
     }
 
     @Override
-    public TextColor getColor() {
-        if(this.color == null) return TextColor.WHITE;
-        return this.color;
-    }
-
-    @Override
-    public Collection<TextStyle> getStyling() {
-        return this.styling;
-    }
-
-    @Override
-    public boolean isBold() {
-        return this.styling.contains(TextStyle.BOLD);
-    }
-
-    @Override
-    public boolean isItalic() {
-        return this.styling.contains(TextStyle.ITALIC);
-    }
-
-    @Override
-    public boolean isUnderlined() {
-        return this.styling.contains(TextStyle.UNDERLINE);
-    }
-
-    @Override
-    public boolean isStrikeThrough() {
-        return this.styling.contains(TextStyle.STRIKETHROUGH);
-    }
-
-    @Override
-    public boolean isObfuscated() {
-        return this.styling.contains(TextStyle.OBFUSCATED);
-    }
-
-    @Override
-    public TextComponent setText(String text) {
+    public Text setText(String text) {
         this.text = text;
         return this;
-    }
-
-    @Override
-    public TextComponent setColor(TextColor color) {
-        this.color = color;
-        return this;
-    }
-
-    @Override
-    public TextComponent setBold(boolean bold) {
-        if(bold){
-            if(!this.styling.contains(TextStyle.BOLD)) this.styling.add(TextStyle.BOLD);
-        }else this.styling.remove(TextStyle.BOLD);
-        return this;
-    }
-
-    @Override
-    public TextComponent setItalic(boolean italic) {
-        if(italic){
-            if(!this.styling.contains(TextStyle.ITALIC)) this.styling.add(TextStyle.ITALIC);
-        }else this.styling.remove(TextStyle.ITALIC);
-        return this;
-    }
-
-    @Override
-    public TextComponent setUnderlined(boolean underlined) {
-        if(underlined){
-            if(!this.styling.contains(TextStyle.UNDERLINE)) this.styling.add(TextStyle.UNDERLINE);
-        }else this.styling.remove(TextStyle.UNDERLINE);
-        return this;
-    }
-
-    @Override
-    public TextComponent setStrikeThrough(boolean strikeThrough) {
-        if(strikeThrough){
-            if(!this.styling.contains(TextStyle.STRIKETHROUGH)) this.styling.add(TextStyle.STRIKETHROUGH);
-        }else this.styling.remove(TextStyle.STRIKETHROUGH);
-        return this;
-    }
-
-    @Override
-    public TextComponent setObfuscated(boolean obfuscated) {
-        if(obfuscated){
-            if(!this.styling.contains(TextStyle.OBFUSCATED)) this.styling.add(TextStyle.OBFUSCATED);
-        }else this.styling.remove(TextStyle.OBFUSCATED);
-        return this;
-    }
-
-    @Override
-    public void setStyling(Collection<TextStyle> styling) {
-        this.styling = styling;
-    }
-
-    @Override
-    public void addStyle(TextStyle... style) {
-        this.styling.addAll(Arrays.asList(style));
-    }
-
-    @Override
-    public void removeStyle(TextStyle... styles) {
-        this.styling.removeAll(Arrays.asList(styles));
-    }
-
-    @Override
-    public void clearStyling() {
-        this.styling.clear();
-    }
-
-    @Override
-    public void copyFormatting(TextComponent component) {
-        component.setColor(this.color);
-        component.setStyling(new ArrayList<>(this.styling));
     }
 
 
@@ -214,6 +81,8 @@ public class Text implements TextComponent{
     public void compile(StringBuilder builder) {
 
     }
+
+
 
 
 
@@ -266,6 +135,18 @@ public class Text implements TextComponent{
         ![Test](chat://Das ist eine vorbereitete Nachricht)
 
         ?[Test](MyCoolHoverMessage)
+
+
+        ![Test](chat://Das ist eine vorbereitete Nachricht)
+
+
+
+        #[key](Click|Hover)  -> Keybind
+        #[entity|objective](Click|Hover) -> Score
+
+
+        ![&5[&7Join&5]](run://game join 10999)
+
 
 
         (&[0-9-aA-fF-lL-oO-Rr]) - colors
@@ -341,11 +222,10 @@ public class Text implements TextComponent{
 
     public static void main(String[] args){
 //Hallo, ![&7Clic$k mich](https//:test.com:test) asssasdsa [test) test https://test.com www.test.com ?[&7Clic$k mich](https//:test.com:test)  lol.ch
-        Matcher m = URL_PATTERN.matcher("&8[&4Friend&8] &7Das ist eine &4&k&lCoole Nachricht");
-
-        Collection<MessageComponent> comp = ofPlainText("&8[&4Friend&8] &7Das ist eine &4&k&lCoole Nachricht",'&');
+        Matcher m = URL_PATTERN.matcher("![&5[&7Join&5]](run://game join 10999)");
 
         long start = System.currentTimeMillis();
+
 
         while (m.find()) {
             System.out.println("Found: "+m.group()+" | "+m.start()+" -> "+m.end());

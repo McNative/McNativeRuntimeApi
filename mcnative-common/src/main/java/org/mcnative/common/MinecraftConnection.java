@@ -19,13 +19,15 @@
 
 package org.mcnative.common;
 
+import net.prematic.libraries.utility.io.IORuntimeException;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public interface MinecraftConnection {
 
@@ -44,19 +46,30 @@ public interface MinecraftConnection {
     void sendPacketAsync(MinecraftPacket packet);
 
 
-    //Use helpers  byte or stream
+    default OutputStream sendData(String channel){
+        return new MinecraftOutputStream(channel,this);
+    }//requires flush and close
 
-    OutputStream sendData(String channel);//requires flush
+    default void sendData(String channel,Consumer<OutputStream> output){
+        MinecraftOutputStream stream = new MinecraftOutputStream(channel,this);
+        output.accept(stream);
+        try {
+            stream.flush();
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
+    }
 
-    void sendData(String channel, byte[] data);
+    void sendData(String channel, byte[] output);
 
 
-    InputStream sendDataQuery(String channel, byte[] data);
+    InputStream sendDataQuery(String channel, byte[] output);
+
+    InputStream sendDataQuery(String channel,Consumer<OutputStream> output);//Always receives same id (Multiple flushable)
 
 
-    OutputStream sendDataAsync(String channel);
 
-    void sendDataAsync(String channel, byte[] data);
 
-    CompletableFuture<InputStream> sendDataQueryAsync(String channel, byte[] data);
+
+
 }

@@ -20,7 +20,7 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.utility.annonations.Experimental;
-import org.mcnative.common.permission.PermissionHandler;
+import org.mcnative.common.player.sound.PermissionHandler;
 
 @Experimental
 public interface MinecraftPlayerPermissionCheckEvent extends MinecraftPlayerEvent {

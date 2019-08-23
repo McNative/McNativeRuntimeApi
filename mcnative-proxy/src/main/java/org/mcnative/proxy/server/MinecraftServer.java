@@ -20,7 +20,7 @@
 package org.mcnative.proxy.server;
 
 import org.mcnative.common.MinecraftConnection;
-import org.mcnative.common.ServerPing;
+import org.mcnative.common.ServerPingResponse;
 import org.mcnative.proxy.ProxiedPlayer;
 
 import java.util.Collection;
@@ -32,12 +32,21 @@ public interface MinecraftServer extends MinecraftConnection {
 
     String getPermission();
 
+    void setPermission(String permission);
+
+
+    MinecraftServerType getType();
+
+    void setType(MinecraftServerType type);
+
+
     Collection<ProxiedPlayer> getConnectedPlayers();
 
     boolean isOnline();
 
-    ServerPing ping();
 
-    CompletableFuture<ServerPing> pingAsync();
+    ServerPingResponse ping();
+
+    CompletableFuture<ServerPingResponse> pingAsync();
 
 }

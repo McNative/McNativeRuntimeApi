@@ -29,5 +29,7 @@ public interface PlayerDesign {
 
     String getDisplay();
 
+    int getPriority();
+
 
 }
