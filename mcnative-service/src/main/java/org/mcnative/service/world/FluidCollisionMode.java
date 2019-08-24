@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:39
+ * @since 24.08.19, 16:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living;
+package org.mcnative.service.world;
 
-import org.mcnative.service.entity.Damageable;
-import org.mcnative.service.entity.Entity;
-import org.mcnative.service.location.Location;
+//From bukkit
+public enum FluidCollisionMode {
 
-public interface LivingEntity extends Entity,Damageable {
+    /**
+     * Ignore fluids.
+     */
+    NEVER,
 
-    double getEyeHeight();
-
-    Location getEyeLocation();
+    /**
+     * Only collide with source fluid blocks.
+     */
+    SOURCE,
+    /**
+     * Collide with all fluids.
+     */
+    ALWAYS;
 
 }

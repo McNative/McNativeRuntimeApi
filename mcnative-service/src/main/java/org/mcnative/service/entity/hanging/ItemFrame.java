@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:39
+ * @since 24.08.19, 17:05
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living;
+package org.mcnative.service.entity.hanging;
 
-import org.mcnative.service.entity.Damageable;
-import org.mcnative.service.entity.Entity;
-import org.mcnative.service.location.Location;
+import org.mcnative.service.inventory.item.ItemStack;
 
-public interface LivingEntity extends Entity,Damageable {
+public interface ItemFrame extends Hanging {
 
-    double getEyeHeight();
+    ItemStack getItem();
 
-    Location getEyeLocation();
+    void setItem(ItemStack item);
 
+    void setItemWithSound(ItemStack item);
+
+    double getRotation();//Double or Rotation
+
+    void setRotation(double rotation);
+
+    void rotate();
+
+    void rotateBack();
 }

@@ -23,7 +23,6 @@ import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.inventory.type.InventoryHolder;
 import org.mcnative.service.material.Material;
 
 import java.util.Collection;
@@ -37,7 +36,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
     int getSize();
 
-    InventoryHolder getHolder();
+    InventoryOwner getOwner();
 
     Collection<HumanEntity> getViewers();
 
@@ -79,7 +78,7 @@ public interface Inventory extends Iterable<ItemStack> {
     boolean hasPlace(Material material);
 
 
-    void setHolder(InventoryHolder holder);
+    void setOwner(InventoryOwner holder);
 
     void setName(String name);
 

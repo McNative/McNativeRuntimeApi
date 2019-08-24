@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 24.08.19, 12:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
  * under the License.
  */
 
-package org.mcnative.service.world;
+package org.mcnative.service.location;
+
+import org.mcnative.service.world.World;
 
 public interface Point {
 
@@ -32,6 +34,22 @@ public interface Point {
     void setY(double x);
 
     void setZ(double x);
+
+    Point calculateMiddle(Point location);
+
+    double distance(Point location);
+
+    double distanceSquared(Point location);
+
+
+    void add(Point location);
+
+    void subtract(Point location);
+
+    void multiply(Point multiplier);
+
+    void divide(Point divider);
+
 
     Location toLocation(World world);
 

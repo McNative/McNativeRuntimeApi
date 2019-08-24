@@ -39,7 +39,7 @@ public interface ProxyService extends McNative {
 
     MinecraftServer registerServer(String name, InetSocketAddress address);
 
-    //MinecraftServer registerServer(MinecraftServer server);//Register custom server?
+    MinecraftServer registerServer(MinecraftServer server);
 
 
     void unregisterServer(String name);

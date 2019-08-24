@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:39
+ * @since 24.08.19, 16:40
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,43 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living;
+package org.mcnative.service.world.construction;
 
-import org.mcnative.service.entity.Damageable;
-import org.mcnative.service.entity.Entity;
 import org.mcnative.service.location.Location;
+import org.mcnative.service.location.Point;
+import org.mcnative.service.world.block.BlockDirection;
+import org.mcnative.service.world.region.Region;
 
-public interface LivingEntity extends Entity,Damageable {
+import java.util.Collection;
 
-    double getEyeHeight();
+//With packets?
+public interface ConstructionObject {
 
-    Location getEyeLocation();
+    String getName(String name);
 
+    void setName(String name);
+
+
+    Location getLocation();
+
+    void place(Point location);
+
+    boolean isPlaced();
+
+    void remove();
+
+
+    Collection<VirtualBlock> getBlocks();
+
+
+    void move(BlockDirection direction);
+
+
+    static ConstructionObject createObjectOf(Point pointA, Point pointB){
+        return null;
+    }
+
+    static ConstructionObject createObjectOf(Region region){
+        return null;
+    }
 }

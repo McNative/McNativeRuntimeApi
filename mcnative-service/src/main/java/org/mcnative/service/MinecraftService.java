@@ -21,36 +21,22 @@ package org.mcnative.service;
 
 import org.mcnative.common.McNative;
 import org.mcnative.service.world.World;
+import org.mcnative.service.world.WorldCreator;
 
 public interface MinecraftService extends McNative {
-
-    /*
-    Inventory
-        GUI
-        Animation
-    Recipe
-    Enchantment
-    Material
-    Scoreboard
-        Tablist
-
-    Entity
-
-    World
-        Generation
-        Biom
-
-    Boss
-    Event
-
-     */
-
 
     ObjectCreator getObjectCreator();
 
     World getDefaultWorld();
 
     World getWorld(String name);
+
+    World loadWorld(String name);
+
+    void unloadWorld(World world);
+
+    World createWorld(WorldCreator creator);
+
 
     static MinecraftService getInstance(){
         return (MinecraftService) McNative.getInstance();

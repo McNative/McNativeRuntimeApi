@@ -20,15 +20,19 @@
 package org.mcnative.service.world.region;
 
 import org.mcnative.service.entity.living.player.Player;
-import org.mcnative.service.world.Location;
-import org.mcnative.service.world.Point;
+import org.mcnative.service.location.Location;
+import org.mcnative.service.location.Point;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldSequence;
 import org.mcnative.service.world.block.Block;
 
-public interface Region extends WorldSequence {
+import java.util.UUID;
+
+public interface Region extends WorldSequence,Iterable<Block> {
 
     String getName();
+
+    UUID getUniqueId();
 
     World getWorld();
 
@@ -58,5 +62,12 @@ public interface Region extends WorldSequence {
 
     void setPointB(Point location);
 
+    static Region newRegion(String name){
+        return null;
+    }
+
+    static Region newRegion(String name,Point pointA, Point pointB){
+        return null;
+    }
 
 }

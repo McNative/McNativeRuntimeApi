@@ -19,22 +19,53 @@
 
 package org.mcnative.service.world;
 
+import org.mcnative.service.location.Location;
+import org.mcnative.service.location.Point;
+
+import java.io.File;
 import java.util.Collection;
+import java.util.UUID;
 
 public interface World extends WorldSequence{
 
     //WorldSettings?
 
+    String getName();
+
+    UUID getUniqueId();
+
     long getSeed();
 
-    WorldBorder getBorder();
+    WorldEnvironment getEnvironment();
 
-    int getMaximumHeight();
+    WorldBorder getBorder();
 
 
     Location getSpawnLocation();
 
     void setSpawnLocation(Location spawnLocation);
+
+
+    boolean isLoaded();
+
+    void load();
+
+    void unload();
+
+
+    Chunk getChunk(int x, int y, int z);
+
+    Chunk getChunk(Point location);
+
+    Collection<Chunk> getLoadedChunks();
+
+    Collection<Chunk> getForceLoadedChunks();
+
+    Chunk loadChunk(int x, int y);
+
+    Chunk loadChunk(Point location);
+
+    Chunk loadChunk(Chunk chunk);
 
 
     long getTime();
@@ -55,59 +86,20 @@ public interface World extends WorldSequence{
     void setThundering(boolean thundering);
 
 
-    Chunk getChunk(int x, int y, int z);
+    int getThunderDuration();
 
-    Chunk getChunk(Point location);
+    void setThunderDuration(int duration);
 
-    Collection<Chunk> getLoadedChunks();
+    int getWeatherDuration();
 
-    boolean isChunkInUse(int x, int z);
-
-    boolean isChunkGenerated(int x, int z);
+    void setWeatherDuration(int duration);
 
 
-    Biome getBiom(int x, int y);
+    boolean isAutoSave();
 
-    Biome getBiom(Point point);
-
-    void setBiom(int x, int y,Biome biome);
-
-    void setBiom(Point point,Biome biome);
-
-
-    void loadChunk(int x, int y);
-
-    void loadChunk(Point location);
-
-    void loadChunk(Chunk chunk);
-
-
-    void unloadChunk(int x, int y);
-
-    void unloadChunk(Point location);
-
-    void unloadChunk(Chunk chunk);
-
-    void tryUnloadChunk(int x, int y);
-
-    void tryUnloadChunk(Point location);
-
-    void tryUnloadChunk(Chunk chunk);
-
-
-    void regenerateChunk(int x, int y);
-
-    void regenerateChunk(Point point);
-
-    void regenerateChunk(Chunk chunk);
-
-
-    void refreshChunk(int x, int y);
-
-    void refreshChunk(Point point);
-
-    void refreshChunk(Chunk chunk);
-
+    void setAutoSave(boolean autoSave);
 
     void save();
+
+    File getFolder();
 }

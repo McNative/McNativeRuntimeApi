@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 24.08.19, 17:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.anvil;
+package org.mcnative.service.world;
 
-public class AnvilSlot {
-
-    public static final int INPUT_LEFT = 0;
-
-    public static final int INPUT_RIGHT = 1;
-
-    public static final int OUTPUT = 2;
-
+public interface WorldCreator {
 }

@@ -19,7 +19,9 @@
 
 package org.mcnative.service.world;
 
-import org.mcnative.service.world.block.Block;
+import org.mcnative.service.location.Location;
+import org.mcnative.service.location.LocationAble;
+import org.mcnative.service.location.Point;
 
 public interface WorldBorder {
 

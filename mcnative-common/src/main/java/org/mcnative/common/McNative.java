@@ -120,6 +120,15 @@ public interface McNative {
     void setPingResponse(ServerPingResponse ping);
 
 
+    Collection<MinecraftPlayer> getWhitelist();
+
+    Collection<MinecraftPlayer> getBanList();
+
+    Collection<MinecraftPlayer> getMuteList();
+
+    Collection<MinecraftPlayer> getOperators();
+
+
     void shutdown();
 
     void restart();

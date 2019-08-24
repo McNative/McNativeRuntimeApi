@@ -19,17 +19,51 @@
 
 package org.mcnative.service.world.block;
 
+import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.location.Offset;
 import org.mcnative.service.material.Material;
+import org.mcnative.service.world.Biome;
 import org.mcnative.service.world.Chunk;
-import org.mcnative.service.world.Location;
+import org.mcnative.service.location.Point;
+import org.mcnative.service.world.World;
+import org.mcnative.service.world.block.data.BlockData;
+
+import java.util.Collection;
 
 public interface Block {
 
+    World getWorld();
+
+    Point getLocation();
+
+
     Material getMaterial();
 
-    Location getLocation();
+    void setMaterial(Material material);
+
+    boolean isEmpty();
+
+    boolean isLiquid();
+
+    boolean isPassable();
+
+
+    BlockData getData();
+
+    void setData(BlockData data);
+
 
     Chunk getChunk();
+
+    Biome getBiome();
+
+    void setBiom(Biome biome);
+
+
+    double getTemperature();
+
+    double getHumidity();
+
 
     byte getLightLevel();
 
@@ -37,4 +71,37 @@ public interface Block {
 
     byte getLightFromBlocks();
 
+
+    Block getRelativeBlock(Offset offset);
+
+    Block getRelativeBlock(BlockDirection direction);
+
+
+    boolean isBlockPowered();
+
+    boolean isBlockIndirectlyPowered();
+
+    boolean isBlockDirectionPowered(BlockDirection direction);
+
+    boolean isBlockIndirectlyPowered(BlockDirection direction);
+
+    int getPower();
+
+    int getPower(BlockDirection direction);
+
+
+    void breakNaturally();
+
+    void breakNaturally(ItemStack tool);
+
+
+    Collection<ItemStack> getDrops();
+
+    Collection<ItemStack> getDrops(ItemStack tool);
+
+    boolean isAllowDrops();
+
+    void setAllowDrop(boolean allowDrop);
+
+    void update();
 }

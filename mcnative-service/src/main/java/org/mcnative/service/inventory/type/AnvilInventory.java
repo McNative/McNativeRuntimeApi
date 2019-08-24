@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 23.08.19, 22:06
+ * @author Davide Wietlisbach
+ * @since 24.08.19, 16:57
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,4 +19,32 @@
 
 package org.mcnative.service.inventory.type;
 
-public interface InventoryHolder {}
+import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.item.ItemStack;
+
+public interface AnvilInventory extends Inventory {
+
+    int SLOT_INPUT_LEFT = 0;
+
+    int SLOT_INPUT_RIGHT = 1;
+
+    int SLOT_OUTPUT = 2;
+
+
+    ItemStack getInputLeft();
+
+    ItemStack getInputRight();
+
+    ItemStack getOutput();
+
+    void setInputLeft(ItemStack input);
+
+    void setInputRight(ItemStack input);
+
+    void setOutput(ItemStack output);
+
+
+
+    void clearItemsOnClose(boolean clear);
+
+}

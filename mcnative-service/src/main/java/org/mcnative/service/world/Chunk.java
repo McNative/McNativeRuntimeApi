@@ -20,12 +20,39 @@
 package org.mcnative.service.world;
 
 import org.mcnative.service.material.Material;
+import org.mcnative.service.world.block.Block;
 
-public interface Chunk extends WorldSequence{
+public interface Chunk extends WorldSequence, Iterable<Block>{
 
     World getWorld();
 
+
     Biome getBiome();
+
+    void setBiom(Biome biome);
+
+
+    boolean isLoaded();
+
+    boolean isInUse();
+
+    boolean isGenerated();
+
+
+    void load();
+
+    void unload();
+
+    void tryUnload();
+
+    void refresh();
+
+    void regenerate();
+
+
+    boolean isForceLoad();
+
+    void setForceLoad(boolean forceLoad);
 
 
     void fill(Material material);
@@ -36,6 +63,5 @@ public interface Chunk extends WorldSequence{
 
     void clear();
 
-    void regenerate();
 
 }

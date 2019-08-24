@@ -19,10 +19,9 @@
 
 package org.mcnative.service.entity;
 
-import org.mcnative.service.world.Location;
+import org.mcnative.service.location.Location;
 import org.mcnative.service.world.World;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 

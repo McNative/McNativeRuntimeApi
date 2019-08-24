@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 24.08.19, 17:16
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,37 +17,6 @@
  * under the License.
  */
 
-package org.mcnative.service.world;
+package org.mcnative.service.inventory;
 
-public interface Location extends Point{
-
-    float getPitch();
-
-    float getYaw();
-
-    World getWorld();
-
-    Chunk getChunk();
-
-    Location calculateMiddle(Location location);
-
-    double distance(Location location);
-
-    double distanceSquared(Location location);
-
-    void setPitch(float pitch);
-
-    void setYaw(float yaw);
-
-    void setWorld(World world);
-
-    void add(Location location);
-
-    void subtract(Location location);
-
-    void multiply(Location multiplier);
-
-    void divide(Location divider);
-
-    Point toPoint();
-}
+public interface InventoryOwner {}

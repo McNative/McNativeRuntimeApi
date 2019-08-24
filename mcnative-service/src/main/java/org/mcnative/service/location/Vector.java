@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:39
+ * @since 24.08.19, 12:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,8 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living;
+package org.mcnative.service.location;
 
-import org.mcnative.service.entity.Damageable;
-import org.mcnative.service.entity.Entity;
-import org.mcnative.service.location.Location;
-
-public interface LivingEntity extends Entity,Damageable {
-
-    double getEyeHeight();
-
-    Location getEyeLocation();
-
+//Vector, point or both?
+public class Vector {
 }
