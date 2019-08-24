@@ -1,3 +1,9 @@
+versions:
+    main: 45
+    joinable:
+        - 40
+        - 50
+    edition: 'JAVA / BEDROCK / BOTH'
 serverInfo:
     enabled: false
     description:

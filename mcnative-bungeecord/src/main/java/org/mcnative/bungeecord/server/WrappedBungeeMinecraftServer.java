@@ -25,6 +25,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.server.MinecraftServer;
+import org.mcnative.proxy.server.MinecraftServerType;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,71 +34,126 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class WrappedBungeeMinecraftServer implements MinecraftServer, ServerInfo {
+public class WrappedBungeeMinecraftServer implements MinecraftServer {
 
-    private final ServerInfo info;
+    private final ServerInfo original;
+
+    private String permission;
+    private MinecraftServerType type;
 
     public WrappedBungeeMinecraftServer(ServerInfo info) {
-        this.info = info;
+        this.original = info;
+        this.permission = info.getPermission();
+        this.type = MinecraftServerType.NORMAL;
     }
 
+    public ServerInfo getOriginalInfo(){
+        return original;
+    }
+
+    @Override
     public String getName() {
-        return info.getName();
+        return original.getName();
     }
 
+    @Override
     public String getPermission() {
-        return info.getPermission();
+        return permission;
     }
 
+    @Override
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    @Override
+    public MinecraftServerType getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(MinecraftServerType type) {
+        this.type = type;
+    }
+
+
+    //@Todo wrap
+
+    @Override
     public Collection<ProxiedPlayer> getConnectedPlayers() {
         return null;
     }
 
+    @Override
     public boolean isOnline() {
-        return false;
+        return true;
     }
 
+    @Override
     public ServerPingResponse ping() {
         return null;
     }
 
+    @Override
     public CompletableFuture<ServerPingResponse> pingAsync() {
         return null;
     }
 
+    @Override
     public InetSocketAddress getAddress() {
-        return info.getAddress();
+        return null;
     }
 
+    @Override
     public boolean isConnected() {
         return false;
     }
 
+    @Override
     public void disconnect(String message) {
 
     }
 
+    @Override
     public void disconnect(TextComponent... reason) {
 
     }
 
+    @Override
     public void sendPacket(MinecraftPacket packet) {
 
     }
 
+    @Override
     public void sendPacketAsync(MinecraftPacket packet) {
 
     }
 
+    @Override
     public void sendData(String channel, byte[] output) {
-        this.info.sendData(channel, output);
+
     }
 
+    @Override
     public InputStream sendDataQuery(String channel, byte[] output) {
         return null;
     }
 
+    @Override
     public InputStream sendDataQuery(String channel, Consumer<OutputStream> output) {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if(object == this || original.equals(object)) return true;
+        else if(object instanceof MinecraftServer){
+            return ((MinecraftServer) object).getName().equalsIgnoreCase(original.getName())
+                    && ((MinecraftServer) object).getAddress().equals(original.getAddress());
+        }else if(object instanceof ServerInfo){
+            return ((ServerInfo) object).getName().equalsIgnoreCase(((ServerInfo) object).getName())
+                    && ((ServerInfo) object).getAddress().equals(original.getAddress());
+        }
+        return false;
     }
 }

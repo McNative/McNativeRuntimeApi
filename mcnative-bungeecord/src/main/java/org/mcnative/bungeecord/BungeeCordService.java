@@ -23,6 +23,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.prematic.libraries.event.EventManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
@@ -30,6 +31,7 @@ import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.server.BungeeMinecraftServer;
+import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
@@ -49,15 +51,19 @@ import org.mcnative.proxy.server.FallbackHandler;
 import org.mcnative.proxy.server.MinecraftServer;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
 public class BungeeCordService implements ProxyService {
 
-    private BungeeCordPlatform platform;
+    private final BungeeCordPlatform platform;
+    private final PrematicLogger logger;
+    private final TaskScheduler scheduler;
 
-    private Collection<PluginMessageListenerEntry> pluginMessageListeners;
-    private Collection<MinecraftServer> servers;
+
+    private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
+    private final Collection<MinecraftServer> servers;
 
     private ChatChannel serverChannel;
 
@@ -68,6 +74,13 @@ public class BungeeCordService implements ProxyService {
 
     private ServerPingResponse serverPingResponse;
     private Tablist tablist;
+
+    public BungeeCordService() {
+        this.scheduler = new SimpleTaskScheduler();
+
+        this.pluginMessageListeners = new ArrayList<>();
+        this.servers = new ArrayList<>();
+    }
 
     @Override
     public String getServiceName() {
@@ -81,7 +94,7 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public PrematicLogger getLogger() {
-        return null;
+        return logger;
     }
 
     @Override
@@ -91,7 +104,7 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public TaskScheduler getScheduler() {
-        return null;
+        return scheduler;
     }
 
     @Override
@@ -189,22 +202,36 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public MinecraftServer getServer(String name) {
-        return Iterators.findOne(servers, server -> server.getName().equalsIgnoreCase(name));
+        MinecraftServer result = Iterators.findOne(servers, server -> server.getName().equalsIgnoreCase(name));
+        return result instanceof WrappedMcNativeMinecraftServer?((WrappedMcNativeMinecraftServer) result).getOriginalServer():result;
     }
 
     @Override
     public MinecraftServer getServer(InetSocketAddress address) {
-        return Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
+        MinecraftServer result = Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
+        return result instanceof WrappedMcNativeMinecraftServer?((WrappedMcNativeMinecraftServer) result).getOriginalServer():result;
     }
 
     @Override
     public MinecraftServer registerServer(String name, InetSocketAddress address) {
-        if(Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name) || server.getAddress().equals(address)) != null){
-            throw new IllegalArgumentException("A server with the "+name+" or address "+address+" is already registered");
-        }
+        validateServer(name,address);
         MinecraftServer server = new BungeeMinecraftServer(name, address);
         this.servers.add(server);
         return server;
+    }
+
+    @Override
+    public MinecraftServer registerServer(MinecraftServer server) {
+        validateServer(server.getName(),server.getAddress());
+        MinecraftServer wrappedServer = new WrappedMcNativeMinecraftServer(server);
+        this.servers.add(wrappedServer);
+        return wrappedServer;
+    }
+
+    private void validateServer(String name, InetSocketAddress address){
+        if(Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name) || server.getAddress().equals(address)) != null){
+            throw new IllegalArgumentException("A server with the "+name+" or address "+address+" is already registered");
+        }
     }
 
     @Override
@@ -319,6 +346,7 @@ public class BungeeCordService implements ProxyService {
         PluginMessageListenerEntry entry = Iterators.removeOne(this.pluginMessageListeners, entry1 -> entry1.owner.equals(owner));
         ProxyServer.getInstance().unregisterChannel(entry.name);
     }
+
 
     @Override
     public void shutdown() {

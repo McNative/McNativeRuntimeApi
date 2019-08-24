@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 18:26
+ * @since 24.08.19, 17:27
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,19 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal;
+package org.mcnative.proxy;
 
-public class sdf {
+import net.prematic.libraries.document.annotations.DocumentFile;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+@DocumentFile(source = "mcnative.",type = "YAML",loadAll = true,appendMissing = true)
+public class McNativeProxyConfiguration {
+
+    public static boolean WHITELIST_ENABLED = false;
+    public static String WHITELIST_MESSAGE = "&6You are not whitelisted on this server.";
+    public static String WHITELIST_PERMISSION = "mcnative.whitelist.join";
+    public static Collection<String> WHITELIST_PLAYERS = Arrays.asList("Dkrieger","cb7f0812-1fbb-4715-976e-a81e52be4b67");
+
 }

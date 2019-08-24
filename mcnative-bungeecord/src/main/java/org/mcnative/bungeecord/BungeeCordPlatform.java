@@ -22,9 +22,11 @@ package org.mcnative.bungeecord;
 import net.md_5.bungee.api.ProxyServer;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public class BungeeCordPlatform implements MinecraftPlatform {
 
@@ -54,7 +56,9 @@ public class BungeeCordPlatform implements MinecraftPlatform {
     }
 
     @Override
-    public ProtocolCheck check() {
-        return null;
+    public void check(Consumer<ProtocolCheck> checker) {
+        ProtocolCheck check = new DefaultProtocolChecker();
+        checker.accept(check);
+        check.process(getProtocolVersion());
     }
 }

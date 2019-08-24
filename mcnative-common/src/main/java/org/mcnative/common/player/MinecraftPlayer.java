@@ -24,11 +24,13 @@ import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public interface MinecraftPlayer extends CommandSender, ServerPingResponse.PlayerInfo {
 
@@ -117,4 +119,6 @@ public interface MinecraftPlayer extends CommandSender, ServerPingResponse.Playe
     void mute(String reason, long time, TimeUnit unit);
 
     void unmute();
+
+    void check(Consumer<ProtocolCheck> checker);
 }

@@ -43,4 +43,6 @@ public interface ProtocolCheck {
 
     ProtocolCheck orElse(Consumer<MinecraftProtocolVersion> execute);
 
+    void process(MinecraftProtocolVersion currentVersion);
+
 }

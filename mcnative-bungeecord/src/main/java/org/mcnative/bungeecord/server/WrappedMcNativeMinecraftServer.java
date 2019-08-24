@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 22:19
+ * @since 24.08.19, 21:08
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,147 +34,155 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class BungeeMinecraftServer implements MinecraftServer, ServerInfo {
+public class WrappedMcNativeMinecraftServer implements MinecraftServer, ServerInfo {
 
-    private final String name;
-    private final InetSocketAddress address;
+    private final MinecraftServer original;
 
-    private String permission;
-    private MinecraftServerType type;
-
-    public BungeeMinecraftServer(String name, InetSocketAddress address) {
-        this.name = name;
-        this.address = address;
+    public WrappedMcNativeMinecraftServer(MinecraftServer original) {
+        this.original = original;
     }
 
-    @Override
-    public Collection<ProxiedPlayer> getPlayers() {
-        return null;
-    }
-
-    @Override
-    public String getMotd() {
-        return null;
-    }
-
-    @Override
-    public boolean isRestricted() {
-        return permission != null;
-    }
-
-    @Override
-    public boolean canAccess(CommandSender sender) {
-        return sender.hasPermission(permission);
-    }
-
-    @Override
-    public boolean sendData(String channel, byte[] data, boolean queue) {
-        return false;
-    }
-
-    @Override
-    public void ping(Callback<ServerPing> callback) {
-
+    public MinecraftServer getOriginalServer() {
+        return original;
     }
 
     @Override
     public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getPermission() {
-        return permission;
-    }
-
-    @Override
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    @Override
-    public MinecraftServerType getType() {
-        return type;
-    }
-
-    @Override
-    public void setType(MinecraftServerType type) {
-        this.type = type;
-    }
-
-    @Override
-    public Collection<org.mcnative.proxy.ProxiedPlayer> getConnectedPlayers() {
-        return null;
-    }
-
-    @Override
-    public boolean isOnline() {
-        return false;
-    }
-
-    @Override
-    public ServerPingResponse ping() {
-        return null;
-    }
-
-    @Override
-    public CompletableFuture<ServerPingResponse> pingAsync() {
-        return null;
+        return original.getName();
     }
 
     @Override
     public InetSocketAddress getAddress() {
-        return address;
+        return original.getAddress();
+    }
+
+    @Override
+    public Collection<ProxiedPlayer> getPlayers() {
+        //@Todo map players
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getMotd() {
+        return "";
+    }
+
+    @Override
+    public boolean isRestricted() {
+        return original.getPermission() != null;
+    }
+
+    @Override
+    public String getPermission() {
+        return original.getPermission();
+    }
+
+    @Override
+    public boolean canAccess(CommandSender sender) {
+        return sender.hasPermission(original.getPermission());
+    }
+
+    @Override
+    public void sendData(String channel, byte[] data) {
+        sendData(channel, data);
+    }
+
+    @Override
+    public boolean sendData(String channel, byte[] data, boolean queue) {
+        sendData(channel, data);
+        return true;
+    }
+
+    @Override
+    public void ping(Callback<ServerPing> callback) {
+        //@Todo add pinging anf wrap
+    }
+
+
+    @Override
+    public void setPermission(String permission) {
+        original.setPermission(permission);
+    }
+
+    @Override
+    public MinecraftServerType getType() {
+        return original.getType();
+    }
+
+    @Override
+    public void setType(MinecraftServerType type) {
+        original.setType(type);
+    }
+
+    @Override
+    public Collection<org.mcnative.proxy.ProxiedPlayer> getConnectedPlayers() {
+        return original.getConnectedPlayers();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return original.isOnline();
+    }
+
+    @Override
+    public ServerPingResponse ping() {
+        return original.ping();
+    }
+
+    @Override
+    public CompletableFuture<ServerPingResponse> pingAsync() {
+        return original.pingAsync();
     }
 
     @Override
     public boolean isConnected() {
-        return false;
+        return original.isConnected();
     }
 
     @Override
     public void disconnect(String message) {
-
+        original.disconnect(message);
     }
 
     @Override
     public void disconnect(TextComponent... reason) {
-
+        original.disconnect(reason);
     }
 
     @Override
     public void sendPacket(MinecraftPacket packet) {
-
+        original.sendPacket(packet);
     }
 
     @Override
     public void sendPacketAsync(MinecraftPacket packet) {
-
-    }
-
-    @Override
-    public void sendData(String channel, byte[] output) {
-
+        original.sendPacketAsync(packet);
     }
 
     @Override
     public InputStream sendDataQuery(String channel, byte[] output) {
-        return null;
+        return original.sendDataQuery(channel, output);
     }
 
     @Override
     public InputStream sendDataQuery(String channel, Consumer<OutputStream> output) {
-        return null;
+        return original.sendDataQuery(channel, output);
     }
 
     @Override
     public boolean equals(Object object) {
-        if(object == this) return true;
-        return object instanceof MinecraftServer
-                && ((MinecraftServer) object).getName().equalsIgnoreCase(name)
-                && ((MinecraftServer) object).getAddress().equals(address);
+        if(object == this || original == object || original.equals(object)) return true;
+        else if(object instanceof MinecraftServer){
+            return ((MinecraftServer) object).getName().equalsIgnoreCase(original.getName())
+                    && ((MinecraftServer) object).getAddress().equals(original.getAddress());
+        }else if(object instanceof ServerInfo){
+            return ((ServerInfo) object).getName().equalsIgnoreCase(((ServerInfo) object).getName())
+                    && ((ServerInfo) object).getAddress().equals(original.getAddress());
+        }
+        return false;
     }
 }

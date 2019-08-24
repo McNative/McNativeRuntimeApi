@@ -19,7 +19,13 @@
 
 package org.mcnative.bungeecord.player;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerConnectRequest;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.document.Document;
+import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
+import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
+import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.chat.ChatChannel;
@@ -33,11 +39,13 @@ import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.ServerConnectResult;
 
@@ -51,6 +59,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class BungeeProxiedPlayer implements ProxiedPlayer {
+
+    private final net.md_5.bungee.api.connection.ProxiedPlayer original;
 
     @Override
     public MinecraftServer getServer() {
@@ -69,7 +79,12 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public void connect(MinecraftServer target) {
-
+        if(target instanceof ServerInfo) original.connect((ServerConnectRequest) target);
+        else{
+            ServerInfo info = ProxyServer.getInstance().getServerInfo(target.getName());
+            if(info != null) original.connect((ServerConnectRequest) target);
+            else throw new IllegalArgumentException("The targeted server is not registered as a server.");
+        }
     }
 
     @Override
@@ -84,7 +99,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public MinecraftProtocolVersion getClientVersion() {
-        return null;
+        return MinecraftProtocolVersion.of(original.getPendingConnection().getVersion());
     }
 
     @Override
@@ -94,7 +109,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public boolean isOnlineMode() {
-        return false;
+        return original.getPendingConnection().isOnlineMode();
     }
 
     @Override
@@ -104,7 +119,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public int getPing() {
-        return 0;
+        return original.getPing();
     }
 
     @Override
@@ -392,6 +407,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
         return false;
     }
 
+
     @Override
     public boolean isWhitelisted() {
         return false;
@@ -404,96 +420,103 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public boolean isOperator() {
-        return false;
+        return McNative.getInstance().getPermissionHandler().isOperator(this);
     }
 
     @Override
     public void setOperator(boolean operator) {
-
+        McNative.getInstance().getPermissionHandler().setOperator(this,operator);
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return null;
+        return McNative.getInstance().getPermissionHandler().getPermissions();
     }
 
     @Override
     public Collection<String> getAllPermissions() {
-        return null;
+        return McNative.getInstance().getPermissionHandler().getAllPermissions();
     }
 
     @Override
     public Collection<String> getGroups() {
-        return null;
+        return McNative.getInstance().getPermissionHandler().getGroups();
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return false;
+        return McNative.getInstance().getPermissionHandler().isPermissionSet(this,permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return false;
+        return McNative.getInstance().getPermissionHandler().hasPermission(this,permission);
     }
 
     @Override
     public void addPermission(String permission) {
-
+        McNative.getInstance().getPermissionHandler().addPermission(this,permission);
     }
 
     @Override
     public void removePermission(String permission) {
-
+        McNative.getInstance().getPermissionHandler().removePermission(this,permission);
     }
 
     @Override
     public boolean isBanned() {
-        return false;
+        return McNative.getInstance().getPunishmentHandler().isBanned(this);
     }
 
     @Override
     public String getBanReason() {
-        return null;
+        return McNative.getInstance().getPunishmentHandler().getBanReason(this);
     }
 
     @Override
     public void ban(String reason) {
-
+        McNative.getInstance().getPunishmentHandler().ban(this,reason);
     }
 
     @Override
     public void ban(String reason, long time, TimeUnit unit) {
-
+        McNative.getInstance().getPunishmentHandler().ban(this,reason,time,unit);
     }
 
     @Override
     public void unban() {
-
+        McNative.getInstance().getPunishmentHandler().unban(this);
     }
 
     @Override
     public boolean isMuted() {
-        return false;
+        return McNative.getInstance().getPunishmentHandler().isMuted(this);
     }
 
     @Override
     public String getMuteReason() {
-        return null;
+        return McNative.getInstance().getPunishmentHandler().getMuteReason(this);
     }
 
     @Override
     public void mute(String reason) {
-
+        McNative.getInstance().getPunishmentHandler().mute(this,reason);
     }
 
     @Override
     public void mute(String reason, long time, TimeUnit unit) {
-
+        McNative.getInstance().getPunishmentHandler().mute(this,reason,time,unit);
     }
 
     @Override
     public void unmute() {
+        McNative.getInstance().getPunishmentHandler().unmute(this);
+    }
 
+    @Override
+    public void check(Consumer<ProtocolCheck> checker) {
+        ProtocolCheck check = new DefaultProtocolChecker();
+        checker.accept(check);
+        check.process(getClientVersion());
     }
 }

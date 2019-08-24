@@ -23,6 +23,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public interface MinecraftPlatform {
 
@@ -36,6 +37,6 @@ public interface MinecraftPlatform {
 
     boolean isProxy();
 
-    ProtocolCheck check();
+    void check(Consumer<ProtocolCheck> checker);
 
 }

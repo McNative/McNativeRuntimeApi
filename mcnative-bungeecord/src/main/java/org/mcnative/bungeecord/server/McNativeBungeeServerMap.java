@@ -21,10 +21,12 @@ package org.mcnative.bungeecord.server;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.utility.Iterators;
+import org.mcnative.common.McNative;
 import org.mcnative.proxy.server.MinecraftServer;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
 
@@ -56,18 +58,26 @@ public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
 
     @Override
     public ServerInfo get(Object key) {
-        return Iterators.mapOne(servers, server -> server.getName().equals(key), server -> server instanceof ServerInfo?(ServerInfo) server :null);
+        return Iterators.mapOne(servers, server -> server.getName().equals(key), server -> {
+            if(server instanceof WrappedBungeeMinecraftServer) return ((WrappedBungeeMinecraftServer) server).getOriginalInfo();
+            else if(server instanceof ServerInfo) return (ServerInfo) server;
+            else{
+                McNative.getInstance().getLogger().error("Invalid server object, can not get as BungeeCord ServerInfo.");
+                return null;
+            }
+        });
     }
 
     @Override
     public ServerInfo put(String key, ServerInfo value) {
-        servers.add(new WrappedBungeeMinecraftServer(value));
+        if(value instanceof MinecraftServer) servers.add((MinecraftServer) value);
+        else servers.add(new WrappedBungeeMinecraftServer(value));
         return value;
     }
 
     @Override
     public ServerInfo remove(Object key) {
-        MinecraftServer server = Iterators.remove(this.servers, server1 -> server1.getName().equals(key));
+        MinecraftServer server = Iterators.removeOne(this.servers, server1 -> server1.getName().equals(key));
         return server instanceof ServerInfo? (ServerInfo) server :null;
     }
 

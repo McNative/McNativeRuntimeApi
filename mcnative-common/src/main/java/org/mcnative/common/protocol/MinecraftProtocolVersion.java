@@ -19,6 +19,10 @@
 
 package org.mcnative.common.protocol;
 
+import net.prematic.libraries.utility.Iterators;
+
+import java.util.function.Predicate;
+
 public enum MinecraftProtocolVersion {
 
     BE_1_12(361,"1.12",MinecraftEdition.BEDROCK),
@@ -70,5 +74,10 @@ public enum MinecraftProtocolVersion {
 
     public String getName() {
         return name;
+    }
+
+    public static MinecraftProtocolVersion of(int number){
+        for (MinecraftProtocolVersion value : values()) if(value.getNumber() == number) return value;
+        throw new UnsupportedOperationException("This protocol version is not supported.");
     }
 }
