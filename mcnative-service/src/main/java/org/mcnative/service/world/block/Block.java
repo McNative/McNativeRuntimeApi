@@ -21,10 +21,10 @@ package org.mcnative.service.world.block;
 
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Offset;
+import org.mcnative.service.location.Point;
 import org.mcnative.service.material.Material;
 import org.mcnative.service.world.Biome;
 import org.mcnative.service.world.Chunk;
-import org.mcnative.service.location.Point;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.block.data.BlockData;
 

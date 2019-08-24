@@ -21,7 +21,6 @@ package org.mcnative.common.event.player;
 
 import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
 
 public interface MinecraftPlayerEvent extends MinecraftEvent {
 

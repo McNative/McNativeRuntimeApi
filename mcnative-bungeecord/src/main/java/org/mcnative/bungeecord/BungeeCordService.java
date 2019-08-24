@@ -20,7 +20,6 @@
 package org.mcnative.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
@@ -29,7 +28,6 @@ import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.server.BungeeMinecraftServer;
 import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.McNative;

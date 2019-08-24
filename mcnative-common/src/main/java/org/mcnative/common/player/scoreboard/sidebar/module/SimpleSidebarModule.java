@@ -20,7 +20,6 @@
 package org.mcnative.common.player.scoreboard.sidebar.module;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.scoreboard.sidebar.SidebarEntry;
 
 public class SimpleSidebarModule extends AbstractSidebarModule{

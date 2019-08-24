@@ -20,8 +20,8 @@
 package org.mcnative.common;
 
 import net.prematic.libraries.utility.io.IORuntimeException;
-import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.text.TextComponent;
 
 import java.io.IOException;
 import java.io.InputStream;

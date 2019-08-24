@@ -21,8 +21,6 @@ package org.mcnative.common.text;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.event.ClickAction;
-import org.mcnative.common.text.event.HoverAction;
-import org.mcnative.common.text.event.TextEvent;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 import org.mcnative.common.text.variable.KeyComponent;

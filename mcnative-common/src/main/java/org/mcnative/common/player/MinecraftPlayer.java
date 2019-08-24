@@ -27,7 +27,6 @@ import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

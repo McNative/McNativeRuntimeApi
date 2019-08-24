@@ -20,9 +20,6 @@
 package org.mcnative.common.player.scoreboard.deprecated;
 
 import net.prematic.libraries.utility.annonations.NotNull;
-import org.mcnative.common.player.scoreboard.deprecated.DisplayMode;
-import org.mcnative.common.player.scoreboard.deprecated.Score;
-import org.mcnative.common.player.scoreboard.deprecated.Scoreboard;
 
 import java.util.Collection;
 

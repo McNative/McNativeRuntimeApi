@@ -23,8 +23,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.document.Document;
-import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
-import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
@@ -45,7 +43,6 @@ import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
-import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.ServerConnectResult;
 

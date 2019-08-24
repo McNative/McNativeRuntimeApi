@@ -19,7 +19,6 @@
 
 package org.mcnative.common.player.scoreboard.deprecated;
 
-import org.mcnative.common.player.scoreboard.deprecated.Scoreboard;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.JEProtocolSupport;
 import org.mcnative.common.text.format.TextColor;

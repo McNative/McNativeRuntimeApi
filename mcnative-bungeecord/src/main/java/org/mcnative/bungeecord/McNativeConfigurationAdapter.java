@@ -25,7 +25,6 @@ import net.md_5.bungee.api.config.ServerInfo;
 import org.mcnative.bungeecord.server.McNativeBungeeServerMap;
 import org.mcnative.proxy.server.MinecraftServer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 

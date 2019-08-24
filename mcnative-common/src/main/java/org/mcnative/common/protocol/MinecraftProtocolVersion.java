@@ -19,10 +19,6 @@
 
 package org.mcnative.common.protocol;
 
-import net.prematic.libraries.utility.Iterators;
-
-import java.util.function.Predicate;
-
 public enum MinecraftProtocolVersion {
 
     BE_1_12(361,"1.12",MinecraftEdition.BEDROCK),

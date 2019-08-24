@@ -19,10 +19,10 @@
 
 package org.mcnative.wrapper.bukkit;
 
-import org.mcnative.wrapper.loader.McNativeLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.wrapper.loader.McNativeLoader;
 
 import java.io.File;
 

@@ -19,8 +19,6 @@
 
 package org.mcnative.common.text.variable;
 
-import net.prematic.libraries.utility.interfaces.Destroyable;
-
 public class Variable {
 
     private final String name;

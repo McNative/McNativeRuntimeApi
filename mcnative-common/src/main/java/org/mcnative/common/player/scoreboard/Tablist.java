@@ -19,10 +19,9 @@
 
 package org.mcnative.common.player.scoreboard;
 
+import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.text.MessageComponent;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
 

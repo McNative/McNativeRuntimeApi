@@ -24,7 +24,6 @@ import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.Tablist;
-import org.mcnative.common.player.scoreboard.deprecated.Scoreboard;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;

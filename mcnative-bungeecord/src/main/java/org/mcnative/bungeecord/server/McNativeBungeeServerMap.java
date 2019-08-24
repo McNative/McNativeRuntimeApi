@@ -24,9 +24,11 @@ import net.prematic.libraries.utility.Iterators;
 import org.mcnative.common.McNative;
 import org.mcnative.proxy.server.MinecraftServer;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
 

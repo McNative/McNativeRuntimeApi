@@ -21,8 +21,6 @@ package org.mcnative.common.text.variable;
 
 
 import org.mcnative.common.text.AbstractChatComponent;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.text.format.MessageFormatComponent;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 

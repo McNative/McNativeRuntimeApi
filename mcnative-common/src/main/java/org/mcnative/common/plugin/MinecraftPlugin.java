@@ -20,8 +20,8 @@
 package org.mcnative.common.plugin;
 
 import net.prematic.libraries.plugin.Plugin;
-import org.mcnative.common.McNative;
 import org.mcnative.common.Configuration;
+import org.mcnative.common.McNative;
 
 import java.io.File;
 
