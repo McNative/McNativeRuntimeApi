@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 25.08.19, 11:24
+ * @since 24.08.19, 12:32
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,15 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.recipe;
+package org.mcnative.service.inventory.recipe.choice;
 
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface Recipe {
+import java.util.Collection;
+import java.util.function.Predicate;
 
-    ItemStack getResult();
+public interface RecipeChoice extends Predicate<ItemStack> {
+
+    @Override
+    boolean test(ItemStack itemStack);
 }

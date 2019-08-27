@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 25.08.19, 11:24
+ * @since 24.08.19, 12:48
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,30 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.recipe;
+package org.mcnative.service.inventory.recipe.choice;
 
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface Recipe {
+import java.util.Arrays;
+import java.util.Collection;
 
-    ItemStack getResult();
+public class ItemStackRecipeChoice implements RecipeChoice {
+
+    private final Collection<ItemStack> choices;
+
+    public ItemStackRecipeChoice(Collection<ItemStack> choices) {
+        this.choices = choices;
+    }
+
+    public ItemStackRecipeChoice(ItemStack... choices) {
+        this(Arrays.asList(choices));
+    }
+
+    @Override
+    public boolean test(ItemStack itemStack) {
+        for (ItemStack choice : this.choices) {
+            if(!choice.equals(itemStack)) return false;
+        }
+        return true;
+    }
 }

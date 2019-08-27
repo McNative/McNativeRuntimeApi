@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 25.08.19, 11:24
+ * @since 25.08.19, 12:38
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.recipe;
+package org.mcnative.service.inventory.recipe.type;
 
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.recipe.choice.RecipeChoice;
 
-public interface Recipe {
+public class SmokingRecipe extends CookingRecipe {
 
-    ItemStack getResult();
+    public SmokingRecipe(String namespace, String key, String group, ItemStack result, RecipeChoice ingredient, float experience, int cookingTime) {
+        super(namespace, key, group, result, ingredient, experience, cookingTime);
+    }
 }
