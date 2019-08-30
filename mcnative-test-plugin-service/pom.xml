@@ -31,6 +31,52 @@
     <artifactId>mcnative-test-plugin-service</artifactId>
     <version>1.0.0</version>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mcnative</groupId>
+                <artifactId>mcnative-buildtool-maven</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>McNative</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.0.0</version>
+                    <manifest>
+                        <name>TestPlugin</name>
+                        <category>Testing</category>
+                        <version>1.0.0</version>
+                        <main>org.mcnative.testplugin.service.TestPlugin</main>
+                        <description>Demo and test plugin</description>
+                        <website>https://mcnative.prematic.net</website>
+                        <author>Davide Wietlisbach</author>
+
+                        <depends>
+                            <depend>DKBans</depend>
+                            <depend>DKCoins</depend>
+                        </depends>
+                    </manifest>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
+
     <dependencies>
 
         <!-- Internal project dependencies -->

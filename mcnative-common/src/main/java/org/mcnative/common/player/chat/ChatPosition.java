@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 25.08.19, 14:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,25 @@
  * under the License.
  */
 
-package org.mcnative.testplugin.service.listener;
+package org.mcnative.common.player.chat;
 
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
-import net.prematic.libraries.event.Listener;
-import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.MinecraftPlayerLoginEvent;
+public class ChatPosition {
 
-public class PlayerLoginListener {
+    private ObjectOwner owner;
+    private String name;
+    private byte id;
 
-    @Listener
-    public void onLogin(MinecraftPlayerLoginEvent event){
-        event.getOnlinePlayer().sendMessage("Welcome on a "+ McNative.getInstance().getPlatform().getName()+" server.");
+    public ObjectOwner getOwner() {
+        return owner;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public byte getId() {
+        return id;
+    }
 }

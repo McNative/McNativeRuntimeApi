@@ -2,7 +2,7 @@ name: 'McNative-Test-Plugin'
 category: 'Testing'
 uniqueId: 'UniqueId'
 version: '1.0.0'
-main: 'net.prematic.mcnative.testplugin.service.TestPlugin'
+main: 'org.mcnative.testplugin.service.TestPlugin'
 description: 'Demo and test plugin'
 website: 'https://mcnative.prematic.net'
 author: 'Davide Wietlisbach'
@@ -13,3 +13,6 @@ authors: ["",""]
 depends: ['DKCoins', 'DKBans']
 softdepends: ['DKCoins', 'DKBans']
 loadbefore: ['McNative']
+
+
+enviromentType: 'PROXY / SERVICE'

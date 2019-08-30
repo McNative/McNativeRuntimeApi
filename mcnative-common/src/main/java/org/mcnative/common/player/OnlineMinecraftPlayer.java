@@ -39,6 +39,7 @@ import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 
 public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnection {
@@ -152,7 +153,7 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
 
 
 
-    ProtocolCheck check();
+    void check(Consumer<ProtocolCheck> checker);
 
     /*
         Xp

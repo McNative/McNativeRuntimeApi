@@ -21,12 +21,13 @@ package org.mcnative.testplugin.service;
 
 import net.prematic.libraries.plugin.lifecycle.Lifecycle;
 import net.prematic.libraries.plugin.lifecycle.LifecycleState;
+import org.mcnative.common.Configuration;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.testplugin.service.listener.PlayerLoginListener;
 
 public class TestPlugin extends MinecraftPlugin {
 
-    @Lifecycle(state= LifecycleState.BOOTSTRAP)
+    @Lifecycle(state=LifecycleState.BOOTSTRAP)
     public void onEnable(LifecycleState state){
         System.out.println("McNative plugin started");
 
@@ -34,6 +35,8 @@ public class TestPlugin extends MinecraftPlugin {
 
 
         getRuntime().getEventManager().registerListener(this,new PlayerLoginListener());
+
+        Configuration.load(Config.class);
     }
 
 }

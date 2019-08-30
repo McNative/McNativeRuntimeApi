@@ -37,9 +37,14 @@ import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PunishmentHandler;
+import org.mcnative.common.player.WhitelistHandler;
 import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.packet.MinecraftPacketListener;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.ProxiedPlayer;
@@ -78,6 +83,9 @@ public class BungeeCordService implements ProxyService {
 
         this.pluginMessageListeners = new ArrayList<>();
         this.servers = new ArrayList<>();
+
+        this.logger = null;
+        this.platform = null;
     }
 
     @Override
@@ -116,7 +124,7 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public PluginManager<McNative> getPluginManager() {
+    public PluginManager getPluginManager() {
         return null;
     }
 
@@ -161,6 +169,75 @@ public class BungeeCordService implements ProxyService {
         this.fallbackHandler = handler;
     }
 
+    @Override
+    public WhitelistHandler getWhitelistHandler() {
+        return null;
+    }
+
+    @Override
+    public void setWhitelistHandler(WhitelistHandler handler) {
+
+    }
+
+    @Override
+    public PlayerDataStorageHandler getPlayerDataStorageHandler() {
+        return null;
+    }
+
+    @Override
+    public void setPlayerDataStorageHandler(PlayerDataStorageHandler handler) {
+
+    }
+
+    @Override
+    public GameProfileLoader getGameProfileLoader() {
+        return null;
+    }
+
+    @Override
+    public void setGameProfileLoader(GameProfileLoader loader) {
+
+    }
+
+    @Override
+    public void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener) {
+
+    }
+
+    @Override
+    public void registerOutgoingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener) {
+
+    }
+
+    @Override
+    public void broadcastPacket(MinecraftPacket packet) {
+
+    }
+
+    @Override
+    public void broadcastPacket(MinecraftPacket packet, String permission) {
+
+    }
+
+    @Override
+    public Collection<MinecraftPlayer> getWhitelist() {
+        return null;
+    }
+
+    @Override
+    public Collection<MinecraftPlayer> getBanList() {
+        return null;
+    }
+
+    @Override
+    public Collection<MinecraftPlayer> getMuteList() {
+        return null;
+    }
+
+    @Override
+    public Collection<MinecraftPlayer> getOperators() {
+        return null;
+    }
 
     @Override
     public ChatChannel getServerChat() {
@@ -355,6 +432,7 @@ public class BungeeCordService implements ProxyService {
     public void restart() {
 
     }
+
 
 
     public static class PluginMessageListenerEntry {

@@ -20,7 +20,7 @@
 package org.mcnative.service.world;
 
 import org.mcnative.service.location.Location;
-import org.mcnative.service.location.Point;
+import org.mcnative.service.location.Vector;
 
 import java.io.File;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public interface World extends WorldSequence{
 
     Chunk getChunk(int x, int y, int z);
 
-    Chunk getChunk(Point location);
+    Chunk getChunk(Vector location);
 
     Collection<Chunk> getLoadedChunks();
 
@@ -63,7 +63,7 @@ public interface World extends WorldSequence{
 
     Chunk loadChunk(int x, int y);
 
-    Chunk loadChunk(Point location);
+    Chunk loadChunk(Vector location);
 
     Chunk loadChunk(Chunk chunk);
 

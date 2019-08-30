@@ -31,7 +31,6 @@ import org.mcnative.service.inventory.item.DroppedItem;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Offset;
-import org.mcnative.service.location.Point;
 import org.mcnative.service.location.Vector;
 import org.mcnative.service.material.Material;
 import org.mcnative.service.world.block.Block;
@@ -44,24 +43,24 @@ public interface WorldSequence {
 
     Block getBlock(int x, int y, int z);
 
-    Block getBlock(Point location);
+    Block getBlock(Vector location);
 
     Block getHighestBlock(int x, int y);
 
-    Block getHighestBlock(Point location);
+    Block getHighestBlock(Vector location);
 
     Block getLowestBlock(int x, int y);
 
-    Block getLowestBlock(Point location);
+    Block getLowestBlock(Vector location);
 
 
     Biome getBiom(int x, int y);
 
-    Biome getBiom(Point point);
+    Biome getBiom(Vector point);
 
     void setBiom(int x, int y,Biome biome);
 
-    void setBiom(Point point,Biome biome);
+    void setBiom(Vector point, Biome biome);
 
 
     double getTemperature(int x, int z);
@@ -80,13 +79,13 @@ public interface WorldSequence {
     Collection<Player> getPlayers();
 
 
-    Collection<Entity> getEntitiesNear(Point point, Offset offset);
+    Collection<Entity> getEntitiesNear(Vector point, Offset offset);
 
-    Collection<Entity> getEntitiesNear(Point point, Offset offset, Predicate<Entity> filter);
+    Collection<Entity> getEntitiesNear(Vector point, Offset offset, Predicate<Entity> filter);
 
-    <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Point point, Offset offset);
+    <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset);
 
-    <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType,Point point, Offset offset, Predicate<Entity> filter);
+    <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset, Predicate<Entity> filter);
 
 
     <E extends Entity>Collection<E> getEntities(Class<E> entityClass);
@@ -94,51 +93,51 @@ public interface WorldSequence {
 
     <E extends Entity> E spawnEntity(Location location, Class<?> clazz);//entity builder ?
 
-    <E extends Entity> E spawnFreezedEntity(Location location,Class<?> clazz);
+    <E extends Entity> E spawnNoAIEntity(Location location,Class<?> clazz);
 
 
     //Return Arrow  Default: 0.6 / 12
-    void spawnArrow(Point location, Vector direction);
+    void spawnArrow(Vector location, Vector direction);
 
-    <A > A spawnArrow(Point location, Vector direction, float speed, float spread, Class<A> arrowClass);
-
-
-    void spawnParticle(Point location, Particle particle, int amount);
-
-    void spawnParticle(Point location, Particle particle, int amount, Offset offset);
+    <A > A spawnArrow(Vector location, Vector direction, float speed, float spread, Class<A> arrowClass);
 
 
+    void spawnParticle(Vector location, Particle particle, int amount);
 
-    DroppedItem dropItem(Point location, ItemStack item);
-
-    DroppedItem dropItemNaturally(Point location, ItemStack item);
+    void spawnParticle(Vector location, Particle particle, int amount, Offset offset);
 
 
-    boolean createExplosion(Point point, float power);
 
-    boolean createExplosion(Point point, float power, boolean fire);
+    DroppedItem dropItem(Vector location, ItemStack item);
 
-    boolean createExplosion(Point point, float power, boolean fire, boolean destroyBlocks);
+    DroppedItem dropItemNaturally(Vector location, ItemStack item);
 
-    boolean createExplosion(Point point, Offset offset, float power);
 
-    boolean createExplosion(Point point, Offset offset, float power, boolean fire);
+    boolean createExplosion(Vector point, float power);
 
-    boolean createExplosion(Point point, Offset offset, float power, boolean fire, boolean destroyBlocks);
+    boolean createExplosion(Vector point, float power, boolean fire);
+
+    boolean createExplosion(Vector point, float power, boolean fire, boolean destroyBlocks);
+
+    boolean createExplosion(Vector point, Offset offset, float power);
+
+    boolean createExplosion(Vector point, Offset offset, float power, boolean fire);
+
+    boolean createExplosion(Vector point, Offset offset, float power, boolean fire, boolean destroyBlocks);
 
 
     //Return lightning
-    default void strikeLightning(Point location){
+    default void strikeLightning(Vector location){
         strikeLightning(location,true);
     }
 
-    void strikeLightning(Point location, boolean damage);
+    void strikeLightning(Vector location, boolean damage);
 
 
     //return FallingBlock
-    void createFallingBlock(Point point, Material material);
+    void createFallingBlock(Vector point, Material material);
 
-    void createFallingBlock(Point point, BlockData data);
+    void createFallingBlock(Vector point, BlockData data);
 
 
     void playEffect(Location location, Effect effect);
@@ -146,12 +145,12 @@ public interface WorldSequence {
     void playEffect(Location location, Effect effect, Offset offset);
 
 
-    void playSound(Point point, Sound sound, float volume, float pitch);
+    void playSound(Vector point, Sound sound, float volume, float pitch);
 
-    void playSound(Point point, Sound sound, SoundCategory category, float volume, float pitch);
+    void playSound(Vector point, Sound sound, SoundCategory category, float volume, float pitch);
 
 
-    boolean generateTree(Point location, TreeType treeType);
+    boolean generateTree(Vector location, TreeType treeType);
 
 
     //RayTraceResult rayTraceEntities(Point start, Vector direction, double maxDistance);

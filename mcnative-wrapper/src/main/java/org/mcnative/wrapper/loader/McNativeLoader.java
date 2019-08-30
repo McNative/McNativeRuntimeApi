@@ -23,50 +23,58 @@ import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.utility.http.HttpClient;
 import net.prematic.libraries.utility.http.HttpResult;
+import net.prematic.libraries.utility.io.FileUtil;
 import net.prematic.libraries.utility.map.Pair;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collection;
 
 public class McNativeLoader {
 
     private static final String MCNATIVE_URL_VERSION = "http://localhost/mcnative/version";
+    private static final File MCNATIVE_FOLDER = new File("plugins/McNative/");
 
     public static boolean isAvailable(){
         return false;
     }
 
-    public static boolean isInstalled(){
-
-    }
-
     public static boolean isNewestVersion(){
-
+        return false;
     }
 
     public static String getVersion(){
-
+        return null;
     }
 
-    public static File install(String platformName){
-        if(isInstalled()){
-            if(isNewestVersion()){
+    public Collection<File> searchAvailableJars(){
+        return null;
+    }
 
-            }
-        }else{
+    public static void install(String platformName){
+        if(isAvailable()) return;
+        File location = downloadLatest(platformName);
+        load(platformName,location);
+    }
 
+    public static File downloadLatest(String platformName){
+        return new File("plugins/McNative/alpha.jar");
+    }
+
+    public static void load(String platformName, File location){
+        //load class
+
+        try{
+            URLClassLoader loader = new URLClassLoader(new URL[] {FileUtil.fileToUrl(location)});
+            Class<?> mcNativeClass = loader.loadClass("org.mcnative."+platformName.toLowerCase()+".McNativeLauncher");
+            ReflectionUtil.invokeMethod(mcNativeClass,"launchMcNative");
+        }catch (ClassNotFoundException exception){
+            exception.printStackTrace();
         }
-        /*
-            - Check version
-            - Download
-
-
-
-         */
-
-
-
-        return null;//Install location
     }
+
 
 
     public Pair<String,Integer> getLatestVersion(){

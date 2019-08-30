@@ -26,8 +26,8 @@ import org.mcnative.service.GameMode;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.PlayerInventory;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.type.PlayerInventory;
 import org.mcnative.service.location.Location;
 
 public interface Player extends HumanEntity,OnlineMinecraftPlayer {

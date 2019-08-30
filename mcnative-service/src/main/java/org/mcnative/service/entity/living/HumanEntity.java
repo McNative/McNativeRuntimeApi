@@ -20,8 +20,8 @@
 package org.mcnative.service.entity.living;
 
 import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.PlayerInventory;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.type.PlayerInventory;
 
 public interface HumanEntity extends LivingEntity {
 

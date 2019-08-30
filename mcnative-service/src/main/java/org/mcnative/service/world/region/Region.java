@@ -21,7 +21,7 @@ package org.mcnative.service.world.region;
 
 import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.location.Location;
-import org.mcnative.service.location.Point;
+import org.mcnative.service.location.Vector;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldSequence;
 import org.mcnative.service.world.block.Block;
@@ -36,11 +36,11 @@ public interface Region extends WorldSequence,Iterable<Block> {
 
     World getWorld();
 
-    Point getPointA();
+    Vector getPointA();
 
-    Point getPointB();
+    Vector getPointB();
 
-    Point[] getCorners();
+    Vector[] getCorners();
 
     Block[] getCornerBlocks();
 
@@ -58,15 +58,16 @@ public interface Region extends WorldSequence,Iterable<Block> {
 
     void setName(String name);
 
-    void setPointA(Point location);
+    void setPointA(Vector location);
 
-    void setPointB(Point location);
+    void setPointB(Vector location);
+
 
     static Region newRegion(String name){
         return null;
     }
 
-    static Region newRegion(String name,Point pointA, Point pointB){
+    static Region newRegion(String name, Vector pointA, Vector pointB){
         return null;
     }
 

@@ -28,16 +28,26 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>mcnative-common</module>
         <module>mcnative-proxy</module>
         <module>mcnative-service</module>
         <module>mcnative-wrapper</module>
         <module>mcnative-test-plugin-service</module>
-        <module>mcnative-buildtool-maven</module>
         <module>mcnative-bukkit</module>
         <module>mcnative-bungeecord</module>
+        <module>mcnative-buildtool-maven</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
 </project>

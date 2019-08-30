@@ -27,6 +27,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.Tablist;
@@ -43,6 +44,7 @@ import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.ServerConnectResult;
 
@@ -59,6 +61,15 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     private final net.md_5.bungee.api.connection.ProxiedPlayer original;
 
+    private final MinecraftPlayerData playerData;
+    private final GameProfile gameProfile;
+
+    public BungeeProxiedPlayer(net.md_5.bungee.api.connection.ProxiedPlayer original, MinecraftPlayerData playerData, GameProfile gameProfile) {
+        this.original = original;
+        this.playerData = playerData;
+        this.gameProfile = gameProfile;
+    }
+
     @Override
     public MinecraftServer getServer() {
         return null;
@@ -66,12 +77,12 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public MinecraftServer getDefaultConnectServer() {
-        return null;
+        return ProxyService.getInstance().getConnectHandler().getServer(this);
     }
 
     @Override
     public MinecraftServer getDefaultFallbackServer() {
-        return null;
+        return ProxyService.getInstance().getFallbackHandler().getFallbackServer(this,getServer(),null);
     }
 
     @Override
@@ -280,18 +291,13 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public ProtocolCheck check() {
-        return null;
-    }
-
-    @Override
     public InetSocketAddress getAddress() {
-        return null;
+        return original.getAddress();
     }
 
     @Override
     public boolean isConnected() {
-        return false;
+        return original.isConnected();
     }
 
     @Override
@@ -331,37 +337,37 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public String getName() {
-        return null;
+        return original.getName();
     }
 
     @Override
     public UUID getUniqueId() {
-        return null;
+        return original.getUniqueId();
     }
 
     @Override
     public long getXBoxId() {
-        return 0;
+        return playerData.getXBoxId();
     }
 
     @Override
     public long getFirstPlayed() {
-        return 0;
+        return playerData.getFirstPlayed();
     }
 
     @Override
     public long getLastPlayed() {
-        return 0;
+        return playerData.getLastPlayed();
     }
 
     @Override
     public GameProfile getGameProfile() {
-        return null;
+        return gameProfile;
     }
 
     @Override
     public Document getProperties() {
-        return null;
+        return playerData.getProperties();
     }
 
     @Override
@@ -396,23 +402,23 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public OnlineMinecraftPlayer getAsOnlinePlayer() {
-        return null;
+        return this;
     }
 
     @Override
     public boolean isOnline() {
-        return false;
+        return isConnected();
     }
 
 
     @Override
     public boolean isWhitelisted() {
-        return false;
+        return McNative.getInstance().getWhitelistHandler().isWhitelisted(this);
     }
 
     @Override
     public void setWhitelisted(boolean whitelisted) {
-
+        McNative.getInstance().getWhitelistHandler().set(this,whitelisted);
     }
 
     @Override
@@ -427,17 +433,17 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public Collection<String> getPermissions() {
-        return McNative.getInstance().getPermissionHandler().getPermissions();
+        return McNative.getInstance().getPermissionHandler().getPermissions(this);
     }
 
     @Override
     public Collection<String> getAllPermissions() {
-        return McNative.getInstance().getPermissionHandler().getAllPermissions();
+        return McNative.getInstance().getPermissionHandler().getAllPermissions(this);
     }
 
     @Override
     public Collection<String> getGroups() {
-        return McNative.getInstance().getPermissionHandler().getGroups();
+        return McNative.getInstance().getPermissionHandler().getGroups(this);
     }
 
     @Override

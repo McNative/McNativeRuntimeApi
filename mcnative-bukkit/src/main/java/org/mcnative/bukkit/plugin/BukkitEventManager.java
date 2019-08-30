@@ -44,7 +44,7 @@ public class BukkitEventManager implements PluginManager, EventManager {
     //private final EventManager eventManager;
     private final PluginManager pluginManager;
 
-    private final Map<Class<?>, List<MethodEntry>> methods;
+   // private final Map<Class<?>, List<MethodEntry>> methods;
 
     public BukkitEventManager(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
@@ -58,23 +58,22 @@ public class BukkitEventManager implements PluginManager, EventManager {
             if(method.getParameterTypes().length == 1){
                 byte priority;
                 Listener info = method.getAnnotation(Listener.class);
-                if(info != null) priority = info.priority()
+                if(info != null) priority = info.priority();
                 else{
                     EventHandler bukkitInfo = method.getAnnotation(EventHandler.class);
                     if(bukkitInfo == null) return;
                 }
 
-                List<MethodEntry> methods = this.methods.computeIfAbsent(method.getParameterTypes()[0], k -> new ArrayList<>());
-                methods.add(new MethodEntry(priority,owner,listener,method));
+               // List<MethodEntry> methods = this.methods.computeIfAbsent(method.getParameterTypes()[0], k -> new ArrayList<>());
+                //methods.add(new MethodEntry(priority,owner,listener,method));
 
                 //Sort all listeners by the priority.
-                methods.sort((o1, o2) -> o1.getPriority() >= o2.getPriority()?0:-1);
+               // methods.sort((o1, o2) -> o1.getPriority() >= o2.getPriority()?0:-1);
 
             }
         }
     }
 
-    private void add
 
     @Override
     public void unregisterListener(Object listener) {

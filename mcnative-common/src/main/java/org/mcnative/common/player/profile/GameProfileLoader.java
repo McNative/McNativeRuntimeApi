@@ -27,6 +27,12 @@ public interface GameProfileLoader {
 
     GameProfile getGameProfile(String name);
 
+
+    GameProfile getGameProfileUncached(UUID uniqueId);
+
+    GameProfile getGameProfileUncached(String name);
+
+
     void clearCache();
 
 }

@@ -21,7 +21,7 @@ package org.mcnative.service.world;
 
 import org.mcnative.service.location.Location;
 import org.mcnative.service.location.LocationAble;
-import org.mcnative.service.location.Point;
+import org.mcnative.service.location.Vector;
 
 public interface WorldBorder {
 
@@ -30,12 +30,12 @@ public interface WorldBorder {
     void setSize(long s);
 
 
-    Point getCenter();
+    Vector getCenter();
 
-    void setCenter(Point point);
+    void setCenter(Vector point);
 
 
-    Point[] getCorners();
+    Vector[] getCorners();
 
 
     boolean isInvisible();

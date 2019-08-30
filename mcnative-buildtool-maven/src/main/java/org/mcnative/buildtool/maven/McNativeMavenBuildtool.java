@@ -36,29 +36,31 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@Mojo(name="McNative", defaultPhase = LifecyclePhase.GENERATE_RESOURCES,threadSafe = true)
+@Mojo(name="McNative", defaultPhase = LifecyclePhase.GENERATE_SOURCES,threadSafe = true)
 public class McNativeMavenBuildtool extends AbstractMojo {
+
+    private static final String MCNATIVE_WRAPPER_URL = "http://localhost/mcnative/download/wrapper";
 
     @Parameter(defaultValue = "${project}")
     private MavenProject project;
 
+    @Parameter(defaultValue = "${project.groupId}")
+    private String wrapperPackage;
+
+
+    private String mcNativeWrapperVersion;
+
     private Document mcNativeYML;
+
+
+    private File mcNativeWrapper;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try{
-            Resource yml;
+            System.out.println("Hallo Hey");
 
 
-            for (Resource resource : project.getResources()) {
-                if(resource.getTargetPath().startsWith("mcnative.")){
-                    //resource.get
-                }
-            }
-
-
-            createBukkitYML();
-            createNukkitYML();
 
             FileUtils.copyDirectoryStructure(
                     new File("target/generated-resources/mcnative/"),
@@ -80,8 +82,6 @@ public class McNativeMavenBuildtool extends AbstractMojo {
         DocumentFileType.YAML.getWriter().write(new File("target/generated-resources/mcnative/nukkit.yml"),document);
     }
 
-
-
     private void createFile(String name, CharSequence content) throws Exception{
         File destination = new File("target/generated-resources/mcnative/",content.toString());
         destination.createNewFile();
@@ -91,5 +91,13 @@ public class McNativeMavenBuildtool extends AbstractMojo {
         writer.close();
     }
 
+
+    private void generateWrapper(){
+
+    }
+
+    private void downloadMcNativeWrapper(){
+
+    }
 
 }

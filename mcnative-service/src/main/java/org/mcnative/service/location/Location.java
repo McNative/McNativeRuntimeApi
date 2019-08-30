@@ -22,7 +22,7 @@ package org.mcnative.service.location;
 import org.mcnative.service.world.Chunk;
 import org.mcnative.service.world.World;
 
-public interface Location extends Point{
+public interface Location extends Vector {
 
     World getWorld();
 
@@ -38,7 +38,7 @@ public interface Location extends Point{
 
     void setWorld(World world);
 
-    Point toPoint();
+    Vector toPoint();
 
     static Location of(double x, double y, double z){
         return null;

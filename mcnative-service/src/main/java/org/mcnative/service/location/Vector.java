@@ -19,6 +19,67 @@
 
 package org.mcnative.service.location;
 
-//Vector, point or both?
-public class Vector {
+import org.mcnative.service.world.World;
+
+public interface Vector {
+
+    double getX();
+
+    double getY();
+
+    double getZ();
+
+    void setX(double x);
+
+    void setY(double x);
+
+    void setZ(double x);
+
+
+    Vector middle(Vector location);
+
+    double distance(Vector location);
+
+    double distanceSquared(Vector location);
+
+    float angle(Vector otherPoint);
+
+
+    void add(Vector location);
+
+    void subtract(Vector location);
+
+    void multiply(Vector multiplier);
+
+    void divide(Vector divider);
+
+
+    double length();
+
+    double lengthSquared();
+
+    boolean isIn(Vector min, Vector max);
+
+    boolean isOut(Vector min, Vector max);
+
+    boolean isIn(Vector original, Offset offset);
+
+    boolean isOut(Vector original, Offset offset);
+
+
+    Location toLocation(World world);
+
+
+    static Vector of(double x, double y, double z){
+        return null;
+    }
+
+    static Vector min(Vector vector1, Vector vector2) {
+        return of(Math.min(vector1.getX(), vector2.getX()), Math.min(vector1.getY(), vector2.getY()), Math.min(vector1.getZ(), vector2.getZ()));
+    }
+
+    static Vector max(Vector vector1,Vector vector2) {
+        return of(Math.max(vector1.getX(), vector2.getX()), Math.max(vector1.getY(), vector2.getY()), Math.max(vector1.getZ(), vector2.getZ()));
+    }
+
 }

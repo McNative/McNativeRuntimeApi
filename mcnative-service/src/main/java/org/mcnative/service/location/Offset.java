@@ -21,6 +21,14 @@ package org.mcnative.service.location;
 
 public class Offset {
 
+    /*
+    Radius
+
+    Offsets / 6
+
+
+     */
+
     static Offset ofRadius(int radius){
         return null;
     }
@@ -28,7 +36,6 @@ public class Offset {
     static Offset ofFlatRadius(int radius){
         return null;
     }
-
 
     static Offset ofSquare(int distance){
         return null;

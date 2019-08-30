@@ -66,6 +66,6 @@ public interface NBTTag {
     void setIntArray(String key, int[] value);
 
     static NBTTag newTag(){
-        return McNative.getInstance().getRegistry().create(NBTTag.class);
+        return null;
     }
 }

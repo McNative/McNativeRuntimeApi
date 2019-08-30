@@ -118,6 +118,4 @@ public interface MinecraftPlayer extends CommandSender, ServerPingResponse.Playe
     void mute(String reason, long time, TimeUnit unit);
 
     void unmute();
-
-    void check(Consumer<ProtocolCheck> checker);
 }

@@ -19,5 +19,14 @@
 
 package org.mcnative.common.protocol.packet;
 
-public class MinecraftPacket {
+import io.netty.buffer.ByteBuf;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
+
+public interface MinecraftPacket {
+
+    void read(MinecraftProtocolVersion version, ByteBuf buffer);
+
+    void write(MinecraftProtocolVersion version, ByteBuf buffer);
+
+
 }

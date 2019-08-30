@@ -20,6 +20,7 @@
 package org.mcnative.service.material;
 
 import org.mcnative.service.inventory.item.data.ItemData;
+import org.mcnative.service.world.block.data.BlockData;
 
 public class Material {
 

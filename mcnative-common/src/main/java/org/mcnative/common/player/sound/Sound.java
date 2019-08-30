@@ -429,6 +429,556 @@ public class Sound {
     public static final Sound ENTITY_FISHING_BOBBER_THROW = createDefault("ENTITY_FISHING_BOBBER_THROW");
     public static final Sound ENTITY_FISH_SWIM = createDefault("ENTITY_FISH_SWIM");
 
+    public static final Sound ENTITY_FOX_AGGRO = createDefault("ENTITY_FOX_AGGRO");
+    public static final Sound ENTITY_FOX_AMBIENT = createDefault("ENTITY_FOX_AMBIENT");
+    public static final Sound ENTITY_FOX_BITE = createDefault("ENTITY_FOX_BITE");
+    public static final Sound ENTITY_FOX_DEATH = createDefault("ENTITY_FOX_DEATH");
+    public static final Sound ENTITY_FOX_EAT = createDefault("ENTITY_FOX_EAT");
+    public static final Sound ENTITY_FOX_HURT = createDefault("ENTITY_FOX_HURT");
+    public static final Sound ENTITY_FOX_SCREECH = createDefault("ENTITY_FOX_SCREECH");
+    public static final Sound ENTITY_FOX_SNIFF = createDefault("ENTITY_FOX_SNIFF");
+    public static final Sound ENTITY_FOX_SPIT = createDefault("ENTITY_FOX_SPIT");
+
+    public static final Sound ENTITY_GENERIC_BIG_FALL = createDefault("ENTITY_GENERIC_BIG_FALL");
+    public static final Sound ENTITY_GENERIC_BURN = createDefault("ENTITY_GENERIC_BURN");
+    public static final Sound ENTITY_GENERIC_DEATH = createDefault("ENTITY_GENERIC_DEATH");
+    public static final Sound ENTITY_GENERIC_DRINK = createDefault("ENTITY_GENERIC_DRINK");
+    public static final Sound ENTITY_GENERIC_EAT = createDefault("ENTITY_GENERIC_EAT");
+    public static final Sound ENTITY_GENERIC_EXPLODE = createDefault("ENTITY_GENERIC_EXPLODE");
+    public static final Sound ENTITY_GENERIC_EXTINGUISH_FIRE = createDefault("ENTITY_GENERIC_EXTINGUISH_FIRE");
+    public static final Sound ENTITY_GENERIC_HURT = createDefault("ENTITY_GENERIC_HURT");
+    public static final Sound ENTITY_GENERIC_SMALL_FALL = createDefault("ENTITY_GENERIC_SMALL_FALL");
+    public static final Sound ENTITY_GENERIC_SPLASH = createDefault("ENTITY_GENERIC_SPLASH");
+    public static final Sound ENTITY_GENERIC_SWIM = createDefault("ENTITY_GENERIC_SWIM");
+
+    public static final Sound ENTITY_GHAST_AMBIENT = createDefault("ENTITY_GHAST_AMBIENT");
+    public static final Sound ENTITY_GHAST_DEATH = createDefault("ENTITY_GHAST_DEATH");
+    public static final Sound ENTITY_GHAST_HURT = createDefault("ENTITY_GHAST_HURT");
+    public static final Sound ENTITY_GHAST_SCREAM = createDefault("ENTITY_GHAST_SCREAM");
+    public static final Sound ENTITY_GHAST_SHOOT = createDefault("ENTITY_GHAST_SHOOT");
+    public static final Sound ENTITY_GHAST_WARN = createDefault("ENTITY_GHAST_WARN");
+
+    public static final Sound ENTITY_GUARDIAN_AMBIENT = createDefault("ENTITY_GUARDIAN_AMBIENT");
+    public static final Sound ENTITY_GUARDIAN_AMBIENT_LAND = createDefault("ENTITY_GUARDIAN_AMBIENT_LAND");
+    public static final Sound ENTITY_GUARDIAN_ATTACK = createDefault("ENTITY_GUARDIAN_ATTACK");
+    public static final Sound ENTITY_GUARDIAN_DEATH = createDefault("ENTITY_GUARDIAN_DEATH");
+    public static final Sound ENTITY_GUARDIAN_DEATH_LAND = createDefault("ENTITY_GUARDIAN_DEATH_LAND");
+    public static final Sound ENTITY_GUARDIAN_FLOP = createDefault("ENTITY_GUARDIAN_FLOP");
+    public static final Sound ENTITY_GUARDIAN_HURT = createDefault("ENTITY_GUARDIAN_HURT");
+    public static final Sound ENTITY_GUARDIAN_HURT_LAND = createDefault("ENTITY_GUARDIAN_HURT_LAND");
+
+    public static final Sound ENTITY_HORSE_AMBIENT = createDefault("ENTITY_HORSE_AMBIENT");
+    public static final Sound ENTITY_HORSE_ANGRY = createDefault("ENTITY_HORSE_ANGRY");
+    public static final Sound ENTITY_HORSE_ARMOR = createDefault("ENTITY_HORSE_ARMOR");
+    public static final Sound ENTITY_HORSE_BREATHE = createDefault("ENTITY_HORSE_BREATHE");
+    public static final Sound ENTITY_HORSE_DEATH = createDefault("ENTITY_HORSE_DEATH");
+    public static final Sound ENTITY_HORSE_EAT = createDefault("ENTITY_HORSE_EAT");
+    public static final Sound ENTITY_HORSE_GALLOP = createDefault("ENTITY_HORSE_GALLOP");
+    public static final Sound ENTITY_HORSE_HURT = createDefault("ENTITY_HORSE_HURT");
+    public static final Sound ENTITY_HORSE_JUMP = createDefault("ENTITY_HORSE_JUMP");
+    public static final Sound ENTITY_HORSE_LAND = createDefault("ENTITY_HORSE_LAND");
+    public static final Sound ENTITY_HORSE_SADDLE = createDefault("ENTITY_HORSE_SADDLE");
+    public static final Sound ENTITY_HORSE_STEP = createDefault("ENTITY_HORSE_STEP");
+    public static final Sound ENTITY_HORSE_STEP_WOOD = createDefault("ENTITY_HORSE_STEP_WOOD");
+
+    public static final Sound ENTITY_HOSTILE_BIG_FALL = createDefault("ENTITY_HOSTILE_BIG_FALL");
+    public static final Sound ENTITY_HOSTILE_DEATH = createDefault("ENTITY_HOSTILE_DEATH");
+    public static final Sound ENTITY_HOSTILE_HURT = createDefault("ENTITY_HOSTILE_HURT");
+    public static final Sound ENTITY_HOSTILE_SMALL_FALL = createDefault("ENTITY_HOSTILE_SMALL_FALL");
+    public static final Sound ENTITY_HOSTILE_SPLASH = createDefault("ENTITY_HOSTILE_SPLASH");
+    public static final Sound ENTITY_HOSTILE_SWIM = createDefault("ENTITY_HOSTILE_SWIM");
+
+    public static final Sound ENTITY_HUSK_AMBIENT = createDefault("ENTITY_HUSK_AMBIENT");
+    public static final Sound ENTITY_HUSK_CONVERTED_TO_ZOMBIE = createDefault("ENTITY_HUSK_CONVERTED_TO_ZOMBIE");
+    public static final Sound ENTITY_HUSK_DEATH = createDefault("ENTITY_HUSK_DEATH");
+    public static final Sound ENTITY_HUSK_HURT = createDefault("ENTITY_HUSK_HURT");
+    public static final Sound ENTITY_HUSK_STEP = createDefault("ENTITY_HUSK_STEP");
+
+    public static final Sound ENTITY_ILLUSIONER_AMBIENT = createDefault("ENTITY_ILLUSIONER_AMBIENT");
+    public static final Sound ENTITY_ILLUSIONER_CAST_SPELL = createDefault("ENTITY_ILLUSIONER_CAST_SPELL");
+    public static final Sound ENTITY_ILLUSIONER_DEATH = createDefault("ENTITY_ILLUSIONER_DEATH");
+    public static final Sound ENTITY_ILLUSIONER_HURT = createDefault("ENTITY_ILLUSIONER_HURT");
+    public static final Sound ENTITY_ILLUSIONER_MIRROR_MOVE = createDefault("ENTITY_ILLUSIONER_MIRROR_MOVE");
+    public static final Sound ENTITY_ILLUSIONER_PREPARE_BLINDNESS = createDefault("ENTITY_ILLUSIONER_PREPARE_BLINDNESS");
+    public static final Sound ENTITY_ILLUSIONER_PREPARE_MIRROR = createDefault("ENTITY_ILLUSIONER_PREPARE_MIRROR");
+
+    public static final Sound ENTITY_IRON_GOLEM_ATTACK = createDefault("ENTITY_IRON_GOLEM_ATTACK");
+    public static final Sound ENTITY_IRON_GOLEM_DEATH = createDefault("ENTITY_IRON_GOLEM_DEATH");
+    public static final Sound ENTITY_IRON_GOLEM_HURT = createDefault("ENTITY_IRON_GOLEM_HURT");
+    public static final Sound ENTITY_IRON_GOLEM_STEP = createDefault("ENTITY_IRON_GOLEM_STEP");
+
+    public static final Sound ENTITY_ITEM_BREAK = createDefault("ENTITY_ITEM_BREAK");
+    public static final Sound ENTITY_ITEM_FRAME_ADD_ITEM = createDefault("ENTITY_ITEM_FRAME_ADD_ITEM");
+    public static final Sound ENTITY_ITEM_FRAME_BREAK = createDefault("ENTITY_ITEM_FRAME_BREAK");
+    public static final Sound ENTITY_ITEM_FRAME_PLACE = createDefault("ENTITY_ITEM_FRAME_PLACE");
+    public static final Sound ENTITY_ITEM_FRAME_REMOVE_ITEM = createDefault("ENTITY_ITEM_FRAME_REMOVE_ITEM");
+    public static final Sound ENTITY_ITEM_FRAME_ROTATE_ITEM = createDefault("ENTITY_ITEM_FRAME_ROTATE_ITEM");
+    public static final Sound ENTITY_ITEM_PICKUP = createDefault("ENTITY_ITEM_PICKUP");
+
+    public static final Sound ENTITY_LEASH_KNOT_BREAK = createDefault("ENTITY_LEASH_KNOT_BREAK");
+    public static final Sound ENTITY_LEASH_KNOT_PLACE = createDefault("ENTITY_LEASH_KNOT_PLACE");
+
+    public static final Sound ENTITY_LIGHTNING_BOLT_IMPACT = createDefault("ENTITY_LIGHTNING_BOLT_IMPACT");
+    public static final Sound ENTITY_LIGHTNING_BOLT_THUNDER = createDefault("ENTITY_LIGHTNING_BOLT_THUNDER");
+    public static final Sound ENTITY_LINGERING_POTION_THROW = createDefault("ENTITY_LINGERING_POTION_THROW");
+
+    public static final Sound ENTITY_LLAMA_AMBIENT = createDefault("ENTITY_LLAMA_AMBIENT");
+    public static final Sound ENTITY_LLAMA_ANGRY = createDefault("ENTITY_LLAMA_ANGRY");
+    public static final Sound ENTITY_LLAMA_CHEST = createDefault("ENTITY_LLAMA_CHEST");
+    public static final Sound ENTITY_LLAMA_DEATH = createDefault("ENTITY_LLAMA_DEATH");
+    public static final Sound ENTITY_LLAMA_EAT = createDefault("ENTITY_LLAMA_EAT");
+    public static final Sound ENTITY_LLAMA_HURT = createDefault("ENTITY_LLAMA_HURT");
+    public static final Sound ENTITY_LLAMA_SPIT = createDefault("ENTITY_LLAMA_SPIT");
+    public static final Sound ENTITY_LLAMA_STEP = createDefault("ENTITY_LLAMA_STEP");
+    public static final Sound ENTITY_LLAMA_SWAG = createDefault("ENTITY_LLAMA_SWAG");
+
+    public static final Sound ENTITY_MAGMA_CUBE_DEATH = createDefault("ENTITY_MAGMA_CUBE_DEATH");
+    public static final Sound ENTITY_MAGMA_CUBE_DEATH_SMALL = createDefault("ENTITY_MAGMA_CUBE_DEATH_SMALL");
+    public static final Sound ENTITY_MAGMA_CUBE_HURT = createDefault("ENTITY_MAGMA_CUBE_HURT");
+    public static final Sound ENTITY_MAGMA_CUBE_HURT_SMALL = createDefault("ENTITY_MAGMA_CUBE_HURT_SMALL");
+    public static final Sound ENTITY_MAGMA_CUBE_JUMP = createDefault("ENTITY_MAGMA_CUBE_JUMP");
+    public static final Sound ENTITY_MAGMA_CUBE_SQUISH = createDefault("ENTITY_MAGMA_CUBE_SQUISH");
+    public static final Sound ENTITY_MAGMA_CUBE_SQUISH_SMALL = createDefault("ENTITY_MAGMA_CUBE_SQUISH_SMALL");
+
+    public static final Sound ENTITY_MINECART_INSIDE = createDefault("ENTITY_MINECART_INSIDE");
+    public static final Sound ENTITY_MINECART_RIDING = createDefault("ENTITY_MINECART_RIDING");
+    public static final Sound ENTITY_MOOSHROOM_CONVERT = createDefault("ENTITY_MOOSHROOM_CONVERT");
+    public static final Sound ENTITY_MOOSHROOM_EAT = createDefault("ENTITY_MOOSHROOM_EAT");
+    public static final Sound ENTITY_MOOSHROOM_MILK = createDefault("ENTITY_MOOSHROOM_MILK");
+    public static final Sound ENTITY_MOOSHROOM_SHEAR = createDefault("ENTITY_MOOSHROOM_SHEAR");
+    public static final Sound ENTITY_MOOSHROOM_SUSPICIOUS_MILK = createDefault("ENTITY_MOOSHROOM_SUSPICIOUS_MILK");
+
+    public static final Sound ENTITY_MULE_AMBIENT = createDefault("ENTITY_MULE_AMBIENT");
+    public static final Sound ENTITY_MULE_CHEST = createDefault("ENTITY_MULE_CHEST");
+    public static final Sound ENTITY_MULE_DEATH = createDefault("ENTITY_MULE_DEATH");
+    public static final Sound ENTITY_MULE_HURT = createDefault("ENTITY_MULE_HURT");
+
+    public static final Sound ENTITY_OCELOT_AMBIENT = createDefault("ENTITY_OCELOT_AMBIENT");
+    public static final Sound ENTITY_OCELOT_DEATH = createDefault("ENTITY_OCELOT_DEATH");
+    public static final Sound ENTITY_OCELOT_HURT = createDefault("ENTITY_OCELOT_HURT");
+
+    public static final Sound ENTITY_PAINTING_BREAK = createDefault("ENTITY_PAINTING_BREAK");
+    public static final Sound ENTITY_PAINTING_PLACE = createDefault("ENTITY_PAINTING_PLACE");
+
+    public static final Sound ENTITY_PANDA_AGGRESSIVE_AMBIENT = createDefault("ENTITY_PANDA_AGGRESSIVE_AMBIENT");
+    public static final Sound ENTITY_PANDA_AMBIENT = createDefault("ENTITY_PANDA_AMBIENT");
+    public static final Sound ENTITY_PANDA_BITE = createDefault("ENTITY_PANDA_BITE");
+    public static final Sound ENTITY_PANDA_CANT_BREED = createDefault("ENTITY_PANDA_CANT_BREED");
+    public static final Sound ENTITY_PANDA_DEATH = createDefault("ENTITY_PANDA_DEATH");
+    public static final Sound ENTITY_PANDA_EAT = createDefault("ENTITY_PANDA_EAT");
+    public static final Sound ENTITY_PANDA_HURT = createDefault("ENTITY_PANDA_HURT");
+    public static final Sound ENTITY_PANDA_PRE_SNEEZE = createDefault("ENTITY_PANDA_PRE_SNEEZE");
+    public static final Sound ENTITY_PANDA_SNEEZE = createDefault("ENTITY_PANDA_SNEEZE");
+    public static final Sound ENTITY_PANDA_STEP = createDefault("ENTITY_PANDA_STEP");
+    public static final Sound ENTITY_PANDA_WORRIED_AMBIENT = createDefault("ENTITY_PANDA_WORRIED_AMBIENT");
+
+    public static final Sound ENTITY_PARROT_AMBIENT = createDefault("ENTITY_PARROT_AMBIENT");
+    public static final Sound ENTITY_PARROT_DEATH = createDefault("ENTITY_PARROT_DEATH");
+    public static final Sound ENTITY_PARROT_EAT = createDefault("ENTITY_PARROT_EAT");
+    public static final Sound ENTITY_PARROT_FLY = createDefault("ENTITY_PARROT_FLY");
+    public static final Sound ENTITY_PARROT_HURT = createDefault("ENTITY_PARROT_HURT");
+    public static final Sound ENTITY_PARROT_IMITATE_BLAZE = createDefault("ENTITY_PARROT_IMITATE_BLAZE");
+    public static final Sound ENTITY_PARROT_IMITATE_CREEPER = createDefault("ENTITY_PARROT_IMITATE_CREEPER");
+    public static final Sound ENTITY_PARROT_IMITATE_DROWNED = createDefault("ENTITY_PARROT_IMITATE_DROWNED");
+    public static final Sound ENTITY_PARROT_IMITATE_ELDER_GUARDIAN = createDefault("ENTITY_PARROT_IMITATE_ELDER_GUARDIAN");
+    public static final Sound ENTITY_PARROT_IMITATE_ENDERMAN = createDefault("ENTITY_PARROT_IMITATE_ENDERMAN");
+    public static final Sound ENTITY_PARROT_IMITATE_ENDERMITE = createDefault("ENTITY_PARROT_IMITATE_ENDERMITE");
+    public static final Sound ENTITY_PARROT_IMITATE_ENDER_DRAGON = createDefault("ENTITY_PARROT_IMITATE_ENDER_DRAGON");
+    public static final Sound ENTITY_PARROT_IMITATE_EVOKER = createDefault("ENTITY_PARROT_IMITATE_EVOKER");
+    public static final Sound ENTITY_PARROT_IMITATE_GHAST = createDefault("ENTITY_PARROT_IMITATE_GHAST");
+    public static final Sound ENTITY_PARROT_IMITATE_GUARDIAN = createDefault("ENTITY_PARROT_IMITATE_GUARDIAN");
+    public static final Sound ENTITY_PARROT_IMITATE_HUSK = createDefault("ENTITY_PARROT_IMITATE_HUSK");
+    public static final Sound ENTITY_PARROT_IMITATE_ILLUSIONER = createDefault("ENTITY_PARROT_IMITATE_ILLUSIONER");
+    public static final Sound ENTITY_PARROT_IMITATE_MAGMA_CUBE = createDefault("ENTITY_PARROT_IMITATE_MAGMA_CUBE");
+    public static final Sound ENTITY_PARROT_IMITATE_PANDA = createDefault("ENTITY_PARROT_IMITATE_PANDA");
+    public static final Sound ENTITY_PARROT_IMITATE_PHANTOM = createDefault("ENTITY_PARROT_IMITATE_PHANTOM");
+    public static final Sound ENTITY_PARROT_IMITATE_PILLAGER = createDefault("ENTITY_PARROT_IMITATE_PILLAGER");
+    public static final Sound ENTITY_PARROT_IMITATE_POLAR_BEAR = createDefault("ENTITY_PARROT_IMITATE_POLAR_BEAR");
+    public static final Sound ENTITY_PARROT_IMITATE_RAVAGER = createDefault("ENTITY_PARROT_IMITATE_RAVAGER");
+    public static final Sound ENTITY_PARROT_IMITATE_SHULKER = createDefault("ENTITY_PARROT_IMITATE_SHULKER");
+    public static final Sound ENTITY_PARROT_IMITATE_SILVERFISH = createDefault("ENTITY_PARROT_IMITATE_SILVERFISH");
+    public static final Sound ENTITY_PARROT_IMITATE_SKELETON = createDefault("ENTITY_PARROT_IMITATE_SKELETON");
+    public static final Sound ENTITY_PARROT_IMITATE_SLIME = createDefault("ENTITY_PARROT_IMITATE_SLIME");
+    public static final Sound ENTITY_PARROT_IMITATE_SPIDER = createDefault("ENTITY_PARROT_IMITATE_SPIDER");
+    public static final Sound ENTITY_PARROT_IMITATE_STRAY = createDefault("ENTITY_PARROT_IMITATE_STRAY");
+    public static final Sound ENTITY_PARROT_IMITATE_VEX = createDefault("ENTITY_PARROT_IMITATE_VEX");
+    public static final Sound ENTITY_PARROT_IMITATE_VINDICATOR = createDefault("ENTITY_PARROT_IMITATE_VINDICATOR");
+    public static final Sound ENTITY_PARROT_IMITATE_WITCH = createDefault("ENTITY_PARROT_IMITATE_WITCH");
+    public static final Sound ENTITY_PARROT_IMITATE_WITHER = createDefault("ENTITY_PARROT_IMITATE_WITHER");
+    public static final Sound ENTITY_PARROT_IMITATE_WITHER_SKELETON = createDefault("ENTITY_PARROT_IMITATE_WITHER_SKELETON");
+    public static final Sound ENTITY_PARROT_IMITATE_WOLF = createDefault("ENTITY_PARROT_IMITATE_WOLF");
+    public static final Sound ENTITY_PARROT_IMITATE_ZOMBIE = createDefault("ENTITY_PARROT_IMITATE_ZOMBIE");
+    public static final Sound ENTITY_PARROT_IMITATE_ZOMBIE_PIGMAN = createDefault("ENTITY_PARROT_IMITATE_ZOMBIE_PIGMAN");
+    public static final Sound ENTITY_PARROT_IMITATE_ZOMBIE_VILLAGER = createDefault("ENTITY_PARROT_IMITATE_ZOMBIE_VILLAGER");
+    public static final Sound ENTITY_PARROT_STEP = createDefault("ENTITY_PARROT_STEP");
+
+    public static final Sound ENTITY_PHANTOM_AMBIENT = createDefault("ENTITY_PHANTOM_AMBIENT");
+    public static final Sound ENTITY_PHANTOM_BITE = createDefault("ENTITY_PHANTOM_BITE");
+    public static final Sound ENTITY_PHANTOM_DEATH = createDefault("ENTITY_PHANTOM_DEATH");
+    public static final Sound ENTITY_PHANTOM_FLAP = createDefault("ENTITY_PHANTOM_FLAP");
+    public static final Sound ENTITY_PHANTOM_HURT = createDefault("ENTITY_PHANTOM_HURT");
+    public static final Sound ENTITY_PHANTOM_SWOOP = createDefault("ENTITY_PHANTOM_SWOOP");
+
+    public static final Sound ENTITY_PIG_AMBIENT = createDefault("ENTITY_PIG_AMBIENT");
+    public static final Sound ENTITY_PIG_DEATH = createDefault("ENTITY_PIG_DEATH");
+    public static final Sound ENTITY_PIG_HURT = createDefault("ENTITY_PIG_HURT");
+    public static final Sound ENTITY_PIG_SADDLE = createDefault("ENTITY_PIG_SADDLE");
+    public static final Sound ENTITY_PIG_STEP = createDefault("ENTITY_PIG_STEP");
+
+    public static final Sound ENTITY_PILLAGER_AMBIENT = createDefault("ENTITY_PILLAGER_AMBIENT");
+    public static final Sound ENTITY_PILLAGER_CELEBRATE = createDefault("ENTITY_PILLAGER_CELEBRATE");
+    public static final Sound ENTITY_PILLAGER_DEATH = createDefault("ENTITY_PILLAGER_DEATH");
+    public static final Sound ENTITY_PILLAGER_HURT = createDefault("ENTITY_PILLAGER_HURT");
+
+    public static final Sound ENTITY_PLAYER_ATTACK_CRIT = createDefault("ENTITY_PLAYER_ATTACK_CRIT");
+    public static final Sound ENTITY_PLAYER_ATTACK_KNOCKBACK = createDefault("ENTITY_PLAYER_ATTACK_KNOCKBACK");
+    public static final Sound ENTITY_PLAYER_ATTACK_NODAMAGE = createDefault("ENTITY_PLAYER_ATTACK_NODAMAGE");
+    public static final Sound ENTITY_PLAYER_ATTACK_STRONG = createDefault("ENTITY_PLAYER_ATTACK_STRONG");
+    public static final Sound ENTITY_PLAYER_ATTACK_SWEEP = createDefault("ENTITY_PLAYER_ATTACK_SWEEP");
+    public static final Sound ENTITY_PLAYER_ATTACK_WEAK = createDefault("ENTITY_PLAYER_ATTACK_WEAK");
+    public static final Sound ENTITY_PLAYER_BIG_FALL = createDefault("ENTITY_PLAYER_BIG_FALL");
+    public static final Sound ENTITY_PLAYER_BREATH = createDefault("ENTITY_PLAYER_BREATH");
+    public static final Sound ENTITY_PLAYER_BURP = createDefault("ENTITY_PLAYER_BURP");
+    public static final Sound ENTITY_PLAYER_DEATH = createDefault("ENTITY_PLAYER_DEATH");
+    public static final Sound ENTITY_PLAYER_HURT = createDefault("ENTITY_PLAYER_HURT");
+    public static final Sound ENTITY_PLAYER_HURT_DROWN = createDefault("ENTITY_PLAYER_HURT_DROWN");
+    public static final Sound ENTITY_PLAYER_HURT_ON_FIRE = createDefault("ENTITY_PLAYER_HURT_ON_FIRE");
+    public static final Sound ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH = createDefault("ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH");
+    public static final Sound ENTITY_PLAYER_LEVELUP = createDefault("ENTITY_PLAYER_LEVELUP");
+    public static final Sound ENTITY_PLAYER_SMALL_FALL = createDefault("ENTITY_PLAYER_SMALL_FALL");
+    public static final Sound ENTITY_PLAYER_SPLASH = createDefault("ENTITY_PLAYER_SPLASH");
+    public static final Sound ENTITY_PLAYER_SPLASH_HIGH_SPEED = createDefault("ENTITY_PLAYER_SPLASH_HIGH_SPEED");
+    public static final Sound ENTITY_PLAYER_SWIM = createDefault("ENTITY_PLAYER_SWIM");
+
+    public static final Sound ENTITY_POLAR_BEAR_AMBIENT = createDefault("ENTITY_POLAR_BEAR_AMBIENT");
+    public static final Sound ENTITY_POLAR_BEAR_AMBIENT_BABY = createDefault("ENTITY_POLAR_BEAR_AMBIENT_BABY");
+    public static final Sound ENTITY_POLAR_BEAR_DEATH = createDefault("ENTITY_POLAR_BEAR_DEATH");
+    public static final Sound ENTITY_POLAR_BEAR_HURT = createDefault("ENTITY_POLAR_BEAR_HURT");
+    public static final Sound ENTITY_POLAR_BEAR_STEP = createDefault("ENTITY_POLAR_BEAR_STEP");
+    public static final Sound ENTITY_POLAR_BEAR_WARNING = createDefault("ENTITY_POLAR_BEAR_WARNING");
+
+    public static final Sound ENTITY_PUFFER_FISH_AMBIENT = createDefault("ENTITY_PUFFER_FISH_AMBIENT");
+    public static final Sound ENTITY_PUFFER_FISH_BLOW_OUT = createDefault("ENTITY_PUFFER_FISH_BLOW_OUT");
+    public static final Sound ENTITY_PUFFER_FISH_BLOW_UP = createDefault("ENTITY_PUFFER_FISH_BLOW_UP");
+    public static final Sound ENTITY_PUFFER_FISH_DEATH = createDefault("ENTITY_PUFFER_FISH_DEATH");
+    public static final Sound ENTITY_PUFFER_FISH_FLOP = createDefault("ENTITY_PUFFER_FISH_FLOP");
+    public static final Sound ENTITY_PUFFER_FISH_HURT = createDefault("ENTITY_PUFFER_FISH_HURT");
+    public static final Sound ENTITY_PUFFER_FISH_STING = createDefault("ENTITY_PUFFER_FISH_STING");
+
+    public static final Sound ENTITY_RABBIT_AMBIENT = createDefault("ENTITY_RABBIT_AMBIENT");
+    public static final Sound ENTITY_RABBIT_ATTACK = createDefault("ENTITY_RABBIT_ATTACK");
+    public static final Sound ENTITY_RABBIT_DEATH = createDefault("ENTITY_RABBIT_DEATH");
+    public static final Sound ENTITY_RABBIT_HURT = createDefault("ENTITY_RABBIT_HURT");
+    public static final Sound ENTITY_RABBIT_JUMP = createDefault("ENTITY_RABBIT_JUMP");
+
+    public static final Sound ENTITY_RAVAGER_AMBIENT = createDefault("ENTITY_RAVAGER_AMBIENT");
+    public static final Sound ENTITY_RAVAGER_ATTACK = createDefault("ENTITY_RAVAGER_ATTACK");
+    public static final Sound ENTITY_RAVAGER_CELEBRATE = createDefault("ENTITY_RAVAGER_CELEBRATE");
+    public static final Sound ENTITY_RAVAGER_DEATH = createDefault("ENTITY_RAVAGER_DEATH");
+    public static final Sound ENTITY_RAVAGER_HURT = createDefault("ENTITY_RAVAGER_HURT");
+    public static final Sound ENTITY_RAVAGER_ROAR = createDefault("ENTITY_RAVAGER_ROAR");
+    public static final Sound ENTITY_RAVAGER_STEP = createDefault("ENTITY_RAVAGER_STEP");
+    public static final Sound ENTITY_RAVAGER_STUNNED = createDefault("ENTITY_RAVAGER_STUNNED");
+
+    public static final Sound ENTITY_SALMON_AMBIENT = createDefault("ENTITY_SALMON_AMBIENT");
+    public static final Sound ENTITY_SALMON_DEATH = createDefault("ENTITY_SALMON_DEATH");
+    public static final Sound ENTITY_SALMON_FLOP = createDefault("ENTITY_SALMON_FLOP");
+    public static final Sound ENTITY_SALMON_HURT = createDefault("ENTITY_SALMON_HURT");
+    public static final Sound ENTITY_SHEEP_AMBIENT = createDefault("ENTITY_SHEEP_AMBIENT");
+    public static final Sound ENTITY_SHEEP_DEATH = createDefault("ENTITY_SHEEP_DEATH");
+    public static final Sound ENTITY_SHEEP_HURT = createDefault("ENTITY_SHEEP_HURT");
+    public static final Sound ENTITY_SHEEP_SHEAR = createDefault("ENTITY_SHEEP_SHEAR");
+    public static final Sound ENTITY_SHEEP_STEP = createDefault("ENTITY_SHEEP_STEP");
+
+    public static final Sound ENTITY_SHULKER_AMBIENT = createDefault("ENTITY_SHULKER_AMBIENT");
+    public static final Sound ENTITY_SHULKER_BULLET_HIT = createDefault("ENTITY_SHULKER_BULLET_HIT");
+    public static final Sound ENTITY_SHULKER_BULLET_HURT = createDefault("ENTITY_SHULKER_BULLET_HURT");
+    public static final Sound ENTITY_SHULKER_CLOSE = createDefault("ENTITY_SHULKER_CLOSE");
+    public static final Sound ENTITY_SHULKER_DEATH = createDefault("ENTITY_SHULKER_DEATH");
+    public static final Sound ENTITY_SHULKER_HURT = createDefault("ENTITY_SHULKER_HURT");
+    public static final Sound ENTITY_SHULKER_HURT_CLOSED = createDefault("ENTITY_SHULKER_HURT_CLOSED");
+    public static final Sound ENTITY_SHULKER_OPEN = createDefault("ENTITY_SHULKER_OPEN");
+    public static final Sound ENTITY_SHULKER_SHOOT = createDefault("ENTITY_SHULKER_SHOOT");
+    public static final Sound ENTITY_SHULKER_TELEPORT = createDefault("ENTITY_SHULKER_TELEPORT");
+
+    public static final Sound ENTITY_SILVERFISH_AMBIENT = createDefault("ENTITY_SILVERFISH_AMBIENT");
+    public static final Sound ENTITY_SILVERFISH_DEATH = createDefault("ENTITY_SILVERFISH_DEATH");
+    public static final Sound ENTITY_SILVERFISH_HURT = createDefault("ENTITY_SILVERFISH_HURT");
+    public static final Sound ENTITY_SILVERFISH_STEP = createDefault("ENTITY_SILVERFISH_STEP");
+
+    public static final Sound ENTITY_SKELETON_AMBIENT = createDefault("ENTITY_SKELETON_AMBIENT");
+    public static final Sound ENTITY_SKELETON_DEATH = createDefault("ENTITY_SKELETON_DEATH");
+    public static final Sound ENTITY_SKELETON_HORSE_AMBIENT = createDefault("ENTITY_SKELETON_HORSE_AMBIENT");
+    public static final Sound ENTITY_SKELETON_HORSE_AMBIENT_WATER = createDefault("ENTITY_SKELETON_HORSE_AMBIENT_WATER");
+    public static final Sound ENTITY_SKELETON_HORSE_DEATH = createDefault("ENTITY_SKELETON_HORSE_DEATH");
+    public static final Sound ENTITY_SKELETON_HORSE_GALLOP_WATER = createDefault("ENTITY_SKELETON_HORSE_GALLOP_WATER");
+    public static final Sound ENTITY_SKELETON_HORSE_HURT = createDefault("ENTITY_SKELETON_HORSE_HURT");
+    public static final Sound ENTITY_SKELETON_HORSE_JUMP_WATER = createDefault("ENTITY_SKELETON_HORSE_JUMP_WATER");
+    public static final Sound ENTITY_SKELETON_HORSE_STEP_WATER = createDefault("ENTITY_SKELETON_HORSE_STEP_WATER");
+    public static final Sound ENTITY_SKELETON_HORSE_SWIM = createDefault("ENTITY_SKELETON_HORSE_SWIM");
+    public static final Sound ENTITY_SKELETON_HURT = createDefault("ENTITY_SKELETON_HURT");
+    public static final Sound ENTITY_SKELETON_SHOOT = createDefault("ENTITY_SKELETON_SHOOT");
+    public static final Sound ENTITY_SKELETON_STEP = createDefault("ENTITY_SKELETON_STEP");
+
+    public static final Sound ENTITY_SLIME_ATTACK = createDefault("ENTITY_SLIME_ATTACK");
+    public static final Sound ENTITY_SLIME_DEATH = createDefault("ENTITY_SLIME_DEATH");
+    public static final Sound ENTITY_SLIME_DEATH_SMALL = createDefault("ENTITY_SLIME_DEATH_SMALL");
+    public static final Sound ENTITY_SLIME_HURT = createDefault("ENTITY_SLIME_HURT");
+    public static final Sound ENTITY_SLIME_HURT_SMALL = createDefault("ENTITY_SLIME_HURT_SMALL");
+    public static final Sound ENTITY_SLIME_JUMP = createDefault("ENTITY_SLIME_JUMP");
+    public static final Sound ENTITY_SLIME_JUMP_SMALL = createDefault("ENTITY_SLIME_JUMP_SMALL");
+    public static final Sound ENTITY_SLIME_SQUISH = createDefault("ENTITY_SLIME_SQUISH");
+    public static final Sound ENTITY_SLIME_SQUISH_SMALL = createDefault("ENTITY_SLIME_SQUISH_SMALL");
+
+    public static final Sound ENTITY_SNOWBALL_THROW = createDefault("ENTITY_SNOWBALL_THROW");
+
+    public static final Sound ENTITY_SNOW_GOLEM_AMBIENT = createDefault("ENTITY_SNOW_GOLEM_AMBIENT");
+    public static final Sound ENTITY_SNOW_GOLEM_DEATH = createDefault("ENTITY_SNOW_GOLEM_DEATH");
+    public static final Sound ENTITY_SNOW_GOLEM_HURT = createDefault("ENTITY_SNOW_GOLEM_HURT");
+    public static final Sound ENTITY_SNOW_GOLEM_SHOOT = createDefault("ENTITY_SNOW_GOLEM_SHOOT");
+
+    public static final Sound ENTITY_SPIDER_AMBIENT = createDefault("ENTITY_SPIDER_AMBIENT");
+    public static final Sound ENTITY_SPIDER_DEATH = createDefault("ENTITY_SPIDER_DEATH");
+    public static final Sound ENTITY_SPIDER_HURT = createDefault("ENTITY_SPIDER_HURT");
+    public static final Sound ENTITY_SPIDER_STEP = createDefault("ENTITY_SPIDER_STEP");
+
+    public static final Sound ENTITY_SPLASH_POTION_BREAK = createDefault("ENTITY_SPLASH_POTION_BREAK");
+    public static final Sound ENTITY_SPLASH_POTION_THROW = createDefault("ENTITY_SPLASH_POTION_THROW");
+
+    public static final Sound ENTITY_SQUID_AMBIENT = createDefault("ENTITY_SQUID_AMBIENT");
+    public static final Sound ENTITY_SQUID_DEATH = createDefault("ENTITY_SQUID_DEATH");
+    public static final Sound ENTITY_SQUID_HURT = createDefault("ENTITY_SQUID_HURT");
+    public static final Sound ENTITY_SQUID_SQUIRT = createDefault("ENTITY_SQUID_SQUIRT");
+
+    public static final Sound ENTITY_STRAY_AMBIENT = createDefault("ENTITY_STRAY_AMBIENT");
+    public static final Sound ENTITY_STRAY_DEATH = createDefault("ENTITY_STRAY_DEATH");
+    public static final Sound ENTITY_STRAY_HURT = createDefault("ENTITY_STRAY_HURT");
+    public static final Sound ENTITY_STRAY_STEP = createDefault("ENTITY_STRAY_STEP");
+
+    public static final Sound ENTITY_TNT_PRIMED = createDefault("ENTITY_TNT_PRIMED");
+
+    public static final Sound ENTITY_TROPICAL_FISH_AMBIENT = createDefault("ENTITY_TROPICAL_FISH_AMBIENT");
+    public static final Sound ENTITY_TROPICAL_FISH_DEATH = createDefault("ENTITY_TROPICAL_FISH_DEATH");
+    public static final Sound ENTITY_TROPICAL_FISH_FLOP = createDefault("ENTITY_TROPICAL_FISH_FLOP");
+    public static final Sound ENTITY_TROPICAL_FISH_HURT = createDefault("ENTITY_TROPICAL_FISH_HURT");
+
+    public static final Sound ENTITY_TURTLE_AMBIENT_LAND = createDefault("ENTITY_TURTLE_AMBIENT_LAND");
+    public static final Sound ENTITY_TURTLE_DEATH = createDefault("ENTITY_TURTLE_DEATH");
+    public static final Sound ENTITY_TURTLE_DEATH_BABY = createDefault("ENTITY_TURTLE_DEATH_BABY");
+    public static final Sound ENTITY_TURTLE_EGG_BREAK = createDefault("ENTITY_TURTLE_EGG_BREAK");
+    public static final Sound ENTITY_TURTLE_EGG_CRACK = createDefault("ENTITY_TURTLE_EGG_CRACK");
+    public static final Sound ENTITY_TURTLE_EGG_HATCH = createDefault("ENTITY_TURTLE_EGG_HATCH");
+    public static final Sound ENTITY_TURTLE_HURT = createDefault("ENTITY_TURTLE_HURT");
+    public static final Sound ENTITY_TURTLE_HURT_BABY = createDefault("ENTITY_TURTLE_HURT_BABY");
+    public static final Sound ENTITY_TURTLE_LAY_EGG = createDefault("ENTITY_TURTLE_LAY_EGG");
+    public static final Sound ENTITY_TURTLE_SHAMBLE = createDefault("ENTITY_TURTLE_SHAMBLE");
+    public static final Sound ENTITY_TURTLE_SHAMBLE_BABY = createDefault("ENTITY_TURTLE_SHAMBLE_BABY");
+    public static final Sound ENTITY_TURTLE_SWIM = createDefault("ENTITY_TURTLE_SWIM");
+
+    public static final Sound ENTITY_VEX_AMBIENT = createDefault("ENTITY_VEX_AMBIENT");
+    public static final Sound ENTITY_VEX_CHARGE = createDefault("ENTITY_VEX_CHARGE");
+    public static final Sound ENTITY_VEX_DEATH = createDefault("ENTITY_VEX_DEATH");
+    public static final Sound ENTITY_VEX_HURT = createDefault("ENTITY_VEX_HURT");
+
+    public static final Sound ENTITY_VILLAGER_AMBIENT = createDefault("ENTITY_VILLAGER_AMBIENT");
+    public static final Sound ENTITY_VILLAGER_CELEBRATE = createDefault("ENTITY_VILLAGER_CELEBRATE");
+    public static final Sound ENTITY_VILLAGER_DEATH = createDefault("ENTITY_VILLAGER_DEATH");
+    public static final Sound ENTITY_VILLAGER_HURT = createDefault("ENTITY_VILLAGER_HURT");
+    public static final Sound ENTITY_VILLAGER_NO = createDefault("ENTITY_VILLAGER_NO");
+    public static final Sound ENTITY_VILLAGER_TRADE = createDefault("ENTITY_VILLAGER_TRADE");
+    public static final Sound ENTITY_VILLAGER_WORK_ARMORER = createDefault("ENTITY_VILLAGER_WORK_ARMORER");
+    public static final Sound ENTITY_VILLAGER_WORK_BUTCHER = createDefault("ENTITY_VILLAGER_WORK_BUTCHER");
+    public static final Sound ENTITY_VILLAGER_WORK_CARTOGRAPHER = createDefault("ENTITY_VILLAGER_WORK_CARTOGRAPHER");
+    public static final Sound ENTITY_VILLAGER_WORK_CLERIC = createDefault("ENTITY_VILLAGER_WORK_CLERIC");
+    public static final Sound ENTITY_VILLAGER_WORK_FARMER = createDefault("ENTITY_VILLAGER_WORK_FARMER");
+    public static final Sound ENTITY_VILLAGER_WORK_FISHERMAN = createDefault("ENTITY_VILLAGER_WORK_FISHERMAN");
+    public static final Sound ENTITY_VILLAGER_WORK_FLETCHER = createDefault("ENTITY_VILLAGER_WORK_FLETCHER");
+    public static final Sound ENTITY_VILLAGER_WORK_LEATHERWORKER = createDefault("ENTITY_VILLAGER_WORK_LEATHERWORKER");
+    public static final Sound ENTITY_VILLAGER_WORK_LIBRARIAN = createDefault("ENTITY_VILLAGER_WORK_LIBRARIAN");
+    public static final Sound ENTITY_VILLAGER_WORK_MASON = createDefault("ENTITY_VILLAGER_WORK_MASON");
+    public static final Sound ENTITY_VILLAGER_WORK_SHEPHERD = createDefault("ENTITY_VILLAGER_WORK_SHEPHERD");
+    public static final Sound ENTITY_VILLAGER_WORK_TOOLSMITH = createDefault("ENTITY_VILLAGER_WORK_TOOLSMITH");
+    public static final Sound ENTITY_VILLAGER_WORK_WEAPONSMITH = createDefault("ENTITY_VILLAGER_WORK_WEAPONSMITH");
+    public static final Sound ENTITY_VILLAGER_YES = createDefault("ENTITY_VILLAGER_YES");
+
+    public static final Sound ENTITY_VINDICATOR_AMBIENT = createDefault("ENTITY_VINDICATOR_AMBIENT");
+    public static final Sound ENTITY_VINDICATOR_CELEBRATE = createDefault("ENTITY_VINDICATOR_CELEBRATE");
+    public static final Sound ENTITY_VINDICATOR_DEATH = createDefault("ENTITY_VINDICATOR_DEATH");
+    public static final Sound ENTITY_VINDICATOR_HURT = createDefault("ENTITY_VINDICATOR_HURT");
+
+    public static final Sound ENTITY_WANDERING_TRADER_AMBIENT = createDefault("ENTITY_WANDERING_TRADER_AMBIENT");
+    public static final Sound ENTITY_WANDERING_TRADER_DEATH = createDefault("ENTITY_WANDERING_TRADER_DEATH");
+    public static final Sound ENTITY_WANDERING_TRADER_DISAPPEARED = createDefault("ENTITY_WANDERING_TRADER_DISAPPEARED");
+    public static final Sound ENTITY_WANDERING_TRADER_DRINK_MILK = createDefault("ENTITY_WANDERING_TRADER_DRINK_MILK");
+    public static final Sound ENTITY_WANDERING_TRADER_DRINK_POTION = createDefault("ENTITY_WANDERING_TRADER_DRINK_POTION");
+    public static final Sound ENTITY_WANDERING_TRADER_HURT = createDefault("ENTITY_WANDERING_TRADER_HURT");
+    public static final Sound ENTITY_WANDERING_TRADER_NO = createDefault("ENTITY_WANDERING_TRADER_NO");
+    public static final Sound ENTITY_WANDERING_TRADER_REAPPEARED = createDefault("ENTITY_WANDERING_TRADER_REAPPEARED");
+    public static final Sound ENTITY_WANDERING_TRADER_TRADE = createDefault("ENTITY_WANDERING_TRADER_TRADE");
+    public static final Sound ENTITY_WANDERING_TRADER_YES = createDefault("ENTITY_WANDERING_TRADER_YES");
+
+    public static final Sound ENTITY_WITCH_AMBIENT = createDefault("ENTITY_WITCH_AMBIENT");
+    public static final Sound ENTITY_WITCH_CELEBRATE = createDefault("ENTITY_WITCH_CELEBRATE");
+    public static final Sound ENTITY_WITCH_DEATH = createDefault("ENTITY_WITCH_DEATH");
+    public static final Sound ENTITY_WITCH_DRINK = createDefault("ENTITY_WITCH_DRINK");
+    public static final Sound ENTITY_WITCH_HURT = createDefault("ENTITY_WITCH_HURT");
+    public static final Sound ENTITY_WITCH_THROW = createDefault("ENTITY_WITCH_THROW");
+
+    public static final Sound ENTITY_WITHER_AMBIENT = createDefault("ENTITY_WITHER_AMBIENT");
+    public static final Sound ENTITY_WITHER_BREAK_BLOCK = createDefault("ENTITY_WITHER_BREAK_BLOCK");
+    public static final Sound ENTITY_WITHER_DEATH = createDefault("ENTITY_WITHER_DEATH");
+    public static final Sound ENTITY_WITHER_HURT = createDefault("ENTITY_WITHER_HURT");
+    public static final Sound ENTITY_WITHER_SHOOT = createDefault("ENTITY_WITHER_SHOOT");
+    public static final Sound ENTITY_WITHER_SKELETON_AMBIENT = createDefault("ENTITY_WITHER_SKELETON_AMBIENT");
+    public static final Sound ENTITY_WITHER_SKELETON_DEATH = createDefault("ENTITY_WITHER_SKELETON_DEATH");
+    public static final Sound ENTITY_WITHER_SKELETON_HURT = createDefault("ENTITY_WITHER_SKELETON_HURT");
+    public static final Sound ENTITY_WITHER_SKELETON_STEP = createDefault("ENTITY_WITHER_SKELETON_STEP");
+    public static final Sound ENTITY_WITHER_SPAWN = createDefault("ENTITY_WITHER_SPAWN");
+
+    public static final Sound ENTITY_WOLF_AMBIENT = createDefault("ENTITY_WOLF_AMBIENT");
+    public static final Sound ENTITY_WOLF_DEATH = createDefault("ENTITY_WOLF_DEATH");
+    public static final Sound ENTITY_WOLF_GROWL = createDefault("ENTITY_WOLF_GROWL");
+    public static final Sound ENTITY_WOLF_HOWL = createDefault("ENTITY_WOLF_HOWL");
+    public static final Sound ENTITY_WOLF_HURT = createDefault("ENTITY_WOLF_HURT");
+    public static final Sound ENTITY_WOLF_PANT = createDefault("ENTITY_WOLF_PANT");
+    public static final Sound ENTITY_WOLF_SHAKE = createDefault("ENTITY_WOLF_SHAKE");
+    public static final Sound ENTITY_WOLF_STEP = createDefault("ENTITY_WOLF_STEP");
+    public static final Sound ENTITY_WOLF_WHINE = createDefault("ENTITY_WOLF_WHINE");
+
+    public static final Sound ENTITY_ZOMBIE_AMBIENT = createDefault("ENTITY_ZOMBIE_AMBIENT");
+    public static final Sound ENTITY_ZOMBIE_ATTACK_IRON_DOOR = createDefault("ENTITY_ZOMBIE_ATTACK_IRON_DOOR");
+    public static final Sound ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR = createDefault("ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR");
+    public static final Sound ENTITY_ZOMBIE_BREAK_WOODEN_DOOR = createDefault("ENTITY_ZOMBIE_BREAK_WOODEN_DOOR");
+    public static final Sound ENTITY_ZOMBIE_CONVERTED_TO_DROWNED = createDefault("ENTITY_ZOMBIE_CONVERTED_TO_DROWNED");
+    public static final Sound ENTITY_ZOMBIE_DEATH = createDefault("ENTITY_ZOMBIE_DEATH");
+    public static final Sound ENTITY_ZOMBIE_DESTROY_EGG = createDefault("ENTITY_ZOMBIE_DESTROY_EGG");
+    public static final Sound ENTITY_ZOMBIE_HORSE_AMBIENT = createDefault("ENTITY_ZOMBIE_HORSE_AMBIENT");
+    public static final Sound ENTITY_ZOMBIE_HORSE_DEATH = createDefault("ENTITY_ZOMBIE_HORSE_DEATH");
+    public static final Sound ENTITY_ZOMBIE_HORSE_HURT = createDefault("ENTITY_ZOMBIE_HORSE_HURT");
+    public static final Sound ENTITY_ZOMBIE_HURT = createDefault("ENTITY_ZOMBIE_HURT");
+    public static final Sound ENTITY_ZOMBIE_INFECT = createDefault("ENTITY_ZOMBIE_INFECT");
+    public static final Sound ENTITY_ZOMBIE_PIGMAN_AMBIENT = createDefault("ENTITY_ZOMBIE_PIGMAN_AMBIENT");
+    public static final Sound ENTITY_ZOMBIE_PIGMAN_ANGRY = createDefault("ENTITY_ZOMBIE_PIGMAN_ANGRY");
+    public static final Sound ENTITY_ZOMBIE_PIGMAN_DEATH = createDefault("ENTITY_ZOMBIE_PIGMAN_DEATH");
+    public static final Sound ENTITY_ZOMBIE_PIGMAN_HURT = createDefault("ENTITY_ZOMBIE_PIGMAN_HURT");
+    public static final Sound ENTITY_ZOMBIE_STEP = createDefault("ENTITY_ZOMBIE_STEP");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_AMBIENT = createDefault("ENTITY_ZOMBIE_VILLAGER_AMBIENT");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_CONVERTED = createDefault("ENTITY_ZOMBIE_VILLAGER_CONVERTED");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_CURE = createDefault("ENTITY_ZOMBIE_VILLAGER_CURE");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_DEATH = createDefault("ENTITY_ZOMBIE_VILLAGER_DEATH");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_HURT = createDefault("ENTITY_ZOMBIE_VILLAGER_HURT");
+    public static final Sound ENTITY_ZOMBIE_VILLAGER_STEP = createDefault("ENTITY_ZOMBIE_VILLAGER_STEP");
+
+    public static final Sound EVENT_RAID_HORN = createDefault("EVENT_RAID_HORN");
+
+    public static final Sound ITEM_ARMOR_EQUIP_CHAIN = createDefault("ITEM_ARMOR_EQUIP_CHAIN");
+    public static final Sound ITEM_ARMOR_EQUIP_DIAMOND = createDefault("ITEM_ARMOR_EQUIP_DIAMOND");
+    public static final Sound ITEM_ARMOR_EQUIP_ELYTRA = createDefault("ITEM_ARMOR_EQUIP_ELYTRA");
+    public static final Sound ITEM_ARMOR_EQUIP_GENERIC = createDefault("ITEM_ARMOR_EQUIP_GENERIC");
+    public static final Sound ITEM_ARMOR_EQUIP_GOLD = createDefault("ITEM_ARMOR_EQUIP_GOLD");
+    public static final Sound ITEM_ARMOR_EQUIP_IRON = createDefault("ITEM_ARMOR_EQUIP_IRON");
+    public static final Sound ITEM_ARMOR_EQUIP_LEATHER = createDefault("ITEM_ARMOR_EQUIP_LEATHER");
+    public static final Sound ITEM_ARMOR_EQUIP_TURTLE = createDefault("ITEM_ARMOR_EQUIP_TURTLE");
+
+    public static final Sound ITEM_AXE_STRIP = createDefault("ITEM_AXE_STRIP");
+
+    public static final Sound ITEM_BOOK_PAGE_TURN = createDefault("ITEM_BOOK_PAGE_TURN");
+    public static final Sound ITEM_BOOK_PUT = createDefault("ITEM_BOOK_PUT");
+
+    public static final Sound ITEM_BOTTLE_EMPTY = createDefault("ITEM_BOTTLE_EMPTY");
+    public static final Sound ITEM_BOTTLE_FILL = createDefault("ITEM_BOTTLE_FILL");
+    public static final Sound ITEM_BOTTLE_FILL_DRAGONBREATH = createDefault("ITEM_BOTTLE_FILL_DRAGONBREATH");
+
+    public static final Sound ITEM_BUCKET_EMPTY = createDefault("ITEM_BUCKET_EMPTY");
+    public static final Sound ITEM_BUCKET_EMPTY_FISH = createDefault("ITEM_BUCKET_EMPTY_FISH");
+    public static final Sound ITEM_BUCKET_EMPTY_LAVA = createDefault("ITEM_BUCKET_EMPTY_LAVA");
+    public static final Sound ITEM_BUCKET_FILL = createDefault("ITEM_BUCKET_FILL");
+    public static final Sound ITEM_BUCKET_FILL_FISH = createDefault("ITEM_BUCKET_FILL_FISH");
+    public static final Sound ITEM_BUCKET_FILL_LAVA = createDefault("ITEM_BUCKET_FILL_LAVA");
+
+    public static final Sound ITEM_CHORUS_FRUIT_TELEPORT = createDefault("ITEM_CHORUS_FRUIT_TELEPORT");
+
+    public static final Sound ITEM_CROP_PLANT = createDefault("ITEM_CROP_PLANT");
+
+    public static final Sound ITEM_CROSSBOW_HIT = createDefault("ITEM_CROSSBOW_HIT");
+    public static final Sound ITEM_CROSSBOW_LOADING_END = createDefault("ITEM_CROSSBOW_LOADING_END");
+    public static final Sound ITEM_CROSSBOW_LOADING_MIDDLE = createDefault("ITEM_CROSSBOW_LOADING_MIDDLE");
+    public static final Sound ITEM_CROSSBOW_LOADING_START = createDefault("ITEM_CROSSBOW_LOADING_START");
+    public static final Sound ITEM_CROSSBOW_QUICK_CHARGE_1 = createDefault("ITEM_CROSSBOW_QUICK_CHARGE_1");
+    public static final Sound ITEM_CROSSBOW_QUICK_CHARGE_2 = createDefault("ITEM_CROSSBOW_QUICK_CHARGE_2");
+    public static final Sound ITEM_CROSSBOW_QUICK_CHARGE_3 = createDefault("ITEM_CROSSBOW_QUICK_CHARGE_3");
+    public static final Sound ITEM_CROSSBOW_SHOOT = createDefault("ITEM_CROSSBOW_SHOOT");
+
+    public static final Sound ITEM_ELYTRA_FLYING = createDefault("ITEM_ELYTRA_FLYING");
+
+    public static final Sound ITEM_FIRECHARGE_USE = createDefault("ITEM_FIRECHARGE_USE");
+
+    public static final Sound ITEM_FLINTANDSTEEL_USE = createDefault("ITEM_FLINTANDSTEEL_USE");
+
+    public static final Sound ITEM_HOE_TILL = createDefault("ITEM_HOE_TILL");
+
+    public static final Sound ITEM_NETHER_WART_PLANT = createDefault("ITEM_NETHER_WART_PLANT");
+
+    public static final Sound ITEM_SHIELD_BLOCK = createDefault("ITEM_SHIELD_BLOCK");
+    public static final Sound ITEM_SHIELD_BREAK = createDefault("ITEM_SHIELD_BREAK");
+
+    public static final Sound ITEM_SHOVEL_FLATTEN = createDefault("ITEM_SHOVEL_FLATTEN");
+
+    public static final Sound ITEM_SWEET_BERRIES_PICK_FROM_BUSH = createDefault("ITEM_SWEET_BERRIES_PICK_FROM_BUSH");
+
+    public static final Sound ITEM_TOTEM_USE = createDefault("ITEM_TOTEM_USE");
+
+    public static final Sound ITEM_TRIDENT_HIT = createDefault("ITEM_TRIDENT_HIT");
+    public static final Sound ITEM_TRIDENT_HIT_GROUND = createDefault("ITEM_TRIDENT_HIT_GROUND");
+    public static final Sound ITEM_TRIDENT_RETURN = createDefault("ITEM_TRIDENT_RETURN");
+    public static final Sound ITEM_TRIDENT_RIPTIDE_1 = createDefault("ITEM_TRIDENT_RIPTIDE_1");
+    public static final Sound ITEM_TRIDENT_RIPTIDE_2 = createDefault("ITEM_TRIDENT_RIPTIDE_2");
+    public static final Sound ITEM_TRIDENT_RIPTIDE_3 = createDefault("ITEM_TRIDENT_RIPTIDE_3");
+    public static final Sound ITEM_TRIDENT_THROW = createDefault("ITEM_TRIDENT_THROW");
+    public static final Sound ITEM_TRIDENT_THUNDER = createDefault("ITEM_TRIDENT_THUNDER");
+
+    public static final Sound MUSIC_CREATIVE = createDefault("MUSIC_CREATIVE");
+
+    public static final Sound MUSIC_CREDITS = createDefault("MUSIC_CREDITS");
+
+    public static final Sound MUSIC_DISC_11 = createDefault("MUSIC_DISC_11");
+    public static final Sound MUSIC_DISC_13 = createDefault("MUSIC_DISC_13");
+    public static final Sound MUSIC_DISC_BLOCKS = createDefault("MUSIC_DISC_BLOCKS");
+    public static final Sound MUSIC_DISC_CAT = createDefault("MUSIC_DISC_CAT");
+    public static final Sound MUSIC_DISC_CHIRP = createDefault("MUSIC_DISC_CHIRP");
+    public static final Sound MUSIC_DISC_FAR = createDefault("MUSIC_DISC_FAR");
+    public static final Sound MUSIC_DISC_MALL = createDefault("MUSIC_DISC_MALL");
+    public static final Sound MUSIC_DISC_MELLOHI = createDefault("MUSIC_DISC_MELLOHI");
+    public static final Sound MUSIC_DISC_STAL = createDefault("MUSIC_DISC_STAL");
+    public static final Sound MUSIC_DISC_STRAD = createDefault("MUSIC_DISC_STRAD");
+    public static final Sound MUSIC_DISC_WAIT = createDefault("MUSIC_DISC_WAIT");
+    public static final Sound MUSIC_DISC_WARD = createDefault("MUSIC_DISC_WARD");
+
+    public static final Sound MUSIC_DRAGON = createDefault("MUSIC_DRAGON");
+    public static final Sound MUSIC_END = createDefault("MUSIC_END");
+    public static final Sound MUSIC_GAME = createDefault("MUSIC_GAME");
+    public static final Sound MUSIC_MENU = createDefault("MUSIC_MENU");
+    public static final Sound MUSIC_NETHER = createDefault("MUSIC_NETHER");
+    public static final Sound MUSIC_UNDER_WATER = createDefault("MUSIC_UNDER_WATER");
+
+    public static final Sound UI_BUTTON_CLICK = createDefault("UI_BUTTON_CLICK");
+
+    public static final Sound UI_CARTOGRAPHY_TABLE_TAKE_RESULT = createDefault("UI_CARTOGRAPHY_TABLE_TAKE_RESULT");
+
+    public static final Sound UI_LOOM_SELECT_PATTERN = createDefault("UI_LOOM_SELECT_PATTERN");
+    public static final Sound UI_LOOM_TAKE_RESULT = createDefault("UI_LOOM_TAKE_RESULT");
+
+    public static final Sound UI_STONECUTTER_SELECT_RECIPE = createDefault("UI_STONECUTTER_SELECT_RECIPE");
+    public static final Sound UI_STONECUTTER_TAKE_RESULT = createDefault("UI_STONECUTTER_TAKE_RESULT");
+
+    public static final Sound UI_TOAST_CHALLENGE_COMPLETE = createDefault("UI_TOAST_CHALLENGE_COMPLETE");
+
+    public static final Sound UI_TOAST_IN = createDefault("UI_TOAST_IN");
+    public static final Sound UI_TOAST_OUT = createDefault("UI_TOAST_OUT");
+
+    public static final Sound WEATHER_RAIN = createDefault("WEATHER_RAIN");
+    public static final Sound WEATHER_RAIN_ABOVE = createDefault("WEATHER_RAIN_ABOVE");
+
 
     private final String name;
     private final ObjectOwner owner;

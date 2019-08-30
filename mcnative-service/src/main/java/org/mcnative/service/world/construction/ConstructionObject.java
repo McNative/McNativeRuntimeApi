@@ -20,7 +20,7 @@
 package org.mcnative.service.world.construction;
 
 import org.mcnative.service.location.Location;
-import org.mcnative.service.location.Point;
+import org.mcnative.service.location.Vector;
 import org.mcnative.service.world.block.BlockDirection;
 import org.mcnative.service.world.region.Region;
 
@@ -36,7 +36,7 @@ public interface ConstructionObject {
 
     Location getLocation();
 
-    void place(Point location);
+    void place(Vector location);
 
     boolean isPlaced();
 
@@ -49,7 +49,7 @@ public interface ConstructionObject {
     void move(BlockDirection direction);
 
 
-    static ConstructionObject createObjectOf(Point pointA, Point pointB){
+    static ConstructionObject createObjectOf(Vector pointA, Vector pointB){
         return null;
     }
 

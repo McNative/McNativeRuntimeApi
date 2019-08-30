@@ -20,13 +20,12 @@
 package org.mcnative.bukkit;
 
 import net.prematic.libraries.event.EventManager;
-import net.prematic.mcnative.common.McNative;
+import org.mcnative.common.McNative;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.bukkit.plugin.BukkitEventManager;
 
 public class BukkitMcNativeBootstrap extends JavaPlugin {
 
-    private BukkitService serviceInstance;
 
     @Override
     public void onLoad() {
@@ -36,8 +35,7 @@ public class BukkitMcNativeBootstrap extends JavaPlugin {
 
         EventManager eventManager = BukkitEventManager.initialize();
 
-        this.serviceInstance = new BukkitService();
-        McNative.setInstance(serviceInstance);
+
 
         getLogger().info("McNative successfully started.");
     }

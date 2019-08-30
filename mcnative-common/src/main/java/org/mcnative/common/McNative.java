@@ -29,15 +29,21 @@ import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PunishmentHandler;
+import org.mcnative.common.player.WhitelistHandler;
 import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.packet.MinecraftPacketListener;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.TextComponent;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface McNative {
 
@@ -55,7 +61,8 @@ public interface McNative {
 
     EventManager getEventManager();
 
-    PluginManager<McNative> getPluginManager();
+    PluginManager getPluginManager();
+
 
 
     PermissionHandler getPermissionHandler();
@@ -66,6 +73,19 @@ public interface McNative {
     PunishmentHandler getPunishmentHandler();
 
     void setPunishmentHandler(PunishmentHandler handler);
+
+    WhitelistHandler getWhitelistHandler();
+
+    void setWhitelistHandler(WhitelistHandler handler);
+
+    PlayerDataStorageHandler getPlayerDataStorageHandler();
+
+    void setPlayerDataStorageHandler(PlayerDataStorageHandler handler);
+
+    GameProfileLoader getGameProfileLoader();
+
+    void setGameProfileLoader(GameProfileLoader loader);
+
 
 
     ChatChannel getServerChat();
@@ -115,6 +135,15 @@ public interface McNative {
     void unregisterChannels(Plugin owner);
 
 
+    void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener);
+
+    void registerOutgoingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener);
+
+    void broadcastPacket(MinecraftPacket packet);
+
+    void broadcastPacket(MinecraftPacket packet, String permission);
+
+
     ServerPingResponse getPingResponse();
 
     void setPingResponse(ServerPingResponse ping);
@@ -134,8 +163,8 @@ public interface McNative {
     void restart();
 
 
-    default ProtocolCheck check(){
-        return getPlatform().check();
+    default void check(Consumer<ProtocolCheck> checker){
+        getPlatform().check(checker);
     }
 
     static boolean isAvailable(){

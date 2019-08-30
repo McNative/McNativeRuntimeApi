@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 24.08.19, 12:24
+ * @since 26.08.19, 19:25
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,43 +17,35 @@
  * under the License.
  */
 
-package org.mcnative.service.location;
+package org.mcnative.wrapper.guest;
 
-import org.mcnative.service.world.World;
+import net.prematic.libraries.plugin.Plugin;
+import net.prematic.libraries.plugin.loader.PluginLoader;
 
-public interface Point {
+public class GuestPluginExecutor {
 
-    double getX();
+    private final PluginLoader loader;
 
-    double getY();
-
-    double getZ();
-
-    void setX(double x);
-
-    void setY(double x);
-
-    void setZ(double x);
-
-    Point calculateMiddle(Point location);
-
-    double distance(Point location);
-
-    double distanceSquared(Point location);
-
-
-    void add(Point location);
-
-    void subtract(Point location);
-
-    void multiply(Point multiplier);
-
-    void divide(Point divider);
-
-
-    Location toLocation(World world);
-
-    static Point of(double x, double y, double z){
-        return null;
+    public GuestPluginExecutor(Plugin instance) {
+        this.loader = new GuestPluginLoader(instance);
     }
+
+    public PluginLoader getLoader() {
+        return loader;
+    }
+
+    public void loadGuestPlugin(){
+        loader.construct();
+        loader.initialize();
+        loader.load();
+    }
+
+    public void enableGuestPlugin(){
+        loader.bootstrap();
+    }
+
+    public void disableGuestPlugin(){
+        loader.disable();
+    }
+
 }

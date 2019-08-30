@@ -61,20 +61,4 @@ public class ServerListener implements Listener {
         }
     }
 
-    void test(){
-        ProxyService.getInstance().registerServer(new TestServeInfo("TestServer"));
-
-        if(ProxyService.getInstance().getServer("TestServer") instanceof TestServeInfo){
-
-        }
-
-
-        if(ProxyServer.getInstance().getServerInfo("TestServer") instanceof TestServeInfo){
-
-        }
-    }
-
-    class TestServeInfo {
-
-    }
 }
