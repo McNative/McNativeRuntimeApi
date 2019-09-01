@@ -27,14 +27,9 @@ public interface Damageable {
 
     void heal();
 
-
     double getMaximumHealth();
 
     void setMaximumHealth(double health);
 
-
     void damage(double amount);
-
-
-
 }

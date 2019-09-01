@@ -19,5 +19,57 @@
 
 package org.mcnative.service.entity;
 
-public class PathFinder {
+import org.mcnative.service.entity.living.LivingEntity;
+import org.mcnative.service.location.Location;
+
+import java.util.List;
+
+public interface PathFinder {
+
+    LivingEntity getEntity();
+
+    PathResult getCurrentPath();
+
+    PathResult findPath(Location location);
+
+    PathResult findPath(LivingEntity target);
+
+    default boolean moveTo(Location location) {
+        return moveTo(location, 1);
+    }
+
+    default boolean moveTo(Location location, double speed) {
+        PathResult path = findPath(location);
+        return path != null && moveTo(path, speed);
+    }
+
+    default boolean moveTo(LivingEntity target) {
+        return moveTo(target, 1);
+    }
+
+    default boolean moveTo(LivingEntity target, double speed) {
+        PathResult path = findPath(target);
+        return path != null && moveTo(path, speed);
+    }
+
+    default boolean moveTo(PathResult path) {
+        return moveTo(path, 1);
+    }
+
+    boolean moveTo(PathResult path, double speed);
+
+    boolean hasPath();
+
+    void stopPathfinding();
+
+    interface PathResult {
+
+        List<Location> getPoints();
+
+        int getNextPointIndex();
+
+        Location getNextPoint();
+
+        Location getFinalPoint();
+    }
 }

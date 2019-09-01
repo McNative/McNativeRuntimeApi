@@ -25,7 +25,6 @@ import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import java.util.ArrayList;
 import java.util.Collection;
 
-//@Todo finish all sounds
 public class Sound {
 
     private static final Collection<Sound> SOUNDS = new ArrayList<>();
