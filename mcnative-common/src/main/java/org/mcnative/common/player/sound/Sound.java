@@ -446,7 +446,7 @@ public class Sound {
     }
 
     public boolean isCustom() {
-        return this.owner.equals(ObjectOwner.SYSTEM);
+        return !this.owner.equals(ObjectOwner.SYSTEM);
     }
 
     @Override

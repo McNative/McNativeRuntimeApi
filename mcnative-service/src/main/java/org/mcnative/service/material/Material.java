@@ -20,11 +20,11 @@
 package org.mcnative.service.material;
 
 import org.mcnative.service.inventory.item.data.ItemData;
+import org.mcnative.service.world.block.data.BlockData;
 
 public class Material {
 
     public static final Material AIR = createDefault("Air");
-
     public static final Material STONE = createDefault("Stone");
 
 
@@ -42,6 +42,18 @@ public class Material {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isArmor() {
+        return false;
+    }
+
+    public boolean isFeet() {
+        return false;
+    }
+
+    public boolean isWeapon() {
+        return false;
     }
 
     private BlockData newBlockData(){
@@ -69,5 +81,4 @@ public class Material {
     private static Material createDefault(String name, Class<?> materialClass){
         return new Material(name, materialClass);
     }
-
 }

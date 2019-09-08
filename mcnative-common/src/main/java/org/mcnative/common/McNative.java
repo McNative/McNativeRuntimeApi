@@ -29,7 +29,7 @@ import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.Receivers;
 import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.support.ProtocolCheck;
@@ -38,6 +38,7 @@ import org.mcnative.common.text.TextComponent;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface McNative {
 
@@ -68,9 +69,9 @@ public interface McNative {
     void setPunishmentHandler(PunishmentHandler handler);
 
 
-    ChatChannel getServerChat();
+    Receivers getServerChat();
 
-    void setServerChat(ChatChannel channel);
+    void setServerChat(Receivers channel);
 
 
     Tablist getDefaultTablist();
@@ -134,8 +135,9 @@ public interface McNative {
     void restart();
 
 
-    default ProtocolCheck check(){
-        return getPlatform().check();
+    default ProtocolCheck check(Consumer<ProtocolCheck> check){
+        //return getPlatform().check();
+        return null;
     }
 
     static boolean isAvailable(){

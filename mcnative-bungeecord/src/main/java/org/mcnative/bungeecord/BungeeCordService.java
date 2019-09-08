@@ -37,7 +37,7 @@ import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.Receivers;
 import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.registry.Registry;
@@ -63,7 +63,7 @@ public class BungeeCordService implements ProxyService {
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
 
-    private ChatChannel serverChannel;
+    private Receivers serverChannel;
 
     private PermissionHandler permissionHandler;
     private PunishmentHandler punishmentHandler;
@@ -163,12 +163,12 @@ public class BungeeCordService implements ProxyService {
 
 
     @Override
-    public ChatChannel getServerChat() {
+    public Receivers getServerChat() {
         return serverChannel;
     }
 
     @Override
-    public void setServerChat(ChatChannel channel) {
+    public void setServerChat(Receivers channel) {
         serverChannel = channel;
     }
 

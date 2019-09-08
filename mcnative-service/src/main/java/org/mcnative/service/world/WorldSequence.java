@@ -19,10 +19,11 @@
 
 package org.mcnative.service.world;
 
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.player.Receivers;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.service.Effect;
-import org.mcnative.service.Particle;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.animal.Animal;
 import org.mcnative.service.entity.living.monster.Monster;
@@ -36,6 +37,8 @@ import org.mcnative.service.location.Vector;
 import org.mcnative.service.material.Material;
 import org.mcnative.service.world.block.Block;
 import org.mcnative.service.world.block.data.BlockData;
+import org.mcnative.service.world.particle.Particle;
+import org.mcnative.service.world.particle.Shape;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -98,21 +101,21 @@ public interface WorldSequence {
 
 
     //Return Arrow  Default: 0.6 / 12
-    void spawnArrow(Point location, Vector direction);
+    void spawnArrow(Point point, Vector direction);
 
-    <A > A spawnArrow(Point location, Vector direction, float speed, float spread, Class<A> arrowClass);
+    <A > A spawnArrow(Point point, Vector direction, float speed, float spread, Class<A> arrowClass);
 
+    void spawnParticle(Point point, Particle particle, int amount);
 
-    void spawnParticle(Point location, Particle particle, int amount);
+    void spawnParticle(Point point, Particle particle, int amount, Offset offset);
 
-    void spawnParticle(Point location, Particle particle, int amount, Offset offset);
+    void spawnParticle(Point point, Particle particle, int amount, Iterable<OnlineMinecraftPlayer> receivers);
 
+    void spawnParticle(Point point, Particle particle, int amount, Offset offset, Iterable<OnlineMinecraftPlayer> receivers);
 
+    DroppedItem dropItem(Point point, ItemStack item);
 
-    DroppedItem dropItem(Point location, ItemStack item);
-
-    DroppedItem dropItemNaturally(Point location, ItemStack item);
-
+    DroppedItem dropItemNaturally(Point point, ItemStack item);
 
     boolean createExplosion(Point point, float power);
 

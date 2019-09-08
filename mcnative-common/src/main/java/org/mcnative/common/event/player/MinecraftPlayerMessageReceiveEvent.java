@@ -20,14 +20,14 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.Receivers;
 import org.mcnative.common.text.TextComponent;
 
 public interface MinecraftPlayerMessageReceiveEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 
     TextComponent getMessage();
 
-    ChatChannel getChannel();
+    Receivers getChannel();
 
     void setMessage(TextComponent... components);
 

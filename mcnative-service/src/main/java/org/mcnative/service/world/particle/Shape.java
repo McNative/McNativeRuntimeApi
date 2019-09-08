@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 11.08.19, 20:36
+ * @author Philipp Elvin Friedhoff
+ * @since 08.09.19, 17:27
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,21 @@
  * under the License.
  */
 
-package org.mcnative.common.player.chat;
+package org.mcnative.service.world.particle;
 
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.MessageComponent;
+import org.mcnative.service.location.Point;
 
 import java.util.Collection;
 
-public interface ChatChannel {
+public class Shape {
 
-    String getName();
+    private final Collection<Point> points;
 
-    String getPrefix();
+    public Shape(Collection<Point> points) {
+        this.points = points;
+    }
 
-    void setPrefix(String prefix);
-
-    Collection<OnlineMinecraftPlayer> getPlayers();
-
-    void addPlayer(OnlineMinecraftPlayer player);
-
-    void removePlayer(OnlineMinecraftPlayer player);
-
-    void sendMessage(String message);
-
-    void sendMessage(MessageComponent... components);
-
+    public Collection<Point> getPoints() {
+        return points;
+    }
 }
