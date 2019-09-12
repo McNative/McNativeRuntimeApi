@@ -20,10 +20,11 @@
 package org.mcnative.service.entity.living.player;
 
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.service.entity.living.AnimalTamer;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.location.Location;
 
-public interface OfflinePlayer extends MinecraftPlayer {
+public interface OfflinePlayer extends MinecraftPlayer, AnimalTamer {
 
     Inventory getEnderchestInventory();
 

@@ -19,7 +19,11 @@
 
 package org.mcnative.service.entity.living.monster;
 
-import org.mcnative.service.entity.Entity;
+import org.mcnative.service.entity.living.LivingEntity;
+import org.mcnative.service.entity.living.TargetAbleEntity;
+import org.mcnative.service.loot.Lootable;
 
-public interface Monster extends Entity {
+public interface Monster extends LivingEntity, Lootable, TargetAbleEntity {
+
+    boolean isInDaylight();
 }

@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 11.08.19, 20:36
+ * @author Philipp Elvin Friedhoff
+ * @since 25.08.19, 12:38
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.common.player.chat;
+package org.mcnative.service.inventory.recipe.type;
 
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.MessageComponent;
+import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.recipe.choice.RecipeChoice;
 
-import java.util.Collection;
+public class SmokingRecipe extends CookingRecipe {
 
-public interface ChatChannel {
-
-    String getName();
-
-    String getPrefix();
-
-    void setPrefix(String prefix);
-
-    Collection<OnlineMinecraftPlayer> getPlayers();
-
-    void addPlayer(OnlineMinecraftPlayer player);
-
-    void removePlayer(OnlineMinecraftPlayer player);
-
-    void sendMessage(String message);
-
-    void sendMessage(MessageComponent... components);
-
+    public SmokingRecipe(String namespace, String key, String group, ItemStack result, RecipeChoice ingredient, float experience, int cookingTime) {
+        super(namespace, key, group, result, ingredient, experience, cookingTime);
+    }
 }

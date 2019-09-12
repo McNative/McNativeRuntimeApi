@@ -102,4 +102,6 @@ public interface World extends WorldSequence{
     void save();
 
     File getFolder();
+
+
 }

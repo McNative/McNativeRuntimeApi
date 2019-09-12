@@ -32,8 +32,6 @@ import org.mcnative.service.location.Location;
 
 public interface Player extends HumanEntity,OnlineMinecraftPlayer {
 
-    PlayerInventory getInventory();
-
     void openInventory(Inventory inventory);
 
     void openBook(ItemStack book);

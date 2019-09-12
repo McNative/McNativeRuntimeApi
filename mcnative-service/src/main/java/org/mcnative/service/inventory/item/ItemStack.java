@@ -93,4 +93,8 @@ public interface ItemStack {
     void addFlags(ItemFlag... flags);
 
     void setUnbreakable(boolean unbreakable);
+
+    static ItemStack newItemStack(Material material) {
+        return null;
+    }
 }

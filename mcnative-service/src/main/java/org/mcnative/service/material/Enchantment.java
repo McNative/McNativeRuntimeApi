@@ -19,16 +19,25 @@
 
 package org.mcnative.service.material;
 
-public class Enchantment {
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.service.inventory.item.ItemStack;
 
-    private String name;
-    private int id, startLevel, maxLevel;
+public abstract class Enchantment {
 
-    public Enchantment(String name, int id, int startLevel, int maxLevel) {
+    private final ObjectOwner owner;
+    private final String name;
+    private final int id, startLevel, maxLevel;
+
+    public Enchantment(ObjectOwner owner, String name, int id, int startLevel, int maxLevel) {
+        this.owner = owner;
         this.name = name;
         this.id = id;
         this.startLevel = startLevel;
         this.maxLevel = maxLevel;
+    }
+
+    public ObjectOwner getOwner() {
+        return owner;
     }
 
     public String getName() {
@@ -46,4 +55,10 @@ public class Enchantment {
     public int getMaxLevel() {
         return maxLevel;
     }
+
+    public abstract boolean canEnchant(ItemStack itemStack);
+
+    public abstract boolean conflictsWith(Enchantment enchantment);
+
+    //private static Enchantment createDefault(String name, int id, int maxLevel, Enchantment[] conflicts, )
 }

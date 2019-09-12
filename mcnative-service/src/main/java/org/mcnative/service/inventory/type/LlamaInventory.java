@@ -27,7 +27,7 @@ import org.mcnative.service.inventory.item.ItemStack;
 
 @JEProtocolSupport(min=MinecraftProtocolVersion.JE_1_11)
 @BEProtocolSupport(min=MinecraftProtocolVersion.BE_1_1)
-public interface LlamaInventory extends Inventory {
+public interface LlamaInventory extends HorseInventory {
 
     ItemStack getDecor();
 

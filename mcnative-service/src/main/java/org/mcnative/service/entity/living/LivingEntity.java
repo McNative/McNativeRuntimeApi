@@ -21,12 +21,43 @@ package org.mcnative.service.entity.living;
 
 import org.mcnative.service.entity.Damageable;
 import org.mcnative.service.entity.Entity;
+import org.mcnative.service.entity.projectile.ProjectileSource;
 import org.mcnative.service.location.Location;
+import org.mcnative.service.material.Material;
+import org.mcnative.service.world.block.Block;
 
-public interface LivingEntity extends Entity,Damageable {
+import java.util.List;
+import java.util.Set;
+
+public interface LivingEntity extends Entity, Damageable, ProjectileSource {
 
     double getEyeHeight();
 
+    double getEyeHeight(boolean ignorePose);
+
     Location getEyeLocation();
 
+    List<Block> getLineOfSight(Set<Material> transparent, int maxDistance);
+
+    boolean hasLineOfSight(Entity other);
+
+    Block getTargetBlock(Set<Material> transparent, int maxDistance);
+
+    Block getTargetBlock(int maxDistance);
+
+    //Collection<PotionEffect> getActivePotionEffects();
+
+    //PotionEffect getPotionEffect(PotionEffectType type);
+
+    //boolean hasPotionEffect(PotionEffectType type);
+
+    //boolean addPotionEffect(PotionEffect effect);
+
+    //boolean addPotionEffect(PotionEffect effect, boolean force);
+
+    //void removePotionEffect(PotionEffectType type);
+
+    int getHandRaisedTime();
+
+    boolean isHandRaised();
 }
