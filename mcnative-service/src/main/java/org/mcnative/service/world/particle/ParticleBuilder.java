@@ -22,16 +22,17 @@ package org.mcnative.service.world.particle;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.receiver.ReceiveAble;
 import org.mcnative.common.player.receiver.ReceiverChannel;
+import org.mcnative.service.MinecraftService;
 import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Offset;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 public class ParticleBuilder implements ReceiveAble {
 
     private final List<Entry> entries;
-    private Collection<OnlineMinecraftPlayer> receivers;
+    private Iterable<OnlineMinecraftPlayer> receivers;
     private Shape shape;
 
     private ParticleBuilder() {
@@ -56,9 +57,12 @@ public class ParticleBuilder implements ReceiveAble {
     }
 
     public ParticleBuilder receivers(Iterable<OnlineMinecraftPlayer> receivers) {
-        if(this.receivers == null) this.receivers = new ArrayList<>();
-        receivers.forEach(receiver -> this.receivers.add(receiver));
+        this.receivers = receivers;
         return this;
+    }
+
+    public ParticleBuilder receivers(OnlineMinecraftPlayer... receivers) {
+        return receivers(Arrays.asList(receivers));
     }
 
     public ParticleBuilder shape(Shape shape) {
@@ -68,12 +72,9 @@ public class ParticleBuilder implements ReceiveAble {
 
     public void spawn() {
         if(shape == null) {
+            Iterable<OnlineMinecraftPlayer> receivers = this.receivers != null ? this.receivers : MinecraftService.getInstance().getOnlinePlayers();
             for (Entry entry : this.entries) {
-                if(this.receivers == null || this.receivers.isEmpty()) {
-                    entry.location.getWorld().spawnParticle(entry.location, entry.particle, entry.amount, entry.offset);
-                } else {
-                    entry.location.getWorld().spawnParticle(entry.location, entry.particle, entry.amount, entry.offset, this.receivers);
-                }
+                entry.location.getWorld().spawnParticle(entry.location, entry.particle, entry.amount, entry.offset, receivers);
             }
         }
     }
@@ -85,6 +86,7 @@ public class ParticleBuilder implements ReceiveAble {
     @Override
     public void execute(ReceiverChannel receivers) {
         receivers(receivers);
+        spawn();
     }
 
     private static final class Entry {
