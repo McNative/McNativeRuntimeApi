@@ -30,52 +30,58 @@ import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collection;
 
 public class McNativeLoader {
 
     private static final String MCNATIVE_URL_VERSION = "http://localhost/mcnative/version";
+    private static final String MCNATIVE_URL_DOWNLOAD = "http://localhost/mcnative/download";
+
     private static final File MCNATIVE_FOLDER = new File("plugins/McNative/");
 
-    public static boolean isAvailable(){
-        return false;
+    private final String platform;
+    private File location;
+
+    public McNativeLoader(String platform) {
+        this.platform = platform;
+
+        this.location = new File("plugins/McNative/alpha.jar");
     }
 
-    public static boolean isNewestVersion(){
-        return false;
-    }
-
-    public static String getVersion(){
+    public static String getCurrentVersion(){
         return null;
     }
 
-    public Collection<File> searchAvailableJars(){
-        return null;
+    public boolean isAvailable(){
+        try{
+            return (boolean) ReflectionUtil.invokeMethod(Class.forName("org.mcnative.common.McNative"),"isAvailable");
+        }catch (ClassNotFoundException ignored){}
+        return false;
     }
 
-    public static void install(String platformName){
+    public boolean isLatestVersionInstalled(){
+        return true;
+    }
+
+    public void install(){
         if(isAvailable()) return;
-        File location = downloadLatest(platformName);
-        load(platformName,location);
+        if(!isLatestVersionInstalled()) downloadLatest();
+        launch();
     }
 
-    public static File downloadLatest(String platformName){
-        return new File("plugins/McNative/alpha.jar");
+    public static void downloadLatest(){
+
     }
 
-    public static void load(String platformName, File location){
+    public void launch(){
         //load class
-
         try{
             URLClassLoader loader = new URLClassLoader(new URL[] {FileUtil.fileToUrl(location)});
-            Class<?> mcNativeClass = loader.loadClass("org.mcnative."+platformName.toLowerCase()+".McNativeLauncher");
+            Class<?> mcNativeClass = loader.loadClass("org.mcnative."+this.platform.toLowerCase()+".McNativeLauncher");
             ReflectionUtil.invokeMethod(mcNativeClass,"launchMcNative");
         }catch (ClassNotFoundException exception){
             exception.printStackTrace();
         }
     }
-
-
 
     public Pair<String,Integer> getLatestVersion(){
         HttpClient client = new HttpClient();
@@ -83,11 +89,10 @@ public class McNativeLoader {
         HttpResult result = client.connect();
         Document document = result.getContent(DocumentFileType.JSON.getReader());
         result.close();
-        return new Pair<String, Integer>(document.getString("latest.name"),document.getInt("latest.build"));
+        return new Pair<>(document.getString("latest.name"), document.getInt("latest.build"));
     }
 
-    public static void checkVersion(String cu){
-
+    public static void install(String platform){
+        new McNativeLoader(platform).install();
     }
-
 }

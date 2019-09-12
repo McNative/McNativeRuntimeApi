@@ -19,14 +19,15 @@
 
 package org.mcnative.service.world;
 
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.service.Effect;
-import org.mcnative.service.Particle;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.animal.Animal;
 import org.mcnative.service.entity.living.monster.Monster;
 import org.mcnative.service.entity.living.player.Player;
+import org.mcnative.service.entity.projectile.arrow.Arrow;
 import org.mcnative.service.inventory.item.DroppedItem;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
@@ -35,6 +36,7 @@ import org.mcnative.service.location.Vector;
 import org.mcnative.service.material.Material;
 import org.mcnative.service.world.block.Block;
 import org.mcnative.service.world.block.data.BlockData;
+import org.mcnative.service.world.particle.Particle;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -96,15 +98,19 @@ public interface WorldSequence {
     <E extends Entity> E spawnNoAIEntity(Location location,Class<?> clazz);
 
 
-    //Return Arrow  Default: 0.6 / 12
-    void spawnArrow(Vector location, Vector direction);
+    <A extends Arrow> A spawnArrow(Vector point, Vector direction, float speed, float spread, Class<A> arrowClass);
 
-    <A > A spawnArrow(Vector location, Vector direction, float speed, float spread, Class<A> arrowClass);
+    Arrow spawnArrow(Vector point, Vector direction);
 
 
-    void spawnParticle(Vector location, Particle particle, int amount);
+    void spawnParticle(Vector point, Particle particle, int amount, Iterable<OnlineMinecraftPlayer> receivers);
 
-    void spawnParticle(Vector location, Particle particle, int amount, Offset offset);
+    void spawnParticle(Vector point, Particle particle, int amount, Offset offset, Iterable<OnlineMinecraftPlayer> receivers);
+
+
+    void spawnParticle(Vector point, Particle particle, int amount);
+
+    void spawnParticle(Vector point, Particle particle, int amount, Offset offset);
 
 
 

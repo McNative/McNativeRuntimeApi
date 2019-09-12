@@ -19,9 +19,36 @@
 
 package org.mcnative.bungeecord;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
+import org.mcnative.common.McNative;
+
+import java.util.logging.Logger;
+
 public class McNativeLauncher {
 
     public static void launchMcNative(){
+        Logger logger = ProxyServer.getInstance().getLogger();
+        if(!McNative.isAvailable()) return;
+        logger.info("McNative is starting, please wait...");
 
+        ProxyServer proxy = ProxyServer.getInstance();
+
+        BungeeCordService instance = new BungeeCordService();
+        McNative.setInstance(instance);
+
+        proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(instance.getServers(),proxy.getConfigurationAdapter()));
+        logger.info("McNative has overwritten the configuration adapter.");
+
+        //Override plugin manager
+        ReflectionUtil.changeFieldValue(proxy,"pluginManager",new McNativeBungeePluginManager(proxy));
+        logger.info("McNative initialised plugin manager.");
+
+        //initialise netty pipeline hook
+
+        //override registry
+
+        //initialise connection handlers
     }
 }

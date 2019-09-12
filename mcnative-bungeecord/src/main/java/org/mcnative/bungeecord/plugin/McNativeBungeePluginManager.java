@@ -37,10 +37,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-public class McNativePluginManager extends PluginManager {
+public class McNativeBungeePluginManager extends PluginManager{
 
-    public McNativePluginManager(ProxyServer proxy) {
+    public McNativeBungeePluginManager(ProxyServer proxy) {
         super(proxy);
+    }
+
+    public McNativeBungeePluginManager(ProxyServer proxy, Yaml yaml, EventBus eventBus) {
+        super(proxy, yaml, eventBus);
     }
 
     @Override
@@ -121,34 +125,5 @@ public class McNativePluginManager extends PluginManager {
     @Override
     public Collection<Map.Entry<String, Command>> getCommands() {
         return super.getCommands();
-    }
-
-    public McNativePluginManager(ProxyServer proxy, Yaml yaml, EventBus eventBus) {
-        super(proxy, yaml, eventBus);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 }

@@ -34,8 +34,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
         try{
             McNativeLoader.install("BungeeCord");
 
-            this.executor = null;//new GuestPluginExecutor(new TestPlugin());
-            this.executor.loadGuestPlugin();
+            //this.executor = null;//new GuestPluginExecutor(new TestPlugin());
+            //this.executor.loadGuestPlugin();
         }catch (Exception exception){
             getLogger().log(Level.SEVERE,String.format("Could not load %s v%s by %s"
                     ,getDescription().getName()

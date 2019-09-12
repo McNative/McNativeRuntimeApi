@@ -26,7 +26,6 @@ import org.mcnative.bukkit.plugin.BukkitEventManager;
 
 public class BukkitMcNativeBootstrap extends JavaPlugin {
 
-
     @Override
     public void onLoad() {
         if(McNative.isAvailable()) return;
@@ -34,7 +33,6 @@ public class BukkitMcNativeBootstrap extends JavaPlugin {
         getLogger().info("McNative is starting, please wait...");
 
         EventManager eventManager = BukkitEventManager.initialize();
-
 
 
         getLogger().info("McNative successfully started.");

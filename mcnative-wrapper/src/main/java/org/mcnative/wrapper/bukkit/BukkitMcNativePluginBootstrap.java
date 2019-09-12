@@ -43,6 +43,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
 
     private GuestPluginLoader loader;
 
+
+
     @Override
     public void onLoad() {
 

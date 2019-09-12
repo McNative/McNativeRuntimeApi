@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 18:18
+ * @since 31.08.19, 13:35
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,11 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord;
+package org.mcnative.loader;
 
-import net.md_5.bungee.api.plugin.Plugin;
 
-public class BungeeCordMcNativeBootstrap extends Plugin {
+public class McNativeLoader {
 
-    @Override
-    public void onLoad() {
-        McNativeLauncher.launchMcNative();
-    }
+
+
 }

@@ -19,10 +19,34 @@
 
 package org.mcnative.bungeecord.event;
 
-import net.md_5.bungee.event.EventBus;
+import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
-public class McNativeBungeeEventManager extends EventBus {
+public class McNativeBungeeEventManager implements EventManager {
 
-    
 
+    @Override
+    public void registerListener(ObjectOwner objectOwner, Object listener) {
+
+    }
+
+    @Override
+    public void unregisterListener(Object listener) {
+
+    }
+
+    @Override
+    public void unregisterListener(ObjectOwner owner) {
+
+    }
+
+    @Override
+    public void callEventAsync(Object o) {
+
+    }
+
+    @Override
+    public void callEvent(Object o) {
+
+    }
 }

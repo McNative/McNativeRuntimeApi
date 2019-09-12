@@ -3,7 +3,7 @@
   ~ (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
   ~
   ~ @author Davide Wietlisbach
-  ~ @since 02.08.19 20:40
+  ~ @since 31.08.19, 21:31
   ~
   ~ The McNative Project is under the Apache License, version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
 
     <artifactId>mcnative-test-plugin-service</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
@@ -60,40 +61,35 @@
                         <name>TestPlugin</name>
                         <category>Testing</category>
                         <version>1.0.0</version>
-                        <main>org.mcnative.testplugin.service.TestPlugin</main>
+                        <main>test.TestPlugin</main>
                         <description>Demo and test plugin</description>
                         <website>https://mcnative.prematic.net</website>
                         <author>Davide Wietlisbach</author>
-
-                        <depends>
-                            <depend>DKBans</depend>
-                            <depend>DKCoins</depend>
-                        </depends>
                     </manifest>
                 </configuration>
             </plugin>
 
-
         </plugins>
     </build>
 
-    <dependencies>
+    <repositories>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
-        <!-- Internal project dependencies -->
+    <dependencies>
         <dependency>
             <groupId>org.mcnative</groupId>
-            <artifactId>mcnative-service</artifactId>
+            <artifactId>mcnative-common</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.mcnative</groupId>
-            <artifactId>mcnative-wrapper</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

@@ -41,6 +41,7 @@
         <module>mcnative-bukkit</module>
         <module>mcnative-bungeecord</module>
         <module>mcnative-buildtool-maven</module>
+        <module>mcnative-loader</module>
     </modules>
 
     <repositories>
