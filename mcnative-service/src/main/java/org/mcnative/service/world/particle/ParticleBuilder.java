@@ -20,7 +20,8 @@
 package org.mcnative.service.world.particle;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.ReceiveAble;
+import org.mcnative.common.player.receiver.ReceiveAble;
+import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Offset;
 import java.util.ArrayList;
@@ -81,14 +82,19 @@ public class ParticleBuilder implements ReceiveAble {
         return new ParticleBuilder();
     }
 
-    private final class Entry {
+    @Override
+    public void execute(ReceiverChannel receivers) {
+        receivers(receivers);
+    }
+
+    private static final class Entry {
 
         final Location location;
         final Particle particle;
         final int amount;
         final Offset offset;
 
-        public Entry(Location location, Particle particle, int amount, Offset offset) {
+        private Entry(Location location, Particle particle, int amount, Offset offset) {
             this.location = location;
             this.particle = particle;
             this.amount = amount;

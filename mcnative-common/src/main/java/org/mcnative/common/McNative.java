@@ -26,14 +26,11 @@ import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import org.mcnative.common.messaging.PluginMessageListener;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.WhitelistHandler;
-import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.player.profile.GameProfileLoader;
+import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.MinecraftPacketListener;
@@ -88,9 +85,9 @@ public interface McNative {
 
 
 
-    ChatChannel getServerChat();
+    ReceiverChannel getServerChat();
 
-    void setServerChat(ChatChannel channel);
+    void setServerChat(ReceiverChannel channel);
 
 
     Tablist getDefaultTablist();

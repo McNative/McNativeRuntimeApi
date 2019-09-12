@@ -21,6 +21,7 @@ package org.mcnative.common.player;
 
 import org.mcnative.common.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
@@ -88,11 +89,11 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
     void setTablistFooter(String footer);
 
 
-    Collection<Receivers> getChatChannels();
+    Collection<ReceiverChannel> getChatChannels();
 
-    void addChatChannel(Receivers channel);
+    void addChatChannel(ReceiverChannel channel);
 
-    void removeChatChannel(Receivers channel);
+    void removeChatChannel(ReceiverChannel channel);
 
 
     void sendMessage(String message);

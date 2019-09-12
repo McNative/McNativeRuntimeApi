@@ -30,18 +30,14 @@ import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
 import org.mcnative.bungeecord.server.BungeeMinecraftServer;
 import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
-import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.messaging.PluginMessageListener;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.WhitelistHandler;
-import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.player.profile.GameProfileLoader;
+import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.MinecraftPacketListener;
@@ -68,7 +64,7 @@ public class BungeeCordService implements ProxyService {
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
 
-    private ChatChannel serverChannel;
+    private ReceiverChannel serverChannel;
 
     private PermissionHandler permissionHandler;
     private PunishmentHandler punishmentHandler;
@@ -240,12 +236,12 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public ChatChannel getServerChat() {
+    public ReceiverChannel getServerChat() {
         return serverChannel;
     }
 
     @Override
-    public void setServerChat(ChatChannel channel) {
+    public void setServerChat(ReceiverChannel channel) {
         serverChannel = channel;
     }
 

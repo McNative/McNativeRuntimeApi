@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 08.09.19, 17:21
+ * @author Davide Wietlisbach
+ * @since 12.09.19, 20:42
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,15 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.player.receiver;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.MessageComponent;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 
-public interface Receivers extends Iterable<OnlineMinecraftPlayer> {
+public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     String getName();
 
@@ -49,5 +48,7 @@ public interface Receivers extends Iterable<OnlineMinecraftPlayer> {
 
     void sendMessage(MessageComponent... components);
 
-    void sendReceiveAble(ReceiveAble receiveAble);
+    default void send(ReceiveAble receiveAble){
+        receiveAble.execute(this);
+    }
 }

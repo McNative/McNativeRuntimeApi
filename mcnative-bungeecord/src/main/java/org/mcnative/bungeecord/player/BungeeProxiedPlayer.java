@@ -26,9 +26,9 @@ import net.prematic.libraries.document.Document;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
-import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
@@ -186,17 +186,17 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public Collection<ChatChannel> getChatChannels() {
+    public Collection<ReceiverChannel> getChatChannels() {
         return null;
     }
 
     @Override
-    public void addChatChannel(ChatChannel channel) {
+    public void addChatChannel(ReceiverChannel channel) {
 
     }
 
     @Override
-    public void removeChatChannel(ChatChannel channel) {
+    public void removeChatChannel(ReceiverChannel channel) {
 
     }
 
