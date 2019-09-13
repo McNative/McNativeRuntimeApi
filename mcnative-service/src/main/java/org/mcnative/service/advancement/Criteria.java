@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 13.09.19, 17:52
+ * @since 12.09.19, 18:36
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,8 @@
 
 package org.mcnative.service.advancement;
 
-public class Advancement implements Criteria {
+public interface Criteria {
 
-    private final String name;
+    String getName();
 
-    public Advancement(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
 }

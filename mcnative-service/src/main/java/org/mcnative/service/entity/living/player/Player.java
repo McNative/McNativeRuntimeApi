@@ -23,6 +23,7 @@ import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
+import org.mcnative.service.advancement.AdvancementProgress;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
@@ -142,6 +143,7 @@ public interface Player extends HumanEntity,OnlineMinecraftPlayer {
 
     void playEffect(Location location, Effect effect, int data);
 
+    AdvancementProgress getAdvancementProgress();
 }
     /*
     Time
