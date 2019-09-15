@@ -28,8 +28,6 @@ public interface NamespacedKey {
 
     String MCNATIVE = "MCNATIVE";
 
-    String getName();
-
     String getNamespace();
 
     String getKey();

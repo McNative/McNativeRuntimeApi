@@ -24,7 +24,6 @@ import org.mcnative.service.inventory.item.ItemStack;
 
 public interface NamedRecipe extends Recipe, NamespacedKey {
 
-    @Override
     default String getName() {
         return getNamespace() + ":" + getKey();
     }
