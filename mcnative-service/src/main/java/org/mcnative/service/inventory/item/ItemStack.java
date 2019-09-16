@@ -22,8 +22,8 @@ package org.mcnative.service.inventory.item;
 
 import org.mcnative.service.NBTTag;
 import org.mcnative.service.inventory.item.data.ItemData;
-import org.mcnative.service.material.Enchantment;
-import org.mcnative.service.material.Material;
+import org.mcnative.service.inventory.item.material.Enchantment;
+import org.mcnative.service.inventory.item.material.Material;
 
 import java.util.List;
 import java.util.Map;

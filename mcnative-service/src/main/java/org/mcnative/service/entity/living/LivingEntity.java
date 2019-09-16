@@ -22,10 +22,13 @@ package org.mcnative.service.entity.living;
 import org.mcnative.service.entity.Damageable;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.projectile.ProjectileSource;
+import org.mcnative.service.inventory.item.material.Material;
+import org.mcnative.service.inventory.item.potion.PotionEffect;
+import org.mcnative.service.inventory.item.potion.PotionEffectType;
 import org.mcnative.service.location.Location;
-import org.mcnative.service.material.Material;
 import org.mcnative.service.world.block.Block;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -45,17 +48,19 @@ public interface LivingEntity extends Entity, Damageable, ProjectileSource {
 
     Block getTargetBlock(int maxDistance);
 
-    //Collection<PotionEffect> getActivePotionEffects();
+    Collection<PotionEffect> getActivePotionEffects();
 
-    //PotionEffect getPotionEffect(PotionEffectType type);
+    PotionEffect getPotionEffect(PotionEffectType type);
 
-    //boolean hasPotionEffect(PotionEffectType type);
+    boolean hasPotionEffect(PotionEffectType type);
 
-    //boolean addPotionEffect(PotionEffect effect);
+    void addPotionEffect(PotionEffect effect);
 
-    //boolean addPotionEffect(PotionEffect effect, boolean force);
+    void addPotionEffect(PotionEffect effect, boolean force);
 
-    //void removePotionEffect(PotionEffectType type);
+    void addPotionEffects(PotionEffect... potionEffects);
+
+    void removePotionEffect(PotionEffectType type);
 
     int getHandRaisedTime();
 

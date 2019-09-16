@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.service.material;
+package org.mcnative.service.inventory.item.material;
 
 public class MaterialCategory {
 

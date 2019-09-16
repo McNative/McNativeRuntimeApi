@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world.block.data;
 
-import org.mcnative.service.material.MaterialData;
+import org.mcnative.service.inventory.item.material.MaterialData;
 
 public interface BlockData extends MaterialData {
 }

@@ -19,9 +19,8 @@
 
 package org.mcnative.service.inventory.recipe.choice;
 
-import net.prematic.libraries.utility.Iterators;
 import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.material.Material;
+import org.mcnative.service.inventory.item.material.Material;
 
 import java.util.Arrays;
 import java.util.Collection;

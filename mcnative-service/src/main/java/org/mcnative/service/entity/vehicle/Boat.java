@@ -19,7 +19,7 @@
 
 package org.mcnative.service.entity.vehicle;
 
-import org.mcnative.service.material.Material;
+import org.mcnative.service.inventory.item.material.Material;
 
 public interface Boat extends Vehicle {
 

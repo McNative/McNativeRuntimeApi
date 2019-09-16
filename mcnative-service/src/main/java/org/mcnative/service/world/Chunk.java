@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world;
 
-import org.mcnative.service.material.Material;
+import org.mcnative.service.inventory.item.material.Material;
 import org.mcnative.service.world.block.Block;
 
 public interface Chunk extends WorldSequence, Iterable<Block>{

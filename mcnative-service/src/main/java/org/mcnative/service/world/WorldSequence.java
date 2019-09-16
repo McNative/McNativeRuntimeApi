@@ -33,7 +33,7 @@ import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Offset;
 import org.mcnative.service.location.Vector;
-import org.mcnative.service.material.Material;
+import org.mcnative.service.inventory.item.material.Material;
 import org.mcnative.service.world.block.Block;
 import org.mcnative.service.world.block.data.BlockData;
 import org.mcnative.service.world.particle.Particle;

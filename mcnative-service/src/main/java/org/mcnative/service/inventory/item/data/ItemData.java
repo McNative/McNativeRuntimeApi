@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.item.data;
 
-import org.mcnative.service.material.MaterialData;
+import org.mcnative.service.inventory.item.material.MaterialData;
 
 public interface ItemData extends MaterialData {
 }
