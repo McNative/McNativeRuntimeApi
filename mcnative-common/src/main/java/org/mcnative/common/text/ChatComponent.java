@@ -50,7 +50,6 @@ public interface ChatComponent<T extends ChatComponent> extends MessageComponent
         return setClickEvent(ClickAction.EXECUTE,callback);
     }
 
-
     Collection<MessageComponent> getExtras();
 
     T addExtra(MessageComponent component);

@@ -20,6 +20,7 @@
 package org.mcnative.common.player.receiver;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.MessageComponent;
 
 import java.util.Collection;
@@ -47,6 +48,8 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
     void sendMessage(String message);
 
     void sendMessage(MessageComponent... components);
+
+    void sendPacket(MinecraftPacket packet);
 
     default void send(ReceiveAble receiveAble){
         receiveAble.execute(this);

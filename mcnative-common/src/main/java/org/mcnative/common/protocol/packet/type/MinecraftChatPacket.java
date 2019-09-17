@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 14:51
+ * @since 15.09.19, 18:15
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.packet.type.outgoing;
+package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
-import org.mcnative.common.player.chat.ChatPosition;
+import org.mcnative.common.player.ChatPosition;
+import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.text.MessageComponent;
+import org.mcnative.common.text.Text;
 
-public class MinecraftMessageSendPacket implements MinecraftPacket {
+public class MinecraftChatPacket implements MinecraftPacket {
 
     private MessageComponent message;
     private ChatPosition position;
@@ -47,12 +50,18 @@ public class MinecraftMessageSendPacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(MinecraftProtocolVersion version, ByteBuf buffer) {
+    public int getId(PacketDirection direction, MinecraftProtocolVersion version) {
+        return 0;
+    }
 
+    @Override
+    public void read(MinecraftProtocolVersion version, ByteBuf buffer) {
+         message = Text.unCompile(MinecraftProtocolUtil.readString(buffer));
     }
 
     @Override
     public void write(MinecraftProtocolVersion version, ByteBuf buffer) {
+        MinecraftProtocolUtil.writeString(buffer,this.message.compile());
         buffer.writeByte(position.getId());
     }
 }

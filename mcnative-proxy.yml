@@ -56,7 +56,11 @@ global:
         enabled: false
         header: '&6McNative §ais a cool Minecraft Application Framework (MAF)'
         footer: '§aWebsite: Https://mcnative.org'
-        playerFormat: '%prefix%%name%%suffix%'
+        order: "RANK / SERVER"
+        format:
+            player: '%prefix%%name%%suffix%'
+            server: ' &8<- %server% &8->'
+
 
 messaging:
     directConnect: false #The BungeeCord server will directly connect to the Minecraft server as a fake player (Required McNative on sub server)

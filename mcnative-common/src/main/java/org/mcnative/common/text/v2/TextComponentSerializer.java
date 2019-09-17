@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 15.09.19, 15:56
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,22 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.packet;
+package org.mcnative.common.text.v2;
 
-import io.netty.buffer.ByteBuf;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import net.prematic.libraries.document.DocumentEntry;
+import net.prematic.libraries.document.adapter.DocumentAdapter;
+import net.prematic.libraries.utility.reflect.TypeReference;
+import org.mcnative.common.text.ChatComponent;
 
-public interface MinecraftPacket {
+public class TextComponentSerializer implements DocumentAdapter<ChatComponent> {
 
-    int getId(PacketDirection direction, MinecraftProtocolVersion version);
+    @Override
+    public ChatComponent read(DocumentEntry documentEntry, TypeReference<ChatComponent> typeReference) {
+        return null;
+    }
 
-    void read(MinecraftProtocolVersion version, ByteBuf buffer);
-
-    void write(MinecraftProtocolVersion version, ByteBuf buffer);
-
-
+    @Override
+    public DocumentEntry write(String s, ChatComponent chatComponent) {
+        return null;
+    }
 }

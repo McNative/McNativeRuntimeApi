@@ -20,10 +20,11 @@
 package org.mcnative.service;
 
 import org.mcnative.common.McNative;
+import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
-public interface MinecraftService extends McNative {
+public interface MinecraftService extends McNative<Player> {
 
     ObjectCreator getObjectCreator();
 

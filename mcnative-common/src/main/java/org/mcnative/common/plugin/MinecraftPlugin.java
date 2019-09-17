@@ -19,6 +19,7 @@
 
 package org.mcnative.common.plugin;
 
+import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import org.mcnative.common.Configuration;
 import org.mcnative.common.McNative;
@@ -26,6 +27,10 @@ import org.mcnative.common.McNative;
 import java.io.File;
 
 public class MinecraftPlugin extends Plugin<McNative> {
+
+    public PrematicLogger getLogger(){
+        return McNative.getInstance().getLogger();
+    }
 
     public File getDataFolder(){
         return null;

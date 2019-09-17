@@ -19,6 +19,7 @@
 
 package org.mcnative.common.player;
 
+import net.prematic.libraries.command.sender.CommandSender;
 import org.mcnative.common.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.receiver.ReceiverChannel;
@@ -42,11 +43,9 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 
-public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnection {
+public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnection, CommandSender {
 
     DeviceInfo getDevice();
-
-    MinecraftProtocolVersion getClientVersion();
 
     String getClientName();
 

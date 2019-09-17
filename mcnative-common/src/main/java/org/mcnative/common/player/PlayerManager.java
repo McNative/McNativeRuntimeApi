@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:10
+ * @since 16.09.19, 20:30
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,34 +20,34 @@
 package org.mcnative.common.player;
 
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
+import java.util.function.Function;
 
-public interface PunishmentHandler {
+public interface PlayerManager<O extends OnlineMinecraftPlayer> {
 
-    Collection<MinecraftPlayer> getBanList();
+    int getOnlineCount();
 
-    Collection<MinecraftPlayer> getMuteList();
+    Collection<O> getOnlinePlayers();
 
-
-    boolean isBanned(MinecraftPlayer player);
-
-    String getBanReason(MinecraftPlayer player);
-
-    void ban(MinecraftPlayer player, String reason);
-
-    void ban(MinecraftPlayer player, String reason, long time, TimeUnit unit);
-
-    void unban(MinecraftPlayer player);
+    <T extends MinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass);
 
 
-    boolean isMuted(MinecraftPlayer player);
+    MinecraftPlayer getPlayer(UUID uniqueId);
 
-    String getMuteReason(MinecraftPlayer player);
+    MinecraftPlayer getPlayer(long xBoxId);
 
-    void mute(MinecraftPlayer player, String reason);
+    MinecraftPlayer getPlayer(String name);
 
-    void mute(MinecraftPlayer player, String reason, long time, TimeUnit unit);
 
-    void unmute(MinecraftPlayer player);
+    O getOnlinePlayer(UUID uniqueId);
+
+    O getOnlinePlayer(long xBoxId);
+
+    O getOnlinePlayer(String name);
+
+
+    <T extends MinecraftPlayer> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer,T> translator);
+
+    <T extends MinecraftPlayer> T translate(Class<T> translatedClass, MinecraftPlayer player);
 
 }

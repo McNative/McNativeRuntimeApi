@@ -28,7 +28,7 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 
-public interface ProxyService extends McNative {
+public interface ProxyService extends McNative<ProxiedPlayer> {
 
 
     Collection<MinecraftServer> getServers();
@@ -57,20 +57,6 @@ public interface ProxyService extends McNative {
     FallbackHandler getFallbackHandler();
 
     void setFallbackHandler(FallbackHandler handler);
-
-
-    Collection<ProxiedPlayer> getOnlineProxiedPlayers();
-
-    ProxiedPlayer getOnlinePlayer(UUID uniqueId);//Add Async method
-
-    ProxiedPlayer getOnlinePlayer(long xBoxId);
-
-    ProxiedPlayer getOnlinePlayer(String name);
-
-
-
-
-
 
     static ProxyService getInstance(){
         return (ProxyService) McNative.getInstance();

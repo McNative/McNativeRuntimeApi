@@ -51,4 +51,17 @@ public class McNativeLauncher {
 
         //initialise connection handlers
     }
+
+
+    /*
+    Plugin integration
+    Event integration
+    Command integration
+    Messaging integration
+    Handler integrations (Permission / Punishment / Whitelist / Connect / Reconnect)
+    Player integration
+
+
+
+     */
 }

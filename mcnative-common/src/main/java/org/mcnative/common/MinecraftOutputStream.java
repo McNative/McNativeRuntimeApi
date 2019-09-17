@@ -32,19 +32,23 @@ public class MinecraftOutputStream extends ByteArrayOutputStream {
         this.connection = connection;
     }
 
+    public MinecraftConnection getConnection() {
+        return connection;
+    }
+
     @Override
     public synchronized void write(int b) {
-        if(connection == null) throw new IllegalArgumentException("Stream is closed.");
+        if(connection == null || !connection.isConnected()) throw new IllegalArgumentException("Stream is closed.");
         super.write(b);
     }
 
     @Override
-    public void flush() throws IOException {
+    public void flush(){
         connection.sendData(channel,toByteArray());
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.connection = null;
     }
 }

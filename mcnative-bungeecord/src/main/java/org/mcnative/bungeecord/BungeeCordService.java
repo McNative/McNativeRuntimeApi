@@ -24,6 +24,7 @@ import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.logging.JdkPrematicLogger;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
@@ -41,6 +42,7 @@ import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.MinecraftPacketListener;
+import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.ProxiedPlayer;
@@ -58,8 +60,12 @@ public class BungeeCordService implements ProxyService {
 
     private final BungeeCordPlatform platform;
     private final PrematicLogger logger;
-    private final TaskScheduler scheduler;
 
+    private final TaskScheduler scheduler;
+    private final Registry registry;
+    private final PluginManager pluginManager;
+    private final CommandManager commandManager;
+    private final EventManager eventManager;
 
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
@@ -68,6 +74,8 @@ public class BungeeCordService implements ProxyService {
 
     private PermissionHandler permissionHandler;
     private PunishmentHandler punishmentHandler;
+    private WhitelistHandler whitelistHandler;
+
     private ConnectHandler connectHandler;
     private FallbackHandler fallbackHandler;
 
@@ -75,13 +83,17 @@ public class BungeeCordService implements ProxyService {
     private Tablist tablist;
 
     public BungeeCordService() {
+        this.platform = new BungeeCordPlatform();
+        this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
+
         this.scheduler = new SimpleTaskScheduler();
+        this.registry = null;
+        this.pluginManager = null;
+        this.commandManager = null;
+        this.eventManager = null;
 
         this.pluginMessageListeners = new ArrayList<>();
         this.servers = new ArrayList<>();
-
-        this.logger = null;
-        this.platform = null;
     }
 
     @Override
@@ -101,7 +113,7 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public Registry getRegistry() {
-        return null;
+        return registry;
     }
 
     @Override
@@ -111,19 +123,28 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public CommandManager getCommandManager() {
-        return null;
+        return commandManager;
     }
 
     @Override
     public EventManager getEventManager() {
-        return null;
+        return eventManager;
     }
 
     @Override
     public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    @Override
+    public PacketManager getPacketManager() {
         return null;
     }
 
+    @Override
+    public PlayerManager<ProxiedPlayer> getPlayerManager() {
+        return null;
+    }
 
     @Override
     public PermissionHandler getPermissionHandler() {
@@ -167,12 +188,12 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public WhitelistHandler getWhitelistHandler() {
-        return null;
+        return this.whitelistHandler;
     }
 
     @Override
     public void setWhitelistHandler(WhitelistHandler handler) {
-
+        this.whitelistHandler = handler;
     }
 
     @Override
@@ -196,16 +217,6 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener) {
-
-    }
-
-    @Override
-    public void registerOutgoingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener) {
-
-    }
-
-    @Override
     public void broadcastPacket(MinecraftPacket packet) {
 
     }
@@ -213,26 +224,6 @@ public class BungeeCordService implements ProxyService {
     @Override
     public void broadcastPacket(MinecraftPacket packet, String permission) {
 
-    }
-
-    @Override
-    public Collection<MinecraftPlayer> getWhitelist() {
-        return null;
-    }
-
-    @Override
-    public Collection<MinecraftPlayer> getBanList() {
-        return null;
-    }
-
-    @Override
-    public Collection<MinecraftPlayer> getMuteList() {
-        return null;
-    }
-
-    @Override
-    public Collection<MinecraftPlayer> getOperators() {
-        return null;
     }
 
     @Override
@@ -320,52 +311,6 @@ public class BungeeCordService implements ProxyService {
         Iterators.removeOne(this.servers, server1 -> server1.equals(server));
     }
 
-
-    @Override
-    public ProxiedPlayer getOnlinePlayer(UUID uniqueId) {
-        return null;
-    }
-
-    @Override
-    public ProxiedPlayer getOnlinePlayer(long xBoxId) {
-        return null;
-    }
-
-    @Override
-    public ProxiedPlayer getOnlinePlayer(String name) {
-        return null;
-    }
-
-    @Override
-    public Collection<ProxiedPlayer> getOnlineProxiedPlayers() {
-        return null;
-    }
-
-    @Override
-    public int getOnlineCount() {
-        return ProxyServer.getInstance().getOnlineCount();
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(UUID uniqueId) {
-        return null;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(long xBoxId) {
-        return null;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(String name) {
-        return null;
-    }
-
-    @Override
-    public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        return null;
-    }
-
     @Override
     public void broadcast(String message) {
     }
@@ -429,15 +374,13 @@ public class BungeeCordService implements ProxyService {
 
     }
 
-
-
     public static class PluginMessageListenerEntry {
 
         public String name;
         public Plugin owner;
         public PluginMessageListener listener;
 
-        public PluginMessageListenerEntry(Plugin owner,String name, PluginMessageListener listener) {
+        private PluginMessageListenerEntry(Plugin owner,String name, PluginMessageListener listener) {
             this.owner = owner;
             this.name = name;
             this.listener = listener;

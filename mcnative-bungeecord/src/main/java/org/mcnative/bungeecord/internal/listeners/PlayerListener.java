@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 15.09.19, 16:12
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.packet;
-
-import io.netty.buffer.ByteBuf;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
-
-public interface MinecraftPacket {
-
-    int getId(PacketDirection direction, MinecraftProtocolVersion version);
-
-    void read(MinecraftProtocolVersion version, ByteBuf buffer);
-
-    void write(MinecraftProtocolVersion version, ByteBuf buffer);
+package org.mcnative.bungeecord.internal.listeners;
 
 
+import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
+
+public class PlayerListener implements Listener {
+
+    @EventHandler
+    public void onPlayerPreLogin(PreLoginEvent event){
+        event.getConnection().unsafe().sendPacket();
+    }
 }

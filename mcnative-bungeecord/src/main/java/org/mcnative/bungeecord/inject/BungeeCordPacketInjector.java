@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 15.09.19, 17:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,20 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.packet;
+package org.mcnative.bungeecord.inject;
 
-import io.netty.buffer.ByteBuf;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToMessageDecoder;
+import net.md_5.bungee.protocol.PacketWrapper;
+import net.md_5.bungee.protocol.Protocol;
 
-public interface MinecraftPacket {
+import java.util.List;
 
-    int getId(PacketDirection direction, MinecraftProtocolVersion version);
+public class BungeeCordPacketInjector extends MessageToMessageDecoder<PacketWrapper> {
 
-    void read(MinecraftProtocolVersion version, ByteBuf buffer);
-
-    void write(MinecraftProtocolVersion version, ByteBuf buffer);
-
-
+    @Override
+    protected void decode(ChannelHandlerContext context, PacketWrapper packetWrapper, List<Object> output) {
+        //If injection for packet registered
+        //Handle listener
+    }
 }

@@ -17,15 +17,21 @@
  * under the License.
  */
 
-package org.mcnative.common.player.chat;
+package org.mcnative.common.player;
 
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 public class ChatPosition {
 
-    private ObjectOwner owner;
-    private String name;
-    private byte id;
+    private final ObjectOwner owner;
+    private final String name;
+    private final byte id;
+
+    public ChatPosition(ObjectOwner owner, String name, byte id) {
+        this.owner = owner;
+        this.name = name;
+        this.id = id;
+    }
 
     public ObjectOwner getOwner() {
         return owner;

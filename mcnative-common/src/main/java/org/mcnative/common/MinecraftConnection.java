@@ -20,6 +20,7 @@
 package org.mcnative.common;
 
 import net.prematic.libraries.utility.io.IORuntimeException;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.TextComponent;
 
@@ -30,6 +31,8 @@ import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
 public interface MinecraftConnection {
+
+    MinecraftProtocolVersion getProtocolVersion();
 
     InetSocketAddress getAddress();
 
@@ -53,11 +56,7 @@ public interface MinecraftConnection {
     default void sendData(String channel,Consumer<OutputStream> output){
         MinecraftOutputStream stream = new MinecraftOutputStream(channel,this);
         output.accept(stream);
-        try {
-            stream.flush();
-        } catch (IOException exception) {
-            throw new IORuntimeException(exception);
-        }
+        stream.flush();
     }
 
     void sendData(String channel, byte[] output);

@@ -22,8 +22,11 @@ package org.mcnative.common.player.permission;
 import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public interface PermissionHandler {
+
+    Collection<MinecraftPlayer> getOperators();
 
     Collection<String> getGroups(MinecraftPlayer player);
 

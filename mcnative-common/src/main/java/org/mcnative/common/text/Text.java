@@ -125,8 +125,6 @@ public class Text extends AbstractChatComponent<Text> implements TextComponent<T
     private static final Pattern URL_PATTERN = Pattern.compile("([!?]\\[(.*?)\\](\\s*)\\(.*?\\))|(&[0-9-aA-fF-lL-oO-Rr])+|((https|http):\\/\\/|www\\.)[a-zA-Z0-9]+[a-zA-Z0-9]\\.[^\\s]{2,}");
 
     /*
-        &5
-
         ![Test](https://test.com|Gehe zur Webseite)
         ![Test](run://game join 10999)
         ![Test](server://lobby-1)
@@ -165,8 +163,6 @@ public class Text extends AbstractChatComponent<Text> implements TextComponent<T
         ([!?]\[(.*?)\](\s*)\(.*?\))|(&[0-9-aA-fF-lL-oO-Rr])|((https|http):\/\/|www\.)[a-zA-Z0-9]+[a-zA-Z0-9]\.[^\s]{2,} Markup, urls and colors
 
 
-
-
         Hallo du, |&5gehe zu |https://link.com||
      */
 
@@ -182,8 +178,6 @@ public class Text extends AbstractChatComponent<Text> implements TextComponent<T
         int lastColorIndex = 0;
         while(markups.find()){
             char type = content[markups.start()];
-
-
             if(type == '&'){
                 TextComponent  component = new Text();
                 for (int index = markups.start()+1; index < markups.end(); index+=2) {
@@ -216,6 +210,10 @@ public class Text extends AbstractChatComponent<Text> implements TextComponent<T
         }
          */
         return components;
+    }
+
+    public static MessageComponent unCompile(String jsonText){
+        return null;
     }
 
     public static void main(String[] args){

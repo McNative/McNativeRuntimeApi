@@ -33,16 +33,15 @@ import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.packet.MinecraftPacketListener;
+import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.TextComponent;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.function.Consumer;
 
-public interface McNative {
+public interface McNative<P extends OnlineMinecraftPlayer> {
 
     String getServiceName();
 
@@ -59,6 +58,10 @@ public interface McNative {
     EventManager getEventManager();
 
     PluginManager getPluginManager();
+
+    PacketManager getPacketManager();
+
+    PlayerManager<P> getPlayerManager();
 
 
 
@@ -95,23 +98,6 @@ public interface McNative {
     void setDefaultTablist(Tablist tablist);
 
 
-    int getOnlineCount();
-
-    MinecraftPlayer getPlayer(UUID uniqueId);
-
-    MinecraftPlayer getPlayer(long xBoxId);
-
-    MinecraftPlayer getPlayer(String name);
-
-    OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId);
-
-    OnlineMinecraftPlayer getOnlinePlayer(long xBoxId);
-
-    OnlineMinecraftPlayer getOnlinePlayer(String name);
-
-    Collection<OnlineMinecraftPlayer> getOnlinePlayers();
-
-
     void broadcast(String message);
 
     void broadcast(TextComponent... components);
@@ -132,10 +118,6 @@ public interface McNative {
     void unregisterChannels(Plugin owner);
 
 
-    void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener);
-
-    void registerOutgoingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener);
-
     void broadcastPacket(MinecraftPacket packet);
 
     void broadcastPacket(MinecraftPacket packet, String permission);
@@ -144,16 +126,6 @@ public interface McNative {
     ServerPingResponse getPingResponse();
 
     void setPingResponse(ServerPingResponse ping);
-
-
-    Collection<MinecraftPlayer> getWhitelist();
-
-    Collection<MinecraftPlayer> getBanList();
-
-    Collection<MinecraftPlayer> getMuteList();
-
-    Collection<MinecraftPlayer> getOperators();
-
 
     void shutdown();
 

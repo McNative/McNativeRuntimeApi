@@ -42,6 +42,7 @@
         <module>mcnative-bungeecord</module>
         <module>mcnative-buildtool-maven</module>
         <module>mcnative-loader</module>
+        <module>mcnative-test-plugin-proxy-bungeecord</module>
     </modules>
 
     <repositories>

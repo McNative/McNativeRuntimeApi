@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.event.Cancellable;
+import org.mcnative.common.MinecraftConnection;
 import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 
@@ -29,12 +30,19 @@ public interface MinecraftPacketEvent extends MinecraftEvent, Cancellable {
 
     <T extends MinecraftPacket> T getPacket(Class<T> packetClass);
 
-    MinecraftPlayer getPlayer();
+    MinecraftConnection getConnection();
 
+    PacketDirection getDirection();
 
-    boolean isIncoming();
+    default boolean isIncoming(){
+        return getDirection() == PacketDirection.INCOMING;
+    }
 
-    boolean isOutgoing();
+    default boolean isOutgoing(){
+        return getDirection() == PacketDirection.OUTGOING;
+    }
+
+    boolean isThroughput();
 
     void setPacket(MinecraftPacket packet);
 

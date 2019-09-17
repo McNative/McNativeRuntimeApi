@@ -37,7 +37,10 @@ public class Material implements NamespacedKey {
     private final float hardness, blastResistance;
     private final boolean empty, solid, transparent, flammable, burnable, fuel, occluding, gravity, interactable;
 
-    public Material(String name, String namespace, String key, Class<?> materialClass, MaterialCategory[] categories, int maxStackSize, short maxDurability, float hardness, float blastResistance, boolean empty, boolean solid, boolean transparent, boolean flammable, boolean burnable, boolean fuel, boolean occluding, boolean gravity, boolean interactable) {
+    public Material(String name, String namespace, String key, Class<?> materialClass, MaterialCategory[] categories
+            , int maxStackSize, short maxDurability, float hardness, float blastResistance, boolean empty
+            , boolean solid, boolean transparent, boolean flammable, boolean burnable, boolean fuel
+            , boolean occluding, boolean gravity, boolean interactable) {
         this.name = name;
         this.namespace = namespace;
         this.key = key;
