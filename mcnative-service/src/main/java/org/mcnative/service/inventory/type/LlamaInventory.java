@@ -22,7 +22,6 @@ package org.mcnative.service.inventory.type;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.BEProtocolSupport;
 import org.mcnative.common.protocol.support.JEProtocolSupport;
-import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
 @JEProtocolSupport(min=MinecraftProtocolVersion.JE_1_11)

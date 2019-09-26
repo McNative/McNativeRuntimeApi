@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 09.08.19, 20:16
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.common.text;
+package org.mcnative.common.text.outdated;
 
-public interface MessageComponent {
+public class KeybindComponent {
 
-    default String toPlainText(){
-        StringBuilder builder = new StringBuilder();
-        toPlainText(builder);
-        return builder.toString();
+    private String keybind;
+
+    public String getKeybind() {
+        return keybind;
     }
 
-    void toPlainText(StringBuilder builder);
-
-    default String compile(){
-        StringBuilder builder = new StringBuilder();
-        compile(builder);
-        return builder.toString();
+    public void setKeybind(String keybind) {
+        this.keybind = keybind;
     }
-
-    void compile(StringBuilder builder);
 }

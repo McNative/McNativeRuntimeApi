@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 10:34
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,32 @@
  * under the License.
  */
 
-package org.mcnative.common.text;
+package org.mcnative.common.text.components;
 
-public class KeybindComponent {
+import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.text.format.TextStyle;
+
+import java.util.Set;
+
+public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
 
     private String keybind;
+
+    public KeybindComponent() {}
+
+    public KeybindComponent(String keybind) {
+        this.keybind = keybind;
+    }
+
+    public KeybindComponent(String keybind,TextColor color) {
+        super(color);
+        this.keybind = keybind;
+    }
+
+    public KeybindComponent(String keybind,TextColor color, Set<TextStyle> styling) {
+        super(color, styling);
+        this.keybind = keybind;
+    }
 
     public String getKeybind() {
         return keybind;

@@ -19,17 +19,60 @@
 
 package org.mcnative.common.text.event;
 
-public enum ClickAction {
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-    OPEN_URL,
-    OPEN_FILE,
-    RUN_COMMAND,
-    SUGGEST_COMMAND,
-    CHANGE_PAGE,
+import java.util.function.Consumer;
 
-    EXECUTE(),
-    CHANGE_WORLD(),
-    OPEN_INVENTORY(),
-    TELEPORT()
+public abstract class ClickAction {
+
+    public static final ClickAction OPEN_URL = new DefaultMinecraftEvent("OPEN_URL");
+    public static final ClickAction OPEN_FILE = new DefaultMinecraftEvent("OPEN_FILE");
+    public static final ClickAction RUN_COMMAND = new DefaultMinecraftEvent("RUN_COMMAND");
+    public static final ClickAction SUGGEST_COMMAND = new DefaultMinecraftEvent("SUGGEST_COMMAND");
+    public static final ClickAction CHANGE_PAGE = new DefaultMinecraftEvent("CHANGE_PAGE");
+
+    public static final ClickAction EXECUTE = new ClickAction("EXECUTE"){
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void execute(OnlineMinecraftPlayer player, Object value) {
+            if(value instanceof Runnable) ((Runnable) value).run();
+            else if(value instanceof Consumer<?>) ((Consumer) value).accept(player);
+            else throw new IllegalArgumentException("Invalid execute type");
+        }
+    };
+
+    private final String name;
+
+    public ClickAction(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isDefaultMinecraftEvent(){
+        return false;
+    }
+
+    public abstract void execute(OnlineMinecraftPlayer player, Object value);
+
+    private static class DefaultMinecraftEvent extends ClickAction{
+
+        private DefaultMinecraftEvent(String name) {
+            super(name);
+        }
+
+        @Override
+        public boolean isDefaultMinecraftEvent() {
+            return true;
+        }
+
+        @Override
+        public void execute(OnlineMinecraftPlayer player, Object value) {
+            //Unused (Implemented in Minecraft)
+        }
+    }
 
 }

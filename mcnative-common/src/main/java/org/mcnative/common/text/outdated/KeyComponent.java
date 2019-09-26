@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 09.08.19, 18:59
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
  * under the License.
  */
 
-package org.mcnative.common.text.variable;
+package org.mcnative.common.text.outdated;
 
 
-import org.mcnative.common.text.AbstractChatComponent;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
+import org.mcnative.common.text.variable.Variable;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Arrays;
 import java.util.Collection;

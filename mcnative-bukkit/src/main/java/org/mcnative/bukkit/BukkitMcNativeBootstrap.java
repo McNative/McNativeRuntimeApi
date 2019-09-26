@@ -20,9 +20,9 @@
 package org.mcnative.bukkit;
 
 import net.prematic.libraries.event.EventManager;
-import org.mcnative.common.McNative;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.bukkit.plugin.BukkitEventManager;
+import org.mcnative.common.McNative;
 
 public class BukkitMcNativeBootstrap extends JavaPlugin {
 

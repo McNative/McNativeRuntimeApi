@@ -19,8 +19,6 @@
 
 package org.mcnative.service.entity.living.animal.water.fish;
 
-import org.mcnative.service.entity.living.animal.water.fish.Fish;
-
 public interface PufferFish extends Fish {
 
     int getPuffState();

@@ -22,7 +22,6 @@ package org.mcnative.common.protocol.packet;
 import net.prematic.libraries.event.Cancellable;
 import org.mcnative.common.MinecraftConnection;
 import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.player.MinecraftPlayer;
 
 public interface MinecraftPacketEvent extends MinecraftEvent, Cancellable {
 

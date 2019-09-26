@@ -19,8 +19,6 @@
 
 package org.mcnative.service.entity.projectile.arrow;
 
-import java.util.List;
-
 public interface TippedArrow extends Arrow {
 
     //PotionData getBasePotionData();

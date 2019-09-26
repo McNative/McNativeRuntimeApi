@@ -25,8 +25,8 @@ import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
-import org.mcnative.common.text.MessageComponent;
-import org.mcnative.common.text.Text;
+import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.outdated.Text;
 
 public class MinecraftChatPacket implements MinecraftPacket {
 

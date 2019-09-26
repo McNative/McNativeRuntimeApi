@@ -29,19 +29,21 @@ import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
+import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.server.BungeeMinecraftServer;
 import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.messaging.PluginMessageListener;
-import org.mcnative.common.player.*;
+import org.mcnative.common.player.PlayerManager;
+import org.mcnative.common.player.PunishmentHandler;
+import org.mcnative.common.player.WhitelistHandler;
 import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.packet.MinecraftPacketListener;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.TextComponent;
@@ -54,7 +56,6 @@ import org.mcnative.proxy.server.MinecraftServer;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 public class BungeeCordService implements ProxyService {
 
@@ -66,6 +67,9 @@ public class BungeeCordService implements ProxyService {
     private final PluginManager pluginManager;
     private final CommandManager commandManager;
     private final EventManager eventManager;
+
+    private final PacketManager packetManager;
+    private final PlayerManager<ProxiedPlayer> playerManager;
 
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
@@ -91,6 +95,9 @@ public class BungeeCordService implements ProxyService {
         this.pluginManager = null;
         this.commandManager = null;
         this.eventManager = null;
+
+        this.packetManager = null;
+        this.playerManager = new BungeeCordPlayerManager();
 
         this.pluginMessageListeners = new ArrayList<>();
         this.servers = new ArrayList<>();
@@ -138,12 +145,12 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public PacketManager getPacketManager() {
-        return null;
+        return packetManager;
     }
 
     @Override
     public PlayerManager<ProxiedPlayer> getPlayerManager() {
-        return null;
+        return playerManager;
     }
 
     @Override

@@ -20,7 +20,6 @@
 package org.mcnative.common;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class MinecraftOutputStream extends ByteArrayOutputStream {
 

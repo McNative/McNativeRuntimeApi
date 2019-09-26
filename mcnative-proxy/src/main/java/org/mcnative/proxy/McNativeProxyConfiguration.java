@@ -21,7 +21,6 @@ package org.mcnative.proxy;
 
 import net.prematic.libraries.document.annotations.DocumentFile;
 import net.prematic.libraries.document.annotations.DocumentKey;
-import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.MinecraftServerType;
 
 import java.util.Arrays;

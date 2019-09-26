@@ -22,8 +22,6 @@ package org.mcnative.service.entity.projectile.potion;
 import org.mcnative.service.entity.projectile.Projectile;
 import org.mcnative.service.inventory.item.ItemStack;
 
-import java.util.Collection;
-
 public interface ThrownPotion extends Projectile {
 
     //Collection<PotionEffect> getEffects();

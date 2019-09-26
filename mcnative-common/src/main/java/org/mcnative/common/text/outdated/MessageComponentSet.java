@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 09.08.19, 20:05
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.text;
+package org.mcnative.common.text.outdated;
 
 import java.util.ArrayList;
 import java.util.Arrays;

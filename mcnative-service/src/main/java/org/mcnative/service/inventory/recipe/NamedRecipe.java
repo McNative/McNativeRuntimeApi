@@ -20,7 +20,6 @@
 package org.mcnative.service.inventory.recipe;
 
 import org.mcnative.service.NamespacedKey;
-import org.mcnative.service.inventory.item.ItemStack;
 
 public interface NamedRecipe extends Recipe, NamespacedKey {
 

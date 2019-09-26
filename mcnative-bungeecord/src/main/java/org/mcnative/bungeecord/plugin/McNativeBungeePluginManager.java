@@ -23,19 +23,12 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.*;
 import net.md_5.bungee.event.EventBus;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.lifecycle.LifecycleState;
-import net.prematic.libraries.plugin.loader.PluginLoader;
-import org.mcnative.common.McNative;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.function.BiConsumer;
 
 public class McNativeBungeePluginManager extends PluginManager{
 

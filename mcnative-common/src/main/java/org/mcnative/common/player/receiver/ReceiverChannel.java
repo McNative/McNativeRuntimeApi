@@ -21,7 +21,7 @@ package org.mcnative.common.player.receiver;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.MessageComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 
 import java.util.Collection;
 import java.util.Iterator;

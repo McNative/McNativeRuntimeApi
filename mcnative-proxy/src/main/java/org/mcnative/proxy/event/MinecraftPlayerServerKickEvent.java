@@ -20,8 +20,8 @@
 package org.mcnative.proxy.event;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 import org.mcnative.proxy.server.MinecraftServer;
 
 public interface MinecraftPlayerServerKickEvent extends MinecraftOnlinePlayerEvent {

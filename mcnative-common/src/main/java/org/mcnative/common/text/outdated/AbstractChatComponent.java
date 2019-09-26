@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 14.08.19, 18:15
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
  * under the License.
  */
 
-package org.mcnative.common.text;
+package org.mcnative.common.text.outdated;
 
+import org.mcnative.common.text.TextComponent;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
 import org.mcnative.common.text.event.TextEvent;
-import org.mcnative.common.text.format.MessageFormatComponent;
+import org.mcnative.common.text.format.MessageFormatAble;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-public abstract class AbstractChatComponent<T extends ChatComponent> implements ChatComponent<T>, MessageFormatComponent<T> {
+public abstract class AbstractChatComponent<T extends ChatComponent> implements ChatComponent<T>, MessageFormatAble<T> {
 
     private TextColor color;
     private Collection<TextStyle> styling;

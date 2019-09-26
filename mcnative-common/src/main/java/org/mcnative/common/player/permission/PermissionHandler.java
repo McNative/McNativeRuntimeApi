@@ -20,9 +20,10 @@
 package org.mcnative.common.player.permission;
 
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.PlayerDesign;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.function.BiFunction;
 
 public interface PermissionHandler {
 
@@ -33,6 +34,8 @@ public interface PermissionHandler {
     Collection<String> getPermissions(MinecraftPlayer player);
 
     Collection<String> getAllPermissions(MinecraftPlayer player);
+
+    PlayerDesign getPlayerDesign(MinecraftPlayer player);
 
     boolean isPermissionSet(MinecraftPlayer player,String permission);
 
@@ -45,4 +48,6 @@ public interface PermissionHandler {
     void removePermission(MinecraftPlayer player, String permission);
 
     void setOperator(MinecraftPlayer player, boolean operator);
+
+    void setPlayerDesignGetter(BiFunction<MinecraftPlayer,PlayerDesign,PlayerDesign> designGetter);
 }

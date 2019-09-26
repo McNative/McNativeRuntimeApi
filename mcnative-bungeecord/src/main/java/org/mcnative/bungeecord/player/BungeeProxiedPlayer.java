@@ -40,8 +40,8 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.ProxyService;
@@ -102,11 +102,11 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public DeviceInfo getDevice() {
-        return null;
+        return null;//Not supported on BungeeCord
     }
 
     @Override
-    public MinecraftProtocolVersion getClientVersion() {
+    public MinecraftProtocolVersion getProtocolVersion() {
         return MinecraftProtocolVersion.of(original.getPendingConnection().getVersion());
     }
 
@@ -172,16 +172,6 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public void chat(String message) {
-
-    }
-
-    @Override
-    public void setTablistHeader(String header) {
-
-    }
-
-    @Override
-    public void setTablistFooter(String footer) {
 
     }
 
@@ -391,13 +381,8 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void setDesign(PlayerDesign design) {
-
-    }
-
-    @Override
     public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
-        return null;
+        return (T) McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
     }
 
     @Override
@@ -520,6 +505,16 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     public void check(Consumer<ProtocolCheck> checker) {
         ProtocolCheck check = new DefaultProtocolChecker();
         checker.accept(check);
-        check.process(getClientVersion());
+        check.process(getProtocolVersion());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

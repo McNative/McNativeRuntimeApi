@@ -20,7 +20,7 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.text.MessageComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 
 import java.net.InetSocketAddress;
 

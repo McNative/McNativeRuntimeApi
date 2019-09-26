@@ -30,15 +30,11 @@ import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.text.MessageComponent;
-import org.mcnative.common.text.Text;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.text.variable.Variable;
+import org.mcnative.common.text.outdated.ChatComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -83,11 +79,6 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
     void chat(String message);
 
 
-    void setTablistHeader(String header);
-
-    void setTablistFooter(String footer);
-
-
     Collection<ReceiverChannel> getChatChannels();
 
     void addChatChannel(ReceiverChannel channel);
@@ -95,40 +86,37 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
     void removeChatChannel(ReceiverChannel channel);
 
 
-    void sendMessage(String message);
+    //void sendMessage(String message);
 
-    void sendMessage(MessageComponent... components);
-
-
-    default void sendMessage(MessageComponent component, Variable... variables){
-        sendMessage(component,new VariableSet(Arrays.asList(variables)));
+    default void sendMessage(ChatComponent component){
+        sendMessage(component,VariableSet.newEmptySet());
     }
 
-    void sendMessage(MessageComponent component, VariableSet variables);
-
-
-    default void sendMessageKey(String key, Variable... variables){
-        sendMessageKey(key,new VariableSet(Arrays.asList(variables)));
-    }
-
-    default void sendMessageKey(String key, VariableSet variables){
-        sendMessage(Text.ofKey(key),variables);
-    }
+    void sendMessage(ChatComponent component, VariableSet variables);
 
 
 
     void sendTitle(String title, String subTitle, int stayTime);
 
-    void sendTitle(TextComponent title, MessageComponent subTitle, int stayTime);
+    void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime);
+
+    void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime,VariableSet variables);
+
 
     void sendTitle(Title title);
 
     void resetTitle();
 
 
-    void sendActionbar(MessageComponent... message);
+    void sendActionbar(ChatComponent message);
 
-    void sendActionbar(long seconds, MessageComponent... message);
+    void sendActionbar(ChatComponent message,VariableSet variables);
+
+    void sendActionbar(MessageComponent message,VariableSet variables,long staySeconds);
+
+    void sendActionbar(MessageComponent message,long stayTime);
+
+
 
 
     Collection<BossBar> getActiveBossBars();
@@ -153,11 +141,5 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
 
 
     void check(Consumer<ProtocolCheck> checker);
-
-    /*
-        Xp
-        Tablist
-
-     */
 
 }

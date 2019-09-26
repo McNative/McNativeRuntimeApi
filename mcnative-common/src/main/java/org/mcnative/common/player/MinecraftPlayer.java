@@ -19,19 +19,16 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.player.profile.GameProfile;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
-public interface MinecraftPlayer extends CommandSender, ServerPingResponse.PlayerInfo {
+public interface MinecraftPlayer extends ServerPingResponse.PlayerInfo {
 
     String getName();
 
@@ -57,15 +54,11 @@ public interface MinecraftPlayer extends CommandSender, ServerPingResponse.Playe
 
     PlayerDesign getDesign(MinecraftPlayer player);
 
-    void setDesign(PlayerDesign design);
-
-
     @Nullable
     <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass);
 
     @Nullable
     OnlineMinecraftPlayer getAsOnlinePlayer();
-
 
     boolean isOnline();
 

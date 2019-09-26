@@ -19,8 +19,6 @@
 
 package org.mcnative.service;
 
-import org.mcnative.common.McNative;
-
 public interface NBTTag {
 
     byte getByte(String key);

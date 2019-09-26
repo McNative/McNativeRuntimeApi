@@ -26,7 +26,6 @@ import org.mcnative.proxy.server.MinecraftServer;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
-import java.util.UUID;
 
 public interface ProxyService extends McNative<ProxiedPlayer> {
 

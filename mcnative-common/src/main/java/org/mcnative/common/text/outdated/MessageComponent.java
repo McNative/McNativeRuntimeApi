@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 14.08.19, 19:45
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.common;
+package org.mcnative.common.text.outdated;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.DocumentRegistry;
-import org.mcnative.common.text.outdated.Text;
+public interface MessageComponent {
 
-import java.io.File;
-
-public interface Configuration extends Document {
-
-    File getFile();
-
-    Text getText(String key);
-
-    boolean save();
-
-
-
-    static void load(Class<?> configurationClass){
-        DocumentRegistry.loadClass(configurationClass);
+    default String toPlainText(){
+        StringBuilder builder = new StringBuilder();
+        toPlainText(builder);
+        return builder.toString();
     }
 
-    static Configuration newConfiguration(File location){
-        return null;
+    void toPlainText(StringBuilder builder);
+
+    default String compile(){
+        StringBuilder builder = new StringBuilder();
+        compile(builder);
+        return builder.toString();
     }
+
+    void compile(StringBuilder builder);
 }

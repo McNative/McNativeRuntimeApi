@@ -21,7 +21,6 @@ package org.mcnative.bukkit.plugin;
 
 import net.prematic.libraries.event.EventManager;
 import net.prematic.libraries.event.Listener;
-import net.prematic.libraries.event.MethodEntry;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
@@ -34,9 +33,6 @@ import org.bukkit.plugin.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class BukkitEventManager implements PluginManager, EventManager {

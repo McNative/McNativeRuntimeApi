@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 10:16
+ * @since 24.09.19, 20:24
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,20 @@
  * under the License.
  */
 
-package org.mcnative.common.text;
+package org.mcnative.common.text.components;
 
+import net.prematic.libraries.document.Document;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
 import org.mcnative.common.text.event.TextEvent;
-import org.mcnative.common.text.format.MessageFormatComponent;
+import org.mcnative.common.text.format.MessageFormatAble;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public interface ChatComponent<T extends ChatComponent> extends MessageComponent, MessageFormatComponent<T> {
+public interface ChatComponent<T extends ChatComponent> extends MessageFormatAble<T> {
 
     TextEvent<ClickAction> getClickEvent();
 
@@ -38,22 +40,46 @@ public interface ChatComponent<T extends ChatComponent> extends MessageComponent
 
     T setHoverEvent(TextEvent<HoverAction> event);
 
-    default T setClickEvent(ClickAction action, Object value){
+
+    default T onClick(ClickAction action, Object value){
         return setClickEvent(new TextEvent<>(action, value));
     }
 
-    default T setHoverEvent(HoverAction action, Object value){
-        return setHoverEvent(new TextEvent<>(action, value));
+    default T onClick(Runnable callback){
+        return onClick(ClickAction.EXECUTE,callback);
     }
 
     default T onClick(Consumer<OnlineMinecraftPlayer> callback){
-        return setClickEvent(ClickAction.EXECUTE,callback);
+        return onClick(ClickAction.EXECUTE,callback);
     }
 
-    Collection<MessageComponent> getExtras();
+    default T onHover(HoverAction action, String value){
+        return setHoverEvent(new TextEvent<>(action, value));
+    }
 
-    T addExtra(MessageComponent component);
 
-    T removeExtra(MessageComponent component);
+    Collection<ChatComponent> getExtras();
 
+    T addExtra(ChatComponent component);
+
+    T removeExtra(ChatComponent component);
+
+
+    default String toPlainText(){
+        return toPlainText(VariableSet.EMPTY);
+    }
+
+    String toPlainText(VariableSet variables);
+
+    default void toPlainText(StringBuilder builder){
+        toPlainText(builder,VariableSet.EMPTY);
+    }
+
+    void toPlainText(StringBuilder builder,VariableSet variables);
+
+    default Document compile(){
+        return compile(VariableSet.EMPTY);
+    }
+
+    Document compile(VariableSet variables);
 }

@@ -19,24 +19,29 @@
 
 package org.mcnative.common.text.variable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
-public class VariableSet extends ArrayList<Variable> {
+public interface VariableSet extends Set<Variable> {
 
-    public VariableSet() {}
+    Set<Variable> getVariables();
 
-    public VariableSet(Collection<? extends Variable> c) {
-        super(c);
+    VariableSet add(String name, Object source);
+
+    VariableSet remove(String name);
+
+
+
+    static VariableSet of(Variable... variables){
+        return new HashVariableSet(Arrays.asList(variables));
     }
 
-    public Collection<Variable> getVariables() {
-        return this;
+    static VariableSet of(Collection<Variable> variables){
+        return new HashVariableSet(variables);
     }
 
-    public VariableSet add(String name, Object source){
-        add(new Variable(name,source));
-        return this;
+    static VariableSet newEmptySet(){
+        return EmptyVariableSet.newEmptySet();
     }
-
 }

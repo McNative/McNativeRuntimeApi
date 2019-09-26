@@ -19,9 +19,10 @@
 
 package org.mcnative.common.text;
 
-import org.mcnative.common.text.format.MessageFormatComponent;
+import org.mcnative.common.text.format.MessageFormatAble;
+import org.mcnative.common.text.outdated.ChatComponent;
 
-public interface TextComponent<T extends TextComponent> extends ChatComponent<T>, MessageFormatComponent<T> {
+public interface TextComponent<T extends TextComponent> extends ChatComponent<T>, MessageFormatAble<T> {
 
     String getText();
 

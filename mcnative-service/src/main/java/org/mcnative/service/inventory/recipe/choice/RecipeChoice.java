@@ -21,7 +21,6 @@ package org.mcnative.service.inventory.recipe.choice;
 
 import org.mcnative.service.inventory.item.ItemStack;
 
-import java.util.Collection;
 import java.util.function.Predicate;
 
 public interface RecipeChoice extends Predicate<ItemStack> {

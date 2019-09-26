@@ -20,8 +20,8 @@
 package org.mcnative.common;
 
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.text.MessageComponent;
 import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.outdated.MessageComponent;
 
 import javax.imageio.ImageIO;
 import java.io.File;

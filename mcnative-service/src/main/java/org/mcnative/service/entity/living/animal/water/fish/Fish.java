@@ -19,7 +19,6 @@
 
 package org.mcnative.service.entity.living.animal.water.fish;
 
-import org.mcnative.service.entity.living.LivingEntity;
 import org.mcnative.service.entity.living.animal.water.WaterEntity;
 
 public interface Fish extends WaterEntity {

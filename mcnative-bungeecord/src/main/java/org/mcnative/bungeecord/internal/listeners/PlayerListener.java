@@ -20,14 +20,32 @@
 package org.mcnative.bungeecord.internal.listeners;
 
 
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 
 public class PlayerListener implements Listener {
 
+    private final BungeeCordPlayerManager playerManager;
+
+    public PlayerListener(BungeeCordPlayerManager playerManager) {
+        this.playerManager = playerManager;
+    }
+
     @EventHandler
     public void onPlayerPreLogin(PreLoginEvent event){
-        event.getConnection().unsafe().sendPacket();
+    }
+
+    @EventHandler
+    public void onPlayerLogin(LoginEvent event){
+        playerManager.registerPlayer(null);
+    }
+
+    @EventHandler
+    public void onPlayerLogout(PlayerDisconnectEvent event){
+        playerManager.unregisterPlayer(event.getPlayer());
     }
 }

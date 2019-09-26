@@ -22,7 +22,6 @@ package org.mcnative.bungeecord.inject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import net.md_5.bungee.protocol.PacketWrapper;
-import net.md_5.bungee.protocol.Protocol;
 
 import java.util.List;
 
