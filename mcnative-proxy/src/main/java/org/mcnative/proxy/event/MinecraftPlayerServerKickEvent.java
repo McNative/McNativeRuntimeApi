@@ -20,15 +20,15 @@
 package org.mcnative.proxy.event;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.server.MinecraftServer;
 
 public interface MinecraftPlayerServerKickEvent extends MinecraftOnlinePlayerEvent {
 
     MinecraftServer getServer();
 
-    MessageComponent getKickReason();
+    ChatComponent getKickReason();
 
 
     MinecraftServer getFallbackServer();
@@ -36,6 +36,10 @@ public interface MinecraftPlayerServerKickEvent extends MinecraftOnlinePlayerEve
     void setFallbackServer(MinecraftServer server);
 
 
-    void setKickReason(TextComponent... components);
+    default void setKickReason(ChatComponent cancelReason){
+        setKickReason(cancelReason, VariableSet.newEmptySet());
+    }
+
+    void setKickReason(ChatComponent cancelReason, VariableSet variables);
 
 }

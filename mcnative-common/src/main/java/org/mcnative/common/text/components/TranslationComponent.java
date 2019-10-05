@@ -19,8 +19,10 @@
 
 package org.mcnative.common.text.components;
 
+import net.prematic.libraries.document.Document;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -50,5 +52,15 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    @Override
+    public void toPlainText(StringBuilder builder, VariableSet variables) {
+        builder.append("{translation=").append(translation).append("}");
+    }
+
+    @Override
+    public void compile(Document document,VariableSet variables) {
+        super.compile(variables).add("translate",translation);
     }
 }

@@ -26,7 +26,6 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.MinecraftServerType;
 

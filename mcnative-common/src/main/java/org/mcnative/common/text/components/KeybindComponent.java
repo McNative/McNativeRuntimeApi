@@ -19,8 +19,10 @@
 
 package org.mcnative.common.text.components;
 
+import net.prematic.libraries.document.Document;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -50,5 +52,15 @@ public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
 
     public void setKeybind(String keybind) {
         this.keybind = keybind;
+    }
+
+    @Override
+    public void toPlainText(StringBuilder builder, VariableSet variables) {
+        builder.append("{keybind=").append(keybind).append("}");
+    }
+
+    @Override
+    public void compile(Document document,VariableSet variables) {
+        super.compile(variables).add("keybind",keybind);
     }
 }

@@ -33,7 +33,7 @@ import java.util.List;
 public class ParticleBuilder implements ReceiveAble {
 
     private final List<Entry> entries;
-    private Iterable<OnlineMinecraftPlayer> receivers;
+    private Iterable<? extends OnlineMinecraftPlayer> receivers;
     private Shape shape;
 
     private ParticleBuilder() {
@@ -57,7 +57,7 @@ public class ParticleBuilder implements ReceiveAble {
         return particle(location, particle, 1);
     }
 
-    public ParticleBuilder receivers(Iterable<OnlineMinecraftPlayer> receivers) {
+    public ParticleBuilder receivers(Iterable<? extends OnlineMinecraftPlayer> receivers) {
         this.receivers = receivers;
         return this;
     }
@@ -73,7 +73,7 @@ public class ParticleBuilder implements ReceiveAble {
 
     public void spawn() {
         if(shape == null) {
-            Iterable<OnlineMinecraftPlayer> receivers = this.receivers != null ? this.receivers : MinecraftService.getInstance().getOnlinePlayers();
+            Iterable<? extends OnlineMinecraftPlayer> receivers = this.receivers != null ? this.receivers : MinecraftService.getInstance().getPlayerManager().getOnlinePlayers();
             for (Entry entry : this.entries) {
                 entry.location.getWorld().spawnParticle(entry.location, entry.particle, entry.amount, entry.offset, receivers);
             }

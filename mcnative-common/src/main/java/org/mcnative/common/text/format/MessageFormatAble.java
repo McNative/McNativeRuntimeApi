@@ -19,7 +19,7 @@
 
 package org.mcnative.common.text.format;
 
-import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.components.ChatComponent;
 
 import java.util.Set;
 
@@ -99,7 +99,7 @@ public interface MessageFormatAble<T extends MessageFormatAble> {
         return (T) this;
     }
 
-    default void copyFormatting(TextComponent component){
+    default void copyFormatting(ChatComponent component){
         component.setColor(getColor());
         component.setStyling(getStyling());
     }

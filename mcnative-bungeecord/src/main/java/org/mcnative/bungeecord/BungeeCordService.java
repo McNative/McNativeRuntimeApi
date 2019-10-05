@@ -46,7 +46,6 @@ import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.registry.Registry;
-import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.server.ConnectHandler;

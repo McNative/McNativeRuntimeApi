@@ -20,8 +20,7 @@
 package org.mcnative.common;
 
 import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.DocumentRegistry;
-import org.mcnative.common.text.outdated.Text;
+import org.mcnative.common.text.components.ChatComponent;
 
 import java.io.File;
 
@@ -29,14 +28,14 @@ public interface Configuration extends Document {
 
     File getFile();
 
-    Text getText(String key);
+    ChatComponent getText(String key);
 
     boolean save();
 
 
 
     static void load(Class<?> configurationClass){
-        DocumentRegistry.loadClass(configurationClass);
+        Document.loadConfigurationClass(configurationClass);
     }
 
     static Configuration newConfiguration(File location){

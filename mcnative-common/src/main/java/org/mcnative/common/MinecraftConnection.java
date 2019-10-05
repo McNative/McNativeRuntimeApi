@@ -21,7 +21,8 @@ package org.mcnative.common;
 
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,7 +40,11 @@ public interface MinecraftConnection {
 
     void disconnect(String message);
 
-    void disconnect(TextComponent... reason);
+    default void disconnect(ChatComponent reason){
+        disconnect(reason,VariableSet.newEmptySet());
+    }
+
+    void disconnect(ChatComponent reason, VariableSet variables);
 
 
     void sendPacket(MinecraftPacket packet);

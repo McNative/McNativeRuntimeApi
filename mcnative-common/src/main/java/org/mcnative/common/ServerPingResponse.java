@@ -20,8 +20,8 @@
 package org.mcnative.common;
 
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -45,15 +45,27 @@ public interface ServerPingResponse {
     ServerPingResponse setVersion(String name, MinecraftProtocolVersion version);
 
 
-    TextComponent[] getDescription();
+    ChatComponent[] getDescription();
 
-    ServerPingResponse setDescription(TextComponent[] description);
+    ServerPingResponse setDescription(ChatComponent[] description);
 
-    ServerPingResponse setDescription(MessageComponent line1, MessageComponent line2);
+    default ServerPingResponse setDescription(ChatComponent line1, ChatComponent line2){
+        return setDescription(line1, line2,VariableSet.newEmptySet());
+    }
 
-    ServerPingResponse setLine1(MessageComponent... component);
+    ServerPingResponse setDescription(ChatComponent line1, ChatComponent line2, VariableSet variables);
 
-    ServerPingResponse setLine2(MessageComponent... component);
+    default ServerPingResponse setLine1(ChatComponent component){
+        return setLine1(component,VariableSet.newEmptySet());
+    }
+
+    ServerPingResponse setLine1(ChatComponent component, VariableSet variables);
+
+    default ServerPingResponse setLine2(ChatComponent component){
+        return setLine2(component,VariableSet.newEmptySet());
+    }
+
+    ServerPingResponse setLine2(ChatComponent component, VariableSet variables);
 
 
     String getFavicon();

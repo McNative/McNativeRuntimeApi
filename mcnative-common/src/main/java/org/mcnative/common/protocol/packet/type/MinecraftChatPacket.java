@@ -25,20 +25,30 @@ import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
-import org.mcnative.common.text.outdated.MessageComponent;
-import org.mcnative.common.text.outdated.Text;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 public class MinecraftChatPacket implements MinecraftPacket {
 
-    private MessageComponent message;
+    private ChatComponent message;
+    private VariableSet variables;
     private ChatPosition position;
 
-    public MessageComponent getMessage() {
+    public ChatComponent getMessage() {
         return message;
     }
 
-    public void setMessage(MessageComponent message) {
+    public void setMessage(ChatComponent message) {
         this.message = message;
+    }
+
+    public VariableSet getVariables() {
+        return variables;
+    }
+
+    public void setVariables(VariableSet variables) {
+        this.variables = variables;
     }
 
     public ChatPosition getPosition() {
@@ -56,12 +66,12 @@ public class MinecraftChatPacket implements MinecraftPacket {
 
     @Override
     public void read(MinecraftProtocolVersion version, ByteBuf buffer) {
-         message = Text.unCompile(MinecraftProtocolUtil.readString(buffer));
+         message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
     }
 
     @Override
     public void write(MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeString(buffer,this.message.compile());
+        MinecraftProtocolUtil.writeString(buffer,this.message.compile(variables!=null?variables:VariableSet.newEmptySet()).toString());
         buffer.writeByte(position.getId());
     }
 }

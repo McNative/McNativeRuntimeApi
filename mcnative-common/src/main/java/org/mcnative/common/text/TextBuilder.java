@@ -20,7 +20,6 @@
 package org.mcnative.common.text;
 
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.text.components.TextComponent;
 import org.mcnative.common.text.components.*;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
@@ -66,8 +65,8 @@ public class TextBuilder {
         return createComponent(new KeybindComponent(key));
     }
 
-    public TextBuilder score(String objective, String entity){
-        return createComponent(new ScoreComponent(objective,entity));
+    public TextBuilder score(String objective, String entity, String value){
+        return createComponent(new ScoreComponent(objective,entity,value));
     }
 
     public TextBuilder translation(String key){

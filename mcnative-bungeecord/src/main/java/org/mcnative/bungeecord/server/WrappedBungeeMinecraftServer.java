@@ -22,7 +22,6 @@ package org.mcnative.bungeecord.server;
 import net.md_5.bungee.api.config.ServerInfo;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.TextComponent;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.MinecraftServerType;

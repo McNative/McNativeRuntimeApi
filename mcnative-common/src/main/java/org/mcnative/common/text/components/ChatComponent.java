@@ -66,20 +66,30 @@ public interface ChatComponent<T extends ChatComponent> extends MessageFormatAbl
 
 
     default String toPlainText(){
-        return toPlainText(VariableSet.EMPTY);
+        return toPlainText(VariableSet.newEmptySet());
     }
 
-    String toPlainText(VariableSet variables);
+    default String toPlainText(VariableSet variables){
+        StringBuilder builder = new StringBuilder();
+        toPlainText(builder,variables);
+        return builder.toString();
+    }
 
     default void toPlainText(StringBuilder builder){
-        toPlainText(builder,VariableSet.EMPTY);
+        toPlainText(builder,VariableSet.newEmptySet());
     }
 
     void toPlainText(StringBuilder builder,VariableSet variables);
 
     default Document compile(){
-        return compile(VariableSet.EMPTY);
+        return compile(VariableSet.newEmptySet());
     }
 
-    Document compile(VariableSet variables);
+    default Document compile(VariableSet variables){
+        Document output = Document.newDocument();
+        compile(output,variables);
+        return output;
+    }
+
+    void compile(Document document, VariableSet variables);
 }

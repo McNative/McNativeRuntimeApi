@@ -37,6 +37,12 @@ public class HashVariableSet extends HashSet<Variable> implements VariableSet{
     }
 
     @Override
+    public Variable get(String name) {
+        for (Variable variable : this) if(variable.getName().equalsIgnoreCase(name)) return variable;
+        return null;
+    }
+
+    @Override
     public VariableSet add(String name, Object source) {
         super.add(new Variable(name,source));
         return this;

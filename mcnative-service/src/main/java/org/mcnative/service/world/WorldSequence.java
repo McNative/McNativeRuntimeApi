@@ -105,7 +105,7 @@ public interface WorldSequence {
 
     void spawnParticle(Vector point, Particle particle, int amount, Iterable<OnlineMinecraftPlayer> receivers);
 
-    void spawnParticle(Vector point, Particle particle, int amount, Offset offset, Iterable<OnlineMinecraftPlayer> receivers);
+    void spawnParticle(Vector point, Particle particle, int amount, Offset offset, Iterable<? extends OnlineMinecraftPlayer> receivers);
 
 
     void spawnParticle(Vector point, Particle particle, int amount);

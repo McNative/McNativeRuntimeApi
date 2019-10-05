@@ -19,19 +19,19 @@
 
 package org.mcnative.service.world.particle;
 
-import org.mcnative.service.location.Point;
+import org.mcnative.service.location.Vector;
 
 import java.util.Collection;
 
 public class Shape {
 
-    private final Collection<Point> points;
+    private final Collection<Vector> Vectors;
 
-    public Shape(Collection<Point> points) {
-        this.points = points;
+    public Shape(Collection<Vector> Vectors) {
+        this.Vectors = Vectors;
     }
 
-    public Collection<Point> getPoints() {
-        return points;
+    public Collection<Vector> getVectors() {
+        return Vectors;
     }
 }

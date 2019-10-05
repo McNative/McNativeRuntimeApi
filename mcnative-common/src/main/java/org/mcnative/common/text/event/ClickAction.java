@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 public abstract class ClickAction {
 
     public static final ClickAction OPEN_URL = new DefaultMinecraftEvent("OPEN_URL");
-    public static final ClickAction OPEN_FILE = new DefaultMinecraftEvent("OPEN_FILE");
     public static final ClickAction RUN_COMMAND = new DefaultMinecraftEvent("RUN_COMMAND");
     public static final ClickAction SUGGEST_COMMAND = new DefaultMinecraftEvent("SUGGEST_COMMAND");
     public static final ClickAction CHANGE_PAGE = new DefaultMinecraftEvent("CHANGE_PAGE");

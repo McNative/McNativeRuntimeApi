@@ -19,11 +19,11 @@
 
 package org.mcnative.common.text;
 
-import org.mcnative.common.text.components.TextComponent;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.type.DocumentFileType;
 import org.mcnative.common.text.components.*;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
-import org.mcnative.common.text.outdated.MessageComponent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -66,16 +66,16 @@ public class Text {
 
 
 
-    public static ScoreComponent ofScore(String objective, String entity){
-        return ofScore(objective,entity,TextColor.WHITE);
+    public static ScoreComponent ofScore(String objective, String entity, String value){
+        return ofScore(objective,entity,value,TextColor.WHITE);
     }
 
-    public static ScoreComponent ofScore(String objective, String entity, TextColor color){
-        return ofScore(objective,entity, color,new HashSet<>());
+    public static ScoreComponent ofScore(String objective, String entity, String value, TextColor color){
+        return ofScore(objective,entity,value, color,new HashSet<>());
     }
 
-    public static ScoreComponent ofScore(String objective, String entity, TextColor color, Set<TextStyle> styling){
-        return new ScoreComponent(objective,entity,color,styling);
+    public static ScoreComponent ofScore(String objective, String entity, String value, TextColor color, Set<TextStyle> styling){
+        return new ScoreComponent(objective,entity,value,color,styling);
     }
 
 
@@ -107,16 +107,15 @@ public class Text {
     }
 
 
-
-    public static MessageComponent parse(String text){
+    public static ChatComponent parse(String text){
         return parse(text,true);
     }
 
-    public static MessageComponent parse(String text,boolean markup){
+    public static ChatComponent parse(String text,boolean markup){
         return parse(text,markup,true,DEFAULT_ALTERNATE_COLOR_CHAR);
     }
 
-    public static MessageComponent parse(String text, boolean markup, boolean colors, char alternateChar){
+    public static ChatComponent parse(String text, boolean markup, boolean colors, char alternateChar){
         return null;
     }
 
@@ -126,6 +125,14 @@ public class Text {
             if(content[i] == alternateChar && ALL_CODES.indexOf(content[i]+1) > -1) content[i] = FORMAT_CHAR;
         }
         return new String(content);
+    }
+
+    public static ChatComponent decompile(String jsonText){
+        return decompile(DocumentFileType.JSON.getReader().read(jsonText));
+    }
+
+    public static ChatComponent decompile(Document document){
+        return null;
     }
 
 }

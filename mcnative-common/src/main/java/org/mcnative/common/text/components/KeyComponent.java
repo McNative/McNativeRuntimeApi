@@ -19,8 +19,10 @@
 
 package org.mcnative.common.text.components;
 
+import net.prematic.libraries.document.Document;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -50,5 +52,19 @@ public class KeyComponent extends AbstractChatComponent<KeyComponent>{
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @Override
+    public void toPlainText(StringBuilder builder, VariableSet variables) {
+        builder.append(replaceVariablesAndTranslate(variables));
+    }
+
+    @Override
+    public void compile(Document document,VariableSet variables) {
+        super.compile(variables).add("text",replaceVariablesAndTranslate(variables));
+    }
+
+    private String replaceVariablesAndTranslate(VariableSet variables){
+        return variables.replace(key);//Todo get message form translate engine
     }
 }

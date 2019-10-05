@@ -37,6 +37,11 @@ public class EmptyVariableSet implements VariableSet{
     }
 
     @Override
+    public Variable get(String name) {
+        return null;
+    }
+
+    @Override
     public VariableSet add(String name, Object source) {
         throw new UnsupportedOperationException("It is not possible to add a variable to a empty set.");
     }

@@ -19,8 +19,10 @@
 
 package org.mcnative.common.text.components;
 
+import net.prematic.libraries.document.Document;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -28,24 +30,28 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
 
     private String entityName;
     private String objective;
+    private String value;
 
     public ScoreComponent() {}
 
-    public ScoreComponent(String entityName, String objective) {
+    public ScoreComponent(String entityName, String objective, String value) {
         this.entityName = entityName;
         this.objective = objective;
+        this.value = value;
     }
 
-    public ScoreComponent(String entityName, String objective,TextColor color) {
+    public ScoreComponent(String entityName, String objective, String value,TextColor color) {
         super(color);
         this.entityName = entityName;
         this.objective = objective;
+        this.value = value;
     }
 
-    public ScoreComponent(String entityName, String objective,TextColor color, Set<TextStyle> styling) {
+    public ScoreComponent(String entityName, String objective, String value,TextColor color, Set<TextStyle> styling) {
         super(color, styling);
         this.entityName = entityName;
         this.objective = objective;
+        this.value = value;
     }
 
     public String getEntityName() {
@@ -62,5 +68,27 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
 
     public void setObjective(String objective) {
         this.objective = objective;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public void toPlainText(StringBuilder builder, VariableSet variables) {
+        builder.append("{objective=").append(objective).append(".entity=").append(entityName).append(",value=").append(value).append("}");
+    }
+
+    @Override
+    public void compile(Document document,VariableSet variables) {
+        Document score = Document.newDocument();
+        score.add("name",entityName);
+        score.add("objective", objective);
+        score.add("value",value);
+        super.compile(variables).add("score",score);
     }
 }

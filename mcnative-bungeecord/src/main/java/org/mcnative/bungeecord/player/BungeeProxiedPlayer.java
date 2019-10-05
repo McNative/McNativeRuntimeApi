@@ -40,8 +40,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.text.TextComponent;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.ProxyService;
@@ -196,12 +195,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void sendMessage(MessageComponent... components) {
-
-    }
-
-    @Override
-    public void sendMessage(MessageComponent component, VariableSet variables) {
+    public void sendMessage(ChatComponent component, VariableSet variables) {
 
     }
 
@@ -211,7 +205,12 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void sendTitle(TextComponent title, MessageComponent subTitle, int stayTime) {
+    public void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime) {
+
+    }
+
+    @Override
+    public void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime, VariableSet variables) {
 
     }
 
@@ -226,12 +225,22 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void sendActionbar(MessageComponent... message) {
+    public void sendActionbar(ChatComponent message) {
 
     }
 
     @Override
-    public void sendActionbar(long seconds, MessageComponent... message) {
+    public void sendActionbar(ChatComponent message, VariableSet variables) {
+
+    }
+
+    @Override
+    public void sendActionbar(ChatComponent message, VariableSet variables, long staySeconds) {
+
+    }
+
+    @Override
+    public void sendActionbar(ChatComponent message, long stayTime) {
 
     }
 

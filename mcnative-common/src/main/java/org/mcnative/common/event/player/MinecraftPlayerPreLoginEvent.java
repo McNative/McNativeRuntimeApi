@@ -20,7 +20,8 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.net.InetSocketAddress;
 
@@ -30,5 +31,9 @@ public interface MinecraftPlayerPreLoginEvent extends MinecraftPlayerEvent, Canc
 
     void setCancelReason(String message);
 
-    void setCancelReason(MessageComponent... cancelReason);
+    default void setCancelReason(ChatComponent cancelReason){
+        setCancelReason(cancelReason, VariableSet.newEmptySet());
+    }
+
+    void setCancelReason(ChatComponent cancelReason, VariableSet variables);
 }

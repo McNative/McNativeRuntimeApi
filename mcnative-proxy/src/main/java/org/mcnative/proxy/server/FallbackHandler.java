@@ -19,11 +19,11 @@
 
 package org.mcnative.proxy.server;
 
-import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.proxy.ProxiedPlayer;
 
 public interface FallbackHandler {
 
-    MinecraftServer getFallbackServer(ProxiedPlayer player, MinecraftServer kickedFrom, TextComponent message);
+    MinecraftServer getFallbackServer(ProxiedPlayer player, MinecraftServer kickedFrom, ChatComponent message);
 
 }

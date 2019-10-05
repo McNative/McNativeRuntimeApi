@@ -21,7 +21,8 @@ package org.mcnative.common.player.receiver;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -47,7 +48,11 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     void sendMessage(String message);
 
-    void sendMessage(MessageComponent... components);
+    default void sendMessage(ChatComponent component){
+        sendMessage(component,VariableSet.newEmptySet());
+    }
+
+    void sendMessage(ChatComponent component, VariableSet variables);
 
     void sendPacket(MinecraftPacket packet);
 

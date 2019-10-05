@@ -19,17 +19,26 @@
 
 package org.mcnative.common.player;
 
-import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 public interface Title {
 
     Title title(String text);
 
-    Title title(TextComponent... components);
+    default Title title(ChatComponent component){
+        return title(component,VariableSet.newEmptySet());
+    }
+
+    Title title(ChatComponent component, VariableSet variables);
 
     Title subTitle(String text);
 
-    Title subTitle(TextComponent... components);
+    default Title subTitle(ChatComponent component){
+        return subTitle(component,VariableSet.newEmptySet());
+    }
+
+    Title subTitle(ChatComponent component, VariableSet variables);
 
     Title fadeInTime(int ticks);
 

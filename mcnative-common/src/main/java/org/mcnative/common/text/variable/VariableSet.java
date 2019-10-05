@@ -27,10 +27,15 @@ public interface VariableSet extends Set<Variable> {
 
     Set<Variable> getVariables();
 
+    Variable get(String name);
+
     VariableSet add(String name, Object source);
 
     VariableSet remove(String name);
 
+    default String replace(String text){
+        return replace(text,this);
+    }
 
 
     static VariableSet of(Variable... variables){
@@ -43,5 +48,31 @@ public interface VariableSet extends Set<Variable> {
 
     static VariableSet newEmptySet(){
         return EmptyVariableSet.newEmptySet();
+    }
+
+    static String replace(String text, VariableSet variables){
+        char[] chars = text.toCharArray();
+        int start = -1;
+        StringBuilder builder = new StringBuilder(text.length());
+        boolean in = false;
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if(c == '%'){
+                if(start == -1) start = i;
+                else{
+                    if(start < i){
+                        Variable variable = variables.get(text.substring(start+1,i));
+                        if(variable != null){
+                            builder.append(variable.getObject());//@Todo parse with dot (advanced string processing)
+                            start = -1;
+                            continue;
+                        }
+                    }
+                    builder.append("{Unknown}");
+                }
+            }
+            else builder.append(c);
+        }
+        return builder.toString();
     }
 }

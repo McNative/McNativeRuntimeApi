@@ -31,8 +31,7 @@ import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.text.outdated.ChatComponent;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
@@ -112,9 +111,9 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
 
     void sendActionbar(ChatComponent message,VariableSet variables);
 
-    void sendActionbar(MessageComponent message,VariableSet variables,long staySeconds);
+    void sendActionbar(ChatComponent message,VariableSet variables,long staySeconds);
 
-    void sendActionbar(MessageComponent message,long stayTime);
+    void sendActionbar(ChatComponent message,long stayTime);
 
 
 

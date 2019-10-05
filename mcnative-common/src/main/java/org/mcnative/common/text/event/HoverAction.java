@@ -19,9 +19,14 @@
 
 package org.mcnative.common.text.event;
 
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.support.JEProtocolSupport;
+
 public enum HoverAction {
 
     SHOW_TEXT,
+
+    @JEProtocolSupport(max= MinecraftProtocolVersion.JE_1_11_2)
     SHOW_ACHIEVEMENT,
     SHOW_ITEM,
     SHOW_ENTITY

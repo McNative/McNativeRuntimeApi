@@ -21,7 +21,8 @@ package org.mcnative.common.player.scoreboard;
 
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.text.outdated.MessageComponent;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 
@@ -32,15 +33,27 @@ public interface Tablist {
 
     void setHeader(String message);
 
-    void setHeader(MessageComponent... components);
+    default void setHeader(ChatComponent component){
+        setHeader(component,VariableSet.newEmptySet());
+    }
+
+    void setHeader(ChatComponent component, VariableSet variables);
 
 
     void setFooter(String message);
 
-    void setFooter(MessageComponent... components);
+    default void setFooter(ChatComponent component){
+        setFooter(component,VariableSet.newEmptySet());
+    }
+
+    void setFooter(ChatComponent component, VariableSet variables);
 
 
-    void setHeaderAndFooter(MessageComponent header, MessageComponent footer);
+    default void setHeaderAndFooter(ChatComponent header, ChatComponent footer){
+        setHeaderAndFooter(header, footer,VariableSet.newEmptySet());
+    }
+
+    void setHeaderAndFooter(ChatComponent header, ChatComponent footer, VariableSet variables);
 
     void clearHeaderAndFooter();
 

@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbstractChatComponent<T extends AbstractChatComponent> implements ChatComponent<T>{
+public abstract class AbstractChatComponent<T extends AbstractChatComponent> implements ChatComponent<T>{
 
     private TextColor color;
     private Set<TextStyle> styling;
@@ -96,21 +96,6 @@ public class AbstractChatComponent<T extends AbstractChatComponent> implements C
     }
 
     @Override
-    public String toPlainText(VariableSet variables) {
-        return null;
-    }
-
-    @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
-
-    }
-
-    @Override
-    public Document compile(VariableSet variables) {
-        return null;
-    }
-
-    @Override
     public TextColor getColor() {
         return color;
     }
@@ -130,5 +115,40 @@ public class AbstractChatComponent<T extends AbstractChatComponent> implements C
     public T setStyling(Set<TextStyle> styling) {
         this.styling = styling;
         return (T) this;
+    }
+
+    @Override
+    public void compile(Document document, VariableSet variables) {
+        if(isBold()) document.add("bold",true);
+        if(isItalic()) document.add("italic",true);
+        if(isUnderlined()) document.add("underlined",true);
+        if(isStrikeThrough()) document.add("strikethrough",true);
+        if(isObfuscated()) document.add("obfuscated",true);
+        if(this.color != null) document.add("color",color.getCode());
+        if(this.clickEvent != null){//Register temp command
+            if(clickEvent.getAction().isDefaultMinecraftEvent()){
+                document.add(clickEvent.getAction().getName().toLowerCase(),clickEvent.getValue().toString());
+            }else document.add("run_command","mcnOnTextClick");//@Todo add custom event managing
+        }else if(this.hoverEvent != null){
+            if(hoverEvent.getAction() == HoverAction.SHOW_TEXT) document.add("show_text",hoverEvent.getValue());
+            else if(hoverEvent.getAction() == HoverAction.SHOW_ITEM) document.add("show_item",hoverEvent.getValue());
+            else if(hoverEvent.getAction() == HoverAction.SHOW_ENTITY) document.add("show_entity",hoverEvent.getValue());
+            else if(hoverEvent.getAction() == HoverAction.SHOW_ACHIEVEMENT) document.add("show_achievement",hoverEvent.getValue());
+            //SHOW_ACHIEVEMENT is deprecated Since 1.12
+        }
+        if(extras != null){
+            Document[] extras = new Document[this.extras.size()];
+            int index = 0;
+            for (ChatComponent extra : this.extras) {
+                extras[index] = extra.compile(variables);
+                index++;
+            }
+            document.add("extra",extras);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return toPlainText();
     }
 }

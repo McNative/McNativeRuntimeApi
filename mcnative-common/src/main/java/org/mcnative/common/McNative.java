@@ -39,7 +39,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
-import org.mcnative.common.text.TextComponent;
+import org.mcnative.common.text.components.ChatComponent;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -103,11 +103,11 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
 
     void broadcast(String message);
 
-    void broadcast(TextComponent... components);
+    void broadcast(ChatComponent component);
 
     void broadcast(String permission, String message);
 
-    void broadcast(String permission,TextComponent... components);
+    void broadcast(String permission,ChatComponent component);
 
 
     Collection<String> getOpenChannels();
