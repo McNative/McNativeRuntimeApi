@@ -39,11 +39,12 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent> imp
 
     private TextEvent<ClickAction> clickEvent;
     private TextEvent<HoverAction> hoverEvent;
+    private String insertion;
 
-    private Collection<ChatComponent> extras;
+    private Collection<MessageComponent> extras;
 
     public AbstractChatComponent(){
-        this(TextColor.WHITE);
+        this(null);
     }
 
     public AbstractChatComponent(TextColor color){
@@ -79,24 +80,36 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent> imp
     }
 
     @Override
-    public Collection<ChatComponent> getExtras() {
+    public String getInsertion() {
+        return this.insertion;
+    }
+
+    @Override
+    public T setInsertion(String insertion) {
+        this.insertion = insertion;
+        return (T) this;
+    }
+
+    @Override
+    public Collection<MessageComponent> getExtras() {
         return extras;
     }
 
     @Override
-    public T addExtra(ChatComponent component) {
+    public T addExtra(MessageComponent component) {
         extras.add(component);
         return (T) this;
     }
 
     @Override
-    public T removeExtra(ChatComponent component) {
+    public T removeExtra(MessageComponent component) {
         extras.remove(component);
         return (T) this;
     }
 
     @Override
     public TextColor getColor() {
+        if(color == null) return TextColor.WHITE;
         return color;
     }
 
@@ -118,33 +131,47 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent> imp
     }
 
     @Override
-    public void compile(Document document, VariableSet variables) {
+    public Document compile(String key, VariableSet variables) {
+        Document document = Document.newDocument(key);
         if(isBold()) document.add("bold",true);
         if(isItalic()) document.add("italic",true);
         if(isUnderlined()) document.add("underlined",true);
         if(isStrikeThrough()) document.add("strikethrough",true);
         if(isObfuscated()) document.add("obfuscated",true);
-        if(this.color != null) document.add("color",color.getCode());
+        if(this.color != null) document.add("color",color.getName());
+        if(insertion != null) document.add("insertion",variables.replace(insertion));
         if(this.clickEvent != null){//Register temp command
-            if(clickEvent.getAction().isDefaultMinecraftEvent()){
-                document.add(clickEvent.getAction().getName().toLowerCase(),clickEvent.getValue().toString());
-            }else document.add("run_command","mcnOnTextClick");//@Todo add custom event managing
-        }else if(this.hoverEvent != null){
-            if(hoverEvent.getAction() == HoverAction.SHOW_TEXT) document.add("show_text",hoverEvent.getValue());
-            else if(hoverEvent.getAction() == HoverAction.SHOW_ITEM) document.add("show_item",hoverEvent.getValue());
-            else if(hoverEvent.getAction() == HoverAction.SHOW_ENTITY) document.add("show_entity",hoverEvent.getValue());
-            else if(hoverEvent.getAction() == HoverAction.SHOW_ACHIEVEMENT) document.add("show_achievement",hoverEvent.getValue());
-            //SHOW_ACHIEVEMENT is deprecated Since 1.12
+            Document event = Document.newDocument();
+            if(clickEvent.getAction().isDirectEvent()){
+                event.add("action",clickEvent.getAction().getName().toLowerCase());
+                event.add("value",clickEvent.getValue().toString());
+            }else{
+                event.add("action","run_command");
+                event.add("value","mcnOnTextClick");//@Todo add custom event managing
+            }
+            document.add("clickEvent",event);
         }
-        if(extras != null){
+        if(this.hoverEvent != null){
+            Document event = Document.newDocument();
+            event.add("action",hoverEvent.getAction().getName().toLowerCase());
+
+            ChatComponent value;
+            if(hoverEvent.getValue() instanceof ChatComponent) value = ((ChatComponent) hoverEvent.getValue());
+            else value = new TextComponent(hoverEvent.getValue().toString());
+            event.add("value",value.compile(variables));
+
+            document.add("hoverEvent",event);
+        }
+        if(extras != null && !extras.isEmpty()){
             Document[] extras = new Document[this.extras.size()];
             int index = 0;
-            for (ChatComponent extra : this.extras) {
+            for (MessageComponent extra : this.extras) {
                 extras[index] = extra.compile(variables);
                 index++;
             }
             document.add("extra",extras);
         }
+        return document;
     }
 
     @Override

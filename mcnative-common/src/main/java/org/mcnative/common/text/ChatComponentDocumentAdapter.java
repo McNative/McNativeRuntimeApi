@@ -19,7 +19,6 @@
 
 package org.mcnative.common.text;
 
-import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.DocumentEntry;
 import net.prematic.libraries.document.adapter.DocumentAdapter;
 import net.prematic.libraries.utility.reflect.TypeReference;
@@ -36,8 +35,6 @@ public class ChatComponentDocumentAdapter implements DocumentAdapter<ChatCompone
 
     @Override
     public DocumentEntry write(String key, ChatComponent component) {
-        Document output = Document.newDocument(key);
-        component.compile(output, VariableSet.newEmptySet());
-        return output;
+        return component.compile(key, VariableSet.newEmptySet());
     }
 }

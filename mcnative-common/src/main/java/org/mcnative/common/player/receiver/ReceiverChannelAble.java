@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 13.10.19, 15:43
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,12 @@
  * under the License.
  */
 
-package org.mcnative.common.event.player;
+package org.mcnative.common.player.receiver;
 
-import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.text.components.ChatComponent;
-import org.mcnative.common.text.variable.VariableSet;
+public interface ReceiverChannelAble {
 
-import java.net.InetSocketAddress;
+    ReceiverChannel getReceiver();
 
-public interface MinecraftPlayerPreLoginEvent extends MinecraftPlayerEvent, Cancellable {
+    void setReceiver(ReceiverChannel channel);
 
-    InetSocketAddress getAddress();
-
-    void setCancelReason(String message);
-
-    default void setCancelReason(ChatComponent cancelReason){
-        setCancelReason(cancelReason, VariableSet.newEmptySet());
-    }
-
-    void setCancelReason(ChatComponent cancelReason, VariableSet variables);
 }

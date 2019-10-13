@@ -23,6 +23,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
+import net.prematic.libraries.event.DefaultEventManager;
 import net.prematic.libraries.event.EventManager;
 import net.prematic.libraries.logging.JdkPrematicLogger;
 import net.prematic.libraries.logging.PrematicLogger;
@@ -40,12 +41,17 @@ import org.mcnative.common.player.PunishmentHandler;
 import org.mcnative.common.player.WhitelistHandler;
 import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.permission.PlayerPermissionHandler;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.registry.Registry;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.server.ConnectHandler;
@@ -68,7 +74,7 @@ public class BungeeCordService implements ProxyService {
     private final EventManager eventManager;
 
     private final PacketManager packetManager;
-    private final PlayerManager<ProxiedPlayer> playerManager;
+    private final PlayerManager playerManager;
 
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
@@ -85,7 +91,7 @@ public class BungeeCordService implements ProxyService {
     private ServerPingResponse serverPingResponse;
     private Tablist tablist;
 
-    public BungeeCordService() {
+    public BungeeCordService(PlayerManager manager) {
         this.platform = new BungeeCordPlatform();
         this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
 
@@ -93,10 +99,10 @@ public class BungeeCordService implements ProxyService {
         this.registry = null;
         this.pluginManager = null;
         this.commandManager = null;
-        this.eventManager = null;
+        this.eventManager = new DefaultEventManager();
 
-        this.packetManager = null;
-        this.playerManager = new BungeeCordPlayerManager();
+        this.packetManager = new DefaultPacketManager();
+        this.playerManager = manager;
 
         this.pluginMessageListeners = new ArrayList<>();
         this.servers = new ArrayList<>();
@@ -151,6 +157,7 @@ public class BungeeCordService implements ProxyService {
     public PlayerManager<ProxiedPlayer> getPlayerManager() {
         return playerManager;
     }
+
 
     @Override
     public PermissionHandler getPermissionHandler() {
@@ -224,12 +231,14 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public void broadcastPacket(MinecraftPacket packet) {
-
+        getPlayerManager().getOnlinePlayers().forEach(player -> player.sendPacket(packet));
     }
 
     @Override
     public void broadcastPacket(MinecraftPacket packet, String permission) {
-
+        getPlayerManager().getOnlinePlayers().forEach(player -> {
+            if(player.hasPermission(permission)) player.sendPacket(packet);
+        });
     }
 
     @Override
@@ -261,7 +270,6 @@ public class BungeeCordService implements ProxyService {
     public void setPingResponse(ServerPingResponse ping) {
         this.serverPingResponse = ping;
     }
-
 
     @Override
     public Collection<MinecraftServer> getServers() {
@@ -317,23 +325,17 @@ public class BungeeCordService implements ProxyService {
         Iterators.removeOne(this.servers, server1 -> server1.equals(server));
     }
 
+
     @Override
-    public void broadcast(String message) {
+    public void broadcast(MessageComponent component, VariableSet variables) {
+        getPlayerManager().getOnlinePlayers().forEach(player -> player.sendMessage(component,variables));
     }
 
     @Override
-    public void broadcast(TextComponent... components) {
-
-    }
-
-    @Override
-    public void broadcast(String permission, String message) {
-
-    }
-
-    @Override
-    public void broadcast(String permission, TextComponent... components) {
-
+    public void broadcast(String permission, MessageComponent component, VariableSet variables) {
+        getPlayerManager().getOnlinePlayers().forEach(player -> {
+            if(player.hasPermission(permission)) player.sendMessage(component,variables);
+        });
     }
 
     @Override
@@ -369,7 +371,6 @@ public class BungeeCordService implements ProxyService {
         ProxyServer.getInstance().unregisterChannel(entry.name);
     }
 
-
     @Override
     public void shutdown() {
         ProxyServer.getInstance().stop();
@@ -377,7 +378,8 @@ public class BungeeCordService implements ProxyService {
 
     @Override
     public void restart() {
-
+        shutdown();
+        //@Todo implement restart option
     }
 
     public static class PluginMessageListenerEntry {

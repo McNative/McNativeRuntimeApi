@@ -29,6 +29,7 @@ import java.util.Set;
 public class TranslationComponent extends AbstractChatComponent<TranslationComponent>{
 
     private String translation;
+    private MessageComponentSet with;
 
     public TranslationComponent() {}
 
@@ -46,6 +47,10 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
         this.translation = translation;
     }
 
+    public MessageComponentSet getWith() {
+        return with;
+    }
+
     public String getTranslation() {
         return translation;
     }
@@ -60,7 +65,7 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
     }
 
     @Override
-    public void compile(Document document,VariableSet variables) {
-        super.compile(variables).add("translate",translation);
+    public Document compile(String key, VariableSet variables) {
+        return super.compile(key,variables).add("translate",translation).add("with",with.compile(variables));
     }
 }

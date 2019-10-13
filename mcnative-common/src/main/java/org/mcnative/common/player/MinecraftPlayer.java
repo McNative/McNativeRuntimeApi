@@ -22,15 +22,14 @@ package org.mcnative.common.player;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.player.permission.Permissable;
+import org.mcnative.common.player.permission.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
 
-import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public interface MinecraftPlayer extends ServerPingResponse.PlayerInfo {
-
-    String getName();
+public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerInfo {
 
     UUID getUniqueId();
 
@@ -70,26 +69,6 @@ public interface MinecraftPlayer extends ServerPingResponse.PlayerInfo {
     boolean isWhitelisted();
 
     void setWhitelisted(boolean whitelisted);
-
-
-    boolean isOperator();
-
-    void setOperator(boolean operator);
-
-    Collection<String> getPermissions();
-
-    Collection<String> getAllPermissions();
-
-    Collection<String> getGroups();
-
-    boolean isPermissionSet(String permission);
-
-    boolean hasPermission(String permission);
-
-    void addPermission(String permission);
-
-    void removePermission(String permission);
-
 
     boolean isBanned();
 

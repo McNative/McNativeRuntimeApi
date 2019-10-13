@@ -72,8 +72,28 @@ public enum MinecraftProtocolVersion {
         return name;
     }
 
-    public static MinecraftProtocolVersion of(int number){
-        for (MinecraftProtocolVersion value : values()) if(value.getNumber() == number) return value;
+    public boolean isSameEdition(MinecraftProtocolVersion version){
+        return this.getEdition() == version.getEdition();
+    }
+
+    public boolean isNewer(MinecraftProtocolVersion newerVersion){
+        return isSameEdition(newerVersion) && newerVersion.getNumber() < getNumber();
+    }
+
+    public boolean isOlder(MinecraftProtocolVersion newerVersion){
+        return isSameEdition(newerVersion) && newerVersion.getNumber() > getNumber();
+    }
+
+    public boolean isNewerOrSame(MinecraftProtocolVersion newerVersion){
+        return isSameEdition(newerVersion) && newerVersion.getNumber() <= getNumber();
+    }
+
+    public boolean isOlderOrSame(MinecraftProtocolVersion newerVersion){
+        return isSameEdition(newerVersion) && newerVersion.getNumber() >= getNumber();
+    }
+
+    public static MinecraftProtocolVersion of(MinecraftEdition edition, int number){
+        for (MinecraftProtocolVersion value : values()) if(value.getEdition() == edition && value.getNumber() == number) return value;
         throw new UnsupportedOperationException("This protocol version is not supported.");
     }
 }

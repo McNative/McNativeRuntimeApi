@@ -21,7 +21,16 @@ package org.mcnative.common.protocol;
 
 public enum MinecraftEdition {
 
-    JAVA(),
-    BEDROCK()
+    JAVA("Java"),
+    BEDROCK("Bedrock");
 
+    private final String name;
+
+    MinecraftEdition(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

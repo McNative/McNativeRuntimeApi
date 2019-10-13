@@ -19,17 +19,18 @@
 
 package org.mcnative.common.protocol.packet;
 
-import org.mcnative.common.MinecraftConnection;
+import net.prematic.libraries.utility.annonations.Nullable;
+import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
+import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
 
 public interface PacketManager {
 
-    default void registerPacket(MinecraftPacket packet){
-        registerPacket(PacketDirection.INCOMING,packet);
-        registerPacket(PacketDirection.OUTGOING,packet);
-    }
+    PacketIdentifier getPacketIdentifier(Class<?> packetClass);
 
-    void registerPacket(PacketDirection direction, MinecraftPacket packet);
+    void registerPacket(PacketIdentifier packet);
 
     default void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener){
         registerPacketListener(PacketDirection.INCOMING,packetClass,listener);
@@ -43,9 +44,13 @@ public interface PacketManager {
 
     void unregisterPacketListener(PacketDirection direction, MinecraftPacketListener listener);
 
-    //Null when packet not should be handled
-    MinecraftPacket createPacket(MinecraftProtocolVersion version,int packetId);
+    @Nullable(message="Null when packet not should be handled")
+    MinecraftPacket createIncomingPacket(ConnectionState state, MinecraftProtocolVersion version,int packetId);
 
     MinecraftPacket handlePacket(PacketDirection direction,MinecraftProtocolVersion version, MinecraftConnection connection,MinecraftPacket packet);
 
+    static void registerDefaultPackets(PacketManager packetManager){
+        packetManager.registerPacket(MinecraftChatPacket.IDENTIFIER);
+        packetManager.registerPacket(MinecraftTitlePacket.IDENTIFIER);
+    }
 }

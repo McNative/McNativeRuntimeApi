@@ -20,15 +20,30 @@
 package org.mcnative.common.protocol.packet;
 
 import io.netty.buffer.ByteBuf;
+import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 public interface MinecraftPacket {
 
-    int getId(PacketDirection direction, MinecraftProtocolVersion version);
+    PacketIdentifier getIdentifier();
 
-    void read(MinecraftProtocolVersion version, ByteBuf buffer);
+    void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
-    void write(MinecraftProtocolVersion version, ByteBuf buffer);
+    void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
+    static PacketIdentifier newIdentifier(Class<?> packetClass, PacketIdentifier.PacketCondition... conditions){
+        return new PacketIdentifier(packetClass, conditions);
+    }
 
+    static PacketIdentifier.IdMapping map(MinecraftProtocolVersion version, int identifier){
+        return new PacketIdentifier.IdMapping(version,identifier);
+    }
+
+    static PacketIdentifier.PacketCondition on(PacketDirection direction, PacketIdentifier.IdMapping... mappings){
+        return new PacketIdentifier.PacketCondition(direction,ConnectionState.GAME,mappings);
+    }
+
+    static PacketIdentifier.PacketCondition on(PacketDirection direction, ConnectionState state, PacketIdentifier.IdMapping... mappings){
+        return new PacketIdentifier.PacketCondition(direction,state,mappings);
+    }
 }

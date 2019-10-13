@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 14:48
+ * @since 12.10.19, 15:09
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,16 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.packet;
+package org.mcnative.common.event.player.permission;
 
-public class DefaultMinecraftPacket {
+import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+
+public interface MinecraftPlayerPermissionCheckEvent extends MinecraftOnlinePlayerEvent {
+
+    String getPermission();
+
+    boolean hasPermission();
+
+    void setHasPermission(boolean hasPermission);
+
 }

@@ -19,8 +19,10 @@
 
 package org.mcnative.bungeecord.player;
 
+import io.netty.channel.Channel;
 import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
@@ -111,11 +113,13 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
         return (T) translator.apply(player);
     }
 
-    public void registerPlayer(net.md_5.bungee.api.connection.ProxiedPlayer player){
-        this.onlineMinecraftPlayers.add(new BungeeProxiedPlayer(player,null,null));
+    @Internal
+    public void registerPlayer(ProxiedPlayer player){
+        this.onlineMinecraftPlayers.add(player);
     }
 
-    public void unregisterPlayer(net.md_5.bungee.api.connection.ProxiedPlayer player){
-
+    @Internal
+    public void unregisterPlayer(ProxiedPlayer player){
+        Iterators.removeOne(this.onlineMinecraftPlayers, player0 -> player0.equals(player));
     }
 }

@@ -20,9 +20,12 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.event.Cancellable;
+import org.mcnative.common.text.components.MessageComponent;
 
 public interface MinecraftPlayerKickEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 
-    String getReason();
+    MessageComponent getReason();
+
+    void setReason(MessageComponent component);
 
 }

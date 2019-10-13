@@ -19,57 +19,101 @@
 
 package org.mcnative.common.player.bossbar;
 
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.player.receiver.ReceiverChannel;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
-import java.util.Collection;
+public class BossBar {
 
-public interface BossBar {
+    private MessageComponent title;
+    private VariableSet variables;
 
-    String getTitle();
+    private BarColor color;
+    private BarStyle style;
+    private BarFlag flag;
 
-    BossBar setTitle(String title);
+    private int maximum;
+    private int progress;
 
-
-    TextColor getColor();
-
-    BossBar setColor(TextColor color);
-
-
-    BarStyle getStyle();
-
-    BossBar setStyle(BarStyle style);
+    private ReceiverChannel receiver;
 
 
-    Collection<BarFlag> getFlags();
+    public MessageComponent getTitle() {
+        return title;
+    }
 
-    boolean hasFlag(BarFlag flag);
+    public BossBar setTitle(MessageComponent title) {
+        this.title = title;
+        return this;
+    }
 
-    BossBar addFlag(BarFlag flag);
+    public VariableSet getVariables() {
+        return variables;
+    }
 
-    BossBar removeFlag(BarFlag flag);
+    public BossBar setVariables(VariableSet variables) {
+        this.variables = variables;
+        return this;
+    }
 
+    public BarColor getColor() {
+        return color;
+    }
 
-    int getMaximum();
+    public BossBar setColor(BarColor color) {
+        this.color = color;
+        return this;
+    }
 
-    BossBar setMaximum(int maximum);
+    public BarStyle getStyle() {
+        return style;
+    }
 
+    public BossBar setStyle(BarStyle style) {
+        this.style = style;
+        return this;
+    }
 
-    double getProgress();
+    public BarFlag getFlag() {
+        return flag;
+    }
 
-    BossBar setProgress(double progress);
+    public BossBar setFlag(BarFlag flag) {
+        this.flag = flag;
+        return this;
+    }
 
+    public int getMaximum() {
+        return maximum;
+    }
 
-    boolean isVisible();
+    public BossBar setMaximum(int maximum) {
+        this.maximum = maximum;
+        return this;
+    }
 
-    BossBar setVisible(boolean visible);
+    public int getProgress() {
+        return progress;
+    }
 
+    public BossBar setProgress(int progress) {
+        this.progress = progress;
+        return this;
+    }
 
-    Collection<OnlineMinecraftPlayer> getPlayers();
+    public ReceiverChannel getReceiver() {
+        return receiver;
+    }
 
-    BossBar addPlayer(OnlineMinecraftPlayer player);
+    public void setReceiver(ReceiverChannel receiver) {
+        this.receiver = receiver;
+    }
 
-    BossBar removePlayer(OnlineMinecraftPlayer player);
+    public void update(){
 
-    void clearPlayers();
+    }
+
+    public void destroy(){
+
+    }
 }

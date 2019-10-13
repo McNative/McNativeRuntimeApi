@@ -19,7 +19,16 @@
 
 package org.mcnative.common.protocol.packet;
 
-public enum  PacketDirection {
+/**
+ *
+ *
+ * Server -> OUTGOING | Proxy | -> OUTGOING -> Client
+ * Server <- INCOMING | Proxy | <- INCOMING <- Client
+ *
+ * The proxy has always the same direction state. If a server sends a packet to the client
+ * and the proxy reads this packet the state is still OUTGOING.
+ */
+public enum PacketDirection {
 
     INCOMING(),
     OUTGOING()

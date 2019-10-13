@@ -45,7 +45,7 @@ public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
 
     @Override
     public boolean isEmpty() {
-        return size() != 0;
+        return size() == 0;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
     }
 
     @Override
-    public ServerInfo put(String key, ServerInfo value) {
+    public ServerInfo put(String unused, ServerInfo value) {
         if(value instanceof MinecraftServer) servers.add((MinecraftServer) value);
         else servers.add(new WrappedBungeeMinecraftServer(value));
         return value;
@@ -127,7 +127,9 @@ public class McNativeBungeeServerMap implements Map<String, ServerInfo> {
 
         @Override
         public ServerInfo getValue() {
-            return server instanceof ServerInfo? (ServerInfo) server :null;
+            if(server instanceof ServerInfo) return (ServerInfo) server;
+            else if(server instanceof WrappedBungeeMinecraftServer) return ((WrappedBungeeMinecraftServer) server).getOriginalInfo();
+            else throw new IllegalArgumentException("It is not possible to convert the server into a BungeeCord ServerInfo.");
         }
 
         @Override

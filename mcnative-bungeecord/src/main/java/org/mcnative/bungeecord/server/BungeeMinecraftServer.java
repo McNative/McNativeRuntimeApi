@@ -25,7 +25,12 @@ import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.server.MinecraftServer;
 import org.mcnative.proxy.server.MinecraftServerType;
 
@@ -140,7 +145,17 @@ public class BungeeMinecraftServer implements MinecraftServer, ServerInfo {
     }
 
     @Override
-    public void disconnect(TextComponent... reason) {
+    public MinecraftProtocolVersion getProtocolVersion() {
+        return null;
+    }
+
+    @Override
+    public ConnectionState getState() {
+        return null;
+    }
+
+    @Override
+    public void disconnect(MessageComponent reason, VariableSet variables) {
 
     }
 
@@ -150,7 +165,7 @@ public class BungeeMinecraftServer implements MinecraftServer, ServerInfo {
     }
 
     @Override
-    public void sendPacketAsync(MinecraftPacket packet) {
+    public void sendLocalLoopPacket(MinecraftPacket packet) {
 
     }
 

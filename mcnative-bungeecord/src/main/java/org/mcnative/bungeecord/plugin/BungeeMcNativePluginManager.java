@@ -25,6 +25,7 @@ import net.prematic.libraries.plugin.description.PluginDescription;
 import net.prematic.libraries.plugin.lifecycle.LifecycleState;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import org.mcnative.common.McNative;
 
 import java.io.File;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class BungeeMcNativePluginManager implements PluginManager {
 
     @Override
     public PrematicLogger getLogger() {
-        return null;
+        return McNative.getInstance().getLogger();
     }
 
     @Override

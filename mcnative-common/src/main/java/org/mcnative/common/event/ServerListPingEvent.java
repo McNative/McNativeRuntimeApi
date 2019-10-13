@@ -20,8 +20,11 @@
 package org.mcnative.common.event;
 
 import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.connection.PendingConnection;
 
 public interface ServerListPingEvent extends MinecraftEvent{
+
+    PendingConnection getConnection();
 
     ServerPingResponse getResponse();
 

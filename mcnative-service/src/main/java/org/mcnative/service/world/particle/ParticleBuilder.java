@@ -29,11 +29,11 @@ import org.mcnative.service.location.Offset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ParticleBuilder implements ReceiveAble {
 
     private final List<Entry> entries;
-    private Iterable<? extends OnlineMinecraftPlayer> receivers;
     private Shape shape;
 
     private ParticleBuilder() {
@@ -57,23 +57,14 @@ public class ParticleBuilder implements ReceiveAble {
         return particle(location, particle, 1);
     }
 
-    public ParticleBuilder receivers(Iterable<? extends OnlineMinecraftPlayer> receivers) {
-        this.receivers = receivers;
-        return this;
-    }
-
-    public ParticleBuilder receivers(OnlineMinecraftPlayer... receivers) {
-        return receivers(Arrays.asList(receivers));
-    }
-
     public ParticleBuilder shape(Shape shape) {
         this.shape = shape;
         return this;
     }
 
-    public void spawn() {
+    public void spawn(Iterable<? extends OnlineMinecraftPlayer> receivers) {
+        Objects.requireNonNull(receivers,"No players");
         if(shape == null) {
-            Iterable<? extends OnlineMinecraftPlayer> receivers = this.receivers != null ? this.receivers : MinecraftService.getInstance().getPlayerManager().getOnlinePlayers();
             for (Entry entry : this.entries) {
                 entry.location.getWorld().spawnParticle(entry.location, entry.particle, entry.amount, entry.offset, receivers);
             }
@@ -86,8 +77,7 @@ public class ParticleBuilder implements ReceiveAble {
 
     @Override
     public void execute(ReceiverChannel receivers) {
-        receivers(receivers);
-        spawn();
+        spawn(receivers);
     }
 
     private static final class Entry {

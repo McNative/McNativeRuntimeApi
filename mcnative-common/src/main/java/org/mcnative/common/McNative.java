@@ -40,6 +40,8 @@ import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
 import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -67,7 +69,6 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
     PlayerManager<P> getPlayerManager();
 
 
-
     PermissionHandler getPermissionHandler();
 
     void setPermissionHandler(PermissionHandler handler);
@@ -90,7 +91,6 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
     void setGameProfileLoader(GameProfileLoader loader);
 
 
-
     ReceiverChannel getServerChat();
 
     void setServerChat(ReceiverChannel channel);
@@ -101,13 +101,18 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
     void setDefaultTablist(Tablist tablist);
 
 
-    void broadcast(String message);
 
-    void broadcast(ChatComponent component);
+    default void broadcast(MessageComponent component){
+        broadcast(component,VariableSet.newEmptySet());
+    }
 
-    void broadcast(String permission, String message);
+    void broadcast(MessageComponent component, VariableSet variables);
 
-    void broadcast(String permission,ChatComponent component);
+    default void broadcast(String permission,MessageComponent component){
+        broadcast(permission, component,VariableSet.newEmptySet());
+    }
+
+    void broadcast(String permission,MessageComponent component, VariableSet variables);
 
 
     Collection<String> getOpenChannels();

@@ -20,7 +20,7 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.event.MinecraftEvent;
 
 public interface MinecraftPacketEvent extends MinecraftEvent, Cancellable {
@@ -29,7 +29,9 @@ public interface MinecraftPacketEvent extends MinecraftEvent, Cancellable {
 
     <T extends MinecraftPacket> T getPacket(Class<T> packetClass);
 
-    MinecraftConnection getConnection();
+    MinecraftConnection getSender();
+
+    MinecraftConnection getReceiver();
 
     PacketDirection getDirection();
 

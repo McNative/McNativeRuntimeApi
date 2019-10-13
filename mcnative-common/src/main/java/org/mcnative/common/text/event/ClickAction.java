@@ -42,30 +42,31 @@ public abstract class ClickAction {
     };
 
     private final String name;
+    private final boolean directEvent;
 
     public ClickAction(String name) {
+        this(name,false);
+    }
+
+    public ClickAction(String name, boolean directEvent) {
         this.name = name;
+        this.directEvent = directEvent;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isDefaultMinecraftEvent(){
-        return false;
+    public boolean isDirectEvent(){
+        return directEvent;
     }
 
     public abstract void execute(OnlineMinecraftPlayer player, Object value);
 
-    private static class DefaultMinecraftEvent extends ClickAction{
+    private static class DefaultMinecraftEvent extends ClickAction {
 
         private DefaultMinecraftEvent(String name) {
-            super(name);
-        }
-
-        @Override
-        public boolean isDefaultMinecraftEvent() {
-            return true;
+            super(name,true);
         }
 
         @Override

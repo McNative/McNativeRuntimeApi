@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 21.09.19, 17:56
+ * @since 12.10.19, 21:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.player;
+package org.mcnative.common.player.permission;
 
-import org.mcnative.common.player.MinecraftPlayer;
+public interface Permissable extends PlayerPermissionHandler {
 
-public class BungeeProxiedPlayerV2 implements MinecraftPlayer {
-
-
+    PlayerPermissionHandler getPermissionHandler();
 
 }

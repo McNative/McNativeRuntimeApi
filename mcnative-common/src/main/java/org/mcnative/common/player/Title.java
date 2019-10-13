@@ -19,32 +19,87 @@
 
 package org.mcnative.common.player;
 
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
-public interface Title {
+import java.util.function.Consumer;
 
-    Title title(String text);
+public class Title {
 
-    default Title title(ChatComponent component){
-        return title(component,VariableSet.newEmptySet());
+    private MessageComponent title;
+    private MessageComponent subTitle;
+    private VariableSet variables;
+    private int[] timing;
+
+    public Title() {
+        this.timing = new int[]{20,60,20};
     }
 
-    Title title(ChatComponent component, VariableSet variables);
-
-    Title subTitle(String text);
-
-    default Title subTitle(ChatComponent component){
-        return subTitle(component,VariableSet.newEmptySet());
+    public MessageComponent getTitle() {
+        return title;
     }
 
-    Title subTitle(ChatComponent component, VariableSet variables);
+    public MessageComponent getSubTitle() {
+        return subTitle;
+    }
 
-    Title fadeInTime(int ticks);
+    public VariableSet getVariables() {
+        return variables;
+    }
 
-    Title fadeOutTime(int ticks);
+    public int[] getTiming() {
+        return timing;
+    }
 
-    Title stayTime(int ticks);
+    public Title title(String text){
+        return title(Text.of(text));
+    }
 
-    void send(OnlineMinecraftPlayer player);
+    public Title title(MessageComponent component){
+        title = component;
+        return this;
+    }
+
+    public Title subTitle(String text){
+        return subTitle(Text.of(text));
+    }
+
+    public Title subTitle(MessageComponent component){
+        this.subTitle = component;
+        return this;
+    }
+
+    public Title variables(VariableSet variables){
+        this.variables = variables;
+        return this;
+    }
+
+    public Title fadeInTime(int ticks){
+        this.timing[0] = ticks;
+        return this;
+    }
+
+    public Title fadeOutTime(int ticks){
+        this.timing[2] = ticks;
+        return this;
+    }
+
+    public Title stayTime(int ticks){
+        this.timing[1] = ticks;
+        return this;
+    }
+
+    public void send(OnlineMinecraftPlayer player){
+        player.sendTitle(this);
+    }
+
+    public void send(Iterable<OnlineMinecraftPlayer> players){
+        players.forEach(player -> player.sendTitle(Title.this));
+    }
+
+    public static Title newTitle(){
+        return new Title();
+    }
 }

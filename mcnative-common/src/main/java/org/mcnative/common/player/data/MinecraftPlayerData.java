@@ -20,10 +20,13 @@
 package org.mcnative.common.player.data;
 
 import net.prematic.libraries.document.Document;
+import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
 
 public interface MinecraftPlayerData {
+
+    int getId();
 
     String getName();
 
@@ -35,11 +38,15 @@ public interface MinecraftPlayerData {
 
     long getLastPlayed();
 
+    GameProfile getGameProfile();
+
     Document getProperties();
 
     void updateLastPlayed(long timeStamp);
 
     void updateName(String name);
+
+    void updateGameProfile(GameProfile profile);
 
     void updateProperties();
 }

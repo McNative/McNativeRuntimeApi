@@ -60,7 +60,7 @@ public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
     }
 
     @Override
-    public void compile(Document document,VariableSet variables) {
-        super.compile(variables).add("keybind",keybind);
+    public Document compile(String key, VariableSet variables) {
+        return super.compile(key,variables).add("keybind",keybind);
     }
 }

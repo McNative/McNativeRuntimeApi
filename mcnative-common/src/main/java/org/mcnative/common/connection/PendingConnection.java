@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 13.10.19, 11:08
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,20 @@
  * under the License.
  */
 
-package org.mcnative.common.event.player;
+package org.mcnative.common.connection;
 
-import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.text.components.ChatComponent;
-import org.mcnative.common.text.variable.VariableSet;
+import org.mcnative.common.player.permission.Permissable;
 
-import java.net.InetSocketAddress;
+import java.util.UUID;
 
-public interface MinecraftPlayerLoginEvent extends MinecraftOnlinePlayerEvent,Cancellable {
+public interface PendingConnection extends MinecraftConnection, Permissable {
 
-    InetSocketAddress getAddress();
+    UUID getUniqueId();
 
-    void setCancelReason(String message);
+    long getXBoxId();
 
-    default void setCancelReason(ChatComponent cancelReason){
-        setCancelReason(cancelReason,VariableSet.newEmptySet());
-    }
+    boolean isOnlineMode();
 
-    void setCancelReason(ChatComponent cancelReason, VariableSet variables);
+    void setOnlineMode(boolean online);
+    
 }

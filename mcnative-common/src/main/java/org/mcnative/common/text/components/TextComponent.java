@@ -60,7 +60,7 @@ public class TextComponent extends AbstractChatComponent{
     }
 
     @Override
-    public void compile(Document document,VariableSet variables) {
-        super.compile(variables).add("text",variables.replace(text));
+    public Document compile(String key,VariableSet variables) {
+        return super.compile(key,variables).add("text",variables.replace(text));
     }
 }

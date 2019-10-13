@@ -22,13 +22,22 @@ package org.mcnative.common.text.event;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.JEProtocolSupport;
 
-public enum HoverAction {
+public class HoverAction {
 
-    SHOW_TEXT,
+    public static HoverAction SHOW_TEXT = new HoverAction("show_text");
+    public static HoverAction SHOW_ITEM = new HoverAction("show_item");
+    public static HoverAction SHOW_ENTITY = new HoverAction("show_entity");
 
     @JEProtocolSupport(max= MinecraftProtocolVersion.JE_1_11_2)
-    SHOW_ACHIEVEMENT,
-    SHOW_ITEM,
-    SHOW_ENTITY
+    public static HoverAction SHOW_ACHIEVEMENT = new HoverAction("show_achievement");
 
+    private final String name;
+
+    public HoverAction(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

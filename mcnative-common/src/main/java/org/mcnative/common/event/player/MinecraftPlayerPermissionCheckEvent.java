@@ -20,12 +20,12 @@
 package org.mcnative.common.event.player;
 
 import net.prematic.libraries.utility.annonations.Experimental;
-import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.permission.PlayerPermissionHandler;
 
 @Experimental
 public interface MinecraftPlayerPermissionCheckEvent extends MinecraftPlayerEvent {
 
-    PermissionHandler getHandler();
+    PlayerPermissionHandler getHandler();
 
     String getPermission();
 

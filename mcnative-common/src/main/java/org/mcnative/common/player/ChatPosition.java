@@ -23,6 +23,10 @@ import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 public class ChatPosition {
 
+    public static final ChatPosition PLAYER_CHAT = new ChatPosition(ObjectOwner.SYSTEM,"PLAYER_CHAT", (byte) 0);
+    public static final ChatPosition SYSTEM_CHAT = new ChatPosition(ObjectOwner.SYSTEM,"SYSTEM_INFO", (byte) 1);
+    public static final ChatPosition ACTIONBAR = new ChatPosition(ObjectOwner.SYSTEM,"ACTIONBAR", (byte) 2);
+
     private final ObjectOwner owner;
     private final String name;
     private final byte id;

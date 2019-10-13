@@ -19,6 +19,8 @@
 
 package org.mcnative.common;
 
+import org.mcnative.common.connection.MinecraftConnection;
+
 import java.io.ByteArrayOutputStream;
 
 public class MinecraftOutputStream extends ByteArrayOutputStream {

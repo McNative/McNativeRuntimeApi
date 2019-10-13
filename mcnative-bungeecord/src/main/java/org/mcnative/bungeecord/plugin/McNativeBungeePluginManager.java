@@ -20,103 +20,163 @@
 package org.mcnative.bungeecord.plugin;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.*;
-import net.md_5.bungee.event.EventBus;
-import org.yaml.snakeyaml.Yaml;
+import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.bungeecord.internal.event.player.BungeeMinecraftLoginEvent;
+import org.mcnative.bungeecord.internal.event.player.BungeeMinecraftPendingLoginEvent;
+import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
+import org.mcnative.bungeecord.player.BungeePendingConnection;
+import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
+import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
+import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
+import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.PlayerManager;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class McNativeBungeePluginManager extends PluginManager{
+public class McNativeBungeePluginManager extends PluginManager {
 
-    public McNativeBungeePluginManager(ProxyServer proxy) {
-        super(proxy);
-    }
+    private PluginManager original;
+    private EventManager eventManager;
+    private BungeeCordPlayerManager playerManager;
 
-    public McNativeBungeePluginManager(ProxyServer proxy, Yaml yaml, EventBus eventBus) {
-        super(proxy, yaml, eventBus);
+    private Map<UUID, BungeeProxiedPlayer> pendingPlayers;
+
+    public McNativeBungeePluginManager(PluginManager original,EventManager eventManager,BungeeCordPlayerManager playerManager) {
+        super(null, null, null);
+        this.original = original;
+        this.eventManager = eventManager;
+        this.playerManager = playerManager;
+        this.pendingPlayers = new ConcurrentHashMap<>();
     }
 
     @Override
     public void registerCommand(Plugin plugin, Command command) {
-        super.registerCommand(plugin, command);
+        original.registerCommand(plugin, command);
     }
 
     @Override
     public void unregisterCommand(Command command) {
-        super.unregisterCommand(command);
+        original.unregisterCommand(command);
     }
 
     @Override
     public void unregisterCommands(Plugin plugin) {
-        super.unregisterCommands(plugin);
+        original.unregisterCommands(plugin);
     }
 
     @Override
     public boolean isExecutableCommand(String commandName, CommandSender sender) {
-        return super.isExecutableCommand(commandName, sender);
+        return original.isExecutableCommand(commandName, sender);
     }
 
     @Override
     public boolean dispatchCommand(CommandSender sender, String commandLine) {
-        return super.dispatchCommand(sender, commandLine);
+        return original.dispatchCommand(sender, commandLine);
     }
 
     @Override
     public boolean dispatchCommand(CommandSender sender, String commandLine, List<String> tabResults) {
-        return super.dispatchCommand(sender, commandLine, tabResults);
+        return original.dispatchCommand(sender, commandLine, tabResults);
     }
 
     @Override
     public Collection<Plugin> getPlugins() {
-        return super.getPlugins();
+        return original.getPlugins();
     }
 
     @Override
     public Plugin getPlugin(String name) {
-        return super.getPlugin(name);
+        return original.getPlugin(name);
     }
 
     @Override
     public void loadPlugins() {
-        super.loadPlugins();
+        original.loadPlugins();
     }
 
     @Override
     public void enablePlugins() {
-        super.enablePlugins();
+        original.enablePlugins();
     }
 
     @Override
     public void detectPlugins(File folder) {
-        super.detectPlugins(folder);
+        original.detectPlugins(folder);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Event> T callEvent(T event) {
-        return super.callEvent(event);
+        if(event instanceof LoginEvent) return (T) handleLogin((LoginEvent)event);
+        else if(event instanceof PostLoginEvent){
+            BungeeProxiedPlayer player = pendingPlayers.get(((PostLoginEvent) event).getPlayer().getUniqueId());
+            player.postLogin(((PostLoginEvent) event).getPlayer());
+            playerManager.registerPlayer(player);
+            System.out.println("POST");
+        }
+
+        return original.callEvent(event);
     }
 
     @Override
     public void registerListener(Plugin plugin, Listener listener) {
-        super.registerListener(plugin, listener);
+        System.out.println("REGISTER: "+plugin.getDescription().getName());
+        eventManager.subscribe(ObjectOwner.SYSTEM,listener);
     }
 
     @Override
     public void unregisterListener(Listener listener) {
-        super.unregisterListener(listener);
+        eventManager.unsubscribe(listener);
     }
 
     @Override
     public void unregisterListeners(Plugin plugin) {
-        super.unregisterListeners(plugin);
+        //eventManager.unsubscribe();
     }
 
     @Override
     public Collection<Map.Entry<String, Command>> getCommands() {
-        return super.getCommands();
+        return original.getCommands();
+    }
+
+    public void addOldEvents(){
+
+    }
+
+    private LoginEvent handleLogin(LoginEvent event){
+        BungeePendingConnection connection = new BungeePendingConnection(((LoginEvent) event).getConnection());
+        connection.setState(ConnectionState.LOGIN);
+
+        MinecraftPlayerPendingLoginEvent pendingEvent = new BungeeMinecraftPendingLoginEvent(connection);
+        eventManager.callEvent(MinecraftPlayerPendingLoginEvent.class,pendingEvent);
+        if(pendingEvent.isCancelled()){
+            connection.disconnect(pendingEvent.getCancelReason(),pendingEvent.getCancelReasonVariables());
+            event.postCall();
+            return event;
+        }
+
+        BungeeProxiedPlayer player = new BungeeProxiedPlayer(connection,null,null);
+
+        MinecraftPlayerLoginEvent loginEvent = new BungeeMinecraftLoginEvent((LoginEvent) event,null);
+        eventManager.callEvent(MinecraftPlayerLoginEvent.class,loginEvent);
+
+        if(loginEvent.isCancelled()){
+            if(((LoginEvent) event).getCancelReasonComponents() == null){
+                connection.disconnect(loginEvent.getCancelReason(),loginEvent.getCancelReasonVariables());
+                ((LoginEvent) event).setCancelled(false);
+            }
+        }else pendingPlayers.put(player.getUniqueId(),player);
+        return original.callEvent(event);
     }
 }

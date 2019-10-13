@@ -22,8 +22,9 @@ package org.mcnative.bungeecord.player;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.prematic.libraries.document.Document;
+import net.prematic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
+import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.data.MinecraftPlayerData;
@@ -38,9 +39,11 @@ import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
+import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
 import org.mcnative.proxy.ProxyService;
@@ -53,20 +56,31 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class BungeeProxiedPlayer implements ProxiedPlayer {
+public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements ProxiedPlayer {
 
-    private final net.md_5.bungee.api.connection.ProxiedPlayer original;
-
+    private final BungeePendingConnection connection;
     private final MinecraftPlayerData playerData;
     private final GameProfile gameProfile;
 
-    public BungeeProxiedPlayer(net.md_5.bungee.api.connection.ProxiedPlayer original, MinecraftPlayerData playerData, GameProfile gameProfile) {
-        this.original = original;
+    private net.md_5.bungee.api.connection.ProxiedPlayer original;
+
+    public BungeeProxiedPlayer(BungeePendingConnection connection, MinecraftPlayerData playerData, GameProfile gameProfile) {
+        super(playerData);
+        this.connection = connection;
         this.playerData = playerData;
         this.gameProfile = gameProfile;
+    }
+
+    @Override
+    public String getName() {
+        return connection.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return connection.getUniqueId();
     }
 
     @Override
@@ -86,6 +100,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public void connect(MinecraftServer target) {
+        if(original == null) throw new IllegalArgumentException("Player is not finally connected.");
         if(target instanceof ServerInfo) original.connect((ServerConnectRequest) target);
         else{
             ServerInfo info = ProxyServer.getInstance().getServerInfo(target.getName());
@@ -93,7 +108,6 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
             else throw new IllegalArgumentException("The targeted server is not registered as a server.");
         }
     }
-
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target) {
         return null;
@@ -106,7 +120,12 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return MinecraftProtocolVersion.of(original.getPendingConnection().getVersion());
+        return connection.getProtocolVersion();
+    }
+
+    @Override
+    public ConnectionState getState() {
+        return connection.getState();
     }
 
     @Override
@@ -116,7 +135,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public boolean isOnlineMode() {
-        return original.getPendingConnection().isOnlineMode();
+        return connection.isOnlineMode();
     }
 
     @Override
@@ -126,6 +145,7 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public int getPing() {
+        if(original == null) throw new IllegalArgumentException("Player is not finally connected.");
         return original.getPing();
     }
 
@@ -160,11 +180,6 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void kick(String reason) {
-
-    }
-
-    @Override
     public void performCommand(String command) {
 
     }
@@ -190,58 +205,66 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public void sendMessage(String message) {
-
+    public void sendMessage(MessageComponent message, VariableSet variables) {
+        MinecraftChatPacket packet = new MinecraftChatPacket();
+        packet.setPosition(ChatPosition.PLAYER_CHAT);
+        packet.setMessage(message);
+        packet.setVariables(variables);
+        sendPacket(packet);
     }
 
     @Override
-    public void sendMessage(ChatComponent component, VariableSet variables) {
-
-    }
-
-    @Override
-    public void sendTitle(String title, String subTitle, int stayTime) {
-
-    }
-
-    @Override
-    public void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime) {
-
-    }
-
-    @Override
-    public void sendTitle(ChatComponent title, ChatComponent subTitle, int stayTime, VariableSet variables) {
-
+    public void sendSystemMessage(MessageComponent message, VariableSet variables) {
+        MinecraftChatPacket packet = new MinecraftChatPacket();
+        packet.setPosition(ChatPosition.SYSTEM_CHAT);
+        packet.setMessage(message);
+        packet.setVariables(variables);
+        sendPacket(packet);
     }
 
     @Override
     public void sendTitle(Title title) {
+        MinecraftTitlePacket timePacket = new MinecraftTitlePacket();
+        timePacket.setAction(MinecraftTitlePacket.Action.SET_TIME);
+        timePacket.setTime(title.getTiming());
+        sendPacket(timePacket);
 
+        if(title.getTitle() != null){
+            MinecraftTitlePacket titlePacket = new MinecraftTitlePacket();
+            titlePacket.setAction(MinecraftTitlePacket.Action.SET_TITLE);
+            titlePacket.setMessage(title.getTitle());
+            titlePacket.setVariables(title.getVariables());
+            sendPacket(titlePacket);
+        }
+
+        if(title.getSubTitle() != null){
+            MinecraftTitlePacket subTitle = new MinecraftTitlePacket();
+            subTitle.setAction(MinecraftTitlePacket.Action.SET_SUBTITLE);
+            subTitle.setMessage(title.getSubTitle());
+            subTitle.setVariables(title.getVariables());
+            sendPacket(subTitle);
+        }
     }
 
     @Override
     public void resetTitle() {
-
+        MinecraftTitlePacket packet = new MinecraftTitlePacket();
+        packet.setAction(MinecraftTitlePacket.Action.RESET);
+        sendPacket(packet);
     }
 
     @Override
-    public void sendActionbar(ChatComponent message) {
-
+    public void sendActionbar(MessageComponent message, VariableSet variables) {
+        MinecraftChatPacket packet = new MinecraftChatPacket();
+        packet.setPosition(ChatPosition.ACTIONBAR);
+        packet.setMessage(message);
+        packet.setVariables(variables);
+        sendPacket(packet);
     }
 
     @Override
-    public void sendActionbar(ChatComponent message, VariableSet variables) {
-
-    }
-
-    @Override
-    public void sendActionbar(ChatComponent message, VariableSet variables, long staySeconds) {
-
-    }
-
-    @Override
-    public void sendActionbar(ChatComponent message, long stayTime) {
-
+    public void sendActionbar(MessageComponent message, VariableSet variables, long staySeconds) {
+        //Attache to scheduler
     }
 
     @Override
@@ -291,31 +314,26 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
 
     @Override
     public InetSocketAddress getAddress() {
-        return original.getAddress();
+        return connection.getAddress();
     }
 
     @Override
     public boolean isConnected() {
-        return original.isConnected();
+        return connection.isConnected();
     }
 
     @Override
-    public void disconnect(String message) {
-
-    }
-
-    @Override
-    public void disconnect(TextComponent... reason) {
-
+    public void disconnect(MessageComponent reason, VariableSet variables) {
+        connection.disconnect(reason, variables);
     }
 
     @Override
     public void sendPacket(MinecraftPacket packet) {
-
+        connection.sendPacket(packet);
     }
 
     @Override
-    public void sendPacketAsync(MinecraftPacket packet) {
+    public void sendLocalLoopPacket(MinecraftPacket packet) {
 
     }
 
@@ -335,61 +353,6 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public String getName() {
-        return original.getName();
-    }
-
-    @Override
-    public UUID getUniqueId() {
-        return original.getUniqueId();
-    }
-
-    @Override
-    public long getXBoxId() {
-        return playerData.getXBoxId();
-    }
-
-    @Override
-    public long getFirstPlayed() {
-        return playerData.getFirstPlayed();
-    }
-
-    @Override
-    public long getLastPlayed() {
-        return playerData.getLastPlayed();
-    }
-
-    @Override
-    public GameProfile getGameProfile() {
-        return gameProfile;
-    }
-
-    @Override
-    public Document getProperties() {
-        return playerData.getProperties();
-    }
-
-    @Override
-    public String getDisplayName() {
-        return null;
-    }
-
-    @Override
-    public String getDisplayName(MinecraftPlayer player) {
-        return null;
-    }
-
-    @Override
-    public PlayerDesign getDesign() {
-        return null;
-    }
-
-    @Override
-    public PlayerDesign getDesign(MinecraftPlayer player) {
-        return null;
-    }
-
-    @Override
     public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
         return (T) McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
     }
@@ -404,112 +367,6 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
         return isConnected();
     }
 
-
-    @Override
-    public boolean isWhitelisted() {
-        return McNative.getInstance().getWhitelistHandler().isWhitelisted(this);
-    }
-
-    @Override
-    public void setWhitelisted(boolean whitelisted) {
-        McNative.getInstance().getWhitelistHandler().set(this,whitelisted);
-    }
-
-    @Override
-    public boolean isOperator() {
-        return McNative.getInstance().getPermissionHandler().isOperator(this);
-    }
-
-    @Override
-    public void setOperator(boolean operator) {
-        McNative.getInstance().getPermissionHandler().setOperator(this,operator);
-    }
-
-    @Override
-    public Collection<String> getPermissions() {
-        return McNative.getInstance().getPermissionHandler().getPermissions(this);
-    }
-
-    @Override
-    public Collection<String> getAllPermissions() {
-        return McNative.getInstance().getPermissionHandler().getAllPermissions(this);
-    }
-
-    @Override
-    public Collection<String> getGroups() {
-        return McNative.getInstance().getPermissionHandler().getGroups(this);
-    }
-
-    @Override
-    public boolean isPermissionSet(String permission) {
-        return McNative.getInstance().getPermissionHandler().isPermissionSet(this,permission);
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-        return McNative.getInstance().getPermissionHandler().hasPermission(this,permission);
-    }
-
-    @Override
-    public void addPermission(String permission) {
-        McNative.getInstance().getPermissionHandler().addPermission(this,permission);
-    }
-
-    @Override
-    public void removePermission(String permission) {
-        McNative.getInstance().getPermissionHandler().removePermission(this,permission);
-    }
-
-    @Override
-    public boolean isBanned() {
-        return McNative.getInstance().getPunishmentHandler().isBanned(this);
-    }
-
-    @Override
-    public String getBanReason() {
-        return McNative.getInstance().getPunishmentHandler().getBanReason(this);
-    }
-
-    @Override
-    public void ban(String reason) {
-        McNative.getInstance().getPunishmentHandler().ban(this,reason);
-    }
-
-    @Override
-    public void ban(String reason, long time, TimeUnit unit) {
-        McNative.getInstance().getPunishmentHandler().ban(this,reason,time,unit);
-    }
-
-    @Override
-    public void unban() {
-        McNative.getInstance().getPunishmentHandler().unban(this);
-    }
-
-    @Override
-    public boolean isMuted() {
-        return McNative.getInstance().getPunishmentHandler().isMuted(this);
-    }
-
-    @Override
-    public String getMuteReason() {
-        return McNative.getInstance().getPunishmentHandler().getMuteReason(this);
-    }
-
-    @Override
-    public void mute(String reason) {
-        McNative.getInstance().getPunishmentHandler().mute(this,reason);
-    }
-
-    @Override
-    public void mute(String reason, long time, TimeUnit unit) {
-        McNative.getInstance().getPunishmentHandler().mute(this,reason,time,unit);
-    }
-
-    @Override
-    public void unmute() {
-        McNative.getInstance().getPunishmentHandler().unmute(this);
-    }
-
     @Override
     public void check(Consumer<ProtocolCheck> checker) {
         ProtocolCheck check = new DefaultProtocolChecker();
@@ -518,12 +375,16 @@ public class BungeeProxiedPlayer implements ProxiedPlayer {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object object) {
+        if(object == this || (original != null && original.equals(object))) return true;
+        else if(object instanceof MinecraftPlayerComparable) return ((MinecraftPlayerComparable) object).equals(this);
+        else if(object instanceof MinecraftPlayer) return ((MinecraftPlayer) object).getUniqueId().equals(getUniqueId());
+        return false;
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
+    @Internal
+    public void postLogin(net.md_5.bungee.api.connection.ProxiedPlayer original){
+        this.original = original;
+        connection.setState(ConnectionState.GAME);
     }
 }

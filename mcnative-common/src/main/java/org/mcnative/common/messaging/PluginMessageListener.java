@@ -20,7 +20,7 @@
 package org.mcnative.common.messaging;
 
 import net.prematic.libraries.utility.annonations.Nullable;
-import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.connection.MinecraftConnection;
 
 import java.io.InputStream;
 import java.io.OutputStream;

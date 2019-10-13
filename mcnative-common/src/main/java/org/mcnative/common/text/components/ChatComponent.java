@@ -19,18 +19,15 @@
 
 package org.mcnative.common.text.components;
 
-import net.prematic.libraries.document.Document;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
 import org.mcnative.common.text.event.TextEvent;
 import org.mcnative.common.text.format.MessageFormatAble;
-import org.mcnative.common.text.variable.VariableSet;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
-public interface ChatComponent<T extends ChatComponent> extends MessageFormatAble<T> {
+public interface ChatComponent<T extends ChatComponent> extends MessageComponent<T>,MessageFormatAble<T> {
 
     TextEvent<ClickAction> getClickEvent();
 
@@ -39,6 +36,10 @@ public interface ChatComponent<T extends ChatComponent> extends MessageFormatAbl
     T setClickEvent(TextEvent<ClickAction> event);
 
     T setHoverEvent(TextEvent<HoverAction> event);
+
+    String getInsertion();
+
+    T setInsertion(String insertion);
 
 
     default T onClick(ClickAction action, Object value){
@@ -58,38 +59,4 @@ public interface ChatComponent<T extends ChatComponent> extends MessageFormatAbl
     }
 
 
-    Collection<ChatComponent> getExtras();
-
-    T addExtra(ChatComponent component);
-
-    T removeExtra(ChatComponent component);
-
-
-    default String toPlainText(){
-        return toPlainText(VariableSet.newEmptySet());
-    }
-
-    default String toPlainText(VariableSet variables){
-        StringBuilder builder = new StringBuilder();
-        toPlainText(builder,variables);
-        return builder.toString();
-    }
-
-    default void toPlainText(StringBuilder builder){
-        toPlainText(builder,VariableSet.newEmptySet());
-    }
-
-    void toPlainText(StringBuilder builder,VariableSet variables);
-
-    default Document compile(){
-        return compile(VariableSet.newEmptySet());
-    }
-
-    default Document compile(VariableSet variables){
-        Document output = Document.newDocument();
-        compile(output,variables);
-        return output;
-    }
-
-    void compile(Document document, VariableSet variables);
 }

@@ -27,6 +27,7 @@ import org.mcnative.proxy.server.MinecraftServer;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
@@ -36,13 +37,15 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
     public McNativeConfigurationAdapter(Collection<MinecraftServer> servers,ConfigurationAdapter original) {
         this.original = original;
         this.serverMap = new McNativeBungeeServerMap(servers);
-        this.serverMap.putAll(original.getServers());
-        original.getServers().clear();
     }
 
     @Override
     public void load() {
         original.load();
+        this.serverMap.clear();
+        this.serverMap.putAll(original.getServers());
+        this.original.getServers().clear();
+        //@Todo load McNative servers
     }
 
     @Override
@@ -57,7 +60,8 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
     @Override
     public boolean getBoolean(String path, boolean def) {
-        return original.getBoolean(path, def);
+        if(path.equalsIgnoreCase("log_pings")) return false;//Disables ping requests in BungeeCord (Better for Support)
+        else return original.getBoolean(path, def);
     }
 
     @Override
@@ -77,11 +81,11 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
     @Override
     public Collection<String> getGroups(String player) {
-        return null;
+        return original.getGroups(player);//@Todo Implement permission and groups
     }
 
     @Override
     public Collection<String> getPermissions(String group) {
-        return null;
+        return original.getPermissions(group);
     }
 }

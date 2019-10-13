@@ -19,7 +19,7 @@
 
 package org.mcnative.proxy.server;
 
-import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.proxy.ProxiedPlayer;
 
@@ -27,8 +27,6 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public interface MinecraftServer extends MinecraftConnection {
-
-    String getName();
 
     String getPermission();
 

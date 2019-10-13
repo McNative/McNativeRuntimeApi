@@ -22,7 +22,7 @@ package org.mcnative.common.protocol.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.mcnative.common.MinecraftConnection;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -50,7 +50,8 @@ public class MinecraftProtocolDecoder extends ByteToMessageDecoder {
         if(buffer.readableBytes() < 5) return;
         if(RELEASE_READER) buffer.resetReaderIndex();
         int packetId = MinecraftProtocolUtil.readVarInt(buffer);
-        MinecraftPacket packet = packetManager.createPacket(this.version,packetId);
+        MinecraftPacket packet = packetManager.createIncomingPacket(connection.getState(),this.version,packetId);
+        //read
         if(packet != null) output.add(packetManager.handlePacket(PacketDirection.INCOMING,this.version,connection,packet));
         if(RELEASE_READER) buffer.resetReaderIndex();
     }

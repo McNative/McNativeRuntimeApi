@@ -76,6 +76,10 @@ public class MinecraftProtocolUtil {
         } while (value != 0);
     }
 
+    public static void writeUnsignedInt(ByteBuf buffer, int value) {
+        buffer.writeInt(value & 0xFF);
+    }
+
 
     public static int readVarShort(ByteBuf buffer) {
         int low = buffer.readUnsignedShort();

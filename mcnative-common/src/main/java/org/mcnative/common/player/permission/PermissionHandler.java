@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 18.08.19, 20:19
+ * @since 12.10.19, 20:03
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,34 +20,17 @@
 package org.mcnative.common.player.permission;
 
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.PlayerDesign;
+import org.mcnative.common.connection.PendingConnection;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
 
 public interface PermissionHandler {
 
     Collection<MinecraftPlayer> getOperators();
 
-    Collection<String> getGroups(MinecraftPlayer player);
+    Collection<String> getGroups();
 
-    Collection<String> getPermissions(MinecraftPlayer player);
+    PlayerPermissionHandler getPlayerHandler(MinecraftPlayer player);
 
-    Collection<String> getAllPermissions(MinecraftPlayer player);
-
-    PlayerDesign getPlayerDesign(MinecraftPlayer player);
-
-    boolean isPermissionSet(MinecraftPlayer player,String permission);
-
-    boolean hasPermission(MinecraftPlayer player, String permission);
-
-    boolean isOperator(MinecraftPlayer player);
-
-    void addPermission(MinecraftPlayer player, String permission);
-
-    void removePermission(MinecraftPlayer player, String permission);
-
-    void setOperator(MinecraftPlayer player, boolean operator);
-
-    void setPlayerDesignGetter(BiFunction<MinecraftPlayer,PlayerDesign,PlayerDesign> designGetter);
+    PlayerPermissionHandler getPlayerHandler(PendingConnection connection);
 }

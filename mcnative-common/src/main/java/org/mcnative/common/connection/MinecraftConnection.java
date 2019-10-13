@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 15:53
+ * @since 13.10.19, 11:07
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@
  * under the License.
  */
 
-package org.mcnative.common;
+package org.mcnative.common.connection;
 
+import org.mcnative.common.MinecraftOutputStream;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
 import java.io.InputStream;
@@ -31,25 +33,31 @@ import java.util.function.Consumer;
 
 public interface MinecraftConnection {
 
+    String getName();
+
     MinecraftProtocolVersion getProtocolVersion();
+
+    ConnectionState getState();
 
     InetSocketAddress getAddress();
 
     boolean isConnected();
 
 
-    void disconnect(String message);
+    default void disconnect(String message){
+        disconnect(Text.of(message));
+    }
 
-    default void disconnect(ChatComponent reason){
+    default void disconnect(MessageComponent reason){
         disconnect(reason,VariableSet.newEmptySet());
     }
 
-    void disconnect(ChatComponent reason, VariableSet variables);
+    void disconnect(MessageComponent reason, VariableSet variables);
 
 
     void sendPacket(MinecraftPacket packet);
 
-    void sendPacketAsync(MinecraftPacket packet);
+    void sendLocalLoopPacket(MinecraftPacket packet);
 
 
     default OutputStream sendData(String channel){
@@ -68,10 +76,5 @@ public interface MinecraftConnection {
     InputStream sendDataQuery(String channel, byte[] output);
 
     InputStream sendDataQuery(String channel,Consumer<OutputStream> output);//Always receives same id (Multiple flushable)
-
-
-
-
-
 
 }

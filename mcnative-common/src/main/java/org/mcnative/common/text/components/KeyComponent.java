@@ -60,8 +60,8 @@ public class KeyComponent extends AbstractChatComponent<KeyComponent>{
     }
 
     @Override
-    public void compile(Document document,VariableSet variables) {
-        super.compile(variables).add("text",replaceVariablesAndTranslate(variables));
+    public Document compile(String key, VariableSet variables) {
+        return super.compile(key,variables).add("text",replaceVariablesAndTranslate(variables));
     }
 
     private String replaceVariablesAndTranslate(VariableSet variables){

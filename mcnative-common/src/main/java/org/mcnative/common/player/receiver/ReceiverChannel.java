@@ -22,10 +22,12 @@ package org.mcnative.common.player.receiver;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
@@ -48,15 +50,19 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     void sendMessage(String message);
 
-    default void sendMessage(ChatComponent component){
+    default void sendMessage(MessageComponent component){
         sendMessage(component,VariableSet.newEmptySet());
     }
 
-    void sendMessage(ChatComponent component, VariableSet variables);
+    void sendMessage(MessageComponent component, VariableSet variables);
 
     void sendPacket(MinecraftPacket packet);
 
     default void send(ReceiveAble receiveAble){
         receiveAble.execute(this);
     }
+
+    void addRemovalListener(Consumer<OnlineMinecraftPlayer> listener);
+
+    void addAdditionListener(Consumer<OnlineMinecraftPlayer> listener);
 }

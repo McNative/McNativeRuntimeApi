@@ -35,14 +35,17 @@ public class TextBuilder {
 
     private TextColor color;
     private Set<TextStyle> styling;
-    private ChatComponent currentComponent;
-    private ChatComponent mainComponent;
+    private MessageComponent currentComponent;
+    private MessageComponent mainComponent;
 
     private TextBuilder parent;
 
-    public TextBuilder() {}
+    public TextBuilder() {
+        this(new MessageComponentSet(),null);
+    }
 
-    public TextBuilder(TextBuilder parent) {
+    public TextBuilder(MessageComponent mainComponent, TextBuilder parent) {
+        this.mainComponent = mainComponent;
         this.parent = parent;
     }
 
@@ -56,6 +59,19 @@ public class TextBuilder {
         return this;
     }
 
+    public TextBuilder reset(){
+        return color(TextColor.RESET).blank();
+    }
+
+    public TextBuilder blank(){
+        return text("");
+    }
+
+    public TextBuilder insertion(String insertion){
+        if(currentComponent == null) throw new IllegalArgumentException("No component for insertion specified.");
+        getCurrentAsChatComponent().setInsertion(insertion);
+        return this;
+    }
 
     public TextBuilder text(String text) {
         return createComponent(new TextComponent(text));
@@ -88,24 +104,24 @@ public class TextBuilder {
 
     public TextBuilder onClick(ClickAction action, Object value){
         if(currentComponent == null) throw new IllegalArgumentException("No component for clicking specified.");
-        this.currentComponent.onClick(action,value);
+        this.getCurrentAsChatComponent().onClick(action,value);
         return this;
     }
 
     public TextBuilder onHover(HoverAction action, String hover){
         if(currentComponent == null) throw new IllegalArgumentException("No component for hovering specified.");
-        this.currentComponent.onHover(action,hover);
+        this.getCurrentAsChatComponent().onHover(action,hover);
         return this;
     }
 
     public TextBuilder include(TextBuilder builder){
-        return include(builder.build());
+        return include((ChatComponent) builder.build());
     }
 
     public TextBuilder include(Consumer<TextBuilder> include){
-        TextBuilder builder = new TextBuilder();
+        TextBuilder builder = new TextBuilder(null,null);
         include.accept(builder);
-        return include(builder.build());
+        return include((ChatComponent) builder.build());
     }
 
     public TextBuilder include(ChatComponent component){
@@ -113,22 +129,25 @@ public class TextBuilder {
     }
 
     public TextBuilder include(){
-        return new TextBuilder(this);
+        return new TextBuilder(null,this);
     }
 
     public TextBuilder out(){
         if(parent == null) throw new IllegalArgumentException("No parent builder defined");
-        return parent.include(build());
+        return parent.include((ChatComponent) build());
     }
 
-
-    public ChatComponent build(){
+    public MessageComponent build(){
         return mainComponent!=null?mainComponent:new TextComponent();
     }
 
+    private ChatComponent getCurrentAsChatComponent(){
+        if(currentComponent instanceof ChatComponent) return (ChatComponent) currentComponent;
+        else throw new IllegalArgumentException("Component is not a chat component");
+    }
 
     private TextBuilder createComponent(ChatComponent component){
-        if(this.currentComponent != null) this.currentComponent.addExtra(component);
+        if(this.currentComponent != null) this.mainComponent.addExtra(component);
         else this.mainComponent = component;
         this.currentComponent = component;
         if(color != null){
@@ -141,8 +160,6 @@ public class TextBuilder {
         }
         return this;
     }
-
-
 
     //@Todo remove
     public void example(){

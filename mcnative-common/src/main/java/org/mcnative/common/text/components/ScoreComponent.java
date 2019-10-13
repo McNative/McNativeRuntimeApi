@@ -84,11 +84,11 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
     }
 
     @Override
-    public void compile(Document document,VariableSet variables) {
+    public Document compile(String key,VariableSet variables) {
         Document score = Document.newDocument();
         score.add("name",entityName);
         score.add("objective", objective);
         score.add("value",value);
-        super.compile(variables).add("score",score);
+        return super.compile(key,variables).add("score",score);
     }
 }

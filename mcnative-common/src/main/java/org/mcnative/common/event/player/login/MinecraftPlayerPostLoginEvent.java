@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 11.08.19, 16:42
+ * @since 09.10.19, 19:37
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,27 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.event.player.login;
 
-public interface PlayerDesign {
+import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-    String getColor();
+public class MinecraftPlayerPostLoginEvent implements MinecraftOnlinePlayerEvent {
 
-    String getPrefix();
+    private final OnlineMinecraftPlayer player;
 
-    String getSuffix();
+    public MinecraftPlayerPostLoginEvent(OnlineMinecraftPlayer player) {
+        this.player = player;
+    }
 
-    String getDisplay();
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player;
+    }
 
-    int getPriority();
-
-
+    @Override
+    public MinecraftPlayer getPlayer() {
+        return player;
+    }
 }

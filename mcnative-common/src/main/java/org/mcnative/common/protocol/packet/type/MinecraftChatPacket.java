@@ -25,21 +25,36 @@ import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
+import org.mcnative.common.protocol.packet.PacketIdentifier;
 import org.mcnative.common.text.Text;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
+
+import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftChatPacket implements MinecraftPacket {
 
-    private ChatComponent message;
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftChatPacket.class
+            ,on(PacketDirection.OUTGOING
+                    ,map(MinecraftProtocolVersion.JE_1_7,0x02)
+                    ,map(MinecraftProtocolVersion.JE_1_9,0x0F)
+                    ,map(MinecraftProtocolVersion.JE_1_13,0x0E))
+            ,on(PacketDirection.INCOMING
+                    ,map(MinecraftProtocolVersion.JE_1_7,0x01)
+                    ,map(MinecraftProtocolVersion.JE_1_9,0x02)
+                    ,map(MinecraftProtocolVersion.JE_1_12,0x03)
+                    ,map(MinecraftProtocolVersion.JE_1_12_1,0x02)
+                    ,map(MinecraftProtocolVersion.JE_1_14,0x03)));
+
+    private MessageComponent message;
     private VariableSet variables;
     private ChatPosition position;
 
-    public ChatComponent getMessage() {
+    public MessageComponent getMessage() {
         return message;
     }
 
-    public void setMessage(ChatComponent message) {
+    public void setMessage(MessageComponent message) {
         this.message = message;
     }
 
@@ -60,18 +75,19 @@ public class MinecraftChatPacket implements MinecraftPacket {
     }
 
     @Override
-    public int getId(PacketDirection direction, MinecraftProtocolVersion version) {
-        return 0;
+    public PacketIdentifier getIdentifier() {
+        return IDENTIFIER;
     }
 
     @Override
-    public void read(MinecraftProtocolVersion version, ByteBuf buffer) {
-         message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
+    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+        message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
+        if(direction == PacketDirection.OUTGOING); //@Todo read position
     }
 
     @Override
-    public void write(MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeString(buffer,this.message.compile(variables!=null?variables:VariableSet.newEmptySet()).toString());
-        buffer.writeByte(position.getId());
+    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+        MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet()));
+        if(direction == PacketDirection.OUTGOING) buffer.writeByte(position.getId());
     }
 }

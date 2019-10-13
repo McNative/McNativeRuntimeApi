@@ -22,7 +22,7 @@ package org.mcnative.testplugin.service.listener;
 
 import net.prematic.libraries.event.Listener;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.MinecraftPlayerLoginEvent;
+import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 
 public class PlayerLoginListener {
 

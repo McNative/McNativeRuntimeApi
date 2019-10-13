@@ -22,15 +22,19 @@ package org.mcnative.common.player;
 import net.prematic.libraries.document.Document;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.data.MinecraftPlayerData;
+import org.mcnative.common.player.permission.PlayerDesign;
+import org.mcnative.common.player.permission.PlayerPermissionHandler;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
-public class OfflineMinecraftPlayer implements MinecraftPlayer{
+public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     private final MinecraftPlayerData data;
+    private PlayerPermissionHandler permissionHandler;
 
     public OfflineMinecraftPlayer(MinecraftPlayerData data) {
         this.data = data;
@@ -83,12 +87,12 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer{
 
     @Override
     public PlayerDesign getDesign() {
-        return getDesign(null);
+        return permissionHandler.getDesign();
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer player) {
-        return McNative.getInstance().getPermissionHandler().getPlayerDesign(this);
+        return permissionHandler.getDesign(player);
     }
 
     @Override
@@ -117,48 +121,59 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer{
     }
 
     @Override
+    public PlayerPermissionHandler getPermissionHandler() {
+        if(permissionHandler == null) permissionHandler = McNative.getInstance().getPermissionHandler().getPlayerHandler(this);
+        return permissionHandler;
+    }
+
+    @Override
+    public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
+        permissionHandler.setPlayerDesignGetter(designGetter);
+    }
+
+    @Override
     public boolean isOperator() {
-        return McNative.getInstance().getPermissionHandler().isOperator(this);
+        return permissionHandler.isOperator();
     }
 
     @Override
     public void setOperator(boolean operator) {
-        McNative.getInstance().getPermissionHandler().setOperator(this,operator);
+        permissionHandler.setOperator(operator);
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return McNative.getInstance().getPermissionHandler().getPermissions(this);
+        return permissionHandler.getPermissions();
     }
 
     @Override
     public Collection<String> getAllPermissions() {
-        return McNative.getInstance().getPermissionHandler().getAllPermissions(this);
+        return permissionHandler.getAllPermissions();
     }
 
     @Override
     public Collection<String> getGroups() {
-        return McNative.getInstance().getPermissionHandler().getGroups(this);
+        return permissionHandler.getGroups();
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return McNative.getInstance().getPermissionHandler().isPermissionSet(this,permission);
+        return permissionHandler.isPermissionSet(permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return McNative.getInstance().getPermissionHandler().hasPermission(this,permission);
+        return permissionHandler.hasPermission(permission);
     }
 
     @Override
     public void addPermission(String permission) {
-        McNative.getInstance().getPermissionHandler().addPermission(this,permission);
+        permissionHandler.addPermission(permission);
     }
 
     @Override
     public void removePermission(String permission) {
-        McNative.getInstance().getPermissionHandler().removePermission(this,permission);
+        permissionHandler.removePermission(permission);
     }
 
     @Override
