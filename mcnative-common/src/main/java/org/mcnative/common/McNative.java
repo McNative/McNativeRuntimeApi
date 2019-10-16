@@ -39,6 +39,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.registry.Registry;
+import org.mcnative.common.storage.StorageManager;
 import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
@@ -67,6 +68,8 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
     PacketManager getPacketManager();
 
     PlayerManager<P> getPlayerManager();
+
+    StorageManager getStorageManager();
 
 
     PermissionHandler getPermissionHandler();
