@@ -31,6 +31,7 @@ public interface PlayerManager<O extends OnlineMinecraftPlayer> {
 
     <T extends MinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass);
 
+    MinecraftPlayer getPlayer(int id);
 
     MinecraftPlayer getPlayer(UUID uniqueId);
 
@@ -38,6 +39,8 @@ public interface PlayerManager<O extends OnlineMinecraftPlayer> {
 
     MinecraftPlayer getPlayer(String name);
 
+
+    O getOnlinePlayer(int id);
 
     O getOnlinePlayer(UUID uniqueId);
 

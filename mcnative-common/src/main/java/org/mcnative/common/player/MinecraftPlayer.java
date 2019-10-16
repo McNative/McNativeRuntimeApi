@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 
 public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerInfo {
 
+    int getId();
+
     UUID getUniqueId();
 
     long getXBoxId();
