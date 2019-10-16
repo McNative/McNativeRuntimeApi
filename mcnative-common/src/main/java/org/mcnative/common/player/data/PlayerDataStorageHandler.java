@@ -19,6 +19,8 @@
 
 package org.mcnative.common.player.data;
 
+import org.mcnative.common.player.profile.GameProfile;
+
 import java.util.UUID;
 
 public interface PlayerDataStorageHandler {
@@ -29,6 +31,6 @@ public interface PlayerDataStorageHandler {
 
     MinecraftPlayerData getPlayerData(long xBoxId);
 
-    MinecraftPlayerData createPlayerData(String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed);
+    MinecraftPlayerData createPlayerData(String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile);
 
 }

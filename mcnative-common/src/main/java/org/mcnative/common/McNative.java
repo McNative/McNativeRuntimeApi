@@ -25,6 +25,7 @@ import net.prematic.libraries.event.EventManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerManager;
@@ -47,7 +48,7 @@ import org.mcnative.common.text.variable.VariableSet;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public interface McNative<P extends OnlineMinecraftPlayer> {
+public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
     String getServiceName();
 
@@ -142,9 +143,13 @@ public interface McNative<P extends OnlineMinecraftPlayer> {
 
     void restart();
 
-
     default void check(Consumer<ProtocolCheck> checker){
         getPlatform().check(checker);
+    }
+
+    @Override
+    default String getName() {
+        return ObjectOwner.SYSTEM.getName();
     }
 
     static boolean isAvailable(){
