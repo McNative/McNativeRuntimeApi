@@ -159,7 +159,15 @@ public class Enchantment implements NamespacedKey {
         }
 
         public Enchantment build() {
-            return new Enchantment(owner, name, namespace, key, startLevel, maxLevel, materialCategories, treasure, conflicts);
+            return new Enchantment(owner == null ? ObjectOwner.SYSTEM : owner,
+                    name,
+                    namespace == null ? NamespacedKey.MCNATIVE : namespace,
+                    key,
+                    startLevel == 0 ? 1 : startLevel,
+                    maxLevel,
+                    materialCategories,
+                    treasure,
+                    conflicts);
         }
     }
 }
