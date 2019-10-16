@@ -20,10 +20,9 @@
 package org.mcnative.common.storage;
 
 import net.prematic.databasequery.core.config.DatabaseDriverConfig;
+import net.prematic.databasequery.sql.SqlDatabaseDriverConfig;
 import net.prematic.databasequery.sql.h2.H2PortableDatabaseDriver;
-import net.prematic.databasequery.sql.h2.H2PortableDatabaseDriverConfig;
 import net.prematic.databasequery.sql.mysql.MySqlDatabaseDriver;
-import net.prematic.databasequery.sql.mysql.MySqlDatabaseDriverConfig;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.DocumentEntry;
 import net.prematic.libraries.document.WrappedDocument;
@@ -60,8 +59,8 @@ public class StorageConfig extends WrappedDocument {
 
     public void createDefault() {
         Document driverConfigs = Document.newDocument();
-        driverConfigs.add("global", new H2PortableDatabaseDriverConfig(H2PortableDatabaseDriver.class).setHost("./data/"));
-        driverConfigs.add("mySqlExample", new MySqlDatabaseDriverConfig(MySqlDatabaseDriver.class)
+        driverConfigs.add("global", new SqlDatabaseDriverConfig(H2PortableDatabaseDriver.class).setHost("./data/"));
+        driverConfigs.add("mySqlExample", new SqlDatabaseDriverConfig(MySqlDatabaseDriver.class)
                 .setHost("127.0.0.1").setPort(3306)
                 .setUsername("root").setPassword("masked")
                 .setMultipleDatabaseConnectionsAble(true)
@@ -79,12 +78,12 @@ public class StorageConfig extends WrappedDocument {
         for (DocumentEntry child : driverConfigs) {
             Document driverConfigDocument = child.toDocument();
             String driverName = driverConfigDocument.getString("driverName");
-            String driverConfigName = DatabaseDriverConfig.getDriverConfigNameByDriverName(driverName);
+            Class<? extends DatabaseDriverConfig> driverConfigClass = DatabaseDriverConfig.getDriverConfigNameByDriverName(driverName);
             try {
-                DatabaseDriverConfig driverConfig = (DatabaseDriverConfig) Class.forName(driverConfigName).getConstructor(Document.class).newInstance(driverConfigDocument);
+                DatabaseDriverConfig driverConfig = driverConfigClass.getConstructor(Document.class).newInstance(driverConfigDocument);
                 entries.add(new Entry(child.getKey(), driverConfig));
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-                McNative.getInstance().getLogger().error("Can't initialize config[{}] for driver[{}]", driverConfigName, driverName);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                McNative.getInstance().getLogger().error("Can't initialize config[{}] for driver[{}]", driverConfigClass, driverName);
             }
         }
         for(DocumentEntry child : getDocument("databases")) {

@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutionException;
 
 public class DefaultPlayerDataStorageHandler implements PlayerDataStorageHandler {
 
-    private final DatabaseCollection playerDataStorage;
+    final DatabaseCollection playerDataStorage;
 
     public DefaultPlayerDataStorageHandler() {
         try {
@@ -58,23 +58,23 @@ public class DefaultPlayerDataStorageHandler implements PlayerDataStorageHandler
 
     @Override
     public MinecraftPlayerData getPlayerData(String name) {
-        return createPlayerDataByQueryResult(name, this.playerDataStorage.find().where("name", name).execute());
+        return getPlayerDataByQueryResult(name, this.playerDataStorage.find().where("name", name).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(UUID uniqueId) {
-        return createPlayerDataByQueryResult(uniqueId, this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
+        return getPlayerDataByQueryResult(uniqueId, this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(long xBoxId) {
-        return createPlayerDataByQueryResult(xBoxId, this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
+        return getPlayerDataByQueryResult(xBoxId, this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
     }
 
-    private MinecraftPlayerData createPlayerDataByQueryResult(Object identifier, CompletableFuture<QueryResult> result) {
+    private MinecraftPlayerData getPlayerDataByQueryResult(Object identifier, CompletableFuture<QueryResult> result) {
         try {
             QueryResultEntry entry = result.get().first();
-            return new DefaultMinecraftPlayerData(entry.getInt("id"),
+            return new DefaultMinecraftPlayerData(this, entry.getInt("id"),
                     entry.getString("name"),
                     entry.getUniqueId("uniqueId"),
                     entry.getLong("xBoxId"),
@@ -102,6 +102,6 @@ public class DefaultPlayerDataStorageHandler implements PlayerDataStorageHandler
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(String.format("Can't create player data for player[%s, %s, %s].", name, uniqueId, xBoxId));
         }
-        return new DefaultMinecraftPlayerData(id, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile, Document.newDocument());
+        return new DefaultMinecraftPlayerData(this, id, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile, Document.newDocument());
     }
 }
