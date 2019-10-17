@@ -25,6 +25,8 @@ import net.prematic.databasequery.core.datatype.DataType;
 import net.prematic.databasequery.core.query.option.CreateOption;
 import net.prematic.databasequery.core.query.result.QueryResult;
 import net.prematic.databasequery.core.query.result.QueryResultEntry;
+import net.prematic.libraries.caching.ArrayCache;
+import net.prematic.libraries.caching.Cache;
 import org.mcnative.common.McNative;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class DefaultPunishmentHandler implements PunishmentHandler {
     private static int TYPE_MUTE = 2;
 
     private final DatabaseCollection punishmentStorage;
+    private final Cache<PunishEntry> punishEntryCache;
 
     public DefaultPunishmentHandler() {
         try {
@@ -52,24 +55,29 @@ public class DefaultPunishmentHandler implements PunishmentHandler {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Can't create punishment handler.");
         }
+        this.punishEntryCache = new ArrayCache<PunishEntry>()
+                .setExpireAfterAccess(30, TimeUnit.MINUTES)
+                .setRemoveListener(entry -> McNative.getInstance().getPlayerManager().getOnlinePlayer(entry.playerId) != null)
+                .registerQuery("playerId", (entry, objects) -> entry.playerId == (int) objects[0] && entry.type == (int) objects[1]);
     }
 
     @Override
     public Collection<MinecraftPlayer> getBanList() {
-        return getPunishmentListByType(TYPE_BAN);
+        return getPunishmentList(TYPE_BAN);
     }
 
     @Override
     public Collection<MinecraftPlayer> getMuteList() {
-        return getPunishmentListByType(TYPE_MUTE);
+        return getPunishmentList(TYPE_MUTE);
     }
 
-    private Collection<MinecraftPlayer> getPunishmentListByType(int type) {
+    private Collection<MinecraftPlayer> getPunishmentList(int type) {
         try {
             Collection<MinecraftPlayer> players = new ArrayList<>();
             QueryResult result = this.punishmentStorage.find().get("playerId").where("type", type).execute().get();
-            for (QueryResultEntry entry : result) {
-                players.add(McNative.getInstance().getPlayerManager().getPlayer(entry.getInt("playerId")));
+            for (QueryResultEntry resultEntry : result) {
+                players.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getInt("playerId")));
+                cachePunishEntry(resultEntry);
             }
             return players;
         } catch (InterruptedException | ExecutionException e) {
@@ -128,28 +136,48 @@ public class DefaultPunishmentHandler implements PunishmentHandler {
     }
 
     private boolean isPunished(int id, int type) {
+        PunishEntry punishEntry = this.punishEntryCache.get("playerIdAndTypeId", id, type);
+        if(punishEntry != null) return true;
         try {
-            return !this.punishmentStorage.find().where("playerId", id).where("type", type).execute().get().isEmpty();
+            QueryResult result = this.punishmentStorage.find().where("playerId", id).where("type", type).execute().get();
+            if(result.isEmpty()) return false;
+            QueryResultEntry resultEntry = result.first();
+            cachePunishEntry(resultEntry);
+            return true;
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(String.format("Can't get punishment data by id %s.", id));
         }
     }
 
     private String getPunishReason(int id, int type) {
+        PunishEntry punishEntry = this.punishEntryCache.get("playerIdAndTypeId", id, type);
+        if(punishEntry != null) return punishEntry.reason;
         try {
-            return this.punishmentStorage.find().where("playerId", id).where("type", type).execute().get().first().getString("reason");
+            QueryResult result = this.punishmentStorage.find().where("playerId", id).where("type", type).execute().get();
+            if(result.isEmpty()) return null;
+            QueryResultEntry resultEntry = result.first();
+            cachePunishEntry(resultEntry);
+            return resultEntry.getString("reason");
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(String.format("Can't get punishment data by id %s.", id));
         }
     }
 
-    private void punish(int id, String reason, long time, TimeUnit unit, int type) {
-        this.punishmentStorage.insert()
-                .set("playerId", id)
-                .set("type", type)
-                .set("since", System.currentTimeMillis())
-                .set("duration", unit.toMillis(time))
-                .set("reason", reason);
+    private void punish(int playerId, String reason, long time, TimeUnit unit, int type) {
+        try {
+            long since = System.currentTimeMillis();
+            int id = this.punishmentStorage.insert()
+                    .set("playerId", playerId)
+                    .set("type", type)
+                    .set("since", since)
+                    .set("duration", unit.toMillis(time))
+                    .set("reason", reason)
+                    .executeAndGetGeneratedKeys("id")
+                    .get().first().getInt("id");
+            this.punishEntryCache.insert(new PunishEntry(id, playerId, type, since, unit.toMillis(time), reason));
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(String.format("Can't insert punishment data for player id %s.", playerId));
+        }
     }
 
     private void unpunish(int id, int type) {
@@ -157,5 +185,31 @@ public class DefaultPunishmentHandler implements PunishmentHandler {
                 .where("playerId", id)
                 .where("type", type)
                 .execute();
+        this.punishEntryCache.remove("playerIdAndTypeId", id, type);
+    }
+
+    private PunishEntry cachePunishEntry(QueryResultEntry resultEntry) {
+        return new PunishEntry(resultEntry.getInt("id"),
+                resultEntry.getInt("playerId"),
+                resultEntry.getInt("type"),
+                resultEntry.getLong("since"),
+                resultEntry.getLong("duration"),
+                resultEntry.getString("reason"));
+    }
+
+    public static class PunishEntry {
+
+        final int id, playerId, type;
+        final long since, duration;
+        final String reason;
+
+        public PunishEntry(int id, int playerId, int type, long since, long duration, String reason) {
+            this.id = id;
+            this.playerId = playerId;
+            this.type = type;
+            this.since = since;
+            this.duration = duration;
+            this.reason = reason;
+        }
     }
 }
