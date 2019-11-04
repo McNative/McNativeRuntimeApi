@@ -29,7 +29,7 @@ public interface Chunk extends WorldSequence, Iterable<Block>{
 
     Biome getBiome();
 
-    void setBiom(Biome biome);
+    void setBiome(Biome biome);
 
 
     boolean isLoaded();
@@ -50,9 +50,9 @@ public interface Chunk extends WorldSequence, Iterable<Block>{
     void regenerate();
 
 
-    boolean isForceLoad();
+    boolean isForceLoaded();
 
-    void setForceLoad(boolean forceLoad);
+    void setForceLoaded(boolean forceLoaded);
 
 
     void fill(Material material);

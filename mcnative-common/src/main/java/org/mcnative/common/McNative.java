@@ -156,17 +156,17 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
         return getInstance() != null;
     }
 
-    static McNative getInstance() {
+    static McNative<? extends OnlineMinecraftPlayer> getInstance() {
         return InstanceHolder.INSTANCE;
     }
 
-    static void setInstance(McNative instance) {
+    static void setInstance(McNative<? extends OnlineMinecraftPlayer> instance) {
         if(InstanceHolder.INSTANCE != null) throw new IllegalArgumentException("Instance is already set.");
         InstanceHolder.INSTANCE = instance;
     }
 
     class InstanceHolder {
 
-        private static McNative INSTANCE;
+        private static McNative<? extends OnlineMinecraftPlayer> INSTANCE;
     }
 }

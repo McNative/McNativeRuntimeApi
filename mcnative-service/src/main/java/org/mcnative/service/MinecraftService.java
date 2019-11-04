@@ -34,7 +34,11 @@ public interface MinecraftService extends McNative<Player> {
 
     World loadWorld(String name);
 
-    void unloadWorld(World world);
+    void unloadWorld(World world, boolean save);
+
+    default void unloadWorld(World world) {
+        unloadWorld(world, true);
+    }
 
     World createWorld(WorldCreator creator);
 

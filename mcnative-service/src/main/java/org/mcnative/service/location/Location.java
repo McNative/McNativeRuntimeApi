@@ -38,8 +38,6 @@ public interface Location extends Vector {
 
     void setWorld(World world);
 
-    Vector toPoint();
-
     static Location of(double x, double y, double z){
         return null;
     }
@@ -47,4 +45,7 @@ public interface Location extends Vector {
     static Location of(double x, double y, double z, float pitch, float yaw){
         return null;
     }
+
+    @Override
+    Location clone();
 }

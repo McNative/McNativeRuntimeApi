@@ -53,7 +53,7 @@ public interface World extends WorldSequence{
     void unload();
 
 
-    Chunk getChunk(int x, int y, int z);
+    Chunk getChunk(int x, int z);
 
     Chunk getChunk(Vector location);
 
@@ -61,20 +61,23 @@ public interface World extends WorldSequence{
 
     Collection<Chunk> getForceLoadedChunks();
 
-    Chunk loadChunk(int x, int y);
+    Chunk loadChunk(int x, int z);
+
+    Chunk loadChunk(int x, int z, boolean generate);
 
     Chunk loadChunk(Vector location);
 
-    Chunk loadChunk(Chunk chunk);
+    Chunk loadChunk(Vector location, boolean generate);
 
+    Chunk loadChunk(Chunk chunk);
 
     long getTime();
 
-    void setTime(Long time);
+    void setTime(long time);
 
     long getFullTime();
 
-    void setFullTime(Long time);
+    void setFullTime(long time);
 
 
     boolean hasStorm();
@@ -104,4 +107,5 @@ public interface World extends WorldSequence{
     File getFolder();
 
 
+    boolean isDefault();
 }

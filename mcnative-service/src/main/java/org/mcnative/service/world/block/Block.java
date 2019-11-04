@@ -19,8 +19,11 @@
 
 package org.mcnative.service.world.block;
 
+import org.mcnative.common.McNative;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
+import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Offset;
 import org.mcnative.service.location.Vector;
 import org.mcnative.service.world.Biome;
@@ -34,7 +37,7 @@ public interface Block {
 
     World getWorld();
 
-    Vector getLocation();
+    Location getLocation();
 
 
     Material getMaterial();
@@ -57,7 +60,7 @@ public interface Block {
 
     Biome getBiome();
 
-    void setBiom(Biome biome);
+    void setBiome(Biome biome);
 
 
     double getTemperature();
@@ -104,4 +107,6 @@ public interface Block {
     void setAllowDrop(boolean allowDrop);
 
     void update();
+
+    void update(OnlineMinecraftPlayer player);
 }

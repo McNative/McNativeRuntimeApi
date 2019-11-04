@@ -19,16 +19,24 @@
 
 package org.mcnative.service.inventory.item.material;
 
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.McNative;
 import org.mcnative.service.NamespacedKey;
 import org.mcnative.service.inventory.item.data.ItemData;
 import org.mcnative.service.world.block.data.BlockData;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class Material implements NamespacedKey {
 
-    public static final Material AIR = create("Air").build();
+    public static final Collection<Material> MATERIALS = new ArrayList<>();
+
+    public static final Material AIR = create("Air").categories(MaterialCategory.BLOCK).build();
     public static final Material STONE = create("Stone").build();
 
 
+    private final ObjectOwner owner;
     private final String name, namespace, key;
     private final Class<?> materialClass;
     private final MaterialCategory[] categories;
@@ -37,10 +45,11 @@ public class Material implements NamespacedKey {
     private final float hardness, blastResistance;
     private final boolean empty, solid, transparent, flammable, burnable, fuel, occluding, gravity, interactable;
 
-    public Material(String name, String namespace, String key, Class<?> materialClass, MaterialCategory[] categories
+    public Material(ObjectOwner owner, String name, String namespace, String key, Class<?> materialClass, MaterialCategory[] categories
             , int maxStackSize, short maxDurability, float hardness, float blastResistance, boolean empty
             , boolean solid, boolean transparent, boolean flammable, boolean burnable, boolean fuel
             , boolean occluding, boolean gravity, boolean interactable) {
+        this.owner = owner;
         this.name = name;
         this.namespace = namespace;
         this.key = key;
@@ -59,6 +68,10 @@ public class Material implements NamespacedKey {
         this.occluding = occluding;
         this.gravity = gravity;
         this.interactable = interactable;
+    }
+
+    public ObjectOwner getOwner() {
+        return owner;
     }
 
     public String getName() {
@@ -152,20 +165,18 @@ public class Material implements NamespacedKey {
     }
 
 
-    /*
-
-        Extra data
-
-
-     */
-
-
     public static Builder create(String name){
         return new Builder(name);
     }
 
+    public static Material register(Material material) {
+        MATERIALS.add(material);
+        return material;
+    }
+
     private static class Builder {
 
+        private ObjectOwner owner;
         private final String name;
         private String namespace, key;
         private Class<?> materialClass;
@@ -176,9 +187,19 @@ public class Material implements NamespacedKey {
         private boolean empty, solid, transparent, flammable, burnable, fuel, occluding, gravity, interactable;
 
         public Builder(String name) {
+            this.owner = McNative.getInstance();
             this.name = name;
+            this.namespace = NamespacedKey.MCNATIVE;
+            this.key = name;
+            this.maxStackSize = 64;
+            this.maxDurability = -1;
             this.hardness = 0.0f;
             this.blastResistance = 0.0f;
+        }
+
+        public Builder owner(ObjectOwner owner) {
+            this.owner = owner;
+            return this;
         }
 
         public Builder namespace(String namespace) {
@@ -196,7 +217,7 @@ public class Material implements NamespacedKey {
             return this;
         }
 
-        public Builder categories(MaterialCategory[] categories) {
+        public Builder categories(MaterialCategory... categories) {
             this.categories = categories;
             return this;
         }
@@ -267,7 +288,11 @@ public class Material implements NamespacedKey {
         }
 
         public Material build() {
-            return new Material(name, namespace, key, materialClass, categories, maxStackSize, maxDurability, hardness, blastResistance, empty, solid, transparent, flammable, burnable, fuel, occluding, gravity, interactable);
+            return new Material(owner, name, namespace, key, materialClass, categories, maxStackSize, maxDurability, hardness, blastResistance, empty, solid, transparent, flammable, burnable, fuel, occluding, gravity, interactable);
+        }
+
+        public Material buildAndRegister() {
+            return register(build());
         }
     }
 }

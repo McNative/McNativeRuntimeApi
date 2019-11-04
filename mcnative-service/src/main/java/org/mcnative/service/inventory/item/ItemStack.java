@@ -20,7 +20,10 @@
 package org.mcnative.service.inventory.item;
 
 
+import org.mcnative.common.McNative;
+import org.mcnative.service.MinecraftService;
 import org.mcnative.service.NBTTag;
+import org.mcnative.service.entity.Item;
 import org.mcnative.service.inventory.item.data.ItemData;
 import org.mcnative.service.inventory.item.material.Enchantment;
 import org.mcnative.service.inventory.item.material.Material;
@@ -57,8 +60,6 @@ public interface ItemStack {
 
     boolean hasFlag(ItemFlag flag);
 
-    boolean isUnbreakable();
-
 
     void setMaterial(Material material);
 
@@ -92,9 +93,9 @@ public interface ItemStack {
 
     void addFlags(ItemFlag... flags);
 
-    void setUnbreakable(boolean unbreakable);
+    void removeFlag(ItemFlag... flags);
 
     static ItemStack newItemStack(Material material) {
-        return null;
+        return MinecraftService.getInstance().getObjectCreator().newItemStack(material);
     }
 }
