@@ -19,8 +19,8 @@
 
 package org.mcnative.common.storage;
 
-import net.prematic.databasequery.core.Database;
-import net.prematic.databasequery.core.DatabaseDriver;
+import net.prematic.databasequery.api.Database;
+import net.prematic.databasequery.api.DatabaseDriver;
 import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;

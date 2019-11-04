@@ -19,16 +19,15 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.databasequery.core.DatabaseCollection;
-import net.prematic.databasequery.core.datatype.DataType;
-import net.prematic.databasequery.core.query.option.CreateOption;
-import net.prematic.databasequery.core.query.result.QueryResult;
-import net.prematic.databasequery.core.query.result.QueryResultEntry;
+import net.prematic.databasequery.api.DatabaseCollection;
+import net.prematic.databasequery.api.datatype.DataType;
+import net.prematic.databasequery.api.query.option.CreateOption;
+import net.prematic.databasequery.api.query.result.QueryResult;
+import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import org.mcnative.common.McNative;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
 
 public class DefaultWhitelistHandler implements WhitelistHandler {
 
@@ -37,20 +36,16 @@ public class DefaultWhitelistHandler implements WhitelistHandler {
     private boolean enabled;
 
     public DefaultWhitelistHandler() {
-        try {
-            this.whitelistSettings = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
-                    .createCollection("WhitelistSettings")
-                    .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)
-                    .create().get();
-            this.whitelistedPlayers = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
-                    .createCollection("WhitelistedPlayers")
-                    .attribute("playerId", DataType.INTEGER, CreateOption.NOT_NULL)
-                    .create().get();
-            this.whitelistedPlayersCache = loadWhitelistedPlayers();
-            this.enabled = loadWhitelistEnabled();
-        } catch (InterruptedException | ExecutionException ignored) {
-            throw new RuntimeException("Can't create whitelist handler.");
-        }
+        this.whitelistSettings = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+                .createCollection("WhitelistSettings")
+                .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)
+                .create();
+        this.whitelistedPlayers = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+                .createCollection("WhitelistedPlayers")
+                .attribute("playerId", DataType.INTEGER, CreateOption.NOT_NULL)
+                .create();
+        this.whitelistedPlayersCache = loadWhitelistedPlayers();
+        this.enabled = loadWhitelistEnabled();
     }
 
     @Override
@@ -90,16 +85,16 @@ public class DefaultWhitelistHandler implements WhitelistHandler {
         set(player, false);
     }
 
-    private Collection<MinecraftPlayer> loadWhitelistedPlayers() throws ExecutionException, InterruptedException {
+    private Collection<MinecraftPlayer> loadWhitelistedPlayers() {
         Collection<MinecraftPlayer> whitelistedPlayers = new ArrayList<>();
-        for (QueryResultEntry resultEntry : this.whitelistedPlayers.find().execute().get()) {
+        for (QueryResultEntry resultEntry : this.whitelistedPlayers.find().execute()) {
             whitelistedPlayers.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getInt("playerId")));
         }
         return whitelistedPlayers;
     }
 
-    private boolean loadWhitelistEnabled() throws ExecutionException, InterruptedException {
-        QueryResult result = this.whitelistSettings.find().execute().get();
+    private boolean loadWhitelistEnabled() {
+        QueryResult result = this.whitelistSettings.find().execute();
         if(result.isEmpty()) {
             this.whitelistSettings.insert().set("enabled", false).execute();
             return false;

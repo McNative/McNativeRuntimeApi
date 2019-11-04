@@ -19,7 +19,7 @@
 
 package org.mcnative.common.storage;
 
-import net.prematic.databasequery.core.config.DatabaseDriverConfig;
+import net.prematic.databasequery.api.config.DatabaseDriverConfig;
 import net.prematic.databasequery.sql.SqlDatabaseDriverConfig;
 import net.prematic.databasequery.sql.h2.H2PortableDatabaseDriver;
 import net.prematic.databasequery.sql.mysql.MySqlDatabaseDriver;
@@ -64,7 +64,7 @@ public class StorageConfig extends WrappedDocument {
                 .setHost("127.0.0.1").setPort(3306)
                 .setUsername("root").setPassword("masked")
                 .setMultipleDatabaseConnectionsAble(true)
-                .useDataSource().setClassName("com.zaxxer.hikari.HikariDataSource")
+                .getDataSourceConfig().setClassName("com.zaxxer.hikari.HikariDataSource")
                 .out());
         add("drivers", driverConfigs);
 
