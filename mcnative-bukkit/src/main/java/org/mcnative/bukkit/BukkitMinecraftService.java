@@ -30,6 +30,7 @@ import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.plugin.BukkitCommandManager;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
@@ -93,7 +94,7 @@ public class BukkitMinecraftService implements MinecraftService {
         this.objectCreator = new BukkitObjectCreator();
         this.registry = null;
         this.scheduler = new SimpleTaskScheduler();
-        this.commandManager = null;
+        this.commandManager = new BukkitCommandManager();
         this.eventManager = new DefaultEventManager();
         this.pluginManager = null;
         this.packetManager = new DefaultPacketManager();
