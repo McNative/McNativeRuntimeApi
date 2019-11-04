@@ -20,6 +20,8 @@
 package org.mcnative.bukkit.inventory.item;
 
 import net.prematic.libraries.utility.Iterators;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.mcnative.service.NBTTag;
 import org.mcnative.service.inventory.item.ItemFlag;
 import org.mcnative.service.inventory.item.ItemStack;
@@ -53,8 +55,18 @@ public class BukkitItemStack implements ItemStack {
     }
 
     @Override
-    public short getDurability() {
-        return this.original.getDurability();
+    public boolean hasDurability() {
+        return this.original.getItemMeta() != null &&
+                this.original.getItemMeta() instanceof Damageable &&
+                ((Damageable)this.original.getItemMeta()).hasDamage();
+    }
+
+    @Override
+    public int getDurability() {
+        if(this.original.getItemMeta() != null) {
+            return ((Damageable)this.original.getItemMeta()).getDamage();
+        }
+        return 0;
     }
 
     @Override
@@ -125,13 +137,21 @@ public class BukkitItemStack implements ItemStack {
     }
 
     @Override
-    public void setDurability(short durability) {
-        this.original.setDurability(durability);
+    public void setDurability(int durability) {
+        if (this.original.getItemMeta() != null) {
+            ItemMeta meta = this.original.getItemMeta();
+            ((Damageable) meta).setDamage(durability);
+            this.original.setItemMeta(meta);
+        }
     }
 
     @Override
     public void setDisplayName(String name) {
-        if(this.original.getItemMeta() != null) this.original.getItemMeta().setDisplayName(name);
+        if(this.original.getItemMeta() != null) {
+            ItemMeta meta = this.original.getItemMeta();
+            meta.setDisplayName(name);
+            this.original.setItemMeta(meta);
+        }
     }
 
     @Override
@@ -151,7 +171,11 @@ public class BukkitItemStack implements ItemStack {
 
     @Override
     public void setLore(List<String> lore) {
-        if(this.original.getItemMeta() != null) this.original.getItemMeta().setLore(lore);
+        if(this.original.getItemMeta() != null) {
+            ItemMeta meta = this.original.getItemMeta();
+            meta.setLore(lore);
+            this.original.setItemMeta(meta);
+        }
     }
 
     @Override
@@ -162,18 +186,22 @@ public class BukkitItemStack implements ItemStack {
     @Override
     public void setLore(int index, String lore) {
         if(this.original.getItemMeta() != null) {
-            List<String> fullLore = this.original.getItemMeta().getLore() != null ? this.original.getItemMeta().getLore() : new ArrayList<>();
-            fullLore.add(index, lore);
-            this.original.getItemMeta().setLore(fullLore);
+            ItemMeta meta = this.original.getItemMeta();
+            List<String> newLore = meta.getLore() != null ? meta.getLore() : new ArrayList<>();
+            newLore.add(index, lore);
+            meta.setLore(newLore);
+            this.original.setItemMeta(meta);
         }
     }
 
     @Override
     public void addLore(List<String> lore) {
         if(this.original.getItemMeta() != null) {
-            List<String> fullLore = this.original.getItemMeta().getLore() != null ? this.original.getItemMeta().getLore() : new ArrayList<>();
-            fullLore.addAll(lore);
-            this.original.getItemMeta().setLore(fullLore);
+            ItemMeta meta = this.original.getItemMeta();
+            List<String> newLore = meta.getLore() != null ? meta.getLore() : new ArrayList<>();
+            newLore.addAll(lore);
+            meta.setLore(newLore);
+            this.original.setItemMeta(meta);
         }
     }
 
@@ -190,9 +218,9 @@ public class BukkitItemStack implements ItemStack {
     @Override
     public void setFlags(ItemFlag... flags) {
         if(this.original.getItemMeta() != null) {
-            this.original.getItemMeta().getItemFlags().iterator().forEachRemaining(flag -> {
-                this.original.getItemMeta().removeItemFlags(flag);
-            });
+            ItemMeta meta = this.original.getItemMeta();
+            meta.getItemFlags().iterator().forEachRemaining(meta::removeItemFlags);
+            this.original.setItemMeta(meta);
             addFlags(flags);
         }
     }
@@ -200,18 +228,22 @@ public class BukkitItemStack implements ItemStack {
     @Override
     public void addFlags(ItemFlag... flags) {
         if(this.original.getItemMeta() != null) {
+            ItemMeta meta = this.original.getItemMeta();
             for (ItemFlag flag : flags) {
-                this.original.getItemMeta().addItemFlags(org.bukkit.inventory.ItemFlag.valueOf(flag.getName()));
+                meta.addItemFlags(org.bukkit.inventory.ItemFlag.valueOf(flag.getName()));
             }
+            this.original.setItemMeta(meta);
         }
     }
 
     @Override
     public void removeFlag(ItemFlag... flags) {
         if(this.original.getItemMeta() != null) {
+            ItemMeta meta = this.original.getItemMeta();
             for (ItemFlag flag : flags) {
-                this.original.getItemMeta().removeItemFlags(org.bukkit.inventory.ItemFlag.valueOf(flag.getName()));
+                meta.removeItemFlags(org.bukkit.inventory.ItemFlag.valueOf(flag.getName()));
             }
+            this.original.setItemMeta(meta);
         }
     }
 }

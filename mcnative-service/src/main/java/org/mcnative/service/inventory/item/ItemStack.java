@@ -39,7 +39,9 @@ public interface ItemStack {
 
     int getAmount();
 
-    short getDurability();
+    boolean hasDurability();
+
+    int getDurability();
 
     String getDisplayName();
 
@@ -67,7 +69,7 @@ public interface ItemStack {
 
     void setAmount(int amount);
 
-    void setDurability(short durability);
+    void setDurability(int durability);
 
     void setDisplayName(String name);
 
