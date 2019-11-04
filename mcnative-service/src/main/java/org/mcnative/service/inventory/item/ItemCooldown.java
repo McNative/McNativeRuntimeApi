@@ -19,5 +19,21 @@
 
 package org.mcnative.service.inventory.item;
 
-public class Cooldown {
+import java.util.concurrent.TimeUnit;
+
+public class ItemCooldown {
+
+    private final long cooldown;
+
+    public ItemCooldown(long cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public ItemCooldown(long time, TimeUnit unit) {
+        this(unit.toMillis(time));
+    }
+
+    public long getCooldown() {
+        return cooldown;
+    }
 }
