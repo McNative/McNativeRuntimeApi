@@ -39,6 +39,10 @@ public class BukkitItemStack implements ItemStack {
         this.original = original;
     }
 
+    public org.bukkit.inventory.ItemStack getOriginal() {
+        return original;
+    }
+
     @Override
     public Material getMaterial() {
         return Iterators.findOne(Material.MATERIALS, material -> material.getName().equals(this.original.getType().name()));

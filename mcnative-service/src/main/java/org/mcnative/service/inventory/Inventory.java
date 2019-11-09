@@ -30,8 +30,6 @@ import java.util.stream.Stream;
 
 public interface Inventory extends Iterable<ItemStack> {
 
-    String getName();
-
     String getTitle();
 
     int getSize();
@@ -48,22 +46,23 @@ public interface Inventory extends Iterable<ItemStack> {
 
     Stream<ItemStack> stream();
 
-    int countItems();
+    int countItemStacks();
 
-    int countItems(Material material);
+    int countItemStacks(Material material);
 
+    int countItemStacks(ItemStack itemStack);
 
     boolean contains(ItemStack item);
 
     boolean contains(int index, ItemStack item);
 
-    boolean contains(int x, int y,ItemStack item);
+    boolean contains(int x, int y, ItemStack item);
 
     boolean contains(Material material);
 
     boolean contains(int index, Material material);
 
-    boolean contains(int x, int y,int index, Material material);
+    boolean contains(int x, int y, Material material);
 
     boolean isEmpty();
 
@@ -80,16 +79,12 @@ public interface Inventory extends Iterable<ItemStack> {
 
     void setOwner(InventoryOwner holder);
 
-    void setName(String name);
-
     void setTitle(String title);
 
 
     void setItem(int index, ItemStack item);
 
     void setItem(int x, int y, ItemStack item);
-
-    void addItem(ItemStack items);
 
     void addItems(ItemStack... items);
 
@@ -151,7 +146,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 
     static int toIndex(int x, int y){
-        return y*9+x;//-1 Start item index by 0 or 1?
+        return (y-1)*9+x-1;
     }
 
 

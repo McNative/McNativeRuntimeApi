@@ -27,6 +27,8 @@ public interface HumanEntity extends LivingEntity {
 
     PlayerInventory getInventory();
 
+    Inventory getOpenedInventory();
+
     ItemStack getCursor();
 
     ItemStack getItemInHand();

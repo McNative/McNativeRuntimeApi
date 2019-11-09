@@ -19,17 +19,21 @@
 
 package org.mcnative.bukkit;
 
+import org.bukkit.Bukkit;
+import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.service.ObjectCreator;
 import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
 
 public class BukkitObjectCreator implements ObjectCreator {
 
+    //@Todo implements InventoryOwner
     @Override
-    public Inventory newInventory() {
-        return null;
+    public Inventory newInventory(InventoryOwner owner, int size, String title) {
+        return new BukkitInventory(Bukkit.createInventory(null, size, title));
     }
 
     @Override
