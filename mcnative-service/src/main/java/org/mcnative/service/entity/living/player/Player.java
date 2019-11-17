@@ -26,13 +26,10 @@ import org.mcnative.service.GameMode;
 import org.mcnative.service.advancement.AdvancementProgress;
 import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.HumanEntity;
-import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
 
-public interface Player extends HumanEntity,OnlineMinecraftPlayer {
-
-    void openInventory(Inventory inventory);
+public interface Player extends HumanEntity, OnlineMinecraftPlayer, OfflinePlayer {
 
     void openBook(ItemStack book);
 
@@ -41,7 +38,7 @@ public interface Player extends HumanEntity,OnlineMinecraftPlayer {
 
     void show(OnlineMinecraftPlayer forPlayer);
 
-    void canSee(OnlineMinecraftPlayer forPlayer);
+    boolean canSee(OnlineMinecraftPlayer forPlayer);
 
 
     boolean isSneaking();
@@ -102,7 +99,7 @@ public interface Player extends HumanEntity,OnlineMinecraftPlayer {
     void setTotalExperience(int exp);
 
 
-    int getFoodLevel(int food);
+    int getFoodLevel();
 
     void setFoodLevel(int food);
 
@@ -116,7 +113,7 @@ public interface Player extends HumanEntity,OnlineMinecraftPlayer {
     void setExhaustion(float value);
 
 
-    boolean isAllowedFlight();
+    boolean isAllowFlight();
 
     void setAllowFlight(boolean flight);
 

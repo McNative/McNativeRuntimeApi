@@ -36,12 +36,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class BukkitInventory implements Inventory {
+public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implements Inventory {
 
-    private final org.bukkit.inventory.Inventory original;
+    private InventoryOwner owner;
+    protected final I original;
 
-    public BukkitInventory(org.bukkit.inventory.Inventory original) {
+    public BukkitInventory(InventoryOwner owner, I original) {
         this.original = original;
+    }
+
+    public I getOriginal() {
+        return original;
     }
 
     @Override
@@ -56,7 +61,7 @@ public class BukkitInventory implements Inventory {
 
     @Override
     public InventoryOwner getOwner() {
-        return null;
+        return this.owner;
     }
 
     @Override
@@ -195,8 +200,8 @@ public class BukkitInventory implements Inventory {
     }
 
     @Override
-    public void setOwner(InventoryOwner holder) {
-
+    public void setOwner(InventoryOwner owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -344,7 +349,7 @@ public class BukkitInventory implements Inventory {
 
     @Override
     public void close(HumanEntity entity) {
-        if(entity.getOpenedInventory() != null && entity.getOpenedInventory().equals(this)) entity.closeInventory();
+        if(entity.getOpenInventory() != null && entity.getOpenInventory().equals(this)) entity.closeInventory();
     }
 
     @Override

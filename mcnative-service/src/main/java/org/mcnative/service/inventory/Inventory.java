@@ -77,7 +77,7 @@ public interface Inventory extends Iterable<ItemStack> {
     boolean hasPlace(Material material);
 
 
-    void setOwner(InventoryOwner holder);
+    void setOwner(InventoryOwner owner);
 
     void setTitle(String title);
 

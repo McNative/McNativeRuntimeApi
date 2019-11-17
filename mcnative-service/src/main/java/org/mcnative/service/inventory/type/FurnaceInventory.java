@@ -22,7 +22,7 @@ package org.mcnative.service.inventory.type;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
-public interface FurnanceInventory extends Inventory {
+public interface FurnaceInventory extends Inventory {
 
     ItemStack getSmelting();
 

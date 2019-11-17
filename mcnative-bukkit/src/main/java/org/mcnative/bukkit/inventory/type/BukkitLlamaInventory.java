@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 23.08.19, 22:06
+ * @since 16.11.19, 14:37
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,26 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.type;
+package org.mcnative.bukkit.inventory.type;
 
-import org.mcnative.service.inventory.Inventory;
+import org.mcnative.bukkit.inventory.item.BukkitItemStack;
+import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.inventory.recipe.Recipe;
+import org.mcnative.service.inventory.type.LlamaInventory;
 
-public interface CraftingInventory extends Inventory {
+public class BukkitLlamaInventory extends BukkitHorseInventory<org.bukkit.inventory.LlamaInventory> implements LlamaInventory {
 
-    ItemStack[] getMatrix();
+    public BukkitLlamaInventory(InventoryOwner owner, org.bukkit.inventory.LlamaInventory original) {
+        super(owner, original);
+    }
 
-    void setMatrix(ItemStack[] matrix);
+    @Override
+    public ItemStack getDecor() {
+        return new BukkitItemStack(this.original.getDecor());
+    }
 
-    ItemStack getResult();
-
-    void setResult(ItemStack item);
-
-    Recipe getRecipe();
-
-    void clearItemsOnClose(boolean clear);
-
+    @Override
+    public void setDecor(ItemStack stack) {
+        this.original.setDecor(((BukkitItemStack)stack).getOriginal());
+    }
 }

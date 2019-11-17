@@ -35,137 +35,134 @@ import org.mcnative.service.location.Location;
 import org.mcnative.service.location.Vector;
 import org.mcnative.service.world.block.Block;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class BukkitLivingEntity<E extends org.bukkit.entity.LivingEntity> extends BukkitEntity<E> implements LivingEntity {
-
-    public BukkitLivingEntity(E original, BukkitWorld world) {
-        super(original, world);
-    }
+public interface BukkitLivingEntity<E extends org.bukkit.entity.LivingEntity> extends BukkitEntity<E>, LivingEntity {
     
     @Override
-    public double getEyeHeight() {
-        return this.original.getEyeHeight();
+    default double getEyeHeight() {
+        return getOriginal().getEyeHeight();
     }
 
     @Override
-    public double getEyeHeight(boolean ignorePose) {
-        return this.original.getEyeHeight(ignorePose);
+    default double getEyeHeight(boolean ignorePose) {
+        return getOriginal().getEyeHeight(ignorePose);
     }
 
     @Override
-    public Location getEyeLocation() {
-        return new BukkitLocation(this.original.getEyeLocation(), this.world);
+    default Location getEyeLocation() {
+        return new BukkitLocation(getOriginal().getEyeLocation(), getBukkitWorld());
     }
 
     @Override
-    public List<Block> getLineOfSight(Set<Material> transparent, int maxDistance) {
+    default List<Block> getLineOfSight(Set<Material> transparent, int maxDistance) {
         Set<org.bukkit.Material> materials = new HashSet<>();
         Iterators.map(transparent, materials, material -> null);
-        List<Block> blocks = Iterators.map(
-                this.original.getLineOfSight(materials, maxDistance),
+        return Iterators.map(
+                getOriginal().getLineOfSight(materials, maxDistance),
                 block -> new BukkitBlock(block, (BukkitWorld) getWorld()));
-        return null;
     }
 
     @Override
-    public boolean hasLineOfSight(Entity other) {
+    default boolean hasLineOfSight(Entity other) {
         return false;
     }
 
     @Override
-    public Block getTargetBlock(Set<Material> transparent, int maxDistance) {
+    default Block getTargetBlock(Set<Material> transparent, int maxDistance) {
         return null;
     }
 
     @Override
-    public Block getTargetBlock(int maxDistance) {
+    default Block getTargetBlock(int maxDistance) {
         return null;
     }
 
     @Override
-    public Collection<PotionEffect> getActivePotionEffects() {
+    default Collection<PotionEffect> getActivePotionEffects() {
         return null;
     }
 
     @Override
-    public PotionEffect getPotionEffect(PotionEffectType type) {
+    default PotionEffect getPotionEffect(PotionEffectType type) {
         return null;
     }
 
     @Override
-    public boolean hasPotionEffect(PotionEffectType type) {
+    default boolean hasPotionEffect(PotionEffectType type) {
         return false;
     }
 
     @Override
-    public void addPotionEffect(PotionEffect effect) {
+    default void addPotionEffect(PotionEffect effect) {
 
     }
 
     @Override
-    public void addPotionEffect(PotionEffect effect, boolean force) {
+    default void addPotionEffect(PotionEffect effect, boolean force) {
 
     }
 
     @Override
-    public void addPotionEffects(PotionEffect... potionEffects) {
+    default void addPotionEffects(PotionEffect... potionEffects) {
 
     }
 
     @Override
-    public void removePotionEffect(PotionEffectType type) {
+    default void removePotionEffect(PotionEffectType type) {
 
     }
 
     @Override
-    public int getHandRaisedTime() {
+    default int getHandRaisedTime() {
         return 0;
     }
 
     @Override
-    public boolean isHandRaised() {
+    default boolean isHandRaised() {
         return false;
     }
 
     @Override
-    public double getHealth() {
-        return this.original.getHealth();
+    default double getHealth() {
+        return getOriginal().getHealth();
     }
 
     @Override
-    public void setHealth(double health) {
-        this.original.setHealth(health);
+    default void setHealth(double health) {
+        getOriginal().setHealth(health);
     }
 
     @Override
-    public void heal() {
-        setHealth(this.original.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    default void heal() {
+        setHealth(getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
     }
 
     @Override
-    public double getMaximumHealth() {
-        return this.original.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+    default double getMaximumHealth() {
+        return getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
     }
 
     @Override
-    public void setMaximumHealth(double health) {
-        this.original.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
+    default void setMaximumHealth(double health) {
+        getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
     }
 
     @Override
-    public void damage(double amount) {
-        this.original.damage(amount);
+    default void damage(double amount) {
+        getOriginal().damage(amount);
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<T> projectile) {
+    default  <T extends Projectile> T launchProjectile(Class<T> projectile) {
         return null;
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<T> projectile, Vector vector) {
+    default <T extends Projectile> T launchProjectile(Class<T> projectile, Vector vector) {
         return null;
     }
 }

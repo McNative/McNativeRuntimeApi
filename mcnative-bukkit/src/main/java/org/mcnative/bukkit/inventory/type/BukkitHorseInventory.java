@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @author Philipp Elvin Friedhoff
+ * @since 14.11.19, 16:40
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,28 @@
  * under the License.
  */
 
-package org.mcnative.service;
+package org.mcnative.bukkit.inventory.type;
 
-import org.mcnative.service.inventory.Inventory;
+
+import org.mcnative.bukkit.inventory.BukkitInventory;
+import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.inventory.item.material.Material;
+import org.mcnative.service.inventory.type.HorseInventory;
 
-public interface ObjectCreator {
+public class BukkitHorseInventory<I extends org.bukkit.inventory.AbstractHorseInventory> extends BukkitInventory<I> implements HorseInventory {
 
-    <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title);
+    public BukkitHorseInventory(InventoryOwner owner, I original) {
+        super(owner, original);
+    }
 
-    ItemStack newItemStack(Material material);
+    @Override
+    public ItemStack getSaddle() {
+        return new BukkitItemStack(this.original.getSaddle());
+    }
+
+    @Override
+    public void setSaddle(ItemStack stack) {
+        this.original.setSaddle(((BukkitItemStack)stack).getOriginal());
+    }
 }

@@ -26,9 +26,13 @@ import org.mcnative.common.McNative;
 
 public class BukkitMcNativeBootstrap extends JavaPlugin {
 
+    private static BukkitMcNativeBootstrap instance;
+
     @Override
     public void onLoad() {
         if(McNative.isAvailable()) return;
+
+        instance = this;
 
         getLogger().info("McNative is starting, please wait...");
 
@@ -42,5 +46,9 @@ public class BukkitMcNativeBootstrap extends JavaPlugin {
     public void onDisable() {
 
         getLogger().info("McNative successfully shut down.");
+    }
+
+    public static BukkitMcNativeBootstrap getInstance() {
+        return instance;
     }
 }

@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 17.08.19, 21:40
+ * @author Philipp Elvin Friedhoff
+ * @since 16.11.19, 15:55
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,27 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living;
+package org.mcnative.bukkit.inventory;
 
+import org.bukkit.inventory.InventoryHolder;
 import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.inventory.type.PlayerInventory;
+import org.mcnative.service.inventory.InventoryOwner;
 
-public interface HumanEntity extends LivingEntity {
+public class BukkitInventoryOwner implements InventoryOwner, InventoryHolder {
 
-    PlayerInventory getInventory();
+    private final InventoryOwner owner;
 
-    Inventory getOpenInventory();
+    public BukkitInventoryOwner(InventoryOwner owner) {
+        this.owner = owner;
+    }
 
-    ItemStack getItemOnCursor();
+    @Override
+    public Inventory getLinkedInventory() {
+        return this.owner.getLinkedInventory();
+    }
 
-    boolean isBlocking();
-
-    boolean isSleeping();
-
-    void openInventory(Inventory inventory);
-
-    void openPlayerInventory();
-
-    void closeInventory();
+    @Override
+    public org.bukkit.inventory.Inventory getInventory() {
+        return ((BukkitInventory)this.owner.getLinkedInventory()).getOriginal();
+    }
 }

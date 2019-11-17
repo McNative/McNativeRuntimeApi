@@ -28,79 +28,75 @@ import org.mcnative.service.world.World;
 import java.util.List;
 import java.util.UUID;
 
-public class BukkitEntity<E extends org.bukkit.entity.Entity> implements Entity {
+public interface BukkitEntity<E extends org.bukkit.entity.Entity> extends Entity {
 
-    protected final E original;
-    protected final BukkitWorld world;
+    E getOriginal();
+    
+    BukkitWorld getBukkitWorld();
 
-    public BukkitEntity(E original, BukkitWorld world) {
-        this.original = original;
-        this.world = world;
+    @Override
+    default int getId() {
+        return getOriginal().getEntityId();
     }
 
     @Override
-    public int getId() {
-        return this.original.getEntityId();
+    default UUID getUniqueId() {
+        return getOriginal().getUniqueId();
     }
 
     @Override
-    public UUID getUniqueId() {
-        return this.original.getUniqueId();
+    default World getWorld() {
+        return getBukkitWorld();
     }
 
     @Override
-    public World getWorld() {
-        return this.world;
+    default Location getLocation() {
+        return new BukkitLocation(getOriginal().getLocation(), getBukkitWorld());
     }
 
     @Override
-    public Location getLocation() {
-        return new BukkitLocation(this.original.getLocation(), world);
+    default boolean isOnGround() {
+        return getOriginal().isOnGround();
     }
 
     @Override
-    public boolean isOnGround() {
-        return this.original.isOnGround();
-    }
-
-    @Override
-    public List<Entity> getNeighbors(double radius) {
+    default List<Entity> getNeighbors(double radius) {
         return null;
     }
 
     @Override
-    public List<Entity> getNeighbors(double x, double y, double z) {
+    default List<Entity> getNeighbors(double x, double y, double z) {
         return null;
     }
 
     @Override
-    public void teleport(Location location) {
-        this.original.teleport(((BukkitLocation)location).getOriginal());
+    default void teleport(Location location) {
+        getOriginal().teleport(((BukkitLocation)location).getOriginal());
     }
 
     @Override
-    public void teleport(int x, int y, int z) {
-        this.original.teleport(new org.bukkit.Location(this.world.getOriginal(), x, y, z));
+    default void teleport(int x, int y, int z) {
+        getOriginal().teleport(new org.bukkit.Location(getBukkitWorld().getOriginal(), x, y, z));
     }
 
     @Override
-    public void teleport(int x, int y, int z, short pitch, short yaw) {
-        this.original.teleport(new org.bukkit.Location(this.world.getOriginal(), x, y, z, pitch, yaw));
+    default void teleport(int x, int y, int z, short pitch, short yaw) {
+        getOriginal().teleport(new org.bukkit.Location(getBukkitWorld().getOriginal(), x, y, z, pitch, yaw));
     }
 
     @Override
-    public void teleport(World world, int x, int y, int z) {
-        this.original.teleport(new org.bukkit.Location(this.world.getOriginal(), x, y, z));
+    default void teleport(World world, int x, int y, int z) {
+        getOriginal().teleport(new org.bukkit.Location(getBukkitWorld().getOriginal(), x, y, z));
     }
 
     @Override
-    public void teleport(World world, int x, int y, int z, short pitch, short yaw) {
-        this.original.teleport(new org.bukkit.Location(((BukkitWorld)world).getOriginal(), x, y, z, pitch, yaw));
+    default void teleport(World world, int x, int y, int z, short pitch, short yaw) {
+        getOriginal().teleport(new org.bukkit.Location(((BukkitWorld)world).getOriginal(), x, y, z, pitch, yaw));
     }
 
     //@Todo
     @Override
-    public void despawn() {
+    default void despawn() {
 
     }
 }
