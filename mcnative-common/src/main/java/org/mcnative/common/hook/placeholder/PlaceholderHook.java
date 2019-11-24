@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 28.08.19, 21:03
+ * @since 19.10.19, 20:29
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,12 @@
  * under the License.
  */
 
-package org.mcnative.testplugin.service;
+package org.mcnative.common.hook.placeholder;
 
-import net.prematic.libraries.document.annotations.DocumentFile;
+import org.mcnative.common.player.MinecraftPlayer;
 
-@DocumentFile(source = "config.yml",appendMissing = true,loadAll = true)
-public class Config {
+public interface PlaceholderHook {
 
-    public static boolean COMMAND_BAN_ENABLED = true;
-
-    public static String HALLO_MESSAGE = "Hallo was geht";
+    Object onRequest(MinecraftPlayer player, String parameter);
 
 }
