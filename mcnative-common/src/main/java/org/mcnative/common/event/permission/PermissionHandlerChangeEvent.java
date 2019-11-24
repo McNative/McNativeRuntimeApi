@@ -17,16 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.common.event.player.permission;
+package org.mcnative.common.event.permission;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.mcnative.common.player.permission.PermissionHandler;
 
-public interface MinecraftPlayerPermissionCheckEvent extends MinecraftOnlinePlayerEvent {
+public interface PermissionHandlerChangeEvent extends MinecraftOnlinePlayerEvent {
 
-    String getPermission();
+    PermissionHandler getOldHandler();
 
-    boolean hasPermission();
+    PermissionHandler getNewHandler();
 
-    void setHasPermission(boolean hasPermission);
+    void setNewHandler(PermissionHandler handler);
 
 }

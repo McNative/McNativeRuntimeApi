@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.08.19, 19:24
+ * @since 17.11.19, 16:14
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.common.event.player;
+package org.mcnative.common.event.permission;
 
+import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.annonations.Experimental;
+import org.mcnative.common.event.MinecraftEvent;
+import org.mcnative.common.event.player.MinecraftPlayerEvent;
 import org.mcnative.common.player.permission.PlayerPermissionHandler;
 
-@Experimental
-public interface MinecraftPlayerPermissionCheckEvent extends MinecraftPlayerEvent {
+public interface PermissionCheckEvent extends MinecraftEvent {
+
+    CommandSender getSender();
 
     PlayerPermissionHandler getHandler();
 

@@ -23,21 +23,4 @@ import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-public class MinecraftPlayerPostLoginEvent implements MinecraftOnlinePlayerEvent {
-
-    private final OnlineMinecraftPlayer player;
-
-    public MinecraftPlayerPostLoginEvent(OnlineMinecraftPlayer player) {
-        this.player = player;
-    }
-
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer() {
-        return player;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer() {
-        return player;
-    }
-}
+public interface MinecraftPlayerPostLoginEvent extends MinecraftOnlinePlayerEvent {}
