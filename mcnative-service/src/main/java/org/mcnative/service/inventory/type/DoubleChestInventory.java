@@ -19,15 +19,9 @@
 
 package org.mcnative.service.inventory.type;
 
-public interface DoubleChestInventory {
+public interface DoubleChestInventory extends ChestInventory {
 
-    ChestInventory getLeft();
+    ChestInventory getLeftSide();
 
-    ChestInventory getRight();
-
-    void setLeft(ChestInventory inventory);
-
-    void setRight(ChestInventory inventory);
-
-
+    ChestInventory getRightSide();
 }

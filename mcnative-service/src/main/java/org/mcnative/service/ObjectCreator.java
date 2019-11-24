@@ -20,9 +20,13 @@
 package org.mcnative.service;
 
 import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.InventoryOwner;
+import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.item.material.Material;
 
 public interface ObjectCreator {
 
-    Inventory newInventory();
+    <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title);
 
+    ItemStack newItemStack(Material material);
 }

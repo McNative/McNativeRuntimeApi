@@ -21,33 +21,49 @@ package org.mcnative.service.location;
 
 import org.mcnative.service.world.World;
 
-public interface Vector {
+public interface Vector extends Cloneable {
 
     double getX();
 
+    default int getBlockX() {
+        return (int) getX();
+    }
+
     double getY();
+
+    default int getBlockY() {
+        return (int) getY();
+    }
 
     double getZ();
 
+    default int getBlockZ() {
+        return (int) getZ();
+    }
+
     void setX(double x);
 
-    void setY(double x);
+    void setY(double y);
 
-    void setZ(double x);
-
-
-    Vector middle(Vector location);
-
-    double distance(Vector location);
-
-    double distanceSquared(Vector location);
-
-    float angle(Vector otherPoint);
+    void setZ(double z);
 
 
-    void add(Vector location);
+    Vector middle(Vector other);
 
-    void subtract(Vector location);
+    double distance(Vector other);
+
+    double distanceSquared(Vector other);
+
+    float angle(Vector other);
+
+
+    void add(Vector other);
+
+    void add(double x, double y, double z);
+
+    void subtract(Vector other);
+
+    void subtract(double x, double y, double z);
 
     void multiply(Vector multiplier);
 
@@ -66,6 +82,8 @@ public interface Vector {
 
     boolean isOut(Vector original, Offset offset);
 
+    double dot(Vector other);
+
 
     Location toLocation(World world);
 
@@ -82,4 +100,5 @@ public interface Vector {
         return of(Math.max(vector1.getX(), vector2.getX()), Math.max(vector1.getY(), vector2.getY()), Math.max(vector1.getZ(), vector2.getZ()));
     }
 
+    Vector clone();
 }

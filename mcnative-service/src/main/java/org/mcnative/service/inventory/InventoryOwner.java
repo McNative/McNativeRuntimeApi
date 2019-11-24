@@ -19,4 +19,8 @@
 
 package org.mcnative.service.inventory;
 
-public interface InventoryOwner {}
+public interface InventoryOwner {
+
+    Inventory getLinkedInventory();
+
+}

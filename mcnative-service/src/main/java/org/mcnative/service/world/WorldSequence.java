@@ -47,22 +47,22 @@ public interface WorldSequence {
 
     Block getBlock(Vector location);
 
-    Block getHighestBlock(int x, int y);
+    Block getHighestBlock(int x, int z);
 
     Block getHighestBlock(Vector location);
 
-    Block getLowestBlock(int x, int y);
+    Block getLowestBlock(int x, int z);
 
     Block getLowestBlock(Vector location);
 
 
-    Biome getBiom(int x, int y);
+    Biome getBiome(int x, int z);
 
-    Biome getBiom(Vector point);
+    Biome getBiome(Vector point);
 
-    void setBiom(int x, int y,Biome biome);
+    void setBiome(int x, int z, Biome biome);
 
-    void setBiom(Vector point, Biome biome);
+    void setBiome(Vector point, Biome biome);
 
 
     double getTemperature(int x, int z);

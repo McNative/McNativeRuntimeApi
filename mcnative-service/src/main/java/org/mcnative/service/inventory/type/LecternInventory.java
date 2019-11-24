@@ -22,11 +22,12 @@ package org.mcnative.service.inventory.type;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.BEProtocolSupport;
 import org.mcnative.common.protocol.support.JEProtocolSupport;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 
 @JEProtocolSupport(min= MinecraftProtocolVersion.JE_1_14)
 @BEProtocolSupport(min=MinecraftProtocolVersion.BE_1_10)
-public interface LecternInventory {
+public interface LecternInventory extends Inventory {
 
     ItemStack getItem();
 

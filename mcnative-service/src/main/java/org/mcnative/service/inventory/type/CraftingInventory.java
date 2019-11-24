@@ -21,6 +21,7 @@ package org.mcnative.service.inventory.type;
 
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.recipe.Recipe;
 
 public interface CraftingInventory extends Inventory {
 
@@ -28,11 +29,11 @@ public interface CraftingInventory extends Inventory {
 
     void setMatrix(ItemStack[] matrix);
 
-    ItemStack getOutput();
+    ItemStack getResult();
 
-    void setOutput(ItemStack item);
+    void setResult(ItemStack item);
 
-    //get getRecipe();
+    Recipe getRecipe();
 
     void clearItemsOnClose(boolean clear);
 

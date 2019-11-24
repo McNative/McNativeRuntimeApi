@@ -27,22 +27,17 @@ public interface HumanEntity extends LivingEntity {
 
     PlayerInventory getInventory();
 
-    ItemStack getCursor();
+    Inventory getOpenInventory();
 
-    ItemStack getItemInHand();
+    ItemStack getItemOnCursor();
 
     boolean isBlocking();
 
     boolean isSleeping();
 
-    void setItemInHand(ItemStack item);
-
     void openInventory(Inventory inventory);
 
-    void openInventory();
+    void openPlayerInventory();
 
     void closeInventory();
-
-
-
 }

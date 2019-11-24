@@ -24,13 +24,13 @@ import org.mcnative.service.inventory.item.ItemStack;
 
 public interface EnchantingInventory extends Inventory {
 
-    ItemStack getInputLeft();
+    ItemStack getItem();
 
-    ItemStack getInputRight();
+    ItemStack getSecondary();
 
-    void setInputLeft(ItemStack input);
+    void setItem(ItemStack input);
 
-    void setInputRight(ItemStack input);
+    void setSecondary(ItemStack input);
 
     void clearItemsOnClose(boolean clear);
 }

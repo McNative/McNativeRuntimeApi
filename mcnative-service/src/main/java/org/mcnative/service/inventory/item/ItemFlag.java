@@ -19,5 +19,51 @@
 
 package org.mcnative.service.inventory.item;
 
-public enum ItemFlag {
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.McNative;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class ItemFlag {
+
+    public static final Collection<ItemFlag> ITEM_FLAGS = new ArrayList<>();
+
+    public static final ItemFlag HIDE_ENCHANTS = createAndRegister("HIDE_ENCHANTS");
+    public static final ItemFlag HIDE_ATTRIBUTES = createAndRegister("HIDE_ATTRIBUTES");
+    public static final ItemFlag HIDE_UNBREAKABLE = createAndRegister("HIDE_UNBREAKABLE");
+    public static final ItemFlag HIDE_DESTROYS = createAndRegister("HIDE_DESTROYS");
+    public static final ItemFlag HIDE_PLACED_ON = createAndRegister("HIDE_PLACED_ON");
+    public static final ItemFlag HIDE_POTION_EFFECTS = createAndRegister("HIDE_POTION_EFFECTS");
+
+
+    private final ObjectOwner owner;
+    private final String name;
+
+    public ItemFlag(ObjectOwner owner, String name) {
+        this.name = name;
+        this.owner = owner;
+    }
+
+    public ObjectOwner getOwner() {
+        return owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public static ItemFlag create(String name) {
+        return new ItemFlag(McNative.getInstance(), name);
+    }
+
+    public static ItemFlag register(ItemFlag itemFlag) {
+        ITEM_FLAGS.add(itemFlag);
+        return itemFlag;
+    }
+
+    public static ItemFlag createAndRegister(String name) {
+        return register(create(name));
+    }
 }

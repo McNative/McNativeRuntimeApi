@@ -46,6 +46,11 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
     public UUID getUniqueId() {
         return data.getUniqueId();
     }

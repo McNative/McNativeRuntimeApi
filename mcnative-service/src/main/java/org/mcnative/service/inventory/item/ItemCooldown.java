@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 23.08.19, 22:06
+ * @author Davide Wietlisbach
+ * @since 11.08.19, 20:51
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.type;
+package org.mcnative.service.inventory.item;
 
-import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.item.ItemStack;
+import java.util.concurrent.TimeUnit;
 
-public interface FurnanceInventory extends Inventory {
+public class ItemCooldown {
 
-    ItemStack getSmelting();
+    private final long cooldown;
 
-    ItemStack getFuel();
+    public ItemCooldown(long cooldown) {
+        this.cooldown = cooldown;
+    }
 
-    ItemStack getResult();
+    public ItemCooldown(long time, TimeUnit unit) {
+        this(unit.toMillis(time));
+    }
 
-    void setSmelting(ItemStack smelting);
-
-    void setFuel(ItemStack fuel);
-
-    void setResult(ItemStack result);
-
+    public long getCooldown() {
+        return cooldown;
+    }
 }

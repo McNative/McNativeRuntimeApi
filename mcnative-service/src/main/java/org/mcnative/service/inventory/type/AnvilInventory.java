@@ -37,6 +37,14 @@ public interface AnvilInventory extends Inventory {
 
     ItemStack getOutput();
 
+
+    String getRenameText();
+
+    int getRepairCost();
+
+    int getMaximumRepairCost();
+
+
     void setInputLeft(ItemStack input);
 
     void setInputRight(ItemStack input);
@@ -44,7 +52,11 @@ public interface AnvilInventory extends Inventory {
     void setOutput(ItemStack output);
 
 
+    void setRenameText(String text);
+
+    void setRepairCost(int levels);
+
+    void setMaximumRepairCost(int levels);
 
     void clearItemsOnClose(boolean clear);
-
 }

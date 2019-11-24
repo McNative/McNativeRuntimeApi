@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 11.08.19, 20:51
+ * @author Philipp Elvin Friedhoff
+ * @since 23.08.19, 22:06
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,23 @@
  * under the License.
  */
 
-package org.mcnative.service.inventory.item;
+package org.mcnative.service.inventory.type;
 
-public class Cooldown {
+import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.item.ItemStack;
+
+public interface FurnaceInventory extends Inventory {
+
+    ItemStack getSmelting();
+
+    ItemStack getFuel();
+
+    ItemStack getResult();
+
+    void setSmelting(ItemStack smelting);
+
+    void setFuel(ItemStack fuel);
+
+    void setResult(ItemStack result);
+
 }

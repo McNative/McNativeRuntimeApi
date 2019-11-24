@@ -29,7 +29,7 @@ public interface PlayerManager<O extends OnlineMinecraftPlayer> {
 
     Collection<O> getOnlinePlayers();
 
-    <T extends MinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass);
+    <T extends OnlineMinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass);
 
     MinecraftPlayer getPlayer(int id);
 

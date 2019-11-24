@@ -41,4 +41,11 @@ public enum GameMode {
     public int getId() {
         return id;
     }
+
+    public static GameMode getById(int id) {
+        for (GameMode value : GameMode.values()) {
+            if(value.getId() == id) return value;
+        }
+        return null;
+    }
 }

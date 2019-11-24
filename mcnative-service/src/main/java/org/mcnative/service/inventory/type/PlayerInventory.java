@@ -34,7 +34,9 @@ public interface PlayerInventory extends Inventory {
 
     ItemStack[] getArmorContents();
 
-    ItemStack getItemInHand();
+    ItemStack getItemInMainHand();
+
+    ItemStack getItemInOffMainHand();
 
     int getHeldItemSlot();
 
@@ -48,7 +50,9 @@ public interface PlayerInventory extends Inventory {
 
     void setArmorContents(ItemStack... items);
 
-    void setItemInHand(ItemStack stack);
+    void setItemInMainHand(ItemStack stack);
+
+    void setItemInOffHand(ItemStack stack);
 
     void setHeldItemSlot(int slot);
 

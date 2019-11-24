@@ -23,9 +23,14 @@ import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.service.NamespacedKey;
 import org.mcnative.service.inventory.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class Enchantment implements NamespacedKey {
 
-    public static final Enchantment PROTECTION_ENVIRONMENTAL = create("protection").materialCategories(MaterialCategory.ARMOR).build();
+    public static final Collection<Enchantment> ENCHANTMENTS = new ArrayList<>();
+
+    public static final Enchantment PROTECTION_ENVIRONMENTAL = create("protection").materialCategories(MaterialCategory.ARMOR).buildAndRegister();
 
     private final ObjectOwner owner;
     private final String name, namespace, key;
@@ -98,9 +103,13 @@ public class Enchantment implements NamespacedKey {
         return treasure;
     }
 
-
     public static Builder create(String name) {
         return new Builder(name);
+    }
+
+    public static Enchantment register(Enchantment enchantment) {
+        ENCHANTMENTS.add(enchantment);
+        return enchantment;
     }
 
     private static class Builder {
@@ -168,6 +177,10 @@ public class Enchantment implements NamespacedKey {
                     materialCategories,
                     treasure,
                     conflicts);
+        }
+
+        public Enchantment buildAndRegister() {
+            return register(build());
         }
     }
 }

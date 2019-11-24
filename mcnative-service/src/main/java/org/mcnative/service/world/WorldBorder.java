@@ -25,27 +25,22 @@ import org.mcnative.service.location.Vector;
 
 public interface WorldBorder {
 
-    long getSize();
+    double getSize();
 
-    void setSize(long s);
-
-
-    Vector getCenter();
-
-    void setCenter(Vector point);
+    void setSize(double size);
 
 
-    Vector[] getCorners();
+    Location getCenter();
+
+    void setCenter(Vector location);
 
 
-    boolean isInvisible();
-
-    void setInvisible(boolean invisible);
+    Location[] getCorners();
 
 
     double getDamageBuffer();
 
-    void setDamageBuffer(boolean blocks);
+    void setDamageBuffer(double blocks);
 
 
     double getDamageAmount();
