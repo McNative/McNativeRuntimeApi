@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 24.11.19, 16:25
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.testplugin.service.listener;
+package org.mcnative.loader;
 
+import net.prematic.resourceloader.ResourceInfo;
+import net.prematic.resourceloader.ResourceLoader;
 
-import net.prematic.libraries.event.Listener;
-import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
+import java.io.File;
 
-public class PlayerLoginListener {
+public class ResourceInstaller {
 
-    @Listener
-    public void onLogin(MinecraftPlayerLoginEvent event){
-        event.getOnlinePlayer().sendMessage("Welcome on a "+ McNative.getInstance().getPlatform().getName()+" server.");
+    public static File load(File resourceLocation){
+        ResourceInfo info = new ResourceInfo("","","",null);
+        ResourceLoader loader = new ResourceLoader(info);
+        return loader.download();
     }
-
 }

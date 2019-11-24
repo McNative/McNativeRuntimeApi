@@ -29,27 +29,37 @@
     <version>1.0.0</version>
 
     <properties>
+        <!-- Project settings -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependency version -->
+        <dependency.bungeecord.version>1.14-SNAPSHOT</dependency.bungeecord.version>
+        <dependency.bukkit.version>1.14.2-R0.1-SNAPSHOT</dependency.bukkit.version>
+        <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
+
+        <dependency.pretronic.libraries.utility>1.0.0</dependency.pretronic.libraries.utility>
+        <dependency.pretronic.libraries.document>1.0.0</dependency.pretronic.libraries.document>
+        <dependency.pretronic.libraries.concurrent>1.0.0</dependency.pretronic.libraries.concurrent>
+        <dependency.pretronic.libraries.command>1.0.0</dependency.pretronic.libraries.command>
+        <dependency.pretronic.libraries.event>1.0.0</dependency.pretronic.libraries.event>
+        <dependency.pretronic.libraries.plugin>1.0.0</dependency.pretronic.libraries.plugin>
+        <dependency.pretronic.databasequery>1.0.0</dependency.pretronic.databasequery>
+
+        <dependency.hikaricp>3.4.1</dependency.hikaricp>
+
+        <!-- Test dependencies -->
+        <test.junit.jupiter>5.5.2</test.junit.jupiter>
     </properties>
 
     <modules>
         <module>mcnative-common</module>
         <module>mcnative-proxy</module>
         <module>mcnative-service</module>
-        <module>mcnative-wrapper</module>
-        <module>mcnative-test-plugin-service</module>
         <module>mcnative-bukkit</module>
         <module>mcnative-bungeecord</module>
         <module>mcnative-buildtool-maven</module>
         <module>mcnative-loader</module>
-        <module>mcnative-test-plugin-proxy-bungeecord</module>
+        <module>mcnative-build</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 
 </project>

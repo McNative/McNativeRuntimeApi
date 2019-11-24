@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 18:59
+ * @since 24.11.19, 16:30
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,29 @@
  * under the License.
  */
 
-package org.mcnative.wrapper.bungeecord;
+package org.mcnative.loader.bootstrap;
 
-import net.md_5.bungee.api.plugin.Plugin;
-import org.mcnative.wrapper.guest.GuestPluginExecutor;
-import org.mcnative.wrapper.loader.McNativeLoader;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.loader.GuestPluginExecutor;
+import org.mcnative.loader.McNativeLoader;
 
 import java.util.logging.Level;
 
-public class BungeeCordMcNativePluginBootstrap extends Plugin {
+public class BukkitMcNativePluginBootstrap extends JavaPlugin {
 
+    private static final String ENVIRONMENT_NAME = "Bukkit";
     private GuestPluginExecutor executor;
 
     @Override
     public void onLoad() {
         try{
-            McNativeLoader.install("BungeeCord");
-
-            //this.executor = null;//new GuestPluginExecutor(new TestPlugin());
-            //this.executor.loadGuestPlugin();
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
+            this.executor = new GuestPluginExecutor(getFile(),getLogger(),ENVIRONMENT_NAME);
+            this.executor.loadGuestPlugin();
         }catch (Exception exception){
-            getLogger().log(Level.SEVERE,String.format("Could not load %s v%s by %s"
-                    ,getDescription().getName()
-                    ,getDescription().getVersion()
-                    ,getDescription().getAuthor())
-                    ,exception);
-
-            getProxy().getPluginManager().unregisterCommands(this);
-            getProxy().getPluginManager().unregisterListeners(this);
+            this.executor = null;
+            getLogger().log(Level.SEVERE,String.format("Could not bootstrap plugin (%s)",exception.getMessage()));
+            getServer().getPluginManager().disablePlugin(this);
         }
     }
 
