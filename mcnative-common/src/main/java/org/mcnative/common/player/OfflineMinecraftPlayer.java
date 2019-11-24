@@ -41,15 +41,15 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public String getName() {
-        return data.getName();
+    public int getId() {
+        return data.getId();
     }
 
     @Override
-    public int getId() {
-        return 0;
+    public String getName() {
+        return data.getName();
     }
-
+    
     @Override
     public UUID getUniqueId() {
         return data.getUniqueId();
@@ -157,8 +157,8 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public Collection<String> getGroups() {
-        return permissionHandler.getGroups();
+    public Collection<String> getPermissionGroups() {
+        return permissionHandler.getPermissionGroups();
     }
 
     @Override
@@ -247,4 +247,6 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
                 ",xBoxId=" + getXBoxId() +
                 '}';
     }
+
+
 }

@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
 
 public interface PlayerPermissionHandler {
 
-    Collection<String> getGroups();
+    Collection<String> getPermissionGroups();
 
     Collection<String> getPermissions();
 

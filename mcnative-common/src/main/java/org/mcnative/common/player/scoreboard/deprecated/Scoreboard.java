@@ -66,7 +66,7 @@ public interface Scoreboard {
     }
 
     static Scoreboard getMainScoreboard(){
-        return McNative.getInstance().getRegistry().getInstance(Scoreboard.class,"MAIN");
+        return null;// McNative.getInstance().getRegistry().getInstance(Scoreboard.class,"MAIN");
     }
 
 }

@@ -85,7 +85,7 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
 
     @Override
     public Document compile(String key, VariableSet variables) {
-        ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);;
+        ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);
         components.forEach(component -> entry.getEntries().add(component.compile(variables)));
         return entry;
     }

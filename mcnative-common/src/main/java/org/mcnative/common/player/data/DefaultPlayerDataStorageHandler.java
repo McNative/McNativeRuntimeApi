@@ -52,17 +52,17 @@ public class DefaultPlayerDataStorageHandler implements PlayerDataStorageHandler
 
     @Override
     public MinecraftPlayerData getPlayerData(String name) {
-        return getPlayerDataByQueryResult(name, this.playerDataStorage.find().where("name", name).execute());
+        return null;// getPlayerDataByQueryResult(name, this.playerDataStorage.find().where("name", name).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(UUID uniqueId) {
-        return getPlayerDataByQueryResult(uniqueId, this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
+        return null;//getPlayerDataByQueryResult(uniqueId, this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(long xBoxId) {
-        return getPlayerDataByQueryResult(xBoxId, this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
+        return null;//getPlayerDataByQueryResult(xBoxId, this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
     }
 
     private MinecraftPlayerData getPlayerDataByQueryResult(Object identifier, QueryResult result) {

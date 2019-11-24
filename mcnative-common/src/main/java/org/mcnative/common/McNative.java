@@ -21,11 +21,13 @@ package org.mcnative.common;
 
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
-import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.hook.placeholder.PlaceHolderManager;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerManager;
@@ -39,9 +41,7 @@ import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.registry.Registry;
 import org.mcnative.common.storage.StorageManager;
-import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
@@ -50,19 +50,21 @@ import java.util.function.Consumer;
 
 public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
+    String CONSOLE_PREFIX = "[McNative] ";
+
     String getServiceName();
 
     MinecraftPlatform getPlatform();
 
     PrematicLogger getLogger();
 
-    Registry getRegistry();
+    ServiceRegistry getRegistry();
 
     TaskScheduler getScheduler();
 
     CommandManager getCommandManager();
 
-    EventManager getEventManager();
+    EventBus getEventBus();
 
     PluginManager getPluginManager();
 
@@ -72,6 +74,7 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
     StorageManager getStorageManager();
 
+    PlaceHolderManager getPlaceHolderManager();
 
     PermissionHandler getPermissionHandler();
 
