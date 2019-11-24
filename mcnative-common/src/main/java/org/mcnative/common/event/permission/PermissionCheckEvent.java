@@ -20,9 +20,7 @@
 package org.mcnative.common.event.permission;
 
 import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.annonations.Experimental;
 import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftPlayerEvent;
 import org.mcnative.common.player.permission.PlayerPermissionHandler;
 
 public interface PermissionCheckEvent extends MinecraftEvent {

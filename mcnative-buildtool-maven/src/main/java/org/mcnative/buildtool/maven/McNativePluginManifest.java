@@ -24,7 +24,8 @@ import net.prematic.libraries.document.type.DocumentFileType;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class McNativePluginManifest {
 

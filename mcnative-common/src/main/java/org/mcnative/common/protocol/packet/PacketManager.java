@@ -20,8 +20,8 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.utility.annonations.Nullable;
-import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;

@@ -49,7 +49,7 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     public String getName() {
         return data.getName();
     }
-    
+
     @Override
     public UUID getUniqueId() {
         return data.getUniqueId();

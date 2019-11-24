@@ -20,11 +20,8 @@
 package org.mcnative.common.player;
 
 import org.mcnative.common.text.Text;
-import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
-
-import java.util.function.Consumer;
 
 public class Title {
 

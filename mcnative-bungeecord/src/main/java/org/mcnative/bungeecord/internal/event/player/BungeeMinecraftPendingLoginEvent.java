@@ -19,8 +19,8 @@
 
 package org.mcnative.bungeecord.internal.event.player;
 
-import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
 import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 

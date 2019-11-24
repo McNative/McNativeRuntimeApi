@@ -20,7 +20,5 @@
 package org.mcnative.common.event.player.login;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
 
 public interface MinecraftPlayerPostLoginEvent extends MinecraftOnlinePlayerEvent {}

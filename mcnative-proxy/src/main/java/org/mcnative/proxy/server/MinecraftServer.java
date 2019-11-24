@@ -19,8 +19,8 @@
 
 package org.mcnative.proxy.server;
 
-import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.proxy.ProxiedPlayer;
 
 import java.util.Collection;

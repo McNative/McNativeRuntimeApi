@@ -20,10 +20,8 @@
 package org.mcnative.service.inventory.item;
 
 
-import org.mcnative.common.McNative;
 import org.mcnative.service.MinecraftService;
 import org.mcnative.service.NBTTag;
-import org.mcnative.service.entity.Item;
 import org.mcnative.service.inventory.item.data.ItemData;
 import org.mcnative.service.inventory.item.material.Enchantment;
 import org.mcnative.service.inventory.item.material.Material;

@@ -19,13 +19,6 @@
 
 package org.mcnative.common.hook.placeholder;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.text.components.TextComponent;
-
-import java.util.Collection;
-import java.util.Map;
-
 public class PlaceHolderManager  {
 
    /*

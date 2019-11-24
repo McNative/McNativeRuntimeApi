@@ -21,7 +21,6 @@ package org.mcnative.common.player.receiver;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 

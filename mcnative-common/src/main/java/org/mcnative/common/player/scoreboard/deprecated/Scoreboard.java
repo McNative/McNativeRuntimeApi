@@ -19,8 +19,6 @@
 
 package org.mcnative.common.player.scoreboard.deprecated;
 
-import org.mcnative.common.McNative;
-
 import java.util.Collection;
 
 @Deprecated

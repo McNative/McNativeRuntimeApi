@@ -21,10 +21,10 @@ package org.mcnative.bungeecord.internal.event.player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.event.LoginEvent;
+import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
