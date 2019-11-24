@@ -1,3 +1,0 @@
-name: 'McNativeTestPlugin'
-version: '1.0.0'
-main: 'org.mcnative.test.proxy.bootstrap.BungeeCordBootstrap'

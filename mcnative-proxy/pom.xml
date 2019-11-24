@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcnative-proxy</artifactId>
-    <version>1.0.0</version>
+
     <build>
         <plugins>
             <plugin>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.mcnative</groupId>
             <artifactId>mcnative-common</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

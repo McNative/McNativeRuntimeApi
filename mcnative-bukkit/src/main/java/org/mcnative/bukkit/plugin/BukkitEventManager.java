@@ -34,6 +34,8 @@ import org.bukkit.plugin.*;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class BukkitEventManager implements PluginManager, EventManager {
 
@@ -48,7 +50,6 @@ public class BukkitEventManager implements PluginManager, EventManager {
 
     //McNative event handle
 
-    @Override
     public void registerListener(ObjectOwner owner, Object listener) {
         for(Method method : listener.getClass().getDeclaredMethods()){
             if(method.getParameterTypes().length == 1){
@@ -70,24 +71,49 @@ public class BukkitEventManager implements PluginManager, EventManager {
         }
     }
 
-
     @Override
-    public void unregisterListener(Object listener) {
+    public void subscribe(ObjectOwner objectOwner, Object o) {
 
     }
 
     @Override
-    public void unregisterListener(ObjectOwner objectOwner) {
+    public <T> void subscribe(ObjectOwner objectOwner, Class<T> aClass, Consumer<T> consumer, byte b) {
 
     }
 
     @Override
-    public void callEventAsync(Object o) {
+    public void unsubscribe(Object o) {
 
     }
 
     @Override
-    public void callEvent(Object event) throws IllegalStateException {
+    public void unsubscribe(Consumer<?> consumer) {
+
+    }
+
+    @Override
+    public void unsubscribe(ObjectOwner objectOwner) {
+
+    }
+
+    @Override
+    public void unsubscribeAll(Class<?> aClass) {
+
+    }
+
+    @Override
+    public <T, E extends T> E callEvent(Class<T> aClass, E e) {
+        return null;
+    }
+
+    @Override
+    public <T, E extends T> void callEventAsync(Class<T> aClass, E e, Consumer<T> consumer) {
+
+    }
+
+    @Override
+    public <T, E extends T> CompletableFuture<T> callEventAsync(Class<T> aClass, E e) {
+        return null;
     }
 
 

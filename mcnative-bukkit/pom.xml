@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcnative-bukkit</artifactId>
-    <version>1.0.0</version>
+
     <build>
         <plugins>
             <plugin>
@@ -45,10 +45,13 @@
     </build>
 
     <repositories>
-        <!-- Repository for bukkit-->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -58,19 +61,27 @@
         <dependency>
             <groupId>org.mcnative</groupId>
             <artifactId>mcnative-service</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-
 
         <!-- External project dependencies -->
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.14.2-R0.1-SNAPSHOT</version>
+            <version>${dependency.bukkit.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>${dependency.placeholderapi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
+
 
 </project>
