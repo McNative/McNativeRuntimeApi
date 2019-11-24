@@ -19,19 +19,29 @@
 
 package org.mcnative.buildtool.maven;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.type.DocumentFileType;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.util.*;
 
 public class McNativePluginManifest {
 
+    @Parameter(required =true)
     private String name;
     private String category;
-    private String version;
+
+    @Parameter(required = true)
+    private PluginVersion version;
+
+    @Parameter(required = true)
     private String main;
     private String description;
     private String website;
     private String author;
-    private List<String> depends, softdepends;
+    private Set<String> depends;
+    private Set<String> softdepends;
 
     public String getName() {
         return name;
@@ -41,7 +51,7 @@ public class McNativePluginManifest {
         return category;
     }
 
-    public String getVersion() {
+    public PluginVersion getVersion() {
         return version;
     }
 
@@ -61,12 +71,19 @@ public class McNativePluginManifest {
         return author;
     }
 
-    public List<String> getDepends() {
+    public Set<String> getDepends() {
+        if(depends == null) depends = new HashSet<>();
         return depends;
     }
 
-    public List<String> getSoftdepends() {
-        if(softdepends == null) softdepends = new ArrayList<>();
+    public Set<String> getSoftdepends() {
+        if(softdepends == null) softdepends = new HashSet<>();
         return softdepends;
+    }
+
+    public void createManifestFile(File location){
+        getSoftdepends().add("McNative");
+        location.getParentFile().mkdirs();
+        DocumentFileType.JSON.getWriter().write(location, Document.newDocument(this));
     }
 }

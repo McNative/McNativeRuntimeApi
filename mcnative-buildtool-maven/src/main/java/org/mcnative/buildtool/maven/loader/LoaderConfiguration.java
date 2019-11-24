@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 12.10.19, 15:09
+ * @since 24.11.19, 17:18
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,35 @@
  * under the License.
  */
 
-package org.mcnative.common.event.player.permission;
+package org.mcnative.buildtool.maven.loader;
 
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.player.permission.PlayerPermissionHandler;
+import org.apache.maven.plugins.annotations.Parameter;
 
-public interface MinecraftPlayerPermissionHandlerChangeEvent extends MinecraftOnlinePlayerEvent {
+public class LoaderConfiguration {
 
-    PlayerPermissionHandler getOldHandler();
+    private String version;
 
-    PlayerPermissionHandler getNewHandler();
+    @Parameter(required = true)
+    private String versionUrl;
 
-    void setNewHandler(PlayerPermissionHandler handler);
+    @Parameter(required = true)
+    private String downloadUrl;
 
+    private boolean licensing = false;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getVersionUrl() {
+        return versionUrl;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public boolean isLicensing() {
+        return licensing;
+    }
 }

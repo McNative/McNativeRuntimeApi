@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 20.08.19, 19:35
+ * @since 27.10.19, 13:15
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,29 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.event;
+package org.mcnative.buildtool.maven.loader;
 
-import net.prematic.libraries.event.EventManager;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+public class McNativeLoaderInfo {
 
-public class McNativeBungeeEventManager implements EventManager {
+    private String name;
+    private String version;
+    private String versionUrl;
+    private String downloadUrl;
 
-
-    @Override
-    public void registerListener(ObjectOwner objectOwner, Object listener) {
-
+    
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public void unregisterListener(Object listener) {
-
+    public String getVersion() {
+        return version;
     }
 
-    @Override
-    public void unregisterListener(ObjectOwner owner) {
-
+    public String getVersionUrl() {
+        return versionUrl;
     }
 
-    @Override
-    public void callEventAsync(Object o) {
-
-    }
-
-    @Override
-    public void callEvent(Object o) {
-
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 }
