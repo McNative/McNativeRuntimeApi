@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.inject;
+package org.mcnative.bungeecord.internal.inject;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

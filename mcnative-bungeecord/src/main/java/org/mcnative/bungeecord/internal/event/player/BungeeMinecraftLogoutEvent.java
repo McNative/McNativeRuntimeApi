@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 17.11.19, 16:07
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,27 @@
  * under the License.
  */
 
-package org.mcnative.common.registry;
+package org.mcnative.bungeecord.internal.event.player;
 
-public class ServicePriority {
+import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-    public static byte HIGHT = 127;
+public class BungeeMinecraftLogoutEvent implements MinecraftPlayerLogoutEvent {
 
-    public static byte NORMAL = 0;
+    private final OnlineMinecraftPlayer player;
 
-    public static byte LOW = -128;
+    public BungeeMinecraftLogoutEvent(OnlineMinecraftPlayer player) {
+        this.player = player;
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer() {
+        return player;
+    }
 }

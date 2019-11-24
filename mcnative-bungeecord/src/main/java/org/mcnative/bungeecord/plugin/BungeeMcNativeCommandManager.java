@@ -19,24 +19,19 @@
 
 package org.mcnative.bungeecord.plugin;
 
-import net.md_5.bungee.api.plugin.PluginManager;
 import net.prematic.libraries.command.command.Command;
+import net.prematic.libraries.command.command.CommandExecutor;
 import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.command.notfound.CommandNotFoundHandler;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
-import java.util.Collection;
 import java.util.List;
 
 public class BungeeMcNativeCommandManager implements CommandManager {
 
-    private PluginManager pluginManager;
-    private Collection<Command> commands;
-
     @Override
     public String getName() {
-        return "McNative";
+        return null;
     }
 
     @Override
@@ -50,22 +45,22 @@ public class BungeeMcNativeCommandManager implements CommandManager {
     }
 
     @Override
-    public void setNotFoundHandler(CommandNotFoundHandler commandNotFoundHandler) {
+    public void setNotFoundHandler(CommandExecutor commandExecutor) {
+        throw new UnsupportedOperationException("Not founded commands will be forwarded to the sub server");
+    }
+
+    @Override
+    public void dispatchCommand(CommandSender commandSender, String s) {
 
     }
 
     @Override
-    public void dispatchCommand(CommandSender sender, String command) {
-        pluginManager.dispatchCommand(null,command);
+    public void registerCommand(ObjectOwner objectOwner, Command command) {
+
     }
 
     @Override
-    public void registerCommand(ObjectOwner owner, Command command) {
-        pluginManager.registerCommand(null,new MappedCommand(command));
-    }
-
-    @Override
-    public void unregisterCommand(String command) {
+    public void unregisterCommand(String s) {
 
     }
 
@@ -75,28 +70,12 @@ public class BungeeMcNativeCommandManager implements CommandManager {
     }
 
     @Override
-    public void unregisterCommand(ObjectOwner owner) {
+    public void unregisterCommand(ObjectOwner objectOwner) {
 
     }
 
     @Override
-    public void unregisterAll() {
-        pluginManager.getCommands().forEach(entry -> pluginManager.unregisterCommand(entry.getValue()));
-        commands.clear();
-    }
+    public void unregisterCommands() {
 
-    private static class MappedCommand extends net.md_5.bungee.api.plugin.Command {
-
-        private final Command realCommand;
-
-        public MappedCommand(Command realCommand) {
-            super(realCommand.getName(),realCommand.getPermission(),realCommand.getAliases().toArray(new String[]{}));
-            this.realCommand = realCommand;
-        }
-
-        @Override
-        public void execute(net.md_5.bungee.api.CommandSender sender, String[] args) {
-            realCommand.execute(null,args);
-        }
     }
 }

@@ -23,33 +23,34 @@ import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
-import net.prematic.libraries.event.DefaultEventManager;
-import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.event.DefaultEventBus;
+import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
+import net.prematic.libraries.plugin.RuntimeEnvironment;
+import net.prematic.libraries.plugin.manager.DefaultPluginManager;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.Iterators;
-import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.server.BungeeMinecraftServer;
 import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.hook.placeholder.PlaceHolderManager;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.PunishmentHandler;
 import org.mcnative.common.player.WhitelistHandler;
 import org.mcnative.common.player.data.PlayerDataStorageHandler;
 import org.mcnative.common.player.permission.PermissionHandler;
-import org.mcnative.common.player.permission.PlayerPermissionHandler;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
-import org.mcnative.common.registry.Registry;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.storage.StorageManager;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;
@@ -68,13 +69,12 @@ public class BungeeCordService implements ProxyService {
     private final PrematicLogger logger;
 
     private final TaskScheduler scheduler;
-    private final Registry registry;
     private final PluginManager pluginManager;
     private final CommandManager commandManager;
-    private final EventManager eventManager;
+    private final EventBus eventBus;
 
     private final PacketManager packetManager;
-    private final PlayerManager playerManager;
+    private final PlayerManager<ProxiedPlayer> playerManager;
 
     private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
     private final Collection<MinecraftServer> servers;
@@ -91,15 +91,14 @@ public class BungeeCordService implements ProxyService {
     private ServerPingResponse serverPingResponse;
     private Tablist tablist;
 
-    public BungeeCordService(PlayerManager manager) {
+    public BungeeCordService(PlayerManager<ProxiedPlayer> manager) {
         this.platform = new BungeeCordPlatform();
         this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
 
         this.scheduler = new SimpleTaskScheduler();
-        this.registry = null;
-        this.pluginManager = null;
+        this.pluginManager = new DefaultPluginManager(logger,new RuntimeEnvironment<>("McNative",this));//@Todo update (dummy manager)
         this.commandManager = null;
-        this.eventManager = new DefaultEventManager();
+        this.eventBus = new DefaultEventBus();
 
         this.packetManager = new DefaultPacketManager();
         this.playerManager = manager;
@@ -124,8 +123,8 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public Registry getRegistry() {
-        return registry;
+    public ServiceRegistry getRegistry() {
+        return pluginManager;
     }
 
     @Override
@@ -139,8 +138,8 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public EventManager getEventManager() {
-        return eventManager;
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     @Override
@@ -158,6 +157,15 @@ public class BungeeCordService implements ProxyService {
         return playerManager;
     }
 
+    @Override
+    public StorageManager getStorageManager() {
+        return null;
+    }
+
+    @Override
+    public PlaceHolderManager getPlaceHolderManager() {
+        return null;
+    }
 
     @Override
     public PermissionHandler getPermissionHandler() {

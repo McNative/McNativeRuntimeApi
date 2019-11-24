@@ -213,8 +213,8 @@ public class BungeePendingConnection implements PendingConnection {
     }
 
     @Override
-    public Collection<String> getGroups() {
-        return permissionHandler.getGroups();
+    public Collection<String> getPermissionGroups() {
+        return permissionHandler.getPermissionGroups();
     }
 
     @Override

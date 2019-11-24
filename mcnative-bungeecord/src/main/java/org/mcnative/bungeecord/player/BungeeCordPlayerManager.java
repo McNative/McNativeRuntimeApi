@@ -19,13 +19,13 @@
 
 package org.mcnative.bungeecord.player;
 
-import io.netty.channel.Channel;
 import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.proxy.ProxiedPlayer;
@@ -54,10 +54,20 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
     }
 
     @Override
+    public ProxiedPlayer getOnlinePlayer(int id) {
+        return null;
+    }
+
+    @Override
     public <T extends MinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass) {
         Collection<T> translatedPlayers = new ArrayList<>(onlineMinecraftPlayers.size());
         onlineMinecraftPlayers.forEach(player -> translate(playerClass,player));
         return translatedPlayers;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer(int id) {
+        return null;
     }
 
     @Override
@@ -119,7 +129,7 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
     }
 
     @Internal
-    public void unregisterPlayer(ProxiedPlayer player){
-        Iterators.removeOne(this.onlineMinecraftPlayers, player0 -> player0.equals(player));
+    public OnlineMinecraftPlayer unregisterPlayer(UUID uniqueId){
+        return Iterators.removeOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
     }
 }

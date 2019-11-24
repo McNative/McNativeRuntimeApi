@@ -25,6 +25,7 @@ import net.prematic.libraries.plugin.description.PluginDescription;
 import net.prematic.libraries.plugin.lifecycle.LifecycleState;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import net.prematic.libraries.plugin.manager.PluginManager;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 
 import java.io.File;
@@ -65,7 +66,32 @@ public class BungeeMcNativePluginManager implements PluginManager {
     }
 
     @Override
-    public <T> void registerService(Class<T> aClass, T t) {
+    public Collection<Class<?>> getAvailableServices() {
+        return null;
+    }
+
+    @Override
+    public <T> Collection<T> getServices(Class<T> aClass) {
+        return null;
+    }
+
+    @Override
+    public <T> void registerService(ObjectOwner objectOwner, Class<T> aClass, T t, byte b) {
+
+    }
+
+    @Override
+    public void unregisterService(Object o) {
+
+    }
+
+    @Override
+    public void unregisterServices(Class<?> aClass) {
+
+    }
+
+    @Override
+    public void unregisterServices(ObjectOwner objectOwner) {
 
     }
 

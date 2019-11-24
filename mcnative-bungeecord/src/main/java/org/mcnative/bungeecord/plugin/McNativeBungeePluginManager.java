@@ -19,45 +19,32 @@
 
 package org.mcnative.bungeecord.plugin;
 
+import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.*;
-import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.event.EventBus;
+import net.prematic.libraries.event.executor.MethodEventExecutor;
+import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.bungeecord.internal.event.player.BungeeMinecraftLoginEvent;
-import org.mcnative.bungeecord.internal.event.player.BungeeMinecraftPendingLoginEvent;
-import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
-import org.mcnative.bungeecord.player.BungeePendingConnection;
-import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
-import org.mcnative.common.connection.ConnectionState;
-import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
-import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.PlayerManager;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class McNativeBungeePluginManager extends PluginManager {
 
-    private PluginManager original;
-    private EventManager eventManager;
-    private BungeeCordPlayerManager playerManager;
+    private final PluginManager original;
+    private final EventBus eventBus;
+    private final Map<Class<?>, Consumer<?>> mangedEvents;
 
-    private Map<UUID, BungeeProxiedPlayer> pendingPlayers;
-
-    public McNativeBungeePluginManager(PluginManager original,EventManager eventManager,BungeeCordPlayerManager playerManager) {
+    public McNativeBungeePluginManager(PluginManager original,EventBus eventBus) {
         super(null, null, null);
         this.original = original;
-        this.eventManager = eventManager;
-        this.playerManager = playerManager;
-        this.pendingPlayers = new ConcurrentHashMap<>();
+        this.eventBus = eventBus;
+        this.mangedEvents = new LinkedHashMap<>();
+        addEventsFromOriginalManager();
     }
 
     @Override
@@ -118,31 +105,32 @@ public class McNativeBungeePluginManager extends PluginManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Event> T callEvent(T event) {
-        if(event instanceof LoginEvent) return (T) handleLogin((LoginEvent)event);
-        else if(event instanceof PostLoginEvent){
-            BungeeProxiedPlayer player = pendingPlayers.get(((PostLoginEvent) event).getPlayer().getUniqueId());
-            player.postLogin(((PostLoginEvent) event).getPlayer());
-            playerManager.registerPlayer(player);
-            System.out.println("POST");
+        Consumer<Object> manager = (Consumer<Object>) mangedEvents.get(event.getClass());
+        if(manager != null){
+            manager.accept(event);
+            event.postCall();
         }
-
-        return original.callEvent(event);
+        else{
+            T result = eventBus.callEvent(event);
+            event.postCall();
+            return result;
+        }
+        return event;
     }
 
     @Override
     public void registerListener(Plugin plugin, Listener listener) {
-        System.out.println("REGISTER: "+plugin.getDescription().getName());
-        eventManager.subscribe(ObjectOwner.SYSTEM,listener);
+        eventBus.subscribe(new PluginObjectOwner(plugin),listener);
     }
 
     @Override
     public void unregisterListener(Listener listener) {
-        eventManager.unsubscribe(listener);
+        eventBus.unsubscribe(listener);
     }
 
     @Override
     public void unregisterListeners(Plugin plugin) {
-        //eventManager.unsubscribe();
+        eventBus.unsubscribe(new PluginObjectOwner(plugin));
     }
 
     @Override
@@ -150,33 +138,39 @@ public class McNativeBungeePluginManager extends PluginManager {
         return original.getCommands();
     }
 
-    public void addOldEvents(){
-
+    public <E> void registerMangedEvent(Class<E> eventClass, Consumer<E> manager){
+        this.mangedEvents.put(eventClass,manager);
     }
 
-    private LoginEvent handleLogin(LoginEvent event){
-        BungeePendingConnection connection = new BungeePendingConnection(((LoginEvent) event).getConnection());
-        connection.setState(ConnectionState.LOGIN);
+    @SuppressWarnings("unchecked")
+    @Internal
+    private void addEventsFromOriginalManager(){
+        Object bus = ReflectionUtil.getFieldValue(original,"eventBus");
+        Map<Class<?>, Map<Byte, Map<Object, Method[]>>> listeners = ReflectionUtil.getFieldValue(bus,"byListenerAndPriority",Map.class);
+        Set<Map.Entry<Plugin, Collection<Listener>>> entries = ReflectionUtil.getFieldValue(original,"listenersByPlugin",Multimap.class).asMap().entrySet();
 
-        MinecraftPlayerPendingLoginEvent pendingEvent = new BungeeMinecraftPendingLoginEvent(connection);
-        eventManager.callEvent(MinecraftPlayerPendingLoginEvent.class,pendingEvent);
-        if(pendingEvent.isCancelled()){
-            connection.disconnect(pendingEvent.getCancelReason(),pendingEvent.getCancelReasonVariables());
-            event.postCall();
-            return event;
-        }
-
-        BungeeProxiedPlayer player = new BungeeProxiedPlayer(connection,null,null);
-
-        MinecraftPlayerLoginEvent loginEvent = new BungeeMinecraftLoginEvent((LoginEvent) event,null);
-        eventManager.callEvent(MinecraftPlayerLoginEvent.class,loginEvent);
-
-        if(loginEvent.isCancelled()){
-            if(((LoginEvent) event).getCancelReasonComponents() == null){
-                connection.disconnect(loginEvent.getCancelReason(),loginEvent.getCancelReasonVariables());
-                ((LoginEvent) event).setCancelled(false);
+        for (Map.Entry<Class<?>, Map<Byte, Map<Object, Method[]>>> entry : listeners.entrySet()) {
+            Class<?> eventClass = entry.getKey();
+            for (Map.Entry<Byte, Map<Object, Method[]>> entry2 : entry.getValue().entrySet()) {
+                byte priority = entry2.getKey();
+                for (Map.Entry<Object, Method[]> entry3 : entry2.getValue().entrySet()) {
+                    Object listener = entry.getKey();
+                    for (Method method : entry3.getValue()) {
+                        Plugin plugin = findOwner(entries,listener);
+                        eventBus.addExecutor(eventClass,new MethodEventExecutor(plugin!=null?
+                                new PluginObjectOwner(plugin):ObjectOwner.SYSTEM
+                                ,priority,listener,eventClass,method));
+                    }
+                }
             }
-        }else pendingPlayers.put(player.getUniqueId(),player);
-        return original.callEvent(event);
+        }
+    }
+
+    @Internal
+    private Plugin findOwner(Set<Map.Entry<Plugin, Collection<Listener>>> entries, Object listener){
+        for (Map.Entry<Plugin, Collection<Listener>> entry : entries) {
+            for (Listener listener0 : entry.getValue()) if(listener0.equals(listener)) return entry.getKey();
+        }
+        return null;
     }
 }

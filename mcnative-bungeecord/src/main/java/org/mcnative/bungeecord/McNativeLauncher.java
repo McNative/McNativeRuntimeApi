@@ -23,18 +23,13 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.internal.event.player.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
-import org.mcnative.common.player.Title;
-import org.mcnative.common.text.Text;
-import org.mcnative.common.text.TextBuilder;
-import org.mcnative.common.text.format.TextColor;
-import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.proxy.ProxyService;
 
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -42,7 +37,7 @@ public class McNativeLauncher {
     public static void launchMcNative(){
         Logger logger = ProxyServer.getInstance().getLogger();
         if(McNative.isAvailable()) return;
-        logger.info("McNative is starting, please wait...");
+        logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
 
         ProxyServer proxy = ProxyServer.getInstance();
 
@@ -51,12 +46,14 @@ public class McNativeLauncher {
         McNative.setInstance(instance);
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(instance.getServers(),proxy.getConfigurationAdapter()));
-        logger.info("McNative has overwritten the configuration adapter.");
+        logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
 
         //Override plugin manager
-        PluginManager oldPluginManager = ReflectionUtil.getFieldValue(proxy,"pluginManager",PluginManager.class);
-        ReflectionUtil.changeFieldValue(proxy,"pluginManager",new McNativeBungeePluginManager(oldPluginManager,instance.getEventManager(),playerManager));
-        logger.info("McNative initialised plugin manager.");
+        PluginManager originalPluginManager = ReflectionUtil.getFieldValue(proxy,"pluginManager",PluginManager.class);
+        McNativeBungeePluginManager pluginManager = new McNativeBungeePluginManager(originalPluginManager,instance.getEventBus());
+        ReflectionUtil.changeFieldValue(proxy,"pluginManager",pluginManager);
+        new McNativeBridgeEventHandler(pluginManager,instance.getEventBus(),playerManager);
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
 
         //ProxyServer.getInstance().getPluginManager().registerListener(null,new PlayerListener(null));
 
@@ -64,7 +61,7 @@ public class McNativeLauncher {
 
         //initialise connection handlers
 
-        logger.info("McNative successfully started.");
+        logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
         new Thread(()->{
             try {
@@ -77,20 +74,11 @@ public class McNativeLauncher {
         }).start();
     }
 
-
     public static void test(){
         try{
-            System.out.println("Lobby -> "+ProxyService.getInstance().getServer("lobby").getAddress());
-            ProxyService.getInstance().getEventManager().subscribe(ObjectOwner.SYSTEM, MinecraftPlayerPendingLoginEvent.class, event -> {
-                System.out.println("Hallo "+event.getConnection().getName());
-                System.out.println("UID: "+event.getConnection().getUniqueId());
-                System.out.println(event.getConnection().isOnlineMode());
-                //event.setCancelReason(Text.newBuilder().color(TextColor.RED).text("Hey from McNative").build());
-
-                ProxyServer.getInstance().getScheduler().schedule(ProxyServer.getInstance().getPluginManager().getPlugin("McNative"),()->{
-                    ProxiedPlayer player = ProxyService.getInstance().getPlayerManager().getOnlinePlayer(event.getConnection().getUniqueId());
-
-                },3,TimeUnit.SECONDS);
+            ProxyService.getInstance().getEventBus().subscribe(ObjectOwner.SYSTEM, MinecraftPlayerLoginEvent.class, event -> {
+                System.out.println("Hallo "+event.getPlayer().getName());
+                System.out.println("UID: "+event.getPlayer().getUniqueId());
             });
         }catch (Exception exception){
             exception.printStackTrace();
@@ -99,7 +87,6 @@ public class McNativeLauncher {
 
     /*
     Plugin integration
-    Event integration
     Command integration
     Messaging integration
     Handler integrations (Permission / Punishment / Whitelist / Connect / Reconnect)

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 26.08.19, 19:25
+ * @since 17.11.19, 13:07
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +17,27 @@
  * under the License.
  */
 
-package org.mcnative.wrapper.guest;
+package org.mcnative.bungeecord.internal.event.player;
 
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.loader.PluginLoader;
+import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-public class GuestPluginExecutor {
+public class BungeeMinecraftPostLoginEvent implements MinecraftPlayerPostLoginEvent {
 
-    private final PluginLoader loader;
+    private final OnlineMinecraftPlayer player;
 
-    public GuestPluginExecutor(Plugin instance) {
-        this.loader = new GuestPluginLoader(instance);
+    public BungeeMinecraftPostLoginEvent(OnlineMinecraftPlayer player) {
+        this.player = player;
     }
 
-    public PluginLoader getLoader() {
-        return loader;
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player;
     }
 
-    public void loadGuestPlugin(){
-        loader.construct();
-        loader.initialize();
-        loader.load();
+    @Override
+    public MinecraftPlayer getPlayer() {
+        return player;
     }
-
-    public void enableGuestPlugin(){
-        loader.bootstrap();
-    }
-
-    public void disableGuestPlugin(){
-        loader.disable();
-    }
-
 }

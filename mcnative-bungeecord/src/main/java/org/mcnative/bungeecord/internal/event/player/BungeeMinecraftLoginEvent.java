@@ -53,6 +53,7 @@ public class BungeeMinecraftLoginEvent implements MinecraftPlayerLoginEvent {
 
     @Override
     public PendingConnection getConnection() {
+        //@Todo implement connection
         return null;
     }
 

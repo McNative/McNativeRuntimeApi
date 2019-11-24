@@ -24,7 +24,6 @@ import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxiedPlayer;

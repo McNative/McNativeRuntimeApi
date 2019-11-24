@@ -27,7 +27,6 @@ import org.mcnative.proxy.server.MinecraftServer;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
