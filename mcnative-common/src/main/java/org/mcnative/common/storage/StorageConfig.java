@@ -30,10 +30,7 @@ import net.prematic.libraries.utility.Iterators;
 import org.mcnative.common.McNative;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class StorageConfig extends WrappedDocument {
@@ -48,13 +45,10 @@ public class StorageConfig extends WrappedDocument {
         load();
     }
 
-    public Collection<Entry> getEntries() {
-        return entries;
-    }
-
     public Entry getPluginStorageConfig(String pluginName) {
-        Supplier<Entry> supplier = () -> Iterators.findOne(getEntries(), entry -> entry.plugins.containsKey(GLOBAL));
-        return Iterators.findOneOrWhenNull(this.entries, entry -> entry.plugins.containsKey(pluginName), supplier);
+        //Supplier<Entry> supplier = () -> Iterators.findOne(getEntries(), entry -> entry.plugins.containsKey(GLOBAL));
+        //return Iterators.findOneOrWhenNull(this.entries, entry -> entry.plugins.containsKey(pluginName), supplier);
+        return null;
     }
 
     public void createDefault() {
@@ -71,6 +65,10 @@ public class StorageConfig extends WrappedDocument {
         Document databases = Document.newDocument();
         databases.add("Example", Document.newDocument().add("driver", "mySqlExample").add("database", "Example"));
         add("databases", databases);
+        /*
+        drivers:
+            mysql1:
+         */
     }
 
     private void load() {

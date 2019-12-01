@@ -152,6 +152,6 @@ public interface Inventory extends Iterable<ItemStack> {
 
 
     static Inventory newInventory(){
-        return MinecraftService.getInstance().getObjectCreator().newInventory();
+        return null;
     }
 }

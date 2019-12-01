@@ -26,8 +26,8 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.permission.PlayerDesign;
-import org.mcnative.common.player.permission.PlayerPermissionHandler;
+import org.mcnative.common.player.PlayerDesign;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.netty.MinecraftProtocolEncoder;
@@ -62,7 +62,7 @@ public class BungeePendingConnection implements PendingConnection {
 
     private ConnectionState state;
     private MinecraftProtocolVersion version;
-    private PlayerPermissionHandler permissionHandler;
+    private PermissionHandler permissionHandler;
 
     public BungeePendingConnection(net.md_5.bungee.api.connection.PendingConnection original) {
         this.original = original;
@@ -172,7 +172,7 @@ public class BungeePendingConnection implements PendingConnection {
     }
 
     @Override
-    public PlayerPermissionHandler getPermissionHandler() {
+    public PermissionHandler getPermissionHandler() {
         if(permissionHandler == null) permissionHandler = McNative.getInstance().getPermissionHandler().getPlayerHandler(this);
         return permissionHandler;
     }

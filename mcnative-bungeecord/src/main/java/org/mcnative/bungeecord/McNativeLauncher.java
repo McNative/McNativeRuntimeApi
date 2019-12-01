@@ -20,73 +20,76 @@
 package org.mcnative.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.internal.event.player.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
+import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
-import org.mcnative.proxy.ProxyService;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
 
     public static void launchMcNative(){
+        launchMcNativeInternal();
+        setupDummyPlugin();
+    }
+
+    public static void launchMcNativeInternal(){
         Logger logger = ProxyServer.getInstance().getLogger();
         if(McNative.isAvailable()) return;
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
 
         ProxyServer proxy = ProxyServer.getInstance();
 
+        BungeeCordPluginManager pluginManager = new BungeeCordPluginManager();
         BungeeCordPlayerManager playerManager = new BungeeCordPlayerManager();
-        BungeeCordService instance = new BungeeCordService(playerManager);
+        BungeeCordService instance = new BungeeCordService(pluginManager,playerManager);
+
         McNative.setInstance(instance);
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(instance.getServers(),proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
 
         //Override plugin manager
-        PluginManager originalPluginManager = ReflectionUtil.getFieldValue(proxy,"pluginManager",PluginManager.class);
-        McNativeBungeePluginManager pluginManager = new McNativeBungeePluginManager(originalPluginManager,instance.getEventBus());
-        ReflectionUtil.changeFieldValue(proxy,"pluginManager",pluginManager);
-        new McNativeBridgeEventHandler(pluginManager,instance.getEventBus(),playerManager);
+        PluginManager originalPluginManager = proxy.getPluginManager();//ReflectionUtil.getFieldValue(proxy,"pluginManager",PluginManager.class);
+        pluginManager.inject(originalPluginManager);
+        McNativeBungeePluginManager newPluginManager = new McNativeBungeePluginManager(originalPluginManager,instance.getEventBus());
+        ReflectionUtil.changeFieldValue(proxy,"pluginManager",newPluginManager);
+        new McNativeBridgeEventHandler(newPluginManager,instance.getEventBus(),playerManager);
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
 
-        //ProxyServer.getInstance().getPluginManager().registerListener(null,new PlayerListener(null));
-
-        //override registry
+        //Override command manager
 
         //initialise connection handlers
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
-        new Thread(()->{
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            test();
-        }).start();
     }
 
-    public static void test(){
-        try{
-            ProxyService.getInstance().getEventBus().subscribe(ObjectOwner.SYSTEM, MinecraftPlayerLoginEvent.class, event -> {
-                System.out.println("Hallo "+event.getPlayer().getName());
-                System.out.println("UID: "+event.getPlayer().getUniqueId());
-            });
-        }catch (Exception exception){
-            exception.printStackTrace();
-        }
+    @SuppressWarnings("unchecked")
+    private static void setupDummyPlugin(){
+        PluginDescription description = new PluginDescription();
+        description.setName("McNative");
+        description.setVersion("1.0.0");//@Todo update
+        description.setAuthor("Pretronic and McNative contributors");
+        description.setMain("reflected");
+
+        Plugin plugin = new Plugin();
+
+        ReflectionUtil.invokeMethod(plugin,"init",new Class[]{ProxyServer.class,PluginDescription.class}
+                ,new Object[]{ProxyServer.getInstance(),description});
+        Map<String, Plugin> plugins = ReflectionUtil.getFieldValue(PluginManager.class,ProxyServer.getInstance().getPluginManager(),"plugins", Map.class);
+        plugins.put(description.getName(),plugin);
     }
+
 
     /*
-    Plugin integration
     Command integration
     Messaging integration
     Handler integrations (Permission / Punishment / Whitelist / Connect / Reconnect)

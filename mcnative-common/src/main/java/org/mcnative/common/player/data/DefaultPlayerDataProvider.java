@@ -32,11 +32,11 @@ import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
 
-public class DefaultPlayerDataStorageHandler implements PlayerDataStorageHandler {
+public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
     final DatabaseCollection playerDataStorage;
 
-    public DefaultPlayerDataStorageHandler() {
+    public DefaultPlayerDataProvider() {
         this.playerDataStorage = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
                 .createCollection("PlayerData")
                 .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)

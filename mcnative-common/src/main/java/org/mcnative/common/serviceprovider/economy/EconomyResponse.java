@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:44
+ * @since 19.10.19, 20:19
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,36 @@
  * under the License.
  */
 
-package org.mcnative.common.plugin;
+package org.mcnative.common.serviceprovider.economy;
 
-import net.prematic.libraries.plugin.Plugin;
-import org.mcnative.common.plugin.configuration.Configuration;
-import org.mcnative.common.McNative;
+public class EconomyResponse {
 
-import java.io.File;
+    private final boolean success;
+    private final String message;
 
-public class MinecraftPlugin extends Plugin<McNative<?>> {
+    private final double amount;
+    private final double newBalance;
 
-    public File getDataFolder(){
-        return getRuntime().getConfigurationProvider().getPluginDataFolder(this);
+    public EconomyResponse(boolean success, String message, double amount, double newBalance) {
+        this.success = success;
+        this.message = message;
+        this.amount = amount;
+        this.newBalance = newBalance;
     }
 
-    public Configuration getConfiguration(){
-        return getConfiguration("config");
+    public boolean isSuccess() {
+        return success;
     }
 
-    public Configuration getConfiguration(String name){
-        return getRuntime().getConfigurationProvider().getConfiguration(this,name);
+    public String getMessage() {
+        return message;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public double getNewBalance() {
+        return newBalance;
     }
 }

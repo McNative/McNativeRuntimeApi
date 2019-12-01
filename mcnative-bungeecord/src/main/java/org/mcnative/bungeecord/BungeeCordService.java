@@ -28,8 +28,6 @@ import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.RuntimeEnvironment;
-import net.prematic.libraries.plugin.manager.DefaultPluginManager;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.Iterators;
@@ -37,13 +35,14 @@ import org.mcnative.bungeecord.server.BungeeMinecraftServer;
 import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
-import org.mcnative.common.hook.placeholder.PlaceHolderManager;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
+import org.mcnative.common.serviceprovider.placeholder.PlaceHolderManager;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.WhitelistHandler;
-import org.mcnative.common.player.data.PlayerDataStorageHandler;
-import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
+import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
+import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
@@ -81,22 +80,18 @@ public class BungeeCordService implements ProxyService {
 
     private ReceiverChannel serverChannel;
 
-    private PermissionHandler permissionHandler;
-    private PunishmentHandler punishmentHandler;
-    private WhitelistHandler whitelistHandler;
-
     private ConnectHandler connectHandler;
     private FallbackHandler fallbackHandler;
 
     private ServerPingResponse serverPingResponse;
     private Tablist tablist;
 
-    public BungeeCordService(PlayerManager<ProxiedPlayer> manager) {
+    public BungeeCordService(PluginManager pluginManager,PlayerManager<ProxiedPlayer> manager) {
         this.platform = new BungeeCordPlatform();
         this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
 
         this.scheduler = new SimpleTaskScheduler();
-        this.pluginManager = new DefaultPluginManager(logger,new RuntimeEnvironment<>("McNative",this));//@Todo update (dummy manager)
+        this.pluginManager = pluginManager;
         this.commandManager = null;
         this.eventBus = new DefaultEventBus();
 
@@ -158,33 +153,13 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public StorageManager getStorageManager() {
+    public PlayerDataProvider getPlayerDataProvider() {
         return null;
     }
 
     @Override
-    public PlaceHolderManager getPlaceHolderManager() {
+    public ConfigurationProvider getConfigurationProvider() {
         return null;
-    }
-
-    @Override
-    public PermissionHandler getPermissionHandler() {
-        return permissionHandler;
-    }
-
-    @Override
-    public void setPermissionHandler(PermissionHandler handler) {
-        permissionHandler = handler;
-    }
-
-    @Override
-    public PunishmentHandler getPunishmentHandler() {
-        return punishmentHandler;
-    }
-
-    @Override
-    public void setPunishmentHandler(PunishmentHandler handler) {
-        punishmentHandler = handler;
     }
 
     @Override
@@ -207,34 +182,10 @@ public class BungeeCordService implements ProxyService {
         this.fallbackHandler = handler;
     }
 
-    @Override
-    public WhitelistHandler getWhitelistHandler() {
-        return this.whitelistHandler;
-    }
-
-    @Override
-    public void setWhitelistHandler(WhitelistHandler handler) {
-        this.whitelistHandler = handler;
-    }
-
-    @Override
-    public PlayerDataStorageHandler getPlayerDataStorageHandler() {
-        return null;
-    }
-
-    @Override
-    public void setPlayerDataStorageHandler(PlayerDataStorageHandler handler) {
-
-    }
 
     @Override
     public GameProfileLoader getGameProfileLoader() {
         return null;
-    }
-
-    @Override
-    public void setGameProfileLoader(GameProfileLoader loader) {
-
     }
 
     @Override

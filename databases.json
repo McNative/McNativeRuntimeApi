@@ -1,0 +1,30 @@
+{
+  "drivers": [
+    {
+      "name": "My-Driver-MYSQL",
+      "type": "MYSQL",
+      "driverClass": "XY",
+      "connection": ""
+    },
+    {
+      "name": "My-Driver-JSON",
+      "type": "Document",
+      "format": "JSON",
+      "location": "data/mydataFolder"
+    }
+  ],
+  "databases": [
+    {
+      "plugin": "McNative",
+      "name": "player",
+      "database": "McNative",
+      "driver": "My-Driver-MYSQL"
+    },
+    {
+      "plugin": "DKPerms",
+      "name": "default",
+      "database": "DKPerms",
+      "driver": "My-Driver-MYSQL"
+    }
+  ]
+}

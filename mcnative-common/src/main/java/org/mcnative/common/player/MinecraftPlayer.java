@@ -22,9 +22,8 @@ package org.mcnative.common.player;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.ServerPingResponse;
-import org.mcnative.common.player.permission.Permissable;
-import org.mcnative.common.player.permission.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.serviceprovider.permission.Permissable;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

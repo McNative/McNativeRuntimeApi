@@ -25,8 +25,8 @@ import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.permission.PlayerDesign;
-import org.mcnative.common.player.permission.PlayerPermissionHandler;
+import org.mcnative.common.player.PlayerDesign;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.service.entity.living.player.OfflinePlayer;
 import org.mcnative.service.inventory.Inventory;
@@ -250,7 +250,7 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     }
 
     @Override
-    public PlayerPermissionHandler getPermissionHandler() {
+    public PermissionHandler getPermissionHandler() {
         return this.offlinePlayer.getPermissionHandler();
     }
 }

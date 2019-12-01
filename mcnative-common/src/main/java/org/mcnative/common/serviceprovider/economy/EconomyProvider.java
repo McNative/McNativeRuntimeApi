@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package org.mcnative.common.hook.economy;
+package org.mcnative.common.serviceprovider.economy;
 
 import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
 
-public interface Economy {
+public interface EconomyProvider {
 
     String getName();
 

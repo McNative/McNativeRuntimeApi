@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.hook.placeholder;
+package org.mcnative.common.serviceprovider.placeholder;
 
 public class PlaceHolderManager  {
 

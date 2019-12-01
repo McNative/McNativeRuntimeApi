@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 12.10.19, 20:03
+ * @since 01.12.19, 18:20
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,25 @@
  * under the License.
  */
 
-package org.mcnative.common.player.permission;
+package org.mcnative.common.plugin.configuration;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.plugin.Plugin;
+import org.mcnative.common.text.components.ChatComponent;
 
-import java.util.Collection;
+import java.io.File;
 
-public interface PermissionHandler {
+public interface Configuration extends Document {
 
-    Collection<MinecraftPlayer> getOperators();
+    String getName();
 
-    Collection<String> getGroups();
+    Plugin<?> getPlugin();
 
-    PlayerPermissionHandler getPlayerHandler(MinecraftPlayer player);
+    ChatComponent<?> getText(String key);
 
-    PlayerPermissionHandler getPlayerHandler(PendingConnection connection);
+    boolean isFirstCreation();
+
+    boolean save();
+
+    void load(Class<?> configurationClass);
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 19.10.19, 20:29
+ * @since 01.12.19, 19:50
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,38 @@
  * under the License.
  */
 
-package org.mcnative.common.hook.placeholder;
+package org.mcnative.common.serviceprovider.permission;
 
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.text.components.TextComponent;
+import org.mcnative.common.player.PlayerDesign;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
 
-public interface PlaceholderProvider {
+public interface PermissionHandler {
 
-    String getName();
+    Collection<String> getPermissionGroups();
 
-    Collection<String> getIdentifiers();
+    Collection<String> getPermissions();
 
-    void registerPlaceHolders(String identifier, PlaceholderHook hook);
+    Collection<String> getAllPermissions();
 
-    void unregisterPlaceHolders(String identifier);
+    PlayerDesign getDesign();
 
-    boolean hasIdentifier(String identifier);
+    PlayerDesign getDesign(MinecraftPlayer forPlayer);
 
-    String translate(MinecraftPlayer player, String identifier, String parameter);
+    boolean isPermissionSet(String permission);
 
-    String replacePlaceholders(MinecraftPlayer player, String rawString);
+    boolean hasPermission(String permission);
 
-    void replacePlaceholder(MinecraftPlayer player, TextComponent rawComponent);
+    void addPermission(String permission);
+
+    void removePermission(String permission);
+
+    boolean isOperator();
+
+    void setOperator(boolean operator);
+
+    void setPlayerDesignGetter(BiFunction<MinecraftPlayer,PlayerDesign,PlayerDesign> designGetter);
+
 }

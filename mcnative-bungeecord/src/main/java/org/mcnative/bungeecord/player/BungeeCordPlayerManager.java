@@ -59,7 +59,7 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
     }
 
     @Override
-    public <T extends MinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass) {
+    public <T extends OnlineMinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass) {
         Collection<T> translatedPlayers = new ArrayList<>(onlineMinecraftPlayers.size());
         onlineMinecraftPlayers.forEach(player -> translate(playerClass,player));
         return translatedPlayers;

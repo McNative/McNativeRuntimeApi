@@ -20,14 +20,14 @@
 package org.mcnative.common.event.permission;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 public interface PermissionHandlerChangeEvent extends MinecraftOnlinePlayerEvent {
 
-    PermissionHandler getOldHandler();
+    PermissionProvider getOldHandler();
 
-    PermissionHandler getNewHandler();
+    PermissionProvider getNewHandler();
 
-    void setNewHandler(PermissionHandler handler);
+    void setNewHandler(PermissionProvider handler);
 
 }

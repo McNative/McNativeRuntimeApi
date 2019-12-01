@@ -35,13 +35,13 @@ import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ServerPingResponse;
 import org.mcnative.common.messaging.PluginMessageListener;
-import org.mcnative.common.player.DefaultWhitelistHandler;
+import org.mcnative.common.serviceprovider.whitelist.DefaultWhitelistProvider;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.WhitelistHandler;
-import org.mcnative.common.player.data.DefaultPlayerDataStorageHandler;
-import org.mcnative.common.player.data.PlayerDataStorageHandler;
-import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
+import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
+import org.mcnative.common.player.data.DefaultPlayerDataProvider;
+import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
@@ -77,10 +77,10 @@ public class BukkitMinecraftService implements MinecraftService {
     private final PlayerManager playerManager;
     private final StorageManager storageManager;
 
-    private PermissionHandler permissionHandler;
-    private PunishmentHandler punishmentHandler;
-    private WhitelistHandler whitelistHandler;
-    private PlayerDataStorageHandler playerDataStorageHandler;
+    private PermissionProvider permissionHandler;
+    private PunishmentProvider punishmentHandler;
+    private WhitelistProvider whitelistHandler;
+    private PlayerDataProvider playerDataStorageHandler;
 
     private GameProfileLoader gameProfileLoader;
     private ReceiverChannel serverChat;
@@ -103,8 +103,8 @@ public class BukkitMinecraftService implements MinecraftService {
 
         this.permissionHandler = null;
         this.punishmentHandler = null;
-        this.whitelistHandler = new DefaultWhitelistHandler();
-        this.playerDataStorageHandler = new DefaultPlayerDataStorageHandler();
+        this.whitelistHandler = new DefaultWhitelistProvider();
+        this.playerDataStorageHandler = new DefaultPlayerDataProvider();
 
         this.gameProfileLoader = null;
         this.serverChat = null;
@@ -209,42 +209,42 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public PermissionHandler getPermissionHandler() {
+    public PermissionProvider getPermissionHandler() {
         return this.permissionHandler;
     }
 
     @Override
-    public void setPermissionHandler(PermissionHandler handler) {
+    public void setPermissionHandler(PermissionProvider handler) {
         this.permissionHandler = handler;
     }
 
     @Override
-    public PunishmentHandler getPunishmentHandler() {
+    public PunishmentProvider getPunishmentHandler() {
         return this.punishmentHandler;
     }
 
     @Override
-    public void setPunishmentHandler(PunishmentHandler handler) {
+    public void setPunishmentHandler(PunishmentProvider handler) {
         this.punishmentHandler = handler;
     }
 
     @Override
-    public WhitelistHandler getWhitelistHandler() {
+    public WhitelistProvider getWhitelistHandler() {
         return this.whitelistHandler;
     }
 
     @Override
-    public void setWhitelistHandler(WhitelistHandler handler) {
+    public void setWhitelistHandler(WhitelistProvider handler) {
         this.whitelistHandler = handler;
     }
 
     @Override
-    public PlayerDataStorageHandler getPlayerDataStorageHandler() {
+    public PlayerDataProvider getPlayerDataStorageHandler() {
         return this.playerDataStorageHandler;
     }
 
     @Override
-    public void setPlayerDataStorageHandler(PlayerDataStorageHandler handler) {
+    public void setPlayerDataStorageHandler(PlayerDataProvider handler) {
         this.playerDataStorageHandler = handler;
     }
 

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 16:57
+ * @since 25.08.19, 16:37
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,20 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.player.data;
 
-import java.util.Collection;
+import org.mcnative.common.player.profile.GameProfile;
 
-public interface WhitelistHandler {
+import java.util.UUID;
 
-    boolean isEnabled();
+public interface PlayerDataProvider {
 
-    void setEnabled(boolean enabled);
+    MinecraftPlayerData getPlayerData(String name);
 
-    Collection<MinecraftPlayer> getPlayers();
+    MinecraftPlayerData getPlayerData(UUID uniqueId);
 
-    boolean isWhitelisted(MinecraftPlayer player);
+    MinecraftPlayerData getPlayerData(long xBoxId);
 
-    void set(MinecraftPlayer player, boolean whitelisted);
+    MinecraftPlayerData createPlayerData(String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile);
 
-    void add(MinecraftPlayer player);
-
-    void remove(MinecraftPlayer player);
 }

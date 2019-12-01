@@ -27,6 +27,7 @@ import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.player.BungeePendingConnection;
 import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
+import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;

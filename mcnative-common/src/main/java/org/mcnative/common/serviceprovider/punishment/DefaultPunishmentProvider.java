@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 16.10.19, 20:42
+ * @author Davide Wietlisbach
+ * @since 01.12.19, 19:41
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.serviceprovider.punishment;
 
 import net.prematic.databasequery.api.DatabaseCollection;
 import net.prematic.databasequery.api.ForeignKey;
@@ -28,12 +28,13 @@ import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import net.prematic.libraries.caching.ArrayCache;
 import net.prematic.libraries.caching.Cache;
 import org.mcnative.common.McNative;
+import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-public class DefaultPunishmentHandler implements PunishmentHandler {
+public class DefaultPunishmentProvider implements PunishmentProvider {
 
     private static int TYPE_BAN = 1;
     private static int TYPE_MUTE = 2;
@@ -41,7 +42,7 @@ public class DefaultPunishmentHandler implements PunishmentHandler {
     private final DatabaseCollection punishmentStorage;
     private final Cache<PunishEntry> punishEntryCache;
 
-    public DefaultPunishmentHandler() {
+    public DefaultPunishmentProvider() {
         this.punishmentStorage = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
                 .createCollection("Punishment")
                 .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)

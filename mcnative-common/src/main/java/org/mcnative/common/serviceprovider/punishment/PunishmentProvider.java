@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 21:10
+ * @since 01.12.19, 19:41
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.serviceprovider.punishment;
+
+import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-public interface PunishmentHandler {
+public interface PunishmentProvider {
 
     Collection<MinecraftPlayer> getBanList();
 

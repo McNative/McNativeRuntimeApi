@@ -62,6 +62,7 @@ public class GuestPluginExecutor {
     }
 
     public void loadGuestPlugin(){
+        McNative.getInstance().getPluginManager().provideLoader(loader);
         loader.construct();
         loader.initialize();
         loader.load();

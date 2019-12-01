@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.player;
 
-import org.mcnative.common.player.permission.PlayerDesign;
+import org.mcnative.common.player.PlayerDesign;
 
 public interface MinecraftPlayerDesignUpdateEvent extends MinecraftPlayerEvent {
 

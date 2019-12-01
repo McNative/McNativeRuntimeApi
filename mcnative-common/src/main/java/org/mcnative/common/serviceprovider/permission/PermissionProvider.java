@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 14.08.19, 19:45
+ * @since 01.12.19, 19:51
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,20 @@
  * under the License.
  */
 
-package org.mcnative.common;
+package org.mcnative.common.serviceprovider.permission;
 
-import net.prematic.libraries.document.Document;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.player.MinecraftPlayer;
 
-import java.io.File;
+import java.util.Collection;
 
-public interface Configuration extends Document {
+public interface PermissionProvider {
 
-    File getFile();
+    Collection<MinecraftPlayer> getOperators();
 
-    ChatComponent getText(String key);
+    Collection<String> getGroups();
 
-    boolean save();
+    PermissionHandler getPlayerHandler(MinecraftPlayer player);
 
-
-
-    static void load(Class<?> configurationClass){
-        Document.loadConfigurationClass(configurationClass);
-    }
-
-    static Configuration newConfiguration(File location){
-        return null;
-    }
+    PermissionHandler getPlayerHandler(PendingConnection connection);
 }

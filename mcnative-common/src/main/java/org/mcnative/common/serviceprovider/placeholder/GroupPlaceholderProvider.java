@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 19.10.19, 21:34
+ * @since 01.12.19, 19:57
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,58 +17,57 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.hook.placeholder;
+package org.mcnative.common.serviceprovider.placeholder;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.OfflinePlayer;
-import org.mcnative.common.serviceprovider.placeholder.PlaceholderHook;
-import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.TextComponent;
 
 import java.util.Collection;
 
-public class PlaceHolderApiProvider implements PlaceholderProvider {
+//@Todo implement for multiple placeholders
+public class GroupPlaceholderProvider implements PlaceholderProvider{
+
+    private final String NAME = "McNative Placeholder Bridge";
+
+
+    public Collection<PlaceholderProvider> getProviders(){
+        return null;
+    }
 
     @Override
     public String getName() {
-        return "PlaceholderApi";
+        return NAME;
     }
 
     @Override
     public Collection<String> getIdentifiers() {
-        return PlaceholderAPI.getRegisteredIdentifiers();
+        return null;
     }
 
     @Override
     public void registerPlaceHolders(String identifier, PlaceholderHook hook) {
-        PlaceholderAPI.registerPlaceholderHook(identifier, new me.clip.placeholderapi.PlaceholderHook() {
-            @Override
-            public String onRequest(OfflinePlayer p, String params) {
-                Object result =  hook.onRequest(null,params);//@Todo map player
-                return result instanceof String ? (String) result : result.toString();
-            }
-        });
+
     }
 
     @Override
     public void unregisterPlaceHolders(String identifier) {
-        PlaceholderAPI.unregisterPlaceholderHook(identifier);
+
     }
 
     @Override
     public boolean hasIdentifier(String identifier) {
-        return PlaceholderAPI.isRegistered(identifier);
+        for (PlaceholderProvider provider : getProviders()) if(provider.hasIdentifier(identifier)) return true;
+        return false;
     }
 
     @Override
     public String translate(MinecraftPlayer player, String identifier, String parameter) {
-        return PlaceholderAPI.getPlaceholders().get(identifier).onRequest(null,parameter);//@Todo map player
+        return null;
     }
 
     @Override
     public String replacePlaceholders(MinecraftPlayer player, String rawString) {
-        return PlaceholderAPI.setPlaceholders(null,rawString);//@Todo map player
+        return null;
     }
 
     @Override

@@ -27,21 +27,18 @@ import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.hook.placeholder.PlaceHolderManager;
+import org.mcnative.common.serviceprovider.placeholder.PlaceHolderManager;
 import org.mcnative.common.messaging.PluginMessageListener;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.PunishmentHandler;
-import org.mcnative.common.player.WhitelistHandler;
-import org.mcnative.common.player.data.PlayerDataStorageHandler;
-import org.mcnative.common.player.permission.PermissionHandler;
+import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
-import org.mcnative.common.storage.StorageManager;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
@@ -72,30 +69,13 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
     PlayerManager<P> getPlayerManager();
 
-    StorageManager getStorageManager();
 
-    PlaceHolderManager getPlaceHolderManager();
+    PlayerDataProvider getPlayerDataProvider();
 
-    PermissionHandler getPermissionHandler();
-
-    void setPermissionHandler(PermissionHandler handler);
-
-
-    PunishmentHandler getPunishmentHandler();
-
-    void setPunishmentHandler(PunishmentHandler handler);
-
-    WhitelistHandler getWhitelistHandler();
-
-    void setWhitelistHandler(WhitelistHandler handler);
-
-    PlayerDataStorageHandler getPlayerDataStorageHandler();
-
-    void setPlayerDataStorageHandler(PlayerDataStorageHandler handler);
+    ConfigurationProvider getConfigurationProvider();
 
     GameProfileLoader getGameProfileLoader();
 
-    void setGameProfileLoader(GameProfileLoader loader);
 
 
     ReceiverChannel getServerChat();
@@ -109,28 +89,28 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
 
 
-    default void broadcast(MessageComponent component){
+    default void broadcast(MessageComponent<?> component){
         broadcast(component,VariableSet.newEmptySet());
     }
 
-    void broadcast(MessageComponent component, VariableSet variables);
+    void broadcast(MessageComponent<?> component, VariableSet variables);
 
-    default void broadcast(String permission,MessageComponent component){
+    default void broadcast(String permission,MessageComponent<?> component){
         broadcast(permission, component,VariableSet.newEmptySet());
     }
 
-    void broadcast(String permission,MessageComponent component, VariableSet variables);
+    void broadcast(String permission,MessageComponent<?> component, VariableSet variables);
 
 
     Collection<String> getOpenChannels();
 
-    void registerChannel(String name, Plugin owner, PluginMessageListener listener);
+    void registerChannel(String name, Plugin<?> owner, PluginMessageListener listener);
 
     void unregisterChannel(String name);
 
     void unregisterChannel(PluginMessageListener listener);
 
-    void unregisterChannels(Plugin owner);
+    void unregisterChannels(Plugin<?> owner);
 
 
     void broadcastPacket(MinecraftPacket packet);

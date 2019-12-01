@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
-    private transient final DefaultPlayerDataStorageHandler playerDataHandler;
+    private transient final DefaultPlayerDataProvider provider;
     private final int id;
     private final String name;
     private final UUID uniqueId;
@@ -35,8 +35,8 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     private final GameProfile gameProfile;
     private final Document properties;
 
-    public DefaultMinecraftPlayerData(DefaultPlayerDataStorageHandler playerDataHandler, int id, String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile, Document properties) {
-        this.playerDataHandler = playerDataHandler;
+    public DefaultMinecraftPlayerData(DefaultPlayerDataProvider provider, int id, String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile, Document properties) {
+        this.provider = provider;
         this.id = id;
         this.name = name;
         this.uniqueId = uniqueId;
@@ -89,7 +89,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateLastPlayed(long timeStamp) {
-        this.playerDataHandler.playerDataStorage.update()
+        this.provider.playerDataStorage.update()
                 .set("lastPlayed", timeStamp)
                 .where("id", this.id)
                 .execute();
@@ -97,7 +97,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateName(String name) {
-        this.playerDataHandler.playerDataStorage.update()
+        this.provider.playerDataStorage.update()
                 .set("name", name)
                 .where("id", this.id)
                 .execute();
@@ -105,7 +105,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateGameProfile(GameProfile profile) {
-        this.playerDataHandler.playerDataStorage.update()
+        this.provider.playerDataStorage.update()
                 .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile), false))
                 .where("id", this.id)
                 .execute();
@@ -113,7 +113,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateProperties() {
-        this.playerDataHandler.playerDataStorage.update()
+        this.provider.playerDataStorage.update()
                 .set("properties", DocumentFileType.JSON.getWriter().write(this.properties))
                 .where("id", this.id)
                 .execute();

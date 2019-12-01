@@ -19,7 +19,7 @@
 
 package org.mcnative.common.connection;
 
-import org.mcnative.common.player.permission.Permissable;
+import org.mcnative.common.serviceprovider.permission.Permissable;
 
 import java.util.UUID;
 

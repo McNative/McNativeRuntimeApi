@@ -21,13 +21,13 @@ package org.mcnative.common.event.permission;
 
 import net.prematic.libraries.command.sender.CommandSender;
 import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.player.permission.PlayerPermissionHandler;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 
 public interface PermissionCheckEvent extends MinecraftEvent {
 
     CommandSender getSender();
 
-    PlayerPermissionHandler getHandler();
+    PermissionHandler getHandler();
 
     String getPermission();
 

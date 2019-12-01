@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 19.10.19, 20:19
+ * @since 01.12.19, 15:26
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,26 @@
  * under the License.
  */
 
-package org.mcnative.common.hook.economy;
+package org.mcnative.bungeecord.plugin.command;
 
-public class EconomyResponse {
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
 
-    private final boolean success;
-    private final String message;
+public class McNativeCommand extends Command {
 
-    private final double amount;
-    private final double newBalance;
+    private final net.prematic.libraries.command.command.Command original;
 
-    public EconomyResponse(boolean success, String message, double amount, double newBalance) {
-        this.success = success;
-        this.message = message;
-        this.amount = amount;
-        this.newBalance = newBalance;
+    public McNativeCommand(net.prematic.libraries.command.command.Command original) {
+        super(original.getName(),original.getPermission(),original.getAliases().toArray(new String[]{}));
+        this.original = original;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public net.prematic.libraries.command.command.Command getOriginal() {
+        return original;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getNewBalance() {
-        return newBalance;
+    @Override
+    public void execute(CommandSender sender, String[] strings) {
+        original.execute(null,null,strings);
     }
 }

@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 17.10.19, 23:30
+ * @author Davide Wietlisbach
+ * @since 01.12.19, 19:41
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.serviceprovider.whitelist;
 
 import net.prematic.databasequery.api.DatabaseCollection;
 import net.prematic.databasequery.api.datatype.DataType;
@@ -25,17 +25,18 @@ import net.prematic.databasequery.api.query.option.CreateOption;
 import net.prematic.databasequery.api.query.result.QueryResult;
 import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import org.mcnative.common.McNative;
+import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefaultWhitelistHandler implements WhitelistHandler {
+public class DefaultWhitelistProvider implements WhitelistProvider {
 
     private final DatabaseCollection whitelistSettings, whitelistedPlayers;
     private final Collection<MinecraftPlayer> whitelistedPlayersCache;
     private boolean enabled;
 
-    public DefaultWhitelistHandler() {
+    public DefaultWhitelistProvider() {
         this.whitelistSettings = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
                 .createCollection("WhitelistSettings")
                 .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)

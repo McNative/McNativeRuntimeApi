@@ -17,12 +17,28 @@
  * under the License.
  */
 
-package org.mcnative.common.hook.placeholder;
+package org.mcnative.common.serviceprovider.placeholder;
 
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.text.components.TextComponent;
 
-public interface PlaceholderHook {
+import java.util.Collection;
 
-    Object onRequest(MinecraftPlayer player, String parameter);
+public interface PlaceholderProvider {
 
+    String getName();
+
+    Collection<String> getIdentifiers();
+
+    void registerPlaceHolders(String identifier, PlaceholderHook hook);
+
+    void unregisterPlaceHolders(String identifier);
+
+    boolean hasIdentifier(String identifier);
+
+    String translate(MinecraftPlayer player, String identifier, String parameter);
+
+    String replacePlaceholders(MinecraftPlayer player, String rawString);
+
+    void replacePlaceholder(MinecraftPlayer player, TextComponent rawComponent);
 }

@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 16:51
+ * @since 01.12.19, 18:22
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,30 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.plugin.configuration;
 
-public interface PlayerFactory {
+import net.prematic.libraries.plugin.Plugin;
+
+import java.io.File;
+
+public interface ConfigurationProvider {
+
+    File getPluginDataFolder(Plugin<?> plugin);
+
+    Configuration getConfiguration(Plugin<?> plugin, String name);
 
 
+    /*
+
+    ? -> Optional
+
+    getDatabase(plugin,name?);
+
+    getDatabaseDriver(plugin,name?):
+
+    setDatabase(plugin,name?,);
+
+
+     */
 
 }
