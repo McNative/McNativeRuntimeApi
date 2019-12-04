@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:51
+ * @since 01.12.19, 18:52
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,25 @@
  * under the License.
  */
 
-package org.mcnative.common.serviceprovider.permission;
+package org.mcnative.common.plugin.setup;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.text.components.ChatComponent;
 
-import java.util.Collection;
+public interface SetupAssistance {
 
-public interface PermissionProvider {
+    void setPermission(String permission);
 
-    Collection<MinecraftPlayer> getOperators();
+    void setAskOnJoin(boolean enabled);
 
-    Collection<String> getGroups();
+    void setAskInConsole(boolean enabled);
 
-    PermissionHandler getPlayerHandler(MinecraftPlayer player);
+    void setWelcomeMessage(ChatComponent<?> message);
 
-    PermissionHandler getPlayerHandler(PendingConnection connection);
+    void join(OnlineMinecraftPlayer player);
 
-    PermissionGroup createGroup(String name);
+    void stop();
 
-    boolean deleteGroup(String name);
+    void reset();
+
 }

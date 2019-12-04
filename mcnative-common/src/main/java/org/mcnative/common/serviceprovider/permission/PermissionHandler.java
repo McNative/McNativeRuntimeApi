@@ -27,27 +27,39 @@ import java.util.function.BiFunction;
 
 public interface PermissionHandler {
 
-    Collection<String> getPermissionGroups();
+    Collection<PermissionGroup> getGroups();
 
     Collection<String> getPermissions();
 
     Collection<String> getAllPermissions();
 
+
     PlayerDesign getDesign();
 
     PlayerDesign getDesign(MinecraftPlayer forPlayer);
 
+
     boolean isPermissionSet(String permission);
+
+    boolean isPermissionAssigned(String permission);
 
     boolean hasPermission(String permission);
 
-    void addPermission(String permission);
 
-    void removePermission(String permission);
+    void setPermission(String permission, boolean allowed);
+
+    void unsetPermission(String permission);
+
+
+    void addGroup(String name);
+
+    void removeGroup(String name);
+
 
     boolean isOperator();
 
     void setOperator(boolean operator);
+
 
     void setPlayerDesignGetter(BiFunction<MinecraftPlayer,PlayerDesign,PlayerDesign> designGetter);
 

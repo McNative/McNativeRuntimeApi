@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:51
+ * @since 02.12.19, 20:12
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,10 @@
 
 package org.mcnative.common.serviceprovider.permission;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+import net.prematic.libraries.utility.interfaces.Castable;
 
-import java.util.Collection;
+public interface PermissionGroup extends PermissionHandler, Castable<Object> {
 
-public interface PermissionProvider {
+    String getName();
 
-    Collection<MinecraftPlayer> getOperators();
-
-    Collection<String> getGroups();
-
-    PermissionHandler getPlayerHandler(MinecraftPlayer player);
-
-    PermissionHandler getPlayerHandler(PendingConnection connection);
-
-    PermissionGroup createGroup(String name);
-
-    boolean deleteGroup(String name);
 }

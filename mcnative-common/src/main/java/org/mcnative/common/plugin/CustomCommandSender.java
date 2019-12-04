@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:51
+ * @since 02.12.19, 20:31
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.common.serviceprovider.permission;
+package org.mcnative.common.plugin;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+import net.prematic.libraries.command.sender.CommandSender;
 
-import java.util.Collection;
+public interface CustomCommandSender extends CommandSender {
 
-public interface PermissionProvider {
+    Object getOriginal();
 
-    Collection<MinecraftPlayer> getOperators();
+    Class<?> getOriginalClass();
 
-    Collection<String> getGroups();
+    boolean instanceOf(Class<?> originalClass);
 
-    PermissionHandler getPlayerHandler(MinecraftPlayer player);
+    <T> T to(Class<T> originalClass);
 
-    PermissionHandler getPlayerHandler(PendingConnection connection);
-
-    PermissionGroup createGroup(String name);
-
-    boolean deleteGroup(String name);
 }

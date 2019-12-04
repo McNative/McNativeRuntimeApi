@@ -37,11 +37,11 @@ public class DefaultWhitelistProvider implements WhitelistProvider {
     private boolean enabled;
 
     public DefaultWhitelistProvider() {
-        this.whitelistSettings = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+        this.whitelistSettings = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
                 .createCollection("WhitelistSettings")
                 .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)
                 .create();
-        this.whitelistedPlayers = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+        this.whitelistedPlayers = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
                 .createCollection("WhitelistedPlayers")
                 .attribute("playerId", DataType.INTEGER, CreateOption.NOT_NULL)
                 .create();

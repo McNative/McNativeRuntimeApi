@@ -20,6 +20,7 @@
 package org.mcnative.common;
 
 import net.prematic.libraries.command.manager.CommandManager;
+import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.logging.PrematicLogger;
@@ -59,9 +60,11 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
 
     TaskScheduler getScheduler();
 
-    CommandManager getCommandManager();
-
     EventBus getEventBus();
+
+    CommandSender getConsoleSender();
+
+    CommandManager getCommandManager();
 
     PluginManager getPluginManager();
 
@@ -75,7 +78,6 @@ public interface McNative<P extends OnlineMinecraftPlayer> extends ObjectOwner {
     ConfigurationProvider getConfigurationProvider();
 
     GameProfileLoader getGameProfileLoader();
-
 
 
     ReceiverChannel getServerChat();

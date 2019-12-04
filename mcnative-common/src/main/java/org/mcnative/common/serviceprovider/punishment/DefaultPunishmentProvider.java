@@ -43,7 +43,7 @@ public class DefaultPunishmentProvider implements PunishmentProvider {
     private final Cache<PunishEntry> punishEntryCache;
 
     public DefaultPunishmentProvider() {
-        this.punishmentStorage = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+        this.punishmentStorage = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
                 .createCollection("Punishment")
                 .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)
                 .attribute("playerId", DataType.INTEGER, -1, null, new ForeignKey(McNative.getInstance().getName(), "PlayerData", "id", ForeignKey.Option.CASCADE, null), CreateOption.UNIQUE, CreateOption.INDEX)

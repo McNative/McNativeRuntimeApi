@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 18:22
+ * @since 04.12.19, 19:35
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,33 +21,30 @@ package org.mcnative.common.plugin.configuration;
 
 import net.prematic.databasequery.api.Database;
 import net.prematic.databasequery.api.DatabaseDriver;
-import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 import java.io.File;
 
-public interface ConfigurationProvider {
+//@Todo implement database stuff
+public class DefaultConfigurationProvider implements ConfigurationProvider {
 
-    File getPluginDataFolder(ObjectOwner owner);
-
-    Configuration getConfiguration(ObjectOwner owner, String name);
-
-
-    default Database getDatabase(ObjectOwner owner){
-        return getDatabase(owner,"default");
+    @Override
+    public File getPluginDataFolder(ObjectOwner owner) {
+        return null;
     }
 
-    Database getDatabase(ObjectOwner owner,String name);
-
-
-    default DatabaseDriver getDatabaseDriver(ObjectOwner owner){
-        return getDatabaseDriver(owner,"default");
+    @Override
+    public Configuration getConfiguration(ObjectOwner owner, String name) {
+        return null;
     }
 
-    DatabaseDriver getDatabaseDriver(ObjectOwner owner,String name);
+    @Override
+    public Database getDatabase(ObjectOwner owner, String name) {
+        return null;
+    }
 
-
-    //@Todo setDatabase
-
-
+    @Override
+    public DatabaseDriver getDatabaseDriver(ObjectOwner owner, String name) {
+        return null;
+    }
 }

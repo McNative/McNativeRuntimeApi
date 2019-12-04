@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:51
+ * @since 02.12.19, 20:57
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.common.serviceprovider.permission;
+package org.mcnative.common.plugin;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+import net.prematic.libraries.plugin.RuntimeEnvironment;
+import net.prematic.libraries.plugin.description.PluginDescription;
+import net.prematic.libraries.plugin.lifecycle.LifecycleState;
+import net.prematic.libraries.plugin.loader.PluginLoader;
+import org.mcnative.common.McNative;
 
-import java.util.Collection;
+public class MinecraftLifecycleState extends LifecycleState<McNative<?>> {
 
-public interface PermissionProvider {
+    public MinecraftLifecycleState(PluginDescription description, PluginLoader loader, RuntimeEnvironment<McNative<?>> environment) {
+        super(description, loader, environment);
+    }
 
-    Collection<MinecraftPlayer> getOperators();
-
-    Collection<String> getGroups();
-
-    PermissionHandler getPlayerHandler(MinecraftPlayer player);
-
-    PermissionHandler getPlayerHandler(PendingConnection connection);
-
-    PermissionGroup createGroup(String name);
-
-    boolean deleteGroup(String name);
 }

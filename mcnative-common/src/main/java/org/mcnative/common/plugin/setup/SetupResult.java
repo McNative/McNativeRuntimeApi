@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:51
+ * @since 01.12.19, 18:58
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,11 @@
  * under the License.
  */
 
-package org.mcnative.common.serviceprovider.permission;
+package org.mcnative.common.plugin.setup;
 
-import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
+public class SetupResult {
 
-import java.util.Collection;
+    private boolean success;
+    private String message;
 
-public interface PermissionProvider {
-
-    Collection<MinecraftPlayer> getOperators();
-
-    Collection<String> getGroups();
-
-    PermissionHandler getPlayerHandler(MinecraftPlayer player);
-
-    PermissionHandler getPlayerHandler(PendingConnection connection);
-
-    PermissionGroup createGroup(String name);
-
-    boolean deleteGroup(String name);
 }
