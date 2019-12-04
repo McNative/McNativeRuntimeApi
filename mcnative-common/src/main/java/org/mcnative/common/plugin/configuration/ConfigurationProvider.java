@@ -21,7 +21,6 @@ package org.mcnative.common.plugin.configuration;
 
 import net.prematic.databasequery.api.Database;
 import net.prematic.databasequery.api.DatabaseDriver;
-import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 import java.io.File;
@@ -39,15 +38,5 @@ public interface ConfigurationProvider {
 
     Database getDatabase(ObjectOwner owner,String name);
 
-
-    default DatabaseDriver getDatabaseDriver(ObjectOwner owner){
-        return getDatabaseDriver(owner,"default");
-    }
-
-    DatabaseDriver getDatabaseDriver(ObjectOwner owner,String name);
-
-
-    //@Todo setDatabase
-
-
+    DatabaseDriver getDatabaseDriver(String name);
 }

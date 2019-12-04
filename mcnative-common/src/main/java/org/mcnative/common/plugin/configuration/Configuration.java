@@ -23,8 +23,6 @@ import net.prematic.libraries.document.Document;
 import net.prematic.libraries.plugin.Plugin;
 import org.mcnative.common.text.components.ChatComponent;
 
-import java.io.File;
-
 public interface Configuration extends Document {
 
     String getName();

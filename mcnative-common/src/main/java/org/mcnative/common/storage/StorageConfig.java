@@ -19,113 +19,139 @@
 
 package org.mcnative.common.storage;
 
+import net.prematic.databasequery.api.DatabaseDriver;
 import net.prematic.databasequery.api.config.DatabaseDriverConfig;
 import net.prematic.databasequery.sql.SqlDatabaseDriverConfig;
-import net.prematic.databasequery.sql.h2.H2PortableDatabaseDriver;
-import net.prematic.databasequery.sql.mysql.MySqlDatabaseDriver;
 import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.DocumentEntry;
-import net.prematic.libraries.document.WrappedDocument;
 import net.prematic.libraries.utility.Iterators;
-import org.mcnative.common.McNative;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class StorageConfig extends WrappedDocument {
+public class StorageConfig {
 
-    private static final String GLOBAL = "global";
+    private final Collection<DatabaseDriverEntry> databaseDriverEntries;
+    private final Collection<DatabaseEntry> databaseEntries;
 
-    private final Collection<Entry> entries;
-
-    public StorageConfig(Document original) {
-        super(original);
-        this.entries = new ArrayList<>();
-        load();
+    public StorageConfig() {
+        this.databaseDriverEntries = new ArrayList<>();
+        this.databaseEntries = new ArrayList<>();
     }
 
-    public Entry getPluginStorageConfig(String pluginName) {
-        //Supplier<Entry> supplier = () -> Iterators.findOne(getEntries(), entry -> entry.plugins.containsKey(GLOBAL));
-        //return Iterators.findOneOrWhenNull(this.entries, entry -> entry.plugins.containsKey(pluginName), supplier);
-        return null;
+    public DatabaseDriverEntry getDriverEntry(String name) {
+        return Iterators.findOneOrWhenNull(this.databaseDriverEntries,
+                entry -> entry.name.equalsIgnoreCase(name),
+                () -> { throw new IllegalArgumentException("No database driver found.");});
     }
 
-    public void createDefault() {
-        Document driverConfigs = Document.newDocument();
-        driverConfigs.add("global", new SqlDatabaseDriverConfig(H2PortableDatabaseDriver.class).setHost("./data/"));
-        driverConfigs.add("mySqlExample", new SqlDatabaseDriverConfig(MySqlDatabaseDriver.class)
-                .setHost("127.0.0.1").setPort(3306)
-                .setUsername("root").setPassword("masked")
-                .setMultipleDatabaseConnectionsAble(true)
-                .getDataSourceConfig().setClassName("com.zaxxer.hikari.HikariDataSource")
-                .out());
-        add("drivers", driverConfigs);
-
-        Document databases = Document.newDocument();
-        databases.add("Example", Document.newDocument().add("driver", "mySqlExample").add("database", "Example"));
-        add("databases", databases);
-        /*
-        drivers:
-            mysql1:
-         */
+    public DatabaseEntry getDatabaseEntry(ObjectOwner plugin, String name) {
+        return Iterators.findOneOrWhenNull(this.databaseEntries,
+                entry -> entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase(name),
+                ()-> { throw new IllegalArgumentException("No database driver found.");});
     }
 
-    private void load() {
-        Document driverConfigs = getDocument("drivers");
-        for (DocumentEntry child : driverConfigs) {
-            Document driverConfigDocument = child.toDocument();
-            String driverName = driverConfigDocument.getString("driverName");
+    public Document createDefault() {
+        this.databaseDriverEntries.clear();
+        this.databaseEntries.clear();
+
+        this.databaseDriverEntries.add(new DatabaseDriverEntry("MySql",
+                new SqlDatabaseDriverConfig("net.prematic.databasequery.sql.mysql.MySqlDatabaseDriver")
+                        .setHost("127.0.0.1").setPort(3307).setUsername("McNative").setPassword("masked")));
+
+        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "MySql"));
+        return save();
+    }
+
+    public StorageConfig load(Document config) {
+        Collection<DatabaseDriverEntry> driverEntries = new ArrayList<>();
+        config.getDocument("drivers").forEach(entry -> {
+            String name = entry.getKey();
+            String driverName = entry.toDocument().getString("driverName");
             Class<? extends DatabaseDriverConfig> driverConfigClass = DatabaseDriverConfig.getDriverConfigNameByDriverName(driverName);
             try {
-                DatabaseDriverConfig driverConfig = driverConfigClass.getConstructor(Document.class).newInstance(driverConfigDocument);
-                entries.add(new Entry(child.getKey(), driverConfig));
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                McNative.getInstance().getLogger().error("Can't initialize config[{}] for driver[{}]", driverConfigClass, driverName);
+                DatabaseDriverConfig driverConfig = driverConfigClass.getConstructor(Document.class).newInstance(entry.toDocument());
+                driverEntries.add(new DatabaseDriverEntry(name, driverConfig));
+            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
+                throw new IllegalArgumentException("Can't load driver for driver with name: " + name + ".");
             }
-        }
-        for(DocumentEntry child : getDocument("databases")) {
-            Document pluginDriverSettings = child.toDocument();
-            String pluginName = child.getKey();
-            String driverAlias = pluginDriverSettings.getString("driver");
-            Entry entry = Iterators.findOne(this.entries, entry1 -> entry1.driverAlias.equalsIgnoreCase(driverAlias));
-            if(entry == null) {
-                McNative.getInstance().getLogger().error("Can't find driver[{}] for plugin {}. Please check, if you have configured a driver under {}.", driverAlias, pluginName, driverAlias);
-                continue;
-            }
-            String databaseName = pluginDriverSettings.getString("database");
-            entry.addPlugin(pluginName, databaseName == null ? pluginName : databaseName);
-        }
+        });
+        Collection<DatabaseEntry> databaseEntries = new ArrayList<>();
+        config.getDocument("databases").forEach(entry -> databaseEntries.add(entry.toDocument().getAsObject(DatabaseEntry.class)));
+        this.databaseDriverEntries.addAll(driverEntries);
+        this.databaseEntries.addAll(databaseEntries);
+        return this;
     }
 
-    static class Entry {
+    public Document save() {
+        Document config = Document.newDocument();
+        config.add("drivers", this.databaseDriverEntries);
+        config.add("databases", this.databaseEntries);
+        return config;
+    }
 
-        private final String driverAlias;
-        private final DatabaseDriverConfig driverConfig;
-        //PluginName, DatabaseName
-        private final Map<String, String> plugins;
+    public StorageConfig addDatabaseDriver(String name, DatabaseDriverConfig driverConfig) {
+        this.databaseDriverEntries.add(new DatabaseDriverEntry(name, driverConfig));
+        return this;
+    }
 
-        public Entry(String driverAlias, DatabaseDriverConfig driverConfig) {
-            this.driverAlias = driverAlias;
+    public StorageConfig addDatabase(ObjectOwner plugin, String name, String database, Class<? extends DatabaseDriver> driverClass) {
+        return addDatabase(plugin, name, database, driverClass.getName());
+    }
+
+    public StorageConfig addDatabase(ObjectOwner plugin, String name, String database, String driverName) {
+        this.databaseEntries.add(new DatabaseEntry(plugin.getName(), name, database, driverName));
+        return this;
+    }
+
+    public static class DatabaseDriverEntry {
+
+        final String name;
+        final DatabaseDriverConfig driverConfig;
+
+        DatabaseDriverEntry(String name, DatabaseDriverConfig driverConfig) {
+            this.name = name;
             this.driverConfig = driverConfig;
-            this.plugins = new HashMap<>();
         }
 
-        public String getDriverAlias() {
-            return driverAlias;
+        public String getName() {
+            return name;
         }
 
         public DatabaseDriverConfig getDriverConfig() {
             return driverConfig;
         }
+    }
 
-        public Map<String, String> getPlugins() {
-            return plugins;
+    public static class DatabaseEntry {
+
+        final String pluginName;
+        final String name;
+        final String database;
+        final String driverName;
+
+        DatabaseEntry(String pluginName, String name, String database, String driverName) {
+            this.pluginName = pluginName;
+            this.name = name;
+            this.database = database;
+            this.driverName = driverName;
         }
 
-        public Entry addPlugin(String pluginName, String databaseName) {
-            this.plugins.put(pluginName, databaseName);
-            return this;
+        public String getPluginName() {
+            return pluginName;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDatabase() {
+            return database;
+        }
+
+        public String getDriverName() {
+            return driverName;
         }
     }
 }
