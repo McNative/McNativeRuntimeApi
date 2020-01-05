@@ -19,94 +19,68 @@
 
 package org.mcnative.bungeecord.player;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OfflineMinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PlayerManager;
+import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.MinecraftPlayerData;
-import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.common.player.data.PlayerDataProvider;
 
 import java.util.*;
 import java.util.function.Function;
 
-public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
+public class BungeeCordPlayerManager implements PlayerManager {
 
     private final Map<Class<?>,Function<MinecraftPlayer,MinecraftPlayer>> adapters;
-    private final Collection<ProxiedPlayer> onlineMinecraftPlayers;
+    private final Collection<ConnectedMinecraftPlayer> onlineMinecraftPlayers;
 
     public BungeeCordPlayerManager() {
         this.adapters = new LinkedHashMap<>();
         this.onlineMinecraftPlayers = new ArrayList<>();
     }
 
-    @Override
-    public int getOnlineCount() {
-        return ProxyServer.getInstance().getOnlineCount();
-    }
-
-    @Override
-    public Collection<ProxiedPlayer> getOnlinePlayers() {
+    public Collection<ConnectedMinecraftPlayer> getConnectedPlayers() {
         return onlineMinecraftPlayers;
     }
 
-    @Override
-    public ProxiedPlayer getOnlinePlayer(int id) {
-        return null;
+    public ConnectedMinecraftPlayer getConnectedPlayer(UUID uniqueId) {
+        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
     }
 
-    @Override
-    public <T extends OnlineMinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass) {
-        Collection<T> translatedPlayers = new ArrayList<>(onlineMinecraftPlayers.size());
-        onlineMinecraftPlayers.forEach(player -> translate(playerClass,player));
-        return translatedPlayers;
+    public ConnectedMinecraftPlayer getConnectedPlayer(long xBoxId) {
+        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getXBoxId() == xBoxId);
     }
 
-    @Override
-    public MinecraftPlayer getPlayer(int id) {
-        return null;
+    public ConnectedMinecraftPlayer getConnectedPlayer(String name) {
+        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getName().equalsIgnoreCase(name));
     }
 
     @Override
     public MinecraftPlayer getPlayer(UUID uniqueId) {
-        ProxiedPlayer online = getOnlinePlayer(uniqueId);
+        ConnectedMinecraftPlayer online = getConnectedPlayer(uniqueId);
         if(online != null) return online;
-        MinecraftPlayerData data = McNative.getInstance().getPlayerDataStorageHandler().getPlayerData(uniqueId);
+        MinecraftPlayerData data = getDataProvider().getPlayerData(uniqueId);
         return data!=null?new OfflineMinecraftPlayer(data):null;
     }
 
     @Override
     public MinecraftPlayer getPlayer(long xBoxId) {
-        ProxiedPlayer online = getOnlinePlayer(xBoxId);
+        ConnectedMinecraftPlayer online = getConnectedPlayer(xBoxId);
         if(online != null) return online;
-        MinecraftPlayerData data = McNative.getInstance().getPlayerDataStorageHandler().getPlayerData(xBoxId);
+        MinecraftPlayerData data = getDataProvider().getPlayerData(xBoxId);
         return data!=null?new OfflineMinecraftPlayer(data):null;
     }
 
     @Override
     public MinecraftPlayer getPlayer(String name) {
-        ProxiedPlayer online = getOnlinePlayer(name);
+        ConnectedMinecraftPlayer online = getConnectedPlayer(name);
         if(online != null) return online;
-        MinecraftPlayerData data = McNative.getInstance().getPlayerDataStorageHandler().getPlayerData(name);
+        MinecraftPlayerData data = getDataProvider().getPlayerData(name);
         return data!=null?new OfflineMinecraftPlayer(data):null;
     }
 
-    @Override
-    public ProxiedPlayer getOnlinePlayer(UUID uniqueId) {
-        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
-    }
-
-    @Override
-    public ProxiedPlayer getOnlinePlayer(long xBoxId) {
-        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getXBoxId() == xBoxId);
-    }
-
-    @Override
-    public ProxiedPlayer getOnlinePlayer(String name) {
-        return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getName().equalsIgnoreCase(name));
+    private PlayerDataProvider getDataProvider(){
+        return McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -124,7 +98,14 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
     }
 
     @Internal
-    public void registerPlayer(ProxiedPlayer player){
+    public ConnectedMinecraftPlayer getMappedPlayer(net.md_5.bungee.api.connection.ProxiedPlayer player0){
+        ConnectedMinecraftPlayer result = Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId() == player0.getUniqueId());
+        if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
+        return result;
+    }
+
+    @Internal
+    public void registerPlayer(ConnectedMinecraftPlayer player){
         this.onlineMinecraftPlayers.add(player);
     }
 
@@ -132,4 +113,5 @@ public class BungeeCordPlayerManager implements PlayerManager<ProxiedPlayer> {
     public OnlineMinecraftPlayer unregisterPlayer(UUID uniqueId){
         return Iterators.removeOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
     }
+
 }

@@ -23,18 +23,6 @@ import org.mcnative.common.player.PlayerDesign;
 
 public interface MinecraftPlayerDesignUpdateEvent extends MinecraftPlayerEvent {
 
-
     PlayerDesign getDesign();
-
-    /*
-    PreLoginEvent
-    LoginEvent
-    PostLoginEvent
-    PlayerJoinServerEvent - OnlyProxy
-    JoinEvent - OnlyService
-
-
-
-     */
 
 }

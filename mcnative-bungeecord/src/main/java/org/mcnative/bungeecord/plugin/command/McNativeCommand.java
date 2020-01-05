@@ -20,7 +20,14 @@
 package org.mcnative.bungeecord.plugin.command;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Command;
+import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
+import org.mcnative.common.McNative;
+import org.mcnative.common.plugin.CustomCommandSender;
 
 public class McNativeCommand extends Command {
 
@@ -37,6 +44,76 @@ public class McNativeCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        original.execute(null,null,strings);
+        net.prematic.libraries.command.sender.CommandSender mapped;
+        if(sender.equals(ProxyServer.getInstance().getConsole())){
+            mapped = McNative.getInstance().getConsoleSender();
+        }else if(sender instanceof ProxiedPlayer) {
+            mapped = ((BungeeCordPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((ProxiedPlayer) sender);
+        }else{
+            mapped = new MappedCommandSender(sender);
+        }
+        original.execute(mapped,null,strings);
+    }
+
+    public final static class MappedCommandSender implements CustomCommandSender {
+
+        private final CommandSender original;
+
+        public MappedCommandSender(CommandSender original) {
+            this.original = original;
+        }
+
+        @Override
+        public Object getOriginal() {
+            return original;
+        }
+
+        @Override
+        public Class<?> getOriginalClass() {
+            return original.getClass();
+        }
+
+        @Override
+        public boolean instanceOf(Class<?> originalClass) {
+            return original.getClass().isAssignableFrom(originalClass);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> T to(Class<T> originalClass) {
+            return (T) original;
+        }
+
+        @Override
+        public String getName() {
+            return original.getName();
+        }
+
+        @Override
+        public boolean hasPermission(String permission) {
+            return original.hasPermission(permission);
+        }
+
+        @Override
+        public void sendMessage(String message) {
+            original.sendMessage(message);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj == this
+                    || (obj instanceof CustomCommandSender && original.equals(((CustomCommandSender) obj).getOriginal()))
+                    ||  original.equals(obj);
+        }
+
+        @Override
+        public String toString() {
+            return original.toString();
+        }
     }
 }

@@ -19,38 +19,38 @@
 
 package org.mcnative.common.protocol.packet;
 
-import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.connection.ConnectionState;
-import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
+import org.mcnative.common.protocol.packet.type.MinecraftClientSettingsPacket;
+import org.mcnative.common.protocol.packet.type.MinecraftResourcePackSendPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
+
+import java.util.List;
 
 public interface PacketManager {
 
     PacketIdentifier getPacketIdentifier(Class<?> packetClass);
 
+    PacketIdentifier getPacketIdentifier(ConnectionState state,PacketDirection direction,MinecraftProtocolVersion version,int packetId);
+
     void registerPacket(PacketIdentifier packet);
 
-    default void registerIncomingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener){
-        registerPacketListener(PacketDirection.INCOMING,packetClass,listener);
-    }
+    void unregisterPacket(PacketIdentifier identifier);
 
-    default void registerOutgoingPacketListener(Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener){
-        registerPacketListener(PacketDirection.OUTGOING,packetClass,listener);
-    }
 
-    void registerPacketListener(PacketDirection direction, Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener);
+    List<MinecraftPacketListener> getPacketListeners(Endpoint endpoint, PacketDirection direction,Class<?> packetClass);
 
-    void unregisterPacketListener(PacketDirection direction, MinecraftPacketListener listener);
+    void registerPacketListener(Endpoint endpoint, PacketDirection direction,Class<?> packetClass, MinecraftPacketListener listener);
 
-    @Nullable(message="Null when packet not should be handled")
-    MinecraftPacket createIncomingPacket(ConnectionState state, MinecraftProtocolVersion version,int packetId);
+    void unregisterPacketListener(MinecraftPacketListener listener);
 
-    MinecraftPacket handlePacket(PacketDirection direction,MinecraftProtocolVersion version, MinecraftConnection connection,MinecraftPacket packet);
 
     static void registerDefaultPackets(PacketManager packetManager){
         packetManager.registerPacket(MinecraftChatPacket.IDENTIFIER);
         packetManager.registerPacket(MinecraftTitlePacket.IDENTIFIER);
+        packetManager.registerPacket(MinecraftResourcePackSendPacket.IDENTIFIER);
+        packetManager.registerPacket(MinecraftClientSettingsPacket.IDENTIFIER);
     }
 }

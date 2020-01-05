@@ -20,30 +20,34 @@
 package org.mcnative.common.player;
 
 import net.prematic.libraries.command.sender.CommandSender;
-import org.mcnative.common.connection.MinecraftConnection;
-import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.component.server.ServerConnectReason;
+import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.player.receiver.ReceiverChannel;
-import org.mcnative.common.player.scoreboard.BelowNameInfo;
-import org.mcnative.common.player.scoreboard.Tablist;
-import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
+import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
+import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
-public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnection, CommandSender {
+public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
+
+    InetSocketAddress getVirtualHost();
+
+    InetSocketAddress getAddress();
 
     DeviceInfo getDevice();
-
-    String getClientName();
 
     boolean isOnlineMode();
 
@@ -52,20 +56,25 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
     int getPing();
 
 
-    //Scoreboard
+    ProxyServer getProxy();
 
-    Sidebar getSidebar();
+    MinecraftServer getServer();
 
-    void setSidebar(Sidebar sidebar);
+    default void connect(MinecraftServer target){
+        connect(target, ServerConnectReason.API);
+    }
 
-    Tablist getTablist();
+    void connect(MinecraftServer target, ServerConnectReason reason);
 
-    void setTablist(Tablist tablist);
+    default CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target){
+        return connectAsync(target, ServerConnectReason.API);
+    }
 
-    BelowNameInfo getBelowNameInfo();
+    CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason);
 
-    void setBelowNameInfo(BelowNameInfo info);
+    ChatChannel getChatChannel();
 
+    void setChatChannel(ChatChannel channel);
 
     default void kick(){
         kick("Kicked by an operator.");
@@ -75,84 +84,75 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
         kick(Text.of(reason));
     }
 
-    default void kick(MessageComponent message){
+    default void kick(MessageComponent<?> message){
         kick(message,VariableSet.newEmptySet());
     }
 
-    default void kick(MessageComponent message,VariableSet variables){
-        disconnect(message, variables);
-    }
+    void kick(MessageComponent<?> message,VariableSet variables);
+
 
     void performCommand(String command);
 
     void chat(String message);
 
 
-    Collection<ReceiverChannel> getChatChannels();
 
-    void addChatChannel(ReceiverChannel channel);
-
-    void removeChatChannel(ReceiverChannel channel);
-
-
-    default void sendMessage(String message){
-        sendMessage(Text.of(message));
-    }
-
-    default void sendMessage(MessageComponent component){
+    default void sendMessage(MessageComponent<?> component){
         sendMessage(component,VariableSet.newEmptySet());
     }
 
-    void sendMessage(MessageComponent component, VariableSet variables);
-
-    default void sendSystemMessage(String message){
-        sendSystemMessage(Text.of(message));
+    default void sendMessage(MessageComponent<?> component, VariableSet variables){
+        sendMessage(ChatPosition.PLAYER_CHAT,component,variables);
     }
 
-    default void sendSystemMessage(MessageComponent component){
+    default void sendSystemMessage(MessageComponent<?> component){
         sendSystemMessage(component,VariableSet.newEmptySet());
     }
 
-    void sendSystemMessage(MessageComponent component, VariableSet variables);
+    default void sendSystemMessage(MessageComponent<?> component, VariableSet variables){
+        sendMessage(ChatPosition.SYSTEM_CHAT,component,variables);
+    }
+
+    default void sendMessage(ChatPosition position,MessageComponent<?> component){
+        sendMessage(position, component,VariableSet.newEmptySet());
+    }
+
+    void sendMessage(ChatPosition position,MessageComponent<?> component, VariableSet variables);
+
+
+    default void sendActionbar(MessageComponent<?> message){
+        sendActionbar(message,VariableSet.newEmptySet());
+    }
+
+    void sendActionbar(MessageComponent<?> message,VariableSet variables);
+
+    default void sendActionbar(MessageComponent<?> message,long stayTime){
+        sendActionbar(message,VariableSet.newEmptySet(), stayTime);
+    }
+
+    void sendActionbar(MessageComponent<?> message,VariableSet variables,long staySeconds);
+
+
 
     default void sendTitle(String title, String subTitle, int stayTime){
         sendTitle(Text.of(title),Text.of(subTitle),stayTime);
     }
 
-    default void sendTitle(MessageComponent title, MessageComponent subTitle, int stayTime){
+    default void sendTitle(MessageComponent<?> title, MessageComponent<?> subTitle, int stayTime){
         sendTitle(title, subTitle, stayTime,VariableSet.newEmptySet());
     }
 
-    default void sendTitle(MessageComponent title, MessageComponent subTitle, int stayTime,VariableSet variables){
+    default void sendTitle(MessageComponent<?> title, MessageComponent<?> subTitle, int stayTime,VariableSet variables){
         sendTitle(Title.newTitle().title(title).title(subTitle).stayTime(stayTime).variables(variables));
     }
-
 
     void sendTitle(Title title);
 
     void resetTitle();
 
 
-    default void sendActionbar(MessageComponent message){
-        sendActionbar(message,VariableSet.newEmptySet());
-    }
 
-    void sendActionbar(MessageComponent message,VariableSet variables);
-
-    default void sendActionbar(MessageComponent message,long stayTime){
-        sendActionbar(message,VariableSet.newEmptySet(), stayTime);
-    }
-
-    void sendActionbar(MessageComponent message,VariableSet variables,long staySeconds);
-
-
-
-
-    Collection<BossBar> getActiveBossBars();
-
-    void addBossBar(BossBar bossBar);
-
-    void removeBossBar(BossBar bossBar);
+    void sendPacket(MinecraftPacket packet);
 
 
     void playNote(Instrument instrument, Note note);
@@ -162,11 +162,6 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, MinecraftConnect
     void stopSound(Sound sound);
 
     void stopSound(String sound, SoundCategory category);
-
-    void setResourcePack(String url);
-
-    void setResourcePack(String url, String hash);
-
 
 
     void check(Consumer<ProtocolCheck> checker);

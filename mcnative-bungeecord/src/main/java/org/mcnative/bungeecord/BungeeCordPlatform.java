@@ -28,6 +28,10 @@ import org.mcnative.common.protocol.support.ProtocolCheck;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+/*
+@Todo In platform
+    - Versions
+ */
 public class BungeeCordPlatform implements MinecraftPlatform {
 
     @Override
@@ -42,7 +46,7 @@ public class BungeeCordPlatform implements MinecraftPlatform {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return null;
+        return MinecraftProtocolVersion.JE_1_8;
     }
 
     @Override
@@ -53,6 +57,11 @@ public class BungeeCordPlatform implements MinecraftPlatform {
     @Override
     public boolean isProxy() {
         return true;
+    }
+
+    @Override
+    public boolean isService() {
+        return false;
     }
 
     @Override

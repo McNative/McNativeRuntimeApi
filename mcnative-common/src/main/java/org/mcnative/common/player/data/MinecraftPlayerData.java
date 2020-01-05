@@ -19,14 +19,13 @@
 
 package org.mcnative.common.player.data;
 
+import net.prematic.libraries.caching.CacheStateAble;
 import net.prematic.libraries.document.Document;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
 
-public interface MinecraftPlayerData {
-
-    int getId();
+public interface MinecraftPlayerData extends CacheStateAble<MinecraftPlayerData> {
 
     String getName();
 
@@ -42,11 +41,13 @@ public interface MinecraftPlayerData {
 
     Document getProperties();
 
-    void updateLastPlayed(long timeStamp);
 
     void updateName(String name);
 
     void updateGameProfile(GameProfile profile);
 
     void updateProperties();
+
+
+    void updateLoginInformation(String name,GameProfile profile, long timeStamp);
 }

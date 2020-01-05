@@ -22,13 +22,14 @@ package org.mcnative.common.event.player.login;
 import net.prematic.libraries.event.Cancellable;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.MinecraftEvent;
+import org.mcnative.common.network.event.NetworkEvent;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
 public interface MinecraftPlayerPendingLoginEvent extends MinecraftEvent, Cancellable {
 
-    MessageComponent getCancelReason();
+    MessageComponent<?> getCancelReason();
 
     VariableSet getCancelReasonVariables();
 
@@ -38,9 +39,9 @@ public interface MinecraftPlayerPendingLoginEvent extends MinecraftEvent, Cancel
         setCancelReason(Text.of(message));
     }
 
-    default void setCancelReason(MessageComponent cancelReason){
+    default void setCancelReason(MessageComponent<?> cancelReason){
         setCancelReason(cancelReason, VariableSet.newEmptySet());
     }
 
-    void setCancelReason(MessageComponent cancelReason, VariableSet variables);
+    void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables);
 }

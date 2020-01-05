@@ -38,7 +38,7 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
     private UUID barId;
     private Action action;
 
-    private MessageComponent title;
+    private MessageComponent<?> title;
     private VariableSet titleVariables;
     private float health;
     private BarColor color;
@@ -61,11 +61,11 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
         this.action = action;
     }
 
-    public MessageComponent getTitle() {
+    public MessageComponent<?> getTitle() {
         return title;
     }
 
-    public void setTitle(MessageComponent title) {
+    public void setTitle(MessageComponent<?> title) {
         this.title = title;
     }
 

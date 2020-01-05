@@ -40,4 +40,12 @@ public class HoverAction {
     public String getName() {
         return name;
     }
+
+    public static HoverAction of(String name){
+        if(name.equalsIgnoreCase(SHOW_TEXT.name)) return SHOW_TEXT;
+        else if(name.equalsIgnoreCase(SHOW_ITEM.name)) return SHOW_ITEM;
+        else if(name.equalsIgnoreCase(SHOW_ENTITY.name)) return SHOW_ENTITY;
+        else if(name.equalsIgnoreCase(SHOW_ACHIEVEMENT.name)) return SHOW_ACHIEVEMENT;
+        else throw new IllegalArgumentException("Action "+name+" not found");
+    }
 }

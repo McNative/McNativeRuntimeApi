@@ -39,19 +39,20 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_7,0x40)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x1A)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x1B)
-                    ,map(MinecraftProtocolVersion.JE_1_14,0x1A))
+                    ,map(MinecraftProtocolVersion.JE_1_14,0x1A)
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x1B))
             ,on(PacketDirection.OUTGOING, ConnectionState.LOGIN
                     ,map(MinecraftProtocolVersion.JE_1_7,0x00)));
 
 
-    private MessageComponent reason;
+    private MessageComponent<?> reason;
     private VariableSet variables;
 
-    public MessageComponent getReason() {
+    public MessageComponent<?> getReason() {
         return reason;
     }
 
-    public void setReason(MessageComponent reason) {
+    public void setReason(MessageComponent<?> reason) {
         this.reason = reason;
     }
 

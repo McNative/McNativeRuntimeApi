@@ -35,8 +35,8 @@ public class TextBuilder {
 
     private TextColor color;
     private Set<TextStyle> styling;
-    private MessageComponent currentComponent;
-    private MessageComponent mainComponent;
+    private MessageComponent<?> currentComponent;
+    private MessageComponent<?>  mainComponent;
 
     private TextBuilder parent;
 
@@ -44,7 +44,7 @@ public class TextBuilder {
         this(new MessageComponentSet(),null);
     }
 
-    public TextBuilder(MessageComponent mainComponent, TextBuilder parent) {
+    public TextBuilder(MessageComponent<?>  mainComponent, TextBuilder parent) {
         this.mainComponent = mainComponent;
         this.parent = parent;
     }
@@ -93,7 +93,6 @@ public class TextBuilder {
         return createComponent(new KeyComponent(key));
     }
 
-
     public TextBuilder onClick(Runnable runnable){
         return onClick(ClickAction.EXECUTE,runnable);
     }
@@ -115,16 +114,16 @@ public class TextBuilder {
     }
 
     public TextBuilder include(TextBuilder builder){
-        return include((ChatComponent) builder.build());
+        return include((ChatComponent<?>) builder.build());
     }
 
     public TextBuilder include(Consumer<TextBuilder> include){
         TextBuilder builder = new TextBuilder(null,null);
         include.accept(builder);
-        return include((ChatComponent) builder.build());
+        return include((ChatComponent<?>) builder.build());
     }
 
-    public TextBuilder include(ChatComponent component){
+    public TextBuilder include(ChatComponent<?> component){
         return createComponent(component);
     }
 
@@ -134,19 +133,19 @@ public class TextBuilder {
 
     public TextBuilder out(){
         if(parent == null) throw new IllegalArgumentException("No parent builder defined");
-        return parent.include((ChatComponent) build());
+        return parent.include((ChatComponent<?>) build());
     }
 
-    public MessageComponent build(){
+    public MessageComponent<?> build(){
         return mainComponent!=null?mainComponent:new TextComponent();
     }
 
-    private ChatComponent getCurrentAsChatComponent(){
-        if(currentComponent instanceof ChatComponent) return (ChatComponent) currentComponent;
+    private ChatComponent<?> getCurrentAsChatComponent(){
+        if(currentComponent instanceof ChatComponent) return (ChatComponent<?>) currentComponent;
         else throw new IllegalArgumentException("Component is not a chat component");
     }
 
-    private TextBuilder createComponent(ChatComponent component){
+    private TextBuilder createComponent(ChatComponent<?> component){
         if(this.currentComponent != null) this.mainComponent.addExtra(component);
         else this.mainComponent = component;
         this.currentComponent = component;
@@ -160,26 +159,4 @@ public class TextBuilder {
         }
         return this;
     }
-
-    //@Todo remove
-    public void example(){
-        new TextBuilder()
-                .color(TextColor.BLUE)
-                .text("Hallo du was geht?")
-                .onClick(ClickAction.OPEN_URL,"https://google.com");
-
-        new TextBuilder()
-                .include(include -> include.color(TextColor.DARK_AQUA).text("[")
-                        .color(TextColor.GREEN).styling(TextStyle.BOLD).text("Join")
-                        .color(TextColor.DARK_AQUA).text("]")
-                ).onClick(ClickAction.RUN_COMMAND,"/join game 1");
-
-        new TextBuilder()
-                .include()
-                    .color(TextColor.DARK_AQUA).text("[")
-                    .color(TextColor.GREEN).styling(TextStyle.BOLD).text("Join")
-                    .color(TextColor.DARK_AQUA).text("]")
-                .out().onClick(ClickAction.RUN_COMMAND,"/join game 1");
-    }
-
 }

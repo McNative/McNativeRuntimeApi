@@ -24,18 +24,6 @@ import org.mcnative.common.player.MinecraftPlayer;
 
 public interface MinecraftPlayerEvent extends MinecraftEvent {
 
-
     MinecraftPlayer getPlayer();
-
-    /*
-    PreLoginEvent
-    LoginEvent
-    PostLoginEvent
-    PlayerJoinServerEvent - OnlyProxy
-    JoinEvent - OnlyService
-
-
-
-     */
 
 }

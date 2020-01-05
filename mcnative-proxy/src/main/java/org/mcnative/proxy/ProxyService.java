@@ -19,45 +19,34 @@
 
 package org.mcnative.proxy;
 
+import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
-import org.mcnative.proxy.server.ConnectHandler;
-import org.mcnative.proxy.server.FallbackHandler;
-import org.mcnative.proxy.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ProxyServer;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.UUID;
 
-public interface ProxyService extends McNative<ProxiedPlayer> {
-
+public interface ProxyService extends LocalService, ProxyServer {
 
     Collection<MinecraftServer> getServers();
 
     MinecraftServer getServer(String name);
 
+    MinecraftServer getServer(UUID uniqueId);
+
     MinecraftServer getServer(InetSocketAddress address);
 
     MinecraftServer registerServer(String name, InetSocketAddress address);
 
-    MinecraftServer registerServer(MinecraftServer server);
 
+    ConnectionHandler getConnectionHandler();
 
-    void unregisterServer(String name);
+    void setConnectionHandler(ConnectionHandler handler);
 
-    void unregisterServer(InetSocketAddress address);
-
-    void unregisterServer(MinecraftServer server);
-
-
-    ConnectHandler getConnectHandler();
-
-    void setConnectHandler(ConnectHandler handler);
-
-
-    FallbackHandler getFallbackHandler();
-
-    void setFallbackHandler(FallbackHandler handler);
 
     static ProxyService getInstance(){
-        return (ProxyService) McNative.getInstance();
+        return (ProxyService) McNative.getInstance().getLocal();
     }
 }

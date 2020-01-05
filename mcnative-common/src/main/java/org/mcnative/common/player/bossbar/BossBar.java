@@ -25,7 +25,7 @@ import org.mcnative.common.text.variable.VariableSet;
 
 public class BossBar {
 
-    private MessageComponent title;
+    private MessageComponent<?> title;
     private VariableSet variables;
 
     private BarColor color;
@@ -37,12 +37,11 @@ public class BossBar {
 
     private ReceiverChannel receiver;
 
-
-    public MessageComponent getTitle() {
+    public MessageComponent<?> getTitle() {
         return title;
     }
 
-    public BossBar setTitle(MessageComponent title) {
+    public BossBar setTitle(MessageComponent<?> title) {
         this.title = title;
         return this;
     }

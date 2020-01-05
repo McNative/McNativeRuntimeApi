@@ -19,5 +19,50 @@
 
 package org.mcnative.bungeecord.internal.event.player;
 
-public class BungeePermissionCheckEvent{
+import net.prematic.libraries.command.sender.CommandSender;
+import org.mcnative.common.event.PermissionCheckEvent;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
+
+public class BungeePermissionCheckEvent implements PermissionCheckEvent {
+
+    private final net.md_5.bungee.api.event.PermissionCheckEvent original;
+    private final CommandSender sender;
+    private final PermissionHandler handler;
+
+    public BungeePermissionCheckEvent(net.md_5.bungee.api.event.PermissionCheckEvent original
+            , CommandSender sender, PermissionHandler handler) {
+        this.original = original;
+        this.sender = sender;
+        this.handler = handler;
+    }
+
+    @Override
+    public CommandSender getSender() {
+        return sender;
+    }
+
+    @Override
+    public PermissionHandler getHandler() {
+        return handler;
+    }
+
+    @Override
+    public boolean hasHandler() {
+        return handler != null;
+    }
+
+    @Override
+    public String getPermission() {
+        return original.getPermission();
+    }
+
+    @Override
+    public boolean hasPermission() {
+        return original.hasPermission();
+    }
+
+    @Override
+    public void setHasPermission(boolean hasPermission) {
+        original.setHasPermission(hasPermission);
+    }
 }

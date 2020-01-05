@@ -19,6 +19,7 @@
 
 package org.mcnative.common.text.components;
 
+import net.prematic.libraries.utility.interfaces.Castable;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
@@ -27,7 +28,7 @@ import org.mcnative.common.text.format.MessageFormatAble;
 
 import java.util.function.Consumer;
 
-public interface ChatComponent<T extends ChatComponent> extends MessageComponent<T>,MessageFormatAble<T> {
+public interface ChatComponent<T extends ChatComponent<?>> extends MessageComponent<T>,MessageFormatAble<T>, Castable<ChatComponent<?>> {
 
     TextEvent<ClickAction> getClickEvent();
 

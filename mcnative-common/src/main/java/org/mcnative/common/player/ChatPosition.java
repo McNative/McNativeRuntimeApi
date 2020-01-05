@@ -21,11 +21,22 @@ package org.mcnative.common.player;
 
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatPosition {
 
     public static final ChatPosition PLAYER_CHAT = new ChatPosition(ObjectOwner.SYSTEM,"PLAYER_CHAT", (byte) 0);
     public static final ChatPosition SYSTEM_CHAT = new ChatPosition(ObjectOwner.SYSTEM,"SYSTEM_INFO", (byte) 1);
     public static final ChatPosition ACTIONBAR = new ChatPosition(ObjectOwner.SYSTEM,"ACTIONBAR", (byte) 2);
+
+    private static final List<ChatPosition> POSITIONS = new ArrayList<>();
+
+    static {
+        POSITIONS.add(PLAYER_CHAT);
+        POSITIONS.add(SYSTEM_CHAT);
+        POSITIONS.add(ACTIONBAR);
+    }
 
     private final ObjectOwner owner;
     private final String name;
@@ -47,5 +58,16 @@ public class ChatPosition {
 
     public byte getId() {
         return id;
+    }
+
+    public static ChatPosition of(byte id){
+        for (ChatPosition position : POSITIONS) {
+            if(position.getId() == id) return position;
+        }
+        throw new IllegalArgumentException("Chat Position not found");
+    }
+
+    public static void registerChatPosition(ChatPosition position){
+        POSITIONS.add(PLAYER_CHAT);
     }
 }

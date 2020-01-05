@@ -20,6 +20,7 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 import org.mcnative.common.text.variable.VariableSet;
@@ -51,6 +52,10 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
         return with;
     }
 
+    public void setWith(MessageComponentSet with) {
+        this.with = with;
+    }
+
     public String getTranslation() {
         return translation;
     }
@@ -62,10 +67,23 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables) {
         builder.append("{translation=").append(translation).append("}");
+        super.toPlainText(builder, variables);
     }
 
     @Override
     public Document compile(String key, VariableSet variables) {
         return super.compile(key,variables).add("translate",translation).add("with",with.compile(variables));
+    }
+
+
+    @Override
+    public void decompile(Document data) {
+        translation = data.getString("translate");
+        Document with = data.getDocument("with");
+        if(with != null){
+            this.with = new MessageComponentSet();
+            this.with.decompile(with);
+        }
+        super.decompile(data);
     }
 }

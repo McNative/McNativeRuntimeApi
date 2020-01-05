@@ -19,15 +19,15 @@
 
 package org.mcnative.proxy;
 
-import net.prematic.libraries.document.annotationss.DocumentFile;
-import net.prematic.libraries.document.annotationss.DocumentKey;
-import org.mcnative.proxy.server.MinecraftServerType;
+import net.prematic.libraries.document.annotations.DocumentKey;
+import net.prematic.libraries.utility.GeneralUtil;
+import net.prematic.libraries.utility.StringUtil;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-@DocumentFile(source = "mcnative.",type = "YAML",loadAll = true,appendMissing = true)
 public class McNativeProxyConfiguration {
 
     public static boolean WHITELIST_ENABLED = false;
@@ -35,7 +35,7 @@ public class McNativeProxyConfiguration {
     public static String WHITELIST_PERMISSION = "mcnative.whitelist.join";
     public static Collection<String> WHITELIST_PLAYERS = Arrays.asList("Dkrieger","cb7f0812-1fbb-4715-976e-a81e52be4b67");
 
-    private static List<MinecraftServer> SERVERS;
+    private static List<ConfiguredServer> SERVERS;
 
     public static boolean GLOBAL_CHAT_ENABLED = false;
     public static String GLOBAL_CHAT_PERMISSION = "chat.use";
@@ -53,17 +53,29 @@ public class McNativeProxyConfiguration {
     public static String GLOBAL_TABLIST_FORMAT_PLAYER = "%prefix% %player% %suffix%";
     public static String GLOBAL_TABLIST_FORMAT_SERVER = "&8<- %server% &8->";
 
+    public static boolean NETWORK_MESSAGING_ENABLED = true;
+
+    @DocumentKey("messaging.directConnect.enabled")
+    public static boolean NETWORK_DIRECT_CONNECT_ENABLED = true;
+    @DocumentKey("messaging.directConnect.password")
+    public static String NETWORK_DIRECT_CONNECT_PASSWORD = StringUtil.getRandomString(15);
+
+    @DocumentKey("messaging.packetManipulation.upstream")
+    public static boolean NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED = true;
+    @DocumentKey("messaging.packetManipulation.downstream")
+    public static boolean NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED = false;
+
     @DocumentKey("messaging.directConnect")
     public static boolean MESSAGING_DIRECT_CONNECT = false;
     public static boolean MESSAGING_PASSWORD = false;
 
-    public static class MinecraftServer {
+    public static class ConfiguredServer {
 
         private final String address;
         private final String permission;
         private final MinecraftServerType type;
 
-        public MinecraftServer(String address, String permission, MinecraftServerType type) {
+        public ConfiguredServer(String address, String permission, MinecraftServerType type) {
             this.address = address;
             this.permission = permission;
             this.type = type;

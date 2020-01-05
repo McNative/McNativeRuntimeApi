@@ -23,14 +23,11 @@ import java.util.UUID;
 
 public interface GameProfileLoader {
 
+    GameProfileInfo getGameProfileInfo(String name);
+
     GameProfile getGameProfile(UUID uniqueId);
 
-    GameProfile getGameProfile(String name);
-
-
     GameProfile getGameProfileUncached(UUID uniqueId);
-
-    GameProfile getGameProfileUncached(String name);
 
 
     void clearCache();

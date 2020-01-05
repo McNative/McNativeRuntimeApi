@@ -20,20 +20,22 @@
 package org.mcnative.common.plugin.configuration;
 
 import net.prematic.libraries.document.Document;
-import net.prematic.libraries.plugin.Plugin;
-import org.mcnative.common.text.components.ChatComponent;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.text.components.MessageComponent;
 
 public interface Configuration extends Document {
 
     String getName();
 
-    Plugin<?> getPlugin();
+    ObjectOwner getOwner();
 
-    ChatComponent<?> getText(String key);
+    MessageComponent<?> getText(String key);
 
     boolean isFirstCreation();
 
-    boolean save();
+    void load();
+
+    void save();
 
     void load(Class<?> configurationClass);
 }

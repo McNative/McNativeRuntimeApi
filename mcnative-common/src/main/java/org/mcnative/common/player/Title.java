@@ -25,8 +25,8 @@ import org.mcnative.common.text.variable.VariableSet;
 
 public class Title {
 
-    private MessageComponent title;
-    private MessageComponent subTitle;
+    private MessageComponent<?> title;
+    private MessageComponent<?> subTitle;
     private VariableSet variables;
     private int[] timing;
 
@@ -34,11 +34,11 @@ public class Title {
         this.timing = new int[]{20,60,20};
     }
 
-    public MessageComponent getTitle() {
+    public MessageComponent<?> getTitle() {
         return title;
     }
 
-    public MessageComponent getSubTitle() {
+    public MessageComponent<?> getSubTitle() {
         return subTitle;
     }
 
@@ -54,7 +54,7 @@ public class Title {
         return title(Text.of(text));
     }
 
-    public Title title(MessageComponent component){
+    public Title title(MessageComponent<?> component){
         title = component;
         return this;
     }
@@ -63,7 +63,7 @@ public class Title {
         return subTitle(Text.of(text));
     }
 
-    public Title subTitle(MessageComponent component){
+    public Title subTitle(MessageComponent<?> component){
         this.subTitle = component;
         return this;
     }

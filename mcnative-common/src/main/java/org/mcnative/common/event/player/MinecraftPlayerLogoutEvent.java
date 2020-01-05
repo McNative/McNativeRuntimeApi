@@ -19,5 +19,8 @@
 
 package org.mcnative.common.event.player;
 
-public interface MinecraftPlayerLogoutEvent extends MinecraftOnlinePlayerEvent {
-}
+import org.mcnative.common.network.event.NetworkEvent;
+import org.mcnative.common.text.components.MessageComponent;
+
+@NetworkEvent
+public interface MinecraftPlayerLogoutEvent extends MinecraftOnlinePlayerEvent {}

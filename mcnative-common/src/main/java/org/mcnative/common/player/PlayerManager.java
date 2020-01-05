@@ -19,34 +19,16 @@
 
 package org.mcnative.common.player;
 
-import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Function;
 
-public interface PlayerManager<O extends OnlineMinecraftPlayer> {
-
-    int getOnlineCount();
-
-    Collection<O> getOnlinePlayers();
-
-    <T extends OnlineMinecraftPlayer> Collection<T> getOnlinePlayers(Class<T> playerClass);
-
-    MinecraftPlayer getPlayer(int id);
+public interface PlayerManager {
 
     MinecraftPlayer getPlayer(UUID uniqueId);
 
     MinecraftPlayer getPlayer(long xBoxId);
 
     MinecraftPlayer getPlayer(String name);
-
-
-    O getOnlinePlayer(int id);
-
-    O getOnlinePlayer(UUID uniqueId);
-
-    O getOnlinePlayer(long xBoxId);
-
-    O getOnlinePlayer(String name);
 
 
     <T extends MinecraftPlayer> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer,T> translator);

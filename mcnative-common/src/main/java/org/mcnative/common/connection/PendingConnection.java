@@ -19,18 +19,21 @@
 
 package org.mcnative.common.connection;
 
-import org.mcnative.common.serviceprovider.permission.Permissable;
-
 import java.util.UUID;
 
-public interface PendingConnection extends MinecraftConnection, Permissable {
+public interface PendingConnection extends MinecraftConnection {
 
+    @SuppressWarnings("The player is not fully authenticated yet")
     UUID getUniqueId();
 
+    @SuppressWarnings("The player is not fully authenticated yet")
     long getXBoxId();
+
+
+    void setUniqueId(UUID uniqueId);
+
 
     boolean isOnlineMode();
 
     void setOnlineMode(boolean online);
-    
 }

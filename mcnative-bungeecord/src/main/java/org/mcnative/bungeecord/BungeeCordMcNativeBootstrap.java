@@ -28,6 +28,7 @@ public class BungeeCordMcNativeBootstrap extends Plugin {
         try{
             McNativeLauncher.launchMcNativeInternal();
         }catch (Exception exception){
+            exception.printStackTrace();
             getLogger().info("Could not bootstrap McNative ("+exception.getMessage()+")");
         }
     }

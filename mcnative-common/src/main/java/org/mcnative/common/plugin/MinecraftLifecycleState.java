@@ -25,9 +25,9 @@ import net.prematic.libraries.plugin.lifecycle.LifecycleState;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import org.mcnative.common.McNative;
 
-public class MinecraftLifecycleState extends LifecycleState<McNative<?>> {
+public class MinecraftLifecycleState extends LifecycleState<McNative> {
 
-    public MinecraftLifecycleState(PluginDescription description, PluginLoader loader, RuntimeEnvironment<McNative<?>> environment) {
+    public MinecraftLifecycleState(PluginDescription description, PluginLoader loader, RuntimeEnvironment<McNative> environment) {
         super(description, loader, environment);
     }
 

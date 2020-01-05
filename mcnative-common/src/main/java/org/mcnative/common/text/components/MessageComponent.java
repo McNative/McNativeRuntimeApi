@@ -25,13 +25,13 @@ import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 
-public interface MessageComponent<T extends MessageComponent> {
+public interface MessageComponent<T extends MessageComponent<?>> {
 
-    Collection<MessageComponent> getExtras();
+    Collection<MessageComponent<?>> getExtras();
 
-    T addExtra(MessageComponent component);
+    T addExtra(MessageComponent<?> component);
 
-    T removeExtra(MessageComponent component);
+    T removeExtra(MessageComponent<?> component);
 
     default String toPlainText(){
         return toPlainText(VariableSet.newEmptySet());
@@ -67,4 +67,5 @@ public interface MessageComponent<T extends MessageComponent> {
         return DocumentFileType.JSON.getWriter().write(compile(variables),false);
     }
 
+    void decompile(Document data);
 }

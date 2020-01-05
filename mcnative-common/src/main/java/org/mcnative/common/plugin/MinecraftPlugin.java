@@ -19,16 +19,19 @@
 
 package org.mcnative.common.plugin;
 
+import net.prematic.databasequery.api.Database;
+import net.prematic.databasequery.api.DatabaseDriver;
 import net.prematic.libraries.plugin.Plugin;
 import org.mcnative.common.plugin.configuration.Configuration;
 import org.mcnative.common.McNative;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
 import java.io.File;
 
-public class MinecraftPlugin extends Plugin<McNative<?>> {
+public class MinecraftPlugin extends Plugin<McNative> {
 
     public File getDataFolder(){
-        return getRuntime().getConfigurationProvider().getPluginDataFolder(this);
+        return getConfigurationProvider().getPluginDataFolder(this);
     }
 
     public Configuration getConfiguration(){
@@ -36,6 +39,23 @@ public class MinecraftPlugin extends Plugin<McNative<?>> {
     }
 
     public Configuration getConfiguration(String name){
-        return getRuntime().getConfigurationProvider().getConfiguration(this,name);
+        return getConfigurationProvider().getConfiguration(this,name);
+    }
+
+    public Database getDatabase(){
+        return getConfigurationProvider().getDatabase(this);
+    }
+
+    public Database getDatabase(String name){
+        return getConfigurationProvider().getDatabase(this,name);
+    }
+
+    public DatabaseDriver getDatabaseDriver(String name){
+        return getConfigurationProvider().getDatabaseDriver(name);
+    }
+
+    private ConfigurationProvider getConfigurationProvider(){
+        return getRuntime().getRegistry().getService(ConfigurationProvider.class);
     }
 }
+

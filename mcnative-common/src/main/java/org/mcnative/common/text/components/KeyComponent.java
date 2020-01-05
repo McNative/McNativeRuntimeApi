@@ -57,6 +57,7 @@ public class KeyComponent extends AbstractChatComponent<KeyComponent>{
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables) {
         builder.append(replaceVariablesAndTranslate(variables));
+        super.toPlainText(builder, variables);
     }
 
     @Override

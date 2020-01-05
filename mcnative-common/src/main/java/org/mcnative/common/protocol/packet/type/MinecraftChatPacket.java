@@ -38,7 +38,8 @@ public class MinecraftChatPacket implements MinecraftPacket {
             ,on(PacketDirection.OUTGOING
                     ,map(MinecraftProtocolVersion.JE_1_7,0x02)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x0F)
-                    ,map(MinecraftProtocolVersion.JE_1_13,0x0E))
+                    ,map(MinecraftProtocolVersion.JE_1_13,0x0E)
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x0F))
             ,on(PacketDirection.INCOMING
                     ,map(MinecraftProtocolVersion.JE_1_7,0x01)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x02)
@@ -46,15 +47,15 @@ public class MinecraftChatPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12_1,0x02)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x03)));
 
-    private MessageComponent message;
+    private MessageComponent<?> message;
     private VariableSet variables;
     private ChatPosition position;
 
-    public MessageComponent getMessage() {
+    public MessageComponent<?> getMessage() {
         return message;
     }
 
-    public void setMessage(MessageComponent message) {
+    public void setMessage(MessageComponent<?> message) {
         this.message = message;
     }
 
@@ -81,13 +82,29 @@ public class MinecraftChatPacket implements MinecraftPacket {
 
     @Override
     public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
-        if(direction == PacketDirection.OUTGOING); //@Todo read position
+        if(direction == PacketDirection.OUTGOING){
+            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+                message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
+                position = ChatPosition.of(buffer.readByte());
+            }else{
+                message = Text.of(MinecraftProtocolUtil.readString(buffer));
+            }
+        }else if(direction == PacketDirection.INCOMING){
+            message = Text.of(MinecraftProtocolUtil.readString(buffer));
+        }
     }
 
     @Override
     public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet()));
-        if(direction == PacketDirection.OUTGOING) buffer.writeByte(position.getId());
+        if(direction == PacketDirection.OUTGOING){
+            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet()));
+                buffer.writeByte(position.getId());
+            }else{
+                MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet()));
+            }
+        }else if(direction == PacketDirection.INCOMING){
+            MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet()));
+        }
     }
 }

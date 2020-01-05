@@ -19,7 +19,6 @@
 
 package org.mcnative.common.serviceprovider.permission;
 
-import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.player.MinecraftPlayer;
 
 import java.util.Collection;
@@ -31,8 +30,6 @@ public interface PermissionProvider {
     Collection<String> getGroups();
 
     PermissionHandler getPlayerHandler(MinecraftPlayer player);
-
-    PermissionHandler getPlayerHandler(PendingConnection connection);
 
     PermissionGroup createGroup(String name);
 

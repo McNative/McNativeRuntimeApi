@@ -33,8 +33,8 @@ import org.bukkit.Bukkit;
 import org.mcnative.bukkit.plugin.BukkitCommandManager;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.MinecraftPlatform;
-import org.mcnative.common.ServerPingResponse;
-import org.mcnative.common.messaging.PluginMessageListener;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.network.messaging.MessageChannelListener;
 import org.mcnative.common.serviceprovider.whitelist.DefaultWhitelistProvider;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
@@ -294,7 +294,7 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public void registerChannel(String name, Plugin owner, PluginMessageListener listener) {
+    public void registerChannel(String name, Plugin owner, MessageChannelListener listener) {
 
     }
 
@@ -304,7 +304,7 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public void unregisterChannel(PluginMessageListener listener) {
+    public void unregisterChannel(MessageChannelListener listener) {
 
     }
 
@@ -324,12 +324,12 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public ServerPingResponse getPingResponse() {
+    public ServerStatusResponse getPingResponse() {
         return null;
     }
 
     @Override
-    public void setPingResponse(ServerPingResponse ping) {
+    public void setPingResponse(ServerStatusResponse ping) {
 
     }
 

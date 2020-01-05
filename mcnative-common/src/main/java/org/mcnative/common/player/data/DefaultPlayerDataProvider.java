@@ -27,17 +27,21 @@ import net.prematic.databasequery.api.query.result.QueryResult;
 import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
+import net.prematic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.profile.GameProfile;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
     final DatabaseCollection playerDataStorage;
 
-    public DefaultPlayerDataProvider() {
-        this.playerDataStorage = McNative.getInstance().getStorageManager().getDatabase(McNative.getInstance())
+    public DefaultPlayerDataProvider(McNative mcnative) {
+        this.playerDataStorage = null;
+        /*
+        mcnative.getConfigurationProvider().getDatabase(mcnative)
                 .createCollection("PlayerData")
                 .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)
                 .attribute("name", DataType.STRING, 32, CreateOption.NOT_NULL, CreateOption.INDEX)
@@ -48,24 +52,28 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .attribute("gameProfile", DataType.LONG_TEXT)
                 .attribute("properties", DataType.LONG_TEXT, -1, "{}")
                 .create();
+         */
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(String name) {
-        return null;// getPlayerDataByQueryResult(name, this.playerDataStorage.find().where("name", name).execute());
+        Objects.requireNonNull(name);
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("name", name).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(UUID uniqueId) {
-        return null;//getPlayerDataByQueryResult(uniqueId, this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
+        Objects.requireNonNull(uniqueId);
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(long xBoxId) {
-        return null;//getPlayerDataByQueryResult(xBoxId, this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
+        Validate.isTrue(xBoxId == 0,"XBoxId can't be 0");
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
     }
 
-    private MinecraftPlayerData getPlayerDataByQueryResult(Object identifier, QueryResult result) {
+    private MinecraftPlayerData getPlayerDataByQueryResult(QueryResult result) {
         QueryResultEntry entry = result.first();
         return new DefaultMinecraftPlayerData(this, entry.getInt("id"),
                 entry.getString("name"),

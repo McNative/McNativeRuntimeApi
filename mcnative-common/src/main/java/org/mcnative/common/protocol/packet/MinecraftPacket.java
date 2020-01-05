@@ -31,7 +31,9 @@ public interface MinecraftPacket {
 
     void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
-    static PacketIdentifier newIdentifier(Class<?> packetClass, PacketIdentifier.PacketCondition... conditions){
+
+
+    static PacketIdentifier newIdentifier(Class<? extends MinecraftPacket> packetClass, PacketIdentifier.PacketCondition... conditions){
         return new PacketIdentifier(packetClass, conditions);
     }
 

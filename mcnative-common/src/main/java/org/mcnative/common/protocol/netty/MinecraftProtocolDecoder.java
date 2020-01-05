@@ -20,39 +20,50 @@
 package org.mcnative.common.protocol.netty;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.MessageToMessageDecoder;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.packet.PacketDirection;
-import org.mcnative.common.protocol.packet.PacketManager;
+import org.mcnative.common.protocol.packet.*;
 
 import java.util.List;
+import java.util.Map;
 
-public class MinecraftProtocolDecoder extends ByteToMessageDecoder {
-
-    public static boolean RELEASE_READER = false;
+public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private final PacketManager packetManager;
+    private final Endpoint endpoint;
+    private final PacketDirection direction;
     private final MinecraftConnection connection;
     private final MinecraftProtocolVersion version;
 
-    public MinecraftProtocolDecoder(PacketManager packetManager, MinecraftConnection connection) {
+    public MinecraftProtocolDecoder(PacketManager packetManager, Endpoint endpoint, PacketDirection direction, MinecraftConnection connection) {
         this.packetManager = packetManager;
+        this.endpoint = endpoint;
+        this.direction = direction;
         this.connection = connection;
         this.version = connection.getProtocolVersion();
     }
-
     @Override
-    protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> output) {
-        if(buffer.readableBytes() < 5) return;
-        if(RELEASE_READER) buffer.resetReaderIndex();
-        int packetId = MinecraftProtocolUtil.readVarInt(buffer);
-        MinecraftPacket packet = packetManager.createIncomingPacket(connection.getState(),this.version,packetId);
-        //read
-        if(packet != null) output.add(packetManager.handlePacket(PacketDirection.INCOMING,this.version,connection,packet));
-        if(RELEASE_READER) buffer.resetReaderIndex();
+    protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> output) {
+        int packetId = MinecraftProtocolUtil.readVarInt(in);
+
+        PacketIdentifier identifier = packetManager.getPacketIdentifier(connection.getState(),direction,version,packetId);
+        if(identifier != null){
+            MinecraftPacket packet = identifier.newPacketInstance();
+            packet.read(direction,version,in);
+            List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
+            if(listeners != null && !listeners.isEmpty()){
+                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+                listeners.forEach(listener -> listener.handle(event));
+                if(event.isCancelled()) return;
+                packet = event.getPacket();
+            }
+            output.add(packet);
+        }
     }
 }

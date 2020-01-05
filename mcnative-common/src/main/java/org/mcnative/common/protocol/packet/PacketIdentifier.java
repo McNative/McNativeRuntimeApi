@@ -19,20 +19,21 @@
 
 package org.mcnative.common.protocol.packet;
 
+import net.prematic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 public class PacketIdentifier {
 
-    private final Class<?> packetClass;
+    private final Class<? extends MinecraftPacket> packetClass;
     private final PacketCondition[] conditions;
 
-    public PacketIdentifier(Class<?> packetClass, PacketCondition[] conditions) {
+    public PacketIdentifier(Class<? extends MinecraftPacket> packetClass, PacketCondition[] conditions) {
         this.packetClass = packetClass;
         this.conditions = conditions;
     }
 
-    public Class<?> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return packetClass;
     }
 
@@ -53,6 +54,11 @@ public class PacketIdentifier {
         if(id == -1) throw new IllegalArgumentException("This packet is not supported for version "+version.getEdition().getName()+" "+version.getName());
         return id;
     }
+
+    public MinecraftPacket newPacketInstance(){
+        return UnsafeInstanceCreator.newInstance(packetClass);
+    }
+
 
     public static class PacketCondition {
 

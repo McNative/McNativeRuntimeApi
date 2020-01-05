@@ -21,37 +21,84 @@ package org.mcnative.common.player;
 
 import java.util.Locale;
 
-public interface PlayerSettings {
+public class PlayerSettings {
 
-    Locale getLocale();
+    private final Locale locale;
+    private final byte viewDistance;
+    private final ChatMode chatMode;
+    private final boolean chatColorsEnabled;
+    private final SkinParts skinParts;
+    private final MainHand mainHand;
 
-    byte getViewDistance();
+    public PlayerSettings(Locale locale, byte viewDistance, ChatMode chatMode, boolean chatColorsEnabled, SkinParts skinParts, MainHand mainHand) {
+        this.locale = locale;
+        this.viewDistance = viewDistance;
+        this.chatMode = chatMode;
+        this.chatColorsEnabled = chatColorsEnabled;
+        this.skinParts = skinParts;
+        this.mainHand = mainHand;
+    }
 
-    ChatMode getChatMode();
+    public Locale getLocale() {
+        return locale;
+    }
 
-    MainHand getMainHand();
+    public byte getViewDistance() {
+        return viewDistance;
+    }
 
-    SkinParts getSkinParts();
+    public ChatMode getChatMode() {
+        return chatMode;
+    }
 
-    boolean hasChatColors();
+    public boolean isChatColorsEnabled() {
+        return chatColorsEnabled;
+    }
 
-    enum ChatMode {
+    public SkinParts getSkinParts() {
+        return skinParts;
+    }
+
+    public MainHand getMainHand() {
+        return mainHand;
+    }
+
+    public enum ChatMode {
         SHOWN,
+
         COMMANDS_ONLY,
-        HIDDEN
+
+        HIDDEN;
+
+        public static ChatMode of(int ordinal){
+            for (ChatMode value : values()) if(value.ordinal() == ordinal) return value;
+            throw new IllegalArgumentException("Invalid Ordinal");
+        }
     }
 
-    enum MainHand {
+    public enum MainHand {
         LEFT,
-        RIGHT
+
+        RIGHT;
+
+        public static MainHand of(int ordinal){
+            for (MainHand value : values()) if(value.ordinal() == ordinal) return value;
+            throw new IllegalArgumentException("Invalid Ordinal");
+        }
     }
 
-    class SkinParts {
+    public static class SkinParts {
+
+        public static final SkinParts SKIN_SHOW_ALL = new SkinParts((byte)127);
 
         private final byte bitmask;
 
         public SkinParts(byte skinBitmask) {
             this.bitmask = skinBitmask;
+        }
+
+        public byte getBitmask() {
+            return bitmask;
         }
 
         public boolean hasCape() {

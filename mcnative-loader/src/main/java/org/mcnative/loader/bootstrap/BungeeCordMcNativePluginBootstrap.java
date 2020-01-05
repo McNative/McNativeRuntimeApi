@@ -39,6 +39,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not bootstrap plugin (%s)",exception.getMessage()));
+            exception.printStackTrace();
             getProxy().getPluginManager().unregisterCommands(this);
             getProxy().getPluginManager().unregisterListeners(this);
         }

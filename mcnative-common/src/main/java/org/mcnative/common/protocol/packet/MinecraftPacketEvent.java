@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 14:10
+ * @since 28.12.19, 21:28
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,78 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.event.Cancellable;
-import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.event.MinecraftEvent;
+import org.mcnative.common.protocol.Endpoint;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
-public interface MinecraftPacketEvent extends MinecraftEvent, Cancellable {
+public class MinecraftPacketEvent implements MinecraftEvent, Cancellable {
 
-    MinecraftPacket getPacket();
+    private final Endpoint endpoint;
+    private final PacketDirection direction;
+    private final MinecraftProtocolVersion version;
 
-    <T extends MinecraftPacket> T getPacket(Class<T> packetClass);
+    private MinecraftPacket packet;
+    private boolean rewrite;
+    private boolean cancelled;
 
-    MinecraftConnection getSender();
+    public MinecraftPacketEvent(Endpoint endpoint, PacketDirection direction, MinecraftProtocolVersion version, MinecraftPacket packet) {
+        this.endpoint = endpoint;
+        this.direction = direction;
+        this.version = version;
+        this.packet = packet;
 
-    MinecraftConnection getReceiver();
-
-    PacketDirection getDirection();
-
-    default boolean isIncoming(){
-        return getDirection() == PacketDirection.INCOMING;
+        this.rewrite = false;
+        this.cancelled = false;
     }
 
-    default boolean isOutgoing(){
-        return getDirection() == PacketDirection.OUTGOING;
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
-    boolean isThroughput();
+    public PacketDirection getDirection() {
+        return direction;
+    }
 
-    void setPacket(MinecraftPacket packet);
+    public MinecraftProtocolVersion getVersion() {
+        return version;
+    }
 
+    public MinecraftPacket getPacket() {
+        return packet;
+    }
+
+    public boolean isPacket(Class<?> packetClass){
+        return packetClass.isAssignableFrom(packet.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends MinecraftPacket> T getPacket(Class<T> packetClass) {
+        return (T) packet;
+    }
+
+    public void setPacket(MinecraftPacket packet) {
+        this.packet = packet;
+    }
+
+    public boolean isRewrite() {
+        return rewrite;
+    }
+
+    public void setRewrite(boolean rewrite) {
+        this.rewrite = rewrite;
+    }
+
+    public void rewrite(){
+        setRewrite(true);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
 }

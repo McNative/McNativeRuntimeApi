@@ -76,8 +76,13 @@ public enum TextColor {
         return name;
     }
 
-    public static TextColor fromCode(char code){
+    public static TextColor of(char code){
         for(TextColor color : values()) if(color.code == code) return color;
+        return null;
+    }
+
+    public static TextColor of(String name){
+        for(TextColor color : values()) if(color.getName().equalsIgnoreCase(name)) return color;
         return null;
     }
 

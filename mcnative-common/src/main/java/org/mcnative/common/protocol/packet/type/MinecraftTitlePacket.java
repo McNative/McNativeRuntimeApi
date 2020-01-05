@@ -25,6 +25,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
@@ -34,11 +35,12 @@ public class MinecraftTitlePacket implements MinecraftPacket {
 
     public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftChatPacket.class
             ,on(PacketDirection.OUTGOING
-                    ,map(MinecraftProtocolVersion.JE_1_7,0x45)
+                    ,map(MinecraftProtocolVersion.JE_1_8,0x45)
                     ,map(MinecraftProtocolVersion.JE_1_12,0x47)
                     ,map(MinecraftProtocolVersion.JE_1_12_1,0x48)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x4B)
-                    ,map(MinecraftProtocolVersion.JE_1_14,0x4F)));
+                    ,map(MinecraftProtocolVersion.JE_1_14,0x4F)
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x50)));
 
     private Action action;
     private Object data;
@@ -52,11 +54,11 @@ public class MinecraftTitlePacket implements MinecraftPacket {
         this.action = action;
     }
 
-    public MessageComponent getMessage(){
-        return (MessageComponent) data;
+    public MessageComponent<?> getMessage(){
+        return (MessageComponent<?>) data;
     }
 
-    public void setMessage(MessageComponent message){
+    public void setMessage(MessageComponent<?> message){
         this.data = message;
     }
 
@@ -83,15 +85,24 @@ public class MinecraftTitlePacket implements MinecraftPacket {
 
     @Override
     public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-
+        action = Action.of(version,MinecraftProtocolUtil.readVarInt(buffer));
+        if(action == Action.SET_TITLE || action == Action.SET_SUBTITLE || action == Action.SET_ACTIONBAR){
+            data = Text.decompile(MinecraftProtocolUtil.readString(buffer));
+        }else if(action == Action.SET_TIME){
+            int[] data = new int[3];
+            data[0] = buffer.readInt();
+            data[1] = buffer.readInt();
+            data[2] = buffer.readInt();
+            this.data = data;
+        }
     }
 
     @Override
     public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeVarInt(buffer,action.ordinal());
+        MinecraftProtocolUtil.writeVarInt(buffer,action.getId(version));
         if(data != null){
             if(data instanceof MessageComponent){
-                MinecraftProtocolUtil.writeString(buffer,((MessageComponent)this.data).compileToString(variables!=null?variables: VariableSet.newEmptySet()));
+                MinecraftProtocolUtil.writeString(buffer,((MessageComponent<?>)this.data).compileToString(variables!=null?variables: VariableSet.newEmptySet()));
             }else if(data instanceof int[]){
                 int[] array = (int[]) data;
                 buffer.writeInt(array[0]);
@@ -104,11 +115,40 @@ public class MinecraftTitlePacket implements MinecraftPacket {
 
     public enum Action {
 
-        SET_TITLE(),
-        SET_SUBTITLE(),
-        SET_ACTIONBAR(),
-        SET_TIME(),
-        HIDE(),
-        RESET();
+        SET_TITLE(0,0),
+        SET_SUBTITLE(1,1),
+        SET_ACTIONBAR(-1,2),
+        SET_TIME(2,3),
+        HIDE(3,4),
+        RESET(4,5);
+
+        private int legacyId;
+        private int Id;
+
+        Action(int legacyId, int id) {
+            this.legacyId = legacyId;
+            Id = id;
+        }
+
+        public int getLegacyId() {
+            return legacyId;
+        }
+
+        public int getId() {
+            return Id;
+        }
+
+        public int getId(MinecraftProtocolVersion version){
+            return version.isNewerOrSame(MinecraftProtocolVersion.JE_1_11) ? getId() : getLegacyId();
+        }
+
+        public static Action of(MinecraftProtocolVersion version,int id){
+            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_11)){
+                for (Action value : values()) if(value.getId() == id) return value;
+            }else{
+                for (Action value : values()) if(value.getLegacyId() == id) return value;
+            }
+            throw new IllegalArgumentException("Title Action not found");
+        }
     }
 }

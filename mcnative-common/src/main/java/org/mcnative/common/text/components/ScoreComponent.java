@@ -81,6 +81,7 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables) {
         builder.append("{objective=").append(objective).append(".entity=").append(entityName).append(",value=").append(value).append("}");
+        super.toPlainText(builder, variables);
     }
 
     @Override
@@ -90,5 +91,13 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
         score.add("objective", objective);
         score.add("value",value);
         return super.compile(key,variables).add("score",score);
+    }
+
+    @Override
+    public void decompile(Document data) {
+        entityName = data.getString("name");
+        objective = data.getString("objective");
+        value = data.getString("value");
+        super.decompile(data);
     }
 }

@@ -28,7 +28,7 @@ public class BungeeMinecraftPendingLoginEvent implements MinecraftPlayerPendingL
 
     private final PendingConnection connection;
 
-    private MessageComponent cancelReason;
+    private MessageComponent<?> cancelReason;
     private VariableSet variables;
     private boolean canceled;
 
@@ -42,7 +42,7 @@ public class BungeeMinecraftPendingLoginEvent implements MinecraftPlayerPendingL
     }
 
     @Override
-    public MessageComponent getCancelReason() {
+    public MessageComponent<?> getCancelReason() {
         return cancelReason;
     }
 
@@ -52,7 +52,7 @@ public class BungeeMinecraftPendingLoginEvent implements MinecraftPlayerPendingL
     }
 
     @Override
-    public void setCancelReason(MessageComponent cancelReason, VariableSet variables) {
+    public void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables) {
         this.cancelReason = cancelReason;
         this.variables = variables;
         setCancelled(true);

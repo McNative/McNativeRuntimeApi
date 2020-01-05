@@ -20,19 +20,36 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.Validate;
+import net.prematic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class DefaultPacketManager implements PacketManager {
 
+    private static Function<Class<?>, List<MinecraftPacketListener>> COMPUTE_FUNCTION = class0 -> new ArrayList<>();
+
     private final Collection<PacketIdentifier> identifiers;
+    private final Map<Class<?>, List<MinecraftPacketListener>> upstreamOutgoingListeners;
+    private final Map<Class<?>, List<MinecraftPacketListener>> upstreamIncomingListeners;
+    private final Map<Class<?>, List<MinecraftPacketListener>> downstreamOutgoingListeners;
+    private final Map<Class<?>, List<MinecraftPacketListener>> downstreamIncomingListeners;
 
     public DefaultPacketManager() {
         this.identifiers = new ArrayList<>();
+
+        this.upstreamOutgoingListeners = new HashMap<>();
+        this.upstreamIncomingListeners = new HashMap<>();
+        this.downstreamOutgoingListeners = new HashMap<>();
+        this.downstreamIncomingListeners = new HashMap<>();
+
         PacketManager.registerDefaultPackets(this);
     }
 
@@ -44,27 +61,53 @@ public class DefaultPacketManager implements PacketManager {
     }
 
     @Override
+    public PacketIdentifier getPacketIdentifier(ConnectionState state, PacketDirection direction, MinecraftProtocolVersion version, int packetId) {
+        for (PacketIdentifier identifier : identifiers) {
+            PacketIdentifier.PacketCondition condition = identifier.getCondition(direction, state);
+            if(condition != null){
+                for (int i = condition.getMappings().length - 1; i >= 0; i--) {
+                    PacketIdentifier.IdMapping mapping = condition.getMappings()[i];
+                    if(version.isNewerOrSame(mapping.getVersion()) && mapping.getId() == packetId) return identifier;
+                }
+                for (PacketIdentifier.IdMapping mapping : condition.getMappings()) {
+                    if(mapping.getVersion().equals(version) && mapping.getId() == packetId) return identifier;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void registerPacket(PacketIdentifier identifier) {
         identifiers.add(identifier);
     }
 
     @Override
-    public void registerPacketListener(PacketDirection direction, Class<? extends MinecraftPacket> packetClass, MinecraftPacketListener listener) {
-
+    public void unregisterPacket(PacketIdentifier identifier) {
+        identifiers.remove(identifier);
     }
 
     @Override
-    public void unregisterPacketListener(PacketDirection direction, MinecraftPacketListener listener) {
-
+    public List<MinecraftPacketListener> getPacketListeners(Endpoint endpoint, PacketDirection direction, Class<?> packetClass) {
+        return getListenerMap(endpoint, direction).get(packetClass);
     }
 
     @Override
-    public MinecraftPacket createIncomingPacket(ConnectionState state, MinecraftProtocolVersion version, int packetId) {
-        return null;
+    public void registerPacketListener(Endpoint endpoint, PacketDirection direction, Class<?> packetClass, MinecraftPacketListener listener) {
+        Map<Class<?>, List<MinecraftPacketListener>> listeners =  getListenerMap(endpoint, direction);
+        listeners.computeIfAbsent(packetClass,COMPUTE_FUNCTION).add(listener);
     }
 
     @Override
-    public MinecraftPacket handlePacket(PacketDirection direction, MinecraftProtocolVersion version, MinecraftConnection connection, MinecraftPacket packet) {
-        return packet;
+    public void unregisterPacketListener(MinecraftPacketListener listener) {
+        throw new UnsupportedOperationException("@Todo implement");
+    }
+
+    private Map<Class<?>, List<MinecraftPacketListener>> getListenerMap(Endpoint endpoint, PacketDirection direction){
+        if(endpoint == Endpoint.UPSTREAM){
+            return direction == PacketDirection.OUTGOING ? upstreamOutgoingListeners : upstreamIncomingListeners;
+        }else{
+            return direction == PacketDirection.OUTGOING ? downstreamOutgoingListeners : downstreamIncomingListeners;
+        }
     }
 }

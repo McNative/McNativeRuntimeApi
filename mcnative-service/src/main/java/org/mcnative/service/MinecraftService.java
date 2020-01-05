@@ -19,12 +19,14 @@
 
 package org.mcnative.service;
 
+import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
+import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
-public interface MinecraftService extends McNative<Player> {
+public interface MinecraftService extends LocalService, MinecraftServer {
 
     ObjectCreator getObjectCreator();
 
@@ -44,6 +46,6 @@ public interface MinecraftService extends McNative<Player> {
 
 
     static MinecraftService getInstance(){
-        return (MinecraftService) McNative.getInstance();
+        return (MinecraftService) McNative.getInstance().getLocal();
     }
 }

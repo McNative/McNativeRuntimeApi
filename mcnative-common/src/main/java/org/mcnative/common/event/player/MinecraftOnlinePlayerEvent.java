@@ -25,15 +25,4 @@ public interface MinecraftOnlinePlayerEvent extends MinecraftPlayerEvent {
 
     OnlineMinecraftPlayer getOnlinePlayer();
 
-    /*
-    PreLoginEvent
-    LoginEvent
-    PostLoginEvent
-    PlayerJoinServerEvent - OnlyProxy
-    JoinEvent - OnlyService
-
-
-
-     */
-
 }

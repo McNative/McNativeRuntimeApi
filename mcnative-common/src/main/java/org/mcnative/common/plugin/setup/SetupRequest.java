@@ -20,4 +20,7 @@
 package org.mcnative.common.plugin.setup;
 
 public class SetupRequest {
+
+
+
 }

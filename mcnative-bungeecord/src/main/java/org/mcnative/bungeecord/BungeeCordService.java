@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 18:19
+ * @since 29.12.19, 18:56
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,127 +19,133 @@
 
 package org.mcnative.bungeecord;
 
-import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.concurrent.TaskScheduler;
-import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
-import net.prematic.libraries.event.DefaultEventBus;
+import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.manager.PluginManager;
-import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.Iterators;
-import org.mcnative.bungeecord.server.BungeeMinecraftServer;
-import org.mcnative.bungeecord.server.WrappedMcNativeMinecraftServer;
-import org.mcnative.common.MinecraftPlatform;
-import org.mcnative.common.ServerPingResponse;
-import org.mcnative.common.plugin.configuration.ConfigurationProvider;
-import org.mcnative.common.serviceprovider.placeholder.PlaceHolderManager;
-import org.mcnative.common.messaging.PluginMessageListener;
-import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
-import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
-import org.mcnative.common.player.data.PlayerDataProvider;
-import org.mcnative.common.serviceprovider.permission.PermissionProvider;
-import org.mcnative.common.player.profile.GameProfileLoader;
-import org.mcnative.common.player.receiver.ReceiverChannel;
+import net.prematic.libraries.utility.Validate;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
+import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.common.LocalService;
+import org.mcnative.common.McNative;
+import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.network.messaging.MessageChannelListener;
+import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.player.ChatChannel;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.scoreboard.Tablist;
-import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
-import org.mcnative.common.storage.StorageManager;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
-import org.mcnative.proxy.ProxiedPlayer;
+import org.mcnative.proxy.ConnectionHandler;
 import org.mcnative.proxy.ProxyService;
-import org.mcnative.proxy.server.ConnectHandler;
-import org.mcnative.proxy.server.FallbackHandler;
-import org.mcnative.proxy.server.MinecraftServer;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
-public class BungeeCordService implements ProxyService {
-
-    private final BungeeCordPlatform platform;
-    private final PrematicLogger logger;
-
-    private final TaskScheduler scheduler;
-    private final PluginManager pluginManager;
-    private final CommandManager commandManager;
-    private final EventBus eventBus;
+/*
+@Todo In service
+    - Implement connection Handler
+    - Implement default tablist
+    - Implement status response
+    - Implement address
+ */
+public class BungeeCordService implements LocalService, ProxyServer, ProxyService {
 
     private final PacketManager packetManager;
-    private final PlayerManager<ProxiedPlayer> playerManager;
+    private final CommandManager commandManager;
+    private final BungeeCordPlayerManager playerManager;
+    private final EventBus eventBus;
+    private final BungeeCordServerMap serverMap;
 
-    private final Collection<PluginMessageListenerEntry> pluginMessageListeners;
-    private final Collection<MinecraftServer> servers;
+    private Collection<MessageEntry> messageListeners;
 
-    private ReceiverChannel serverChannel;
+    private ChatChannel serverChat;
+    private ConnectionHandler connectionHandler;
+    private Tablist defaultTablist;
+    private ServerStatusResponse statusResponse;
 
-    private ConnectHandler connectHandler;
-    private FallbackHandler fallbackHandler;
+    public BungeeCordService(PacketManager packetManager, CommandManager commandManager,BungeeCordPlayerManager playerManager
+            , EventBus eventBus,BungeeCordServerMap serverMap) {
+        this.packetManager = packetManager;
+        this.commandManager = commandManager;
+        this.playerManager = playerManager;
+        this.eventBus = eventBus;
+        this.serverMap = serverMap;
 
-    private ServerPingResponse serverPingResponse;
-    private Tablist tablist;
-
-    public BungeeCordService(PluginManager pluginManager,PlayerManager<ProxiedPlayer> manager) {
-        this.platform = new BungeeCordPlatform();
-        this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
-
-        this.scheduler = new SimpleTaskScheduler();
-        this.pluginManager = pluginManager;
-        this.commandManager = null;
-        this.eventBus = new DefaultEventBus();
-
-        this.packetManager = new DefaultPacketManager();
-        this.playerManager = manager;
-
-        this.pluginMessageListeners = new ArrayList<>();
-        this.servers = new ArrayList<>();
+        this.messageListeners = new ArrayList<>();
     }
 
     @Override
-    public String getServiceName() {
-        return ProxyServer.getInstance().getName();
+    public Collection<MinecraftServer> getServers() {
+        return serverMap.getServers();
     }
 
     @Override
-    public MinecraftPlatform getPlatform() {
-        return platform;
+    public MinecraftServer getServer(String name) {
+        return serverMap.getServer(name);
     }
 
     @Override
-    public PrematicLogger getLogger() {
-        return logger;
+    public MinecraftServer getServer(UUID uniqueId) {
+        return null;
     }
 
     @Override
-    public ServiceRegistry getRegistry() {
-        return pluginManager;
+    public MinecraftServer getServer(InetSocketAddress address) {
+        return serverMap.getServer(address);
     }
 
     @Override
-    public TaskScheduler getScheduler() {
-        return scheduler;
+    public MinecraftServer registerServer(String name, InetSocketAddress address) {
+        Validate.notNull(name,address);
+        ServerInfo info = net.md_5.bungee.api.ProxyServer.getInstance().constructServerInfo(name,address,"",false);
+        this.serverMap.put(info.getName(),info);
+        return serverMap.getMappedServer(info);
     }
 
     @Override
-    public CommandManager getCommandManager() {
-        return commandManager;
+    public ConnectionHandler getConnectionHandler() {
+        return connectionHandler;
     }
 
     @Override
-    public EventBus getEventBus() {
-        return eventBus;
+    public void setConnectionHandler(ConnectionHandler handler) {
+        Validate.notNull(handler);
+        this.connectionHandler = handler;
     }
 
     @Override
-    public PluginManager getPluginManager() {
-        return pluginManager;
+    public Collection<ConnectedMinecraftPlayer> getConnectedPlayers() {
+        return playerManager.getConnectedPlayers();
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(int id) {
+        return playerManager.getConnectedPlayer(id);
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(UUID uniqueId) {
+        return playerManager.getConnectedPlayer(uniqueId);
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(String name) {
+        return playerManager.getConnectedPlayer(name);
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(long xBoxId) {
+        return playerManager.getConnectedPlayer(xBoxId);
     }
 
     @Override
@@ -148,210 +154,202 @@ public class BungeeCordService implements ProxyService {
     }
 
     @Override
-    public PlayerManager<ProxiedPlayer> getPlayerManager() {
-        return playerManager;
+    public ChatChannel getServerChat() {
+        return serverChat;
     }
 
     @Override
-    public PlayerDataProvider getPlayerDataProvider() {
-        return null;
-    }
-
-    @Override
-    public ConfigurationProvider getConfigurationProvider() {
-        return null;
-    }
-
-    @Override
-    public ConnectHandler getConnectHandler() {
-        return this.connectHandler;
-    }
-
-    @Override
-    public void setConnectHandler(ConnectHandler handler) {
-        this.connectHandler = handler;
-    }
-
-    @Override
-    public FallbackHandler getFallbackHandler() {
-        return this.fallbackHandler;
-    }
-
-    @Override
-    public void setFallbackHandler(FallbackHandler handler) {
-        this.fallbackHandler = handler;
-    }
-
-
-    @Override
-    public GameProfileLoader getGameProfileLoader() {
-        return null;
-    }
-
-    @Override
-    public void broadcastPacket(MinecraftPacket packet) {
-        getPlayerManager().getOnlinePlayers().forEach(player -> player.sendPacket(packet));
-    }
-
-    @Override
-    public void broadcastPacket(MinecraftPacket packet, String permission) {
-        getPlayerManager().getOnlinePlayers().forEach(player -> {
-            if(player.hasPermission(permission)) player.sendPacket(packet);
-        });
-    }
-
-    @Override
-    public ReceiverChannel getServerChat() {
-        return serverChannel;
-    }
-
-    @Override
-    public void setServerChat(ReceiverChannel channel) {
-        serverChannel = channel;
+    public void setServerChat(ChatChannel channel) {
+        Validate.notNull(channel);
+        this.serverChat = channel;
     }
 
     @Override
     public Tablist getDefaultTablist() {
-        return tablist;
+        return defaultTablist;
     }
 
     @Override
     public void setDefaultTablist(Tablist tablist) {
-        this.tablist = tablist;
+        Validate.notNull(tablist);
+        this.defaultTablist = tablist;
     }
 
     @Override
-    public ServerPingResponse getPingResponse() {
-        return serverPingResponse;
+    public ServerStatusResponse getStatusResponse() {
+        return statusResponse;
     }
 
     @Override
-    public void setPingResponse(ServerPingResponse ping) {
-        this.serverPingResponse = ping;
+    public void setStatusResponse(ServerStatusResponse status) {
+        Validate.notNull(status);
+        this.statusResponse = status;
     }
 
     @Override
-    public Collection<MinecraftServer> getServers() {
-        return this.servers;
+    public Collection<String> getMessageChannels() {
+        return Iterators.map(this.messageListeners, entry -> entry.name);
     }
 
     @Override
-    public MinecraftServer getServer(String name) {
-        MinecraftServer result = Iterators.findOne(servers, server -> server.getName().equalsIgnoreCase(name));
-        return result instanceof WrappedMcNativeMinecraftServer?((WrappedMcNativeMinecraftServer) result).getOriginalServer():result;
+    public Collection<String> getMessageChannels(Plugin<?> owner) {
+        Validate.notNull(owner);
+        return Iterators.map(this.messageListeners
+                , entry -> entry.name
+                , entry -> entry.owner.equals(owner));
     }
 
     @Override
-    public MinecraftServer getServer(InetSocketAddress address) {
-        MinecraftServer result = Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
-        return result instanceof WrappedMcNativeMinecraftServer?((WrappedMcNativeMinecraftServer) result).getOriginalServer():result;
+    public MessageChannelListener getMessageMessageChannelListener(String name) {
+        Validate.notNull(name);
+        MessageEntry result = Iterators.findOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
+        return result != null ? result.listener : null;
     }
 
     @Override
-    public MinecraftServer registerServer(String name, InetSocketAddress address) {
-        validateServer(name,address);
-        MinecraftServer server = new BungeeMinecraftServer(name, address);
-        this.servers.add(server);
-        return server;
+    public void registerMessageChannel(String name, Plugin<?> owner, MessageChannelListener listener) {
+        Validate.notNull(name,owner,listener);
+        if(getMessageMessageChannelListener(name) != null) throw new IllegalArgumentException("Message channel "+name+" already in use");
+        this.messageListeners.add(new MessageEntry(name,owner,listener));
     }
 
     @Override
-    public MinecraftServer registerServer(MinecraftServer server) {
-        validateServer(server.getName(),server.getAddress());
-        MinecraftServer wrappedServer = new WrappedMcNativeMinecraftServer(server);
-        this.servers.add(wrappedServer);
-        return wrappedServer;
-    }
-
-    private void validateServer(String name, InetSocketAddress address){
-        if(Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name) || server.getAddress().equals(address)) != null){
-            throw new IllegalArgumentException("A server with the "+name+" or address "+address+" is already registered");
-        }
+    public void unregisterMessageChannel(String name) {
+        Validate.notNull(name);
+        Iterators.removeOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
     }
 
     @Override
-    public void unregisterServer(String name) {
-        Iterators.removeOne(this.servers, server -> server.getName().equalsIgnoreCase(name));
+    public void unregisterMessageChannel(MessageChannelListener listener) {
+        Validate.notNull(listener);
+        Iterators.removeSilent(this.messageListeners, entry -> entry.listener.equals(listener));
     }
 
     @Override
-    public void unregisterServer(InetSocketAddress address) {
-        Iterators.removeOne(this.servers, server -> server.getAddress().equals(address));
+    public void unregisterMessageChannels(Plugin<?> owner) {
+        Validate.notNull(owner);
+        Iterators.removeSilent(this.messageListeners, entry -> entry.owner.equals(owner));
     }
 
     @Override
-    public void unregisterServer(MinecraftServer server) {
-        Iterators.removeOne(this.servers, server1 -> server1.equals(server));
-    }
-
-
-    @Override
-    public void broadcast(MessageComponent component, VariableSet variables) {
-        getPlayerManager().getOnlinePlayers().forEach(player -> player.sendMessage(component,variables));
+    public InetSocketAddress getAddress() {
+        return null;
     }
 
     @Override
-    public void broadcast(String permission, MessageComponent component, VariableSet variables) {
-        getPlayerManager().getOnlinePlayers().forEach(player -> {
-            if(player.hasPermission(permission)) player.sendMessage(component,variables);
+    public int getOnlineCount() {
+        return net.md_5.bungee.api.ProxyServer.getInstance().getOnlineCount();
+    }
+
+    @Override
+    public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
+        //@Todo maybe develop reference map?
+        return Iterators.map(getOnlinePlayers(), player -> player);
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
+        return getConnectedPlayer(id);
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
+        return getConnectedPlayer(uniqueId);
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(String name) {
+        return getConnectedPlayer(name);
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
+        return getConnectedPlayer(xBoxId);
+    }
+
+    @Override
+    public void broadcast(MessageComponent<?> component, VariableSet variables) {
+        Validate.notNull(component,variables);
+        getConnectedPlayers().forEach(player -> player.sendMessage(component,variables));
+    }
+
+    @Override
+    public void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
+        Validate.notNull(permission,component,variables);
+        getConnectedPlayers().forEach(player -> {
+            if(player.hasPermission(permission)){
+                player.sendMessage(component, variables);
+            }
         });
     }
 
     @Override
-    public Collection<String> getOpenChannels() {
-        return ProxyServer.getInstance().getChannels();
-    }
-
-    public Collection<PluginMessageListenerEntry> getPluginMessageListeners() {
-        return pluginMessageListeners;
+    public void broadcastPacket(MinecraftPacket packet) {
+        Validate.notNull(packet);
+        getConnectedPlayers().forEach(player -> player.sendPacket(packet));
     }
 
     @Override
-    public void registerChannel(String name, Plugin owner, PluginMessageListener listener) {
-        ProxyServer.getInstance().registerChannel(name);//open channel
-        this.pluginMessageListeners.add(new PluginMessageListenerEntry(owner,name,listener));
+    public void broadcastPacket(MinecraftPacket packet, String permission) {
+        Validate.notNull(packet,permission);
+        getConnectedPlayers().forEach(player -> {
+            if(player.hasPermission(permission)){
+                player.sendPacket(packet);
+            }
+        });
     }
 
     @Override
-    public void unregisterChannel(String name) {
-        ProxyServer.getInstance().unregisterChannel(name);//Close channel
-        Iterators.remove(this.pluginMessageListeners, entry -> entry.name.equalsIgnoreCase(name));
+    public void kickAll(MessageComponent<?> component, VariableSet variables) {
+        Validate.notNull(component,variables);
+        getConnectedPlayers().forEach(player -> player.disconnect(component, variables));
     }
 
     @Override
-    public void unregisterChannel(PluginMessageListener listener) {
-        PluginMessageListenerEntry entry =Iterators.removeOne(this.pluginMessageListeners, entry1 -> entry1.listener.equals(listener));
-        ProxyServer.getInstance().unregisterChannel(entry.name);
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     @Override
-    public void unregisterChannels(Plugin owner) {
-        PluginMessageListenerEntry entry = Iterators.removeOne(this.pluginMessageListeners, entry1 -> entry1.owner.equals(owner));
-        ProxyServer.getInstance().unregisterChannel(entry.name);
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     @Override
-    public void shutdown() {
-        ProxyServer.getInstance().stop();
+    public boolean isOnline() {
+        return true;
     }
 
     @Override
-    public void restart() {
-        shutdown();
-        //@Todo implement restart option
+    public String getName() {
+        return net.md_5.bungee.api.ProxyServer.getInstance().getName();
     }
 
-    public static class PluginMessageListenerEntry {
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return McNative.getInstance().getNetwork().getLocalIdentifier();
+    }
 
-        public String name;
-        public Plugin owner;
-        public PluginMessageListener listener;
+    @Override
+    public void sendMessage(String channel, Document request) {
+        McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendMessage(this,channel,request);
+    }
 
-        private PluginMessageListenerEntry(Plugin owner,String name, PluginMessageListener listener) {
-            this.owner = owner;
+    @Override
+    public Document sendQueryMessage(String channel, Document request) {
+        return  McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendQueryMessage(this,channel,request);
+    }
+
+    private static class MessageEntry {
+
+        private final String name;
+        private final ObjectOwner owner;
+        private final MessageChannelListener listener;
+
+        public MessageEntry(String name, ObjectOwner owner, MessageChannelListener listener) {
             this.name = name;
+            this.owner = owner;
             this.listener = listener;
         }
     }
 }
-

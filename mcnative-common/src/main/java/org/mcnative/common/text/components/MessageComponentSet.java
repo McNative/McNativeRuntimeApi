@@ -19,9 +19,10 @@
 
 package org.mcnative.common.text.components;
 
-import net.prematic.libraries.document.ArrayEntry;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.DocumentRegistry;
+import net.prematic.libraries.document.entry.ArrayEntry;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.ArrayList;
@@ -30,17 +31,17 @@ import java.util.List;
 
 public class MessageComponentSet implements MessageComponent<MessageComponentSet> {
 
-    private final List<MessageComponent> components;
+    private final List<MessageComponent<?>> components;
 
     public MessageComponentSet() {
         this(new ArrayList<>());
     }
 
-    public MessageComponentSet(List<MessageComponent> components) {
+    public MessageComponentSet(List<MessageComponent<?>> components) {
         this.components = components;
     }
 
-    public List<MessageComponent> getComponents() {
+    public List<MessageComponent<?>> getComponents() {
         return components;
     }
 
@@ -48,11 +49,11 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
         return components.size();
     }
 
-    public void add(MessageComponent component){
+    public void add(MessageComponent<?> component){
         components.add(component);
     }
 
-    public void remove(MessageComponent component){
+    public void remove(MessageComponent<?> component){
         components.add(component);
     }
 
@@ -61,18 +62,18 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     }
 
     @Override
-    public Collection<MessageComponent> getExtras() {
+    public Collection<MessageComponent<?>> getExtras() {
         return components;
     }
 
     @Override
-    public MessageComponentSet addExtra(MessageComponent component) {
+    public MessageComponentSet addExtra(MessageComponent<?> component) {
         add(component);
         return this;
     }
 
     @Override
-    public MessageComponentSet removeExtra(MessageComponent component) {
+    public MessageComponentSet removeExtra(MessageComponent<?> component) {
         remove(component);
         return this;
     }
@@ -85,8 +86,13 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     @Override
     public Document compile(String key, VariableSet variables) {
         ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);
-        components.forEach(component -> entry.getEntries().add(component.compile(variables)));
+        components.forEach(component -> entry.entries().add(component.compile(variables)));
         return entry;
+    }
+
+    @Override
+    public void decompile(Document data) {
+        this.components.addAll(Text.decompileArray(data));
     }
 
 }

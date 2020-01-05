@@ -30,13 +30,18 @@ import org.mcnative.common.player.MinecraftPlayer;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefaultWhitelistProvider implements WhitelistProvider {
+public class DefaultWhitelistProvider {
 
+   /*
     private final DatabaseCollection whitelistSettings, whitelistedPlayers;
     private final Collection<MinecraftPlayer> whitelistedPlayersCache;
     private boolean enabled;
 
     public DefaultWhitelistProvider() {
+        whitelistedPlayers = null;
+        whitelistSettings = null;
+        whitelistedPlayersCache = null;
+        /*
         this.whitelistSettings = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
                 .createCollection("WhitelistSettings")
                 .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)
@@ -47,7 +52,8 @@ public class DefaultWhitelistProvider implements WhitelistProvider {
                 .create();
         this.whitelistedPlayersCache = loadWhitelistedPlayers();
         this.enabled = loadWhitelistEnabled();
-    }
+
+}
 
     @Override
     public boolean isEnabled() {
@@ -102,4 +108,5 @@ public class DefaultWhitelistProvider implements WhitelistProvider {
         }
         return result.first().getBoolean("enabled");
     }
+    */
 }

@@ -22,8 +22,7 @@ package org.mcnative.bungeecord;
 import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
-import org.mcnative.bungeecord.server.McNativeBungeeServerMap;
-import org.mcnative.proxy.server.MinecraftServer;
+import org.mcnative.bungeecord.server.BungeeCordServerMap;
 
 import java.util.Collection;
 import java.util.Map;
@@ -31,11 +30,11 @@ import java.util.Map;
 public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
     private final ConfigurationAdapter original;
-    private final McNativeBungeeServerMap serverMap;
+    private final BungeeCordServerMap serverMap;
 
-    public McNativeConfigurationAdapter(Collection<MinecraftServer> servers,ConfigurationAdapter original) {
+    public McNativeConfigurationAdapter(BungeeCordServerMap serverMap, ConfigurationAdapter original) {
         this.original = original;
-        this.serverMap = new McNativeBungeeServerMap(servers);
+        this.serverMap = serverMap;
     }
 
     @Override

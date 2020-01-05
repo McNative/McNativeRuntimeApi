@@ -21,6 +21,8 @@ package org.mcnative.common.player;
 
 public class DeviceInfo {
 
+    public static DeviceInfo JAVA = new DeviceInfo("Java","Java",OperatingSystem.UNKNOWN, UIType.JAVA);
+
     private final String name, id;
     private final OperatingSystem operatingSystem;
     private final UIType uiType;
@@ -44,7 +46,7 @@ public class DeviceInfo {
         return operatingSystem;
     }
 
-    public UIType getUiType() {
+    public UIType getUIType() {
         return uiType;
     }
 

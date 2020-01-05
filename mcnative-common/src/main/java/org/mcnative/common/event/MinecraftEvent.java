@@ -19,4 +19,4 @@
 
 package org.mcnative.common.event;
 
-public interface MinecraftEvent{}
+public interface MinecraftEvent {}

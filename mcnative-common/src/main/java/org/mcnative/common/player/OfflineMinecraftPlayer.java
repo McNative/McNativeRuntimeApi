@@ -23,6 +23,7 @@ import net.prematic.libraries.document.Document;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.serviceprovider.permission.PermissionGroup;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
@@ -35,7 +36,7 @@ import java.util.function.BiFunction;
 
 public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
-    private final MinecraftPlayerData data;
+    private MinecraftPlayerData data;
     private PermissionHandler permissionHandler;
 
     public OfflineMinecraftPlayer(MinecraftPlayerData data) {
@@ -43,43 +44,43 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public int getId() {
-        return data.getId();
-    }
-
-    @Override
     public String getName() {
-        return data.getName();
+        return getData().getName();
     }
 
     @Override
     public UUID getUniqueId() {
-        return data.getUniqueId();
+        return getData().getUniqueId();
     }
 
     @Override
     public long getXBoxId() {
-        return data.getXBoxId();
+        return getData().getXBoxId();
     }
 
     @Override
     public long getFirstPlayed() {
-        return data.getFirstPlayed();
+        return getData().getFirstPlayed();
     }
 
     @Override
     public long getLastPlayed() {
-        return data.getLastPlayed();
+        return getData().getLastPlayed();
     }
 
     @Override
     public GameProfile getGameProfile() {
-        return McNative.getInstance().getGameProfileLoader().getGameProfile(getUniqueId());//Todo Change to data?
+        return getData().getGameProfile();
     }
 
     @Override
     public Document getProperties() {
-        return data.getProperties();
+        return getData().getProperties();
+    }
+
+    private MinecraftPlayerData getData(){
+        if(!data.isCached()) data = data.reload();
+        return data;
     }
 
     @Override
@@ -94,22 +95,32 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     @Override
     public PlayerDesign getDesign() {
-        return permissionHandler.getDesign();
+        return getPermissionHandler().getDesign();
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer player) {
-        return permissionHandler.getDesign(player);
+        return getPermissionHandler().getDesign(player);
     }
 
     @Override
     public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
-        return (T) McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
+        return McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getAsConnectedPlayer() {
+        return McNative.getInstance().getLocal().getConnectedPlayer(getUniqueId());
     }
 
     @Override
     public OnlineMinecraftPlayer getAsOnlinePlayer() {
-        return McNative.getInstance().getPlayerManager().getOnlinePlayer(getUniqueId());
+        return McNative.getInstance().getNetwork().getOnlinePlayer(getUniqueId());
+    }
+
+    @Override
+    public boolean isConnected() {
+        return getAsConnectedPlayer() != null;
     }
 
     @Override
@@ -127,60 +138,80 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         McNative.getInstance().getRegistry().getService(WhitelistProvider.class).set(this,whitelisted);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public PermissionHandler getPermissionHandler() {
-        if(permissionHandler == null) permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);
+        if(permissionHandler == null){
+            permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);
+        }else if(!permissionHandler.isCached()){
+            permissionHandler = permissionHandler.reload();
+        }
         return permissionHandler;
     }
 
     @Override
     public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        permissionHandler.setPlayerDesignGetter(designGetter);
+        getPermissionHandler().setPlayerDesignGetter(designGetter);
     }
 
     @Override
     public boolean isOperator() {
-        return permissionHandler.isOperator();
+        return getPermissionHandler().isOperator();
     }
 
     @Override
     public void setOperator(boolean operator) {
-        permissionHandler.setOperator(operator);
+        getPermissionHandler().setOperator(operator);
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return permissionHandler.getPermissions();
+        return getPermissionHandler().getPermissions();
     }
 
     @Override
     public Collection<String> getAllPermissions() {
-        return permissionHandler.getAllPermissions();
+        return getPermissionHandler().getAllPermissions();
     }
 
     @Override
-    public Collection<String> getPermissionGroups() {
-        return permissionHandler.getPermissionGroups();
+    public Collection<PermissionGroup> getGroups() {
+        return getPermissionHandler().getGroups();
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return permissionHandler.isPermissionSet(permission);
+        return getPermissionHandler().isPermissionSet(permission);
+    }
+
+    @Override
+    public boolean isPermissionAssigned(String permission) {
+        return getPermissionHandler().isPermissionAssigned(permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return permissionHandler.hasPermission(permission);
+        return getPermissionHandler().hasPermission(permission);
     }
 
     @Override
-    public void addPermission(String permission) {
-        permissionHandler.addPermission(permission);
+    public void setPermission(String permission, boolean allowed) {
+        getPermissionHandler().setPermission(permission, allowed);
     }
 
     @Override
-    public void removePermission(String permission) {
-        permissionHandler.removePermission(permission);
+    public void unsetPermission(String permission) {
+        getPermissionHandler().unsetPermission(permission);
+    }
+
+    @Override
+    public void addGroup(String name) {
+        getPermissionHandler().addGroup(name);
+    }
+
+    @Override
+    public void removeGroup(String name) {
+        getPermissionHandler().removeGroup(name);
     }
 
     @Override

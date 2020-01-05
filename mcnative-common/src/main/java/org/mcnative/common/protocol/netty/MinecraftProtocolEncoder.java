@@ -22,31 +22,44 @@ package org.mcnative.common.protocol.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.packet.PacketDirection;
-import org.mcnative.common.protocol.packet.PacketManager;
+import org.mcnative.common.protocol.packet.*;
+import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 
+import java.util.List;
+import java.util.function.Consumer;
+
+//@Todo implement cancellation
 public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPacket> {
 
     private final PacketManager packetManager;
+    private final Endpoint endpoint;
     private final PacketDirection direction;
     private final MinecraftConnection connection;
     private final MinecraftProtocolVersion version;
 
-    public MinecraftProtocolEncoder(PacketManager packetManager,PacketDirection direction, MinecraftConnection connection) {
+    public MinecraftProtocolEncoder(PacketManager packetManager, Endpoint endpoint, PacketDirection direction, MinecraftConnection connection) {
         this.packetManager = packetManager;
+        this.endpoint = endpoint;
         this.direction = direction;
         this.connection = connection;
         this.version = connection.getProtocolVersion();
     }
 
     @Override
-    protected void encode(ChannelHandlerContext context, MinecraftPacket packet, ByteBuf buffer){
-        final MinecraftPacket finalPacket = packet = this.packetManager.handlePacket(PacketDirection.OUTGOING,this.version,connection,packet);
-        MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(PacketDirection.OUTGOING,connection.getState(),version));
-        finalPacket.write(direction,this.version,buffer);
+    protected void encode(ChannelHandlerContext context, MinecraftPacket packet0, ByteBuf buffer){
+        MinecraftPacket packet = packet0;
+        List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
+        if(listeners != null && !listeners.isEmpty()){
+            MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+            listeners.forEach(listener -> listener.handle(event));
+            packet = event.getPacket();
+        }
+        MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));
+        packet.write(direction,this.version,buffer);
     }
 }

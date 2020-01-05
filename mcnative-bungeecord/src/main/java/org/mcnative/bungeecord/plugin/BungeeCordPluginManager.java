@@ -37,7 +37,6 @@ import java.io.File;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-//@Todo Maybe implement custom plugin detection and loader creation
 public class BungeeCordPluginManager implements PluginManager {
 
     private final static String LOADER_CLASS_NAME = "org.mcnative.loader.bootstrap.BungeeCordMcNativePluginBootstrap";
@@ -46,6 +45,8 @@ public class BungeeCordPluginManager implements PluginManager {
     private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
     private final Collection<PluginLoader> loaders;
     private final Collection<Plugin> plugins;
+
+    private net.md_5.bungee.api.plugin.PluginManager original;
 
     public BungeeCordPluginManager() {
         this.services = new ArrayList<>();
@@ -65,18 +66,18 @@ public class BungeeCordPluginManager implements PluginManager {
     }
 
     @Override
-    public Plugin getPlugin(String name) {
+    public Plugin<?> getPlugin(String name) {
         return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getName().equals(name));
     }
 
     @Override
-    public Plugin getPlugin(UUID id) {
+    public Plugin<?> getPlugin(UUID id) {
         return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getId().equals(id));
     }
 
     @Override
     public boolean isPluginEnabled(String name) {
-        Plugin plugin =  getPlugin(name);
+        Plugin<?> plugin =  getPlugin(name);
         return plugin != null && plugin.getLoader().isEnabled();
     }
 
@@ -156,6 +157,7 @@ public class BungeeCordPluginManager implements PluginManager {
             else if(o1.priority > o2.priority) return 1;
             return 0;
         });
+        if(services.size() == 0) throw new IllegalArgumentException("Service "+serviceClass+" is not available.");
         return (T) services.get(0).service;
     }
 
@@ -197,6 +199,19 @@ public class BungeeCordPluginManager implements PluginManager {
         if(loader.isInstanceAvailable()) this.plugins.add(loader.getInstance());
     }
 
+    @Internal
+    public net.md_5.bungee.api.plugin.Plugin getMappedPlugin(Plugin<?> original){
+        for (net.md_5.bungee.api.plugin.Plugin plugin : this.original.getPlugins()) if(plugin.equals(original)) return plugin;
+        throw new IllegalArgumentException("McNative Mapping error (plugin / mcnative -> bungee)");
+    }
+
+    @Internal
+    public Plugin<?> getMappedPlugin(net.md_5.bungee.api.plugin.Plugin original){
+        for (Plugin<?> plugin : plugins) if(plugin.equals(original)) return plugin;
+        throw new IllegalArgumentException("McNative Mapping error (plugin / bungee -> mcnative)");
+    }
+
+    @Internal
     @SuppressWarnings("unchecked")
     public void inject(net.md_5.bungee.api.plugin.PluginManager original){
         Map<String, net.md_5.bungee.api.plugin.Plugin> oldMap = ReflectionUtil.getFieldValue(original,"plugins",Map.class);
@@ -209,6 +224,11 @@ public class BungeeCordPluginManager implements PluginManager {
 
         ReflectionUtil.changeFieldValue(original,"plugins",newMap);
         newMap.putAll(oldMap);
+    }
+
+    @Internal
+    public void setOriginal(net.md_5.bungee.api.plugin.PluginManager original){
+        this.original = original;
     }
 
     private static class ServiceEntry {

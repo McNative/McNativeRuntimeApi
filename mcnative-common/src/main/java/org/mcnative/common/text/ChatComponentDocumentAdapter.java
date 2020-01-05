@@ -19,22 +19,23 @@
 
 package org.mcnative.common.text;
 
-import net.prematic.libraries.document.DocumentEntry;
 import net.prematic.libraries.document.adapter.DocumentAdapter;
+import net.prematic.libraries.document.entry.DocumentBase;
+import net.prematic.libraries.document.entry.DocumentEntry;
 import net.prematic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
-public class ChatComponentDocumentAdapter implements DocumentAdapter<ChatComponent> {
+public class ChatComponentDocumentAdapter implements DocumentAdapter<MessageComponent> {
 
     @Override
-    public ChatComponent read(DocumentEntry entry, TypeReference<ChatComponent> reference) {
-        if(!entry.isObject()) throw new IllegalArgumentException("Entry is not a object.");
+    public MessageComponent read(DocumentBase entry, TypeReference<MessageComponent> reference) {
         return Text.decompile(entry.toDocument());
     }
 
     @Override
-    public DocumentEntry write(String key, ChatComponent component) {
+    public DocumentEntry write(String key, MessageComponent component) {
         return component.compile(key, VariableSet.newEmptySet());
     }
 }

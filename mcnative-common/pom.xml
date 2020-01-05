@@ -46,7 +46,6 @@
     </build>
 
     <dependencies>
-        <!-- Prematic dependencies -->
 
         <dependency>
             <groupId>net.prematic.libraries</groupId>
@@ -96,6 +95,14 @@
             <version>${dependency.hikaricp}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.29.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

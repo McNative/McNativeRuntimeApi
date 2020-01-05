@@ -27,31 +27,36 @@ import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.serviceprovider.permission.PermissionHandler;
+import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.netty.MinecraftProtocolEncoder;
+import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteDecoder;
+import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteEncoder;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftDisconnectPacket;
+import org.mcnative.common.serviceprovider.permission.PermissionGroup;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
+
 
 public class BungeePendingConnection implements PendingConnection {
 
     private static final Class<?> PENDING_CONNECTION_HANDLER_CLASS;
 
     static {
-        Class pending;
+        Class<?> pending;
         try { pending  = Class.forName("net.md_5.bungee.connection.InitialHandler"); } catch (ClassNotFoundException ignored) {pending=null;}
         PENDING_CONNECTION_HANDLER_CLASS = pending;
     }
@@ -62,7 +67,6 @@ public class BungeePendingConnection implements PendingConnection {
 
     private ConnectionState state;
     private MinecraftProtocolVersion version;
-    private PermissionHandler permissionHandler;
 
     public BungeePendingConnection(net.md_5.bungee.api.connection.PendingConnection original) {
         this.original = original;
@@ -71,8 +75,6 @@ public class BungeePendingConnection implements PendingConnection {
         if(PENDING_CONNECTION_HANDLER_CLASS != null && PENDING_CONNECTION_HANDLER_CLASS.isAssignableFrom(original.getClass())) {
             this.channelWrapper = ReflectionUtil.getFieldValue(PENDING_CONNECTION_HANDLER_CLASS,original, "ch");
             this.channel = ReflectionUtil.getFieldValue(channelWrapper, "ch", Channel.class);
-            this.channel.pipeline().addAfter("packet-encoder","mcnative-packet-encoder"
-                    ,new MinecraftProtocolEncoder(McNative.getInstance().getPacketManager(), PacketDirection.OUTGOING,this));
         }else throw new IllegalArgumentException("Invalid pending connection.");
     }
 
@@ -84,6 +86,11 @@ public class BungeePendingConnection implements PendingConnection {
     @Override
     public long getXBoxId() {
         return -1;//Not a bedrock player
+    }
+
+    @Override
+    public void setUniqueId(UUID uniqueId) {
+        original.setUniqueId(uniqueId);
     }
 
     @Override
@@ -122,7 +129,7 @@ public class BungeePendingConnection implements PendingConnection {
     }
 
     @Override
-    public void disconnect(MessageComponent reason, VariableSet variables) {
+    public void disconnect(MessageComponent<?> reason, VariableSet variables) {
         String state = getRawState().toString();
         if(state.equals("STATUS") || state.equals("PING")) channel.close();
         else{
@@ -153,92 +160,48 @@ public class BungeePendingConnection implements PendingConnection {
 
     @Override
     public void sendLocalLoopPacket(MinecraftPacket packet) {
-
+        throw new UnsupportedOperationException("Coming soon");
     }
 
     @Override
     public void sendData(String channel, byte[] output) {
-
-    }
-
-    @Override
-    public InputStream sendDataQuery(String channel, byte[] output) {
-        return null;
-    }
-
-    @Override
-    public InputStream sendDataQuery(String channel, Consumer<OutputStream> output) {
-        return null;
-    }
-
-    @Override
-    public PermissionHandler getPermissionHandler() {
-        if(permissionHandler == null) permissionHandler = McNative.getInstance().getPermissionHandler().getPlayerHandler(this);
-        return permissionHandler;
-    }
-
-    @Override
-    public PlayerDesign getDesign() {
-        return permissionHandler.getDesign();
-    }
-
-    @Override
-    public PlayerDesign getDesign(MinecraftPlayer forPlayer) {
-        return permissionHandler.getDesign(forPlayer);
-    }
-
-    @Override
-    public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        permissionHandler.setPlayerDesignGetter(designGetter);
-    }
-
-    @Override
-    public boolean isOperator() {
-        return permissionHandler.isOperator();
-    }
-
-    @Override
-    public void setOperator(boolean operator) {
-        permissionHandler.setOperator(operator);
-    }
-
-    @Override
-    public Collection<String> getPermissions() {
-        return permissionHandler.getAllPermissions();
-    }
-
-    @Override
-    public Collection<String> getAllPermissions() {
-        return permissionHandler.getAllPermissions();
-    }
-
-    @Override
-    public Collection<String> getPermissionGroups() {
-        return permissionHandler.getPermissionGroups();
-    }
-
-    @Override
-    public boolean isPermissionSet(String permission) {
-        return permissionHandler.isPermissionSet(permission);
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-        return permissionHandler.hasPermission(permission);
-    }
-
-    @Override
-    public void addPermission(String permission) {
-        permissionHandler.addPermission(permission);
-    }
-
-    @Override
-    public void removePermission(String permission) {
-        permissionHandler.removePermission(permission);
+        throw new UnsupportedOperationException("Coming soon");
     }
 
     @Internal
     public void setState(ConnectionState state){
         this.state = state;
+    }
+
+    @Internal
+    public void injectProtocolHandlersToPipeline(){
+        this.channel.pipeline().addAfter("packet-encoder","mcnative-packet-encoder"
+                ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
+                        ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+        this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
+                ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
+                        ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+        this.channel.pipeline().addBefore("packet-decoder","mcnative-packet-rewrite-decoder"
+                ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
+                        ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
+    }
+
+    @Internal
+    public GameProfile extractGameProfile(){
+        Object loginResult = ReflectionUtil.getFieldValue(original,"loginProfile");
+        Object originalProperties = ReflectionUtil.getFieldValue(loginResult,"properties");
+        GameProfile.Property[] properties = new GameProfile.Property[Array.getLength(originalProperties)];
+        if(properties.length > 0){
+            for (int i = 0; i < properties.length; i++) {
+                Object property = Array.get(originalProperties,i);
+                properties[i] = new GameProfile.Property(
+                        ReflectionUtil.getFieldValue(property,"name",String.class)
+                        ,ReflectionUtil.getFieldValue(property,"value",String.class)
+                        ,ReflectionUtil.getFieldValue(property,"signature",String.class));
+            }
+        }
+        return new GameProfile(original.getUniqueId(),original.getName(),properties);
     }
 }

@@ -57,10 +57,17 @@ public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables) {
         builder.append("{keybind=").append(keybind).append("}");
+        super.toPlainText(builder, variables);
     }
 
     @Override
     public Document compile(String key, VariableSet variables) {
         return super.compile(key,variables).add("keybind",keybind);
+    }
+
+    @Override
+    public void decompile(Document data) {
+        keybind = data.getString("keybind");
+        super.decompile(data);
     }
 }

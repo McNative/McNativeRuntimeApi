@@ -19,6 +19,7 @@
 
 package org.mcnative.common.player.receiver;
 
+import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
@@ -32,28 +33,21 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     String getName();
 
-    String getPrefix();
-
-    void setPrefix(String prefix);
-
     Collection<OnlineMinecraftPlayer> getPlayers();
 
-    @Override
-    default Iterator<OnlineMinecraftPlayer> iterator() {
-        return getPlayers().iterator();
-    }
+    boolean containsPlayer(MinecraftPlayer player);
 
     void addPlayer(OnlineMinecraftPlayer player);
 
     void removePlayer(OnlineMinecraftPlayer player);
 
-    void sendMessage(String message);
 
-    default void sendMessage(MessageComponent component){
+    default void sendMessage(MessageComponent<?> component){
         sendMessage(component,VariableSet.newEmptySet());
     }
 
-    void sendMessage(MessageComponent component, VariableSet variables);
+    void sendMessage(MessageComponent<?> component, VariableSet variables);
+
 
     void sendPacket(MinecraftPacket packet);
 
@@ -61,7 +55,9 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
         receiveAble.execute(this);
     }
 
+
     void addRemovalListener(Consumer<OnlineMinecraftPlayer> listener);
 
     void addAdditionListener(Consumer<OnlineMinecraftPlayer> listener);
+
 }

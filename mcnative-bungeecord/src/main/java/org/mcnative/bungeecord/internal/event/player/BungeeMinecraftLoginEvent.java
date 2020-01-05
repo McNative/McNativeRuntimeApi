@@ -31,18 +31,20 @@ import org.mcnative.common.text.variable.VariableSet;
 public class BungeeMinecraftLoginEvent implements MinecraftPlayerLoginEvent {
 
     private final LoginEvent original;
+    private final PendingConnection connection;
     private final OnlineMinecraftPlayer player;
 
-    private MessageComponent cancelReason;
+    private MessageComponent<?> cancelReason;
     private VariableSet variables;
 
-    public BungeeMinecraftLoginEvent(LoginEvent original, OnlineMinecraftPlayer player) {
+    public BungeeMinecraftLoginEvent(LoginEvent original,PendingConnection connection, OnlineMinecraftPlayer player) {
         this.original = original;
+        this.connection = connection;
         this.player = player;
     }
 
     @Override
-    public MessageComponent getCancelReason() {
+    public MessageComponent<?> getCancelReason() {
         return cancelReason;
     }
 
@@ -53,12 +55,11 @@ public class BungeeMinecraftLoginEvent implements MinecraftPlayerLoginEvent {
 
     @Override
     public PendingConnection getConnection() {
-        //@Todo implement connection
-        return null;
+        return connection;
     }
 
     @Override
-    public void setCancelReason(MessageComponent cancelReason, VariableSet variables) {
+    public void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables) {
         this.cancelReason = cancelReason;
         this.variables = variables;
         this.original.setCancelReason((BaseComponent) null);

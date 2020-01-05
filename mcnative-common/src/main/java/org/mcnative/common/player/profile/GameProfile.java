@@ -20,6 +20,7 @@
 package org.mcnative.common.player.profile;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.utility.Iterators;
 
 import java.util.ArrayList;
@@ -31,13 +32,13 @@ public class GameProfile {
 
     private final UUID uniqueId;
     private final String name;
-    private final List<Property> properties;
+    private final Property[] properties;
 
     public GameProfile(UUID uniqueId, String name) {
-        this(uniqueId, name, new ArrayList<>());
+        this(uniqueId, name, new Property[]{});
     }
 
-    public GameProfile(UUID uniqueId, String name, List<Property> properties) {
+    public GameProfile(UUID uniqueId, String name, Property[] properties) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.properties = properties;
@@ -51,12 +52,13 @@ public class GameProfile {
         return name;
     }
 
-    public List<Property> getProperties() {
+    public Property[] getProperties() {
         return properties;
     }
 
     public Property getProperty(String name){
-        return Iterators.findOne(this.properties, property -> property.name.equals(name));
+        for (Property property : properties) if (property.getName().equals(name)) return property;
+        return null;
     }
 
     public String getTextures(){
@@ -64,8 +66,20 @@ public class GameProfile {
         return textures.getValue();
     }
 
+    public Document toDocument(){
+        return Document.newDocument(this);
+    }
+
+    public String toJson(boolean pretty){
+        return DocumentFileType.JSON.getWriter().write(toDocument(),pretty);
+    }
+
     public static GameProfile fromJson(String json){
-        return Document.newDocument(json).getAsObject(GameProfile.class);
+        return fromDocument(DocumentFileType.JSON.getReader().read(json));
+    }
+
+    public static GameProfile fromDocument(Document document){
+        return document.getAsObject(GameProfile.class);
     }
 
     public static final class Property {

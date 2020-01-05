@@ -27,20 +27,28 @@ import net.prematic.libraries.command.command.CommandExecutor;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.map.callback.CallbackMap;
-import net.prematic.libraries.utility.map.callback.LinkedHashCallbackMap;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.MappedPlugin;
-import org.mcnative.bungeecord.plugin.PluginObjectOwner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class BungeeCordCommandManager implements CommandManager {
 
+    private final BungeeCordPluginManager pluginManager;
     private final PluginManager original;
     private final List<Command> commands;
+
+    public BungeeCordCommandManager(BungeeCordPluginManager pluginManager, PluginManager original) {
+        this.pluginManager = pluginManager;
+        this.original = original;
+        this.commands = new ArrayList<>();
+    }
 
     @Override
     public String getName() {
@@ -59,24 +67,20 @@ public class BungeeCordCommandManager implements CommandManager {
 
     @Override
     public void setNotFoundHandler(CommandExecutor executor) {
-        throw new UnsupportedOperationException("Not found handlers are not supported on BungeeCord, commands will be forwarded to spigot");
+        throw new UnsupportedOperationException("Not found handlers are not supported on BungeeCord, commands will be forwarded to sub server");
     }
 
     @Override
-    public void dispatchCommand(CommandSender sender, String command) {
+    public void dispatchCommand(CommandSender sender, String command) {//@Todo map sender
         original.dispatchCommand(null,command);
     }
 
     @Override
     public void registerCommand(ObjectOwner owner, Command command) {
-        Plugin plugin = null;
-        if(owner instanceof MappedPlugin) plugin = ((MappedPlugin) owner).getPlugin();
-        else if(owner instanceof net.prematic.libraries.plugin.Plugin){
-
-        }else throw new IllegalArgumentException("Object owner is not a plugin");
+        Plugin plugin = getOriginalPlugin(owner);
 
         if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
-        original.registerCommand(null,new McNativeCommand(command));
+        this.original.registerCommand(null,new McNativeCommand(command));
         this.commands.add(command);
         command.init(this,owner);
     }
@@ -91,38 +95,57 @@ public class BungeeCordCommandManager implements CommandManager {
     public void unregisterCommand(Command command) {
         if(command instanceof BungeeCordCommand){
             original.unregisterCommand(((BungeeCordCommand) command).getOriginal());
-            //this.commands.remove(command);
         }else{
-
+            net.md_5.bungee.api.plugin.Command mapped = null;
+            for (Map.Entry<String, net.md_5.bungee.api.plugin.Command> entry : original.getCommands()) {
+                if(entry.getValue().equals(command)) mapped = entry.getValue();
+            }
+            if(mapped != null)original.unregisterCommand(mapped);
         }
     }
 
     @Override
     public void unregisterCommand(ObjectOwner owner) {
-        Plugin plugin = null;
-        if(owner instanceof MappedPlugin) plugin = ((MappedPlugin) owner).getPlugin();
-        else if(owner instanceof net.prematic.libraries.plugin.Plugin){
-
-        }else throw new IllegalArgumentException("Object owner is not a plugin");
+        Plugin plugin = getOriginalPlugin(owner);
         original.unregisterCommands(plugin);
     }
 
     @Override
     public void unregisterCommands() {
-        original.getCommands().forEach(entry -> original.unregisterCommand(entry.getValue()));
         this.commands.clear();
+        original.getCommands().forEach(entry -> original.unregisterCommand(entry.getValue()));
     }
 
+    @Internal
+    void registerCommand(Plugin plugin, net.md_5.bungee.api.plugin.Command command){
+        this.commands.add(new BungeeCordCommand(command,pluginManager.getMappedPlugin(plugin)));
+    }
+
+    @Internal
+    void unregisterCommand(net.md_5.bungee.api.plugin.Command command){
+        this.commands.remove(command);
+    }
+
+    @Internal
+    void unregisterCommands(Collection<net.md_5.bungee.api.plugin.Command> commands){
+        this.commands.removeAll(commands);
+    }
+
+    private Plugin getOriginalPlugin(ObjectOwner owner) {
+        Plugin plugin;
+        if (owner instanceof MappedPlugin) {
+            plugin = ((MappedPlugin) owner).getPlugin();
+        } else if (owner instanceof net.prematic.libraries.plugin.Plugin) {
+            plugin = pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner);
+        } else throw new IllegalArgumentException("Object owner is not a plugin");
+        return plugin;
+    }
+
+    @Internal
     @SuppressWarnings("unchecked")
     public void inject(){
-        PluginManager
-        Map<Plugin, net.md_5.bungee.api.plugin.Command> oldMap = ReflectionUtil.getFieldValue(original,"commandsByPlugin", Multimap.class).asMap();
-
-        CallbackMap<Plugin, net.md_5.bungee.api.plugin.Command> newMap = new LinkedHashCallbackMap<>();
-        newMap.setPutCallback((owner, command) -> commands.add(new BungeeCordCommand(command,new PluginObjectOwner(owner))));
-        newMap.setRemoveCallback((owner, command) -> commands.remove(command));
-
+        Multimap<Plugin, net.md_5.bungee.api.plugin.Command> oldMap = ReflectionUtil.getFieldValue(original,"commandsByPlugin", Multimap.class);
+        MappedCommandMap newMap = new MappedCommandMap(this,oldMap);
         ReflectionUtil.changeFieldValue(original,"commandsByPlugin",newMap);
-        newMap.putAll(oldMap);
     }
 }

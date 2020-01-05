@@ -19,17 +19,14 @@
 
 package org.mcnative.common.connection;
 
-import org.mcnative.common.MinecraftOutputStream;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.function.Consumer;
 
 public interface MinecraftConnection {
 
@@ -48,11 +45,11 @@ public interface MinecraftConnection {
         disconnect(Text.of(message));
     }
 
-    default void disconnect(MessageComponent reason){
+    default void disconnect(MessageComponent<?> reason){
         disconnect(reason,VariableSet.newEmptySet());
     }
 
-    void disconnect(MessageComponent reason, VariableSet variables);
+    void disconnect(MessageComponent<?> reason, VariableSet variables);
 
 
     void sendPacket(MinecraftPacket packet);
@@ -62,19 +59,7 @@ public interface MinecraftConnection {
 
     default OutputStream sendData(String channel){
         return new MinecraftOutputStream(channel,this);
-    }//requires flush and close
-
-    default void sendData(String channel,Consumer<OutputStream> output){
-        MinecraftOutputStream stream = new MinecraftOutputStream(channel,this);
-        output.accept(stream);
-        stream.flush();
     }
 
     void sendData(String channel, byte[] output);
-
-
-    InputStream sendDataQuery(String channel, byte[] output);
-
-    InputStream sendDataQuery(String channel,Consumer<OutputStream> output);//Always receives same id (Multiple flushable)
-
 }

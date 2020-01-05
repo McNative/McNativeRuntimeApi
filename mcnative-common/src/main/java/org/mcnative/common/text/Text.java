@@ -20,12 +20,15 @@
 package org.mcnative.common.text;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.entry.DocumentEntry;
 import net.prematic.libraries.document.type.DocumentFileType;
 import org.mcnative.common.text.components.*;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Text {
@@ -39,7 +42,7 @@ public class Text {
     }
 
     public static TextComponent of(String text){
-        return null;
+        return of(text,TextColor.WHITE);
     }
 
     public static TextComponent of(String text, TextColor color){
@@ -49,8 +52,6 @@ public class Text {
     public static TextComponent of(String text, TextColor color, Set<TextStyle> styling){
         return new TextComponent(text,color,styling);
     }
-
-
 
     public static KeybindComponent ofKeybind(String keybind){
         return ofKeybind(keybind,TextColor.WHITE);
@@ -107,15 +108,15 @@ public class Text {
     }
 
 
-    public static ChatComponent parse(String text){
+    public static MessageComponent<?> parse(String text){
         return parse(text,true);
     }
 
-    public static ChatComponent parse(String text,boolean markup){
+    public static MessageComponent<?> parse(String text,boolean markup){
         return parse(text,markup,true,DEFAULT_ALTERNATE_COLOR_CHAR);
     }
 
-    public static ChatComponent parse(String text, boolean markup, boolean colors, char alternateChar){
+    public static MessageComponent<?> parse(String text, boolean markup, boolean colors, char alternateChar){
         return null;
     }
 
@@ -127,12 +128,33 @@ public class Text {
         return new String(content);
     }
 
-    public static ChatComponent decompile(String jsonText){
+    public static MessageComponent<?> decompile(String jsonText){
         return decompile(DocumentFileType.JSON.getReader().read(jsonText));
     }
 
-    public static ChatComponent decompile(Document document){
-        return null;
+    public static MessageComponent<?> decompile(Document data){
+        if(data.isArray()) return new MessageComponentSet(decompileArray(data));
+        else return decompileComponent(data);
     }
 
+    public static MessageComponent<?> decompileComponent(DocumentEntry data){
+        if(data.isPrimitive()) return new TextComponent(data.toPrimitive().getAsString());
+        else{
+            MessageComponent<?> component;
+            Document document = data.toDocument();
+            if(document.contains("text")) component = new TextComponent();
+            else if(document.contains("keybind")) component = new KeybindComponent();
+            else if(document.contains("translation")) component = new TranslationComponent();
+            else if(document.contains("entityName")) component = new ScoreComponent();
+            else throw new IllegalArgumentException("Invalid message component");
+            component.decompile(data.toDocument());
+            return component;
+        }
+    }
+
+    public static List<MessageComponent<?>> decompileArray(Document data){
+        List<MessageComponent<?>> components = new ArrayList<>();
+        for (DocumentEntry entry : data.entries()) components.add(decompileComponent(entry));
+        return components;
+    }
 }

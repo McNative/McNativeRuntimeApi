@@ -23,12 +23,17 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.prematic.libraries.event.DefaultEventBus;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
-import org.mcnative.bungeecord.internal.event.player.McNativeBridgeEventHandler;
+import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
+import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
+import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.common.EXAMPLE.TEST.Test;
 import org.mcnative.common.McNative;
+import org.mcnative.common.protocol.packet.DefaultPacketManager;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -41,35 +46,44 @@ public class McNativeLauncher {
     }
 
     public static void launchMcNativeInternal(){
-        Logger logger = ProxyServer.getInstance().getLogger();
         if(McNative.isAvailable()) return;
+        Logger logger = ProxyServer.getInstance().getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
-
         ProxyServer proxy = ProxyServer.getInstance();
 
+        BungeeCordServerMap serverMap = new BungeeCordServerMap();
         BungeeCordPluginManager pluginManager = new BungeeCordPluginManager();
         BungeeCordPlayerManager playerManager = new BungeeCordPlayerManager();
-        BungeeCordService instance = new BungeeCordService(pluginManager,playerManager);
+        BungeeCordCommandManager commandManager = new BungeeCordCommandManager(pluginManager,ProxyServer.getInstance().getPluginManager());
 
+        BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
+        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,null,localService);
         McNative.setInstance(instance);
 
-        proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(instance.getServers(),proxy.getConfigurationAdapter()));
+
+        proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
 
+
         //Override plugin manager
-        PluginManager originalPluginManager = proxy.getPluginManager();//ReflectionUtil.getFieldValue(proxy,"pluginManager",PluginManager.class);
+        PluginManager originalPluginManager = proxy.getPluginManager();
         pluginManager.inject(originalPluginManager);
-        McNativeBungeePluginManager newPluginManager = new McNativeBungeePluginManager(originalPluginManager,instance.getEventBus());
+        McNativeBungeePluginManager newPluginManager = new McNativeBungeePluginManager(originalPluginManager,localService.getEventBus());
+        pluginManager.setOriginal(newPluginManager);
         ReflectionUtil.changeFieldValue(proxy,"pluginManager",newPluginManager);
-        new McNativeBridgeEventHandler(newPluginManager,instance.getEventBus(),playerManager);
+        new McNativeBridgeEventHandler(newPluginManager,localService.getEventBus(),playerManager,serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
 
+
         //Override command manager
+        commandManager.inject();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised command manager.");
 
         //initialise connection handlers
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
+        Test.launchTest();
     }
 
     @SuppressWarnings("unchecked")
@@ -88,11 +102,4 @@ public class McNativeLauncher {
         plugins.put(description.getName(),plugin);
     }
 
-
-    /*
-    Command integration
-    Messaging integration
-    Handler integrations (Permission / Punishment / Whitelist / Connect / Reconnect)
-    Player integration
-     */
 }

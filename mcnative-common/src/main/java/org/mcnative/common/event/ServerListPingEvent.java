@@ -19,15 +19,18 @@
 
 package org.mcnative.common.event;
 
-import org.mcnative.common.ServerPingResponse;
-import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
+
+import java.net.InetSocketAddress;
 
 public interface ServerListPingEvent extends MinecraftEvent{
 
-    PendingConnection getConnection();
+    InetSocketAddress getClientAddress();
 
-    ServerPingResponse getResponse();
+    InetSocketAddress getVirtualHost();
 
-    void setResponse(ServerPingResponse ping);
+    ServerStatusResponse getResponse();
+
+    void setResponse(ServerStatusResponse ping);
 
 }

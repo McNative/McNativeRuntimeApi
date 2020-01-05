@@ -22,8 +22,11 @@ package org.mcnative.common.connection;
 public enum ConnectionState {
 
     HANDSHAKE(),
+
     INFO(),
+
     LOGIN(),
-    GAME();
+
+    GAME()
 
 }

@@ -22,6 +22,7 @@ package org.mcnative.bungeecord.internal.event.player;
 import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.text.components.MessageComponent;
 
 public class BungeeMinecraftLogoutEvent implements MinecraftPlayerLogoutEvent {
 

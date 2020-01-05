@@ -32,6 +32,12 @@ public interface SetupAssistance {
 
     void setWelcomeMessage(ChatComponent<?> message);
 
+
+    //Enable/Disable
+    //Options
+    //Input (Text / Number (Decimal / Long) / Regex)
+
+
     void join(OnlineMinecraftPlayer player);
 
     void stop();

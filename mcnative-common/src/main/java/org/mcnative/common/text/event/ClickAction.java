@@ -21,9 +21,14 @@ package org.mcnative.common.text.event;
 
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class ClickAction {
+
+    private static Map<String,ClickAction> REGISTRY = new HashMap<>();
 
     public static final ClickAction OPEN_URL = new DefaultMinecraftEvent("OPEN_URL");
     public static final ClickAction RUN_COMMAND = new DefaultMinecraftEvent("RUN_COMMAND");
@@ -40,6 +45,13 @@ public abstract class ClickAction {
             else throw new IllegalArgumentException("Invalid execute type");
         }
     };
+
+    static {
+        registerAction(OPEN_URL);
+        registerAction(RUN_COMMAND);
+        registerAction(SUGGEST_COMMAND);
+        registerAction(CHANGE_PAGE);
+    }
 
     private final String name;
     private final boolean directEvent;
@@ -62,6 +74,17 @@ public abstract class ClickAction {
     }
 
     public abstract void execute(OnlineMinecraftPlayer player, Object value);
+
+    public static void registerAction(ClickAction action){
+        if(REGISTRY.containsKey(action.getName())) throw new IllegalArgumentException("A action with the name "+action.getName()+"is already registered");
+        REGISTRY.put(action.getName(),action);
+    }
+
+    public static ClickAction of(String name){
+        ClickAction action = REGISTRY.get(name);
+        if(action == null) throw new IllegalArgumentException("Action "+name+" not found");
+        return action;
+    }
 
     private static class DefaultMinecraftEvent extends ClickAction {
 

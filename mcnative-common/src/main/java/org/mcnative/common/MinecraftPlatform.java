@@ -37,6 +37,8 @@ public interface MinecraftPlatform {
 
     boolean isProxy();
 
+    boolean isService();
+
     void check(Consumer<ProtocolCheck> checker);
 
 }

@@ -21,16 +21,14 @@ package org.mcnative.common.player;
 
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.annonations.Nullable;
-import org.mcnative.common.ServerPingResponse;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.Permissable;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerInfo {
-
-    int getId();
+public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo {
 
     UUID getUniqueId();
 
@@ -48,7 +46,7 @@ public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerI
 
     String getDisplayName();
 
-    String getDisplayName(MinecraftPlayer player);//Extra display name for another player (Good for Nick).
+    String getDisplayName(MinecraftPlayer player);//Extra display name for another player (Useful for Nick).
 
     PlayerDesign getDesign();
 
@@ -58,7 +56,13 @@ public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerI
     <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass);
 
     @Nullable
+    ConnectedMinecraftPlayer getAsConnectedPlayer();
+
+    @Nullable
     OnlineMinecraftPlayer getAsOnlinePlayer();
+
+
+    boolean isConnected();
 
     boolean isOnline();
 
@@ -67,6 +71,7 @@ public interface MinecraftPlayer extends Permissable, ServerPingResponse.PlayerI
     }
 
 
+    //@Todo per server integration? -> global / Server
     boolean isWhitelisted();
 
     void setWhitelisted(boolean whitelisted);

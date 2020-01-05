@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-public class DefaultPunishmentProvider implements PunishmentProvider {
+public class DefaultPunishmentProvider {
 
+   /*
     private static int TYPE_BAN = 1;
     private static int TYPE_MUTE = 2;
 
@@ -43,6 +44,9 @@ public class DefaultPunishmentProvider implements PunishmentProvider {
     private final Cache<PunishEntry> punishEntryCache;
 
     public DefaultPunishmentProvider() {
+        punishmentStorage = null;
+        punishEntryCache = null;
+      /*
         this.punishmentStorage = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
                 .createCollection("Punishment")
                 .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)
@@ -56,7 +60,8 @@ public class DefaultPunishmentProvider implements PunishmentProvider {
                 .setExpireAfterAccess(30, TimeUnit.MINUTES)
                 .setRemoveListener(entry -> McNative.getInstance().getPlayerManager().getOnlinePlayer(entry.playerId) != null)
                 .registerQuery("playerId", (entry, objects) -> entry.playerId == (int) objects[0] && entry.type == (int) objects[1]);
-    }
+
+}
 
     @Override
     public Collection<MinecraftPlayer> getBanList() {
@@ -185,19 +190,20 @@ public class DefaultPunishmentProvider implements PunishmentProvider {
                 resultEntry.getString("reason"));
     }
 
-    public static class PunishEntry {
+public static class PunishEntry {
 
-        final int id, playerId, type;
-        final long since, duration;
-        final String reason;
+    final int id, playerId, type;
+    final long since, duration;
+    final String reason;
 
-        public PunishEntry(int id, int playerId, int type, long since, long duration, String reason) {
-            this.id = id;
-            this.playerId = playerId;
-            this.type = type;
-            this.since = since;
-            this.duration = duration;
-            this.reason = reason;
-        }
+    public PunishEntry(int id, int playerId, int type, long since, long duration, String reason) {
+        this.id = id;
+        this.playerId = playerId;
+        this.type = type;
+        this.since = since;
+        this.duration = duration;
+        this.reason = reason;
     }
+}
+    */
 }

@@ -26,7 +26,7 @@ import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
-public class TextComponent extends AbstractChatComponent{
+public class TextComponent extends AbstractChatComponent<TextComponent>{
 
     private String text;
 
@@ -57,10 +57,18 @@ public class TextComponent extends AbstractChatComponent{
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables) {
         builder.append(variables.replace(text));
+        super.toPlainText(builder, variables);
     }
 
     @Override
     public Document compile(String key,VariableSet variables) {
         return super.compile(key,variables).add("text",variables.replace(text));
+    }
+
+
+    @Override
+    public void decompile(Document data) {
+        text = data.getString("text");
+        super.decompile(data);
     }
 }
