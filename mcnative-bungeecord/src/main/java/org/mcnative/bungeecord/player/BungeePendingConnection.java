@@ -25,8 +25,6 @@ import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftEdition;
@@ -37,18 +35,14 @@ import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteEncode
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftDisconnectPacket;
-import org.mcnative.common.serviceprovider.permission.PermissionGroup;
-import org.mcnative.common.serviceprovider.permission.PermissionHandler;
-import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
+import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.lang.reflect.Array;
 import java.net.InetSocketAddress;
-import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
 
 
 public class BungeePendingConnection implements PendingConnection {
@@ -174,10 +168,12 @@ public class BungeePendingConnection implements PendingConnection {
     }
 
     @Internal
-    public void injectProtocolHandlersToPipeline(){
+    public void injectUpstreamProtocolHandlersToPipeline(){
         this.channel.pipeline().addAfter("packet-encoder","mcnative-packet-encoder"
                 ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+        if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;
 
         this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
                 ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()

@@ -34,7 +34,7 @@ public class BungeeMinecraftPlayerChatEvent implements MinecraftPlayerChatEvent 
     public BungeeMinecraftPlayerChatEvent(ChatEvent original, OnlineMinecraftPlayer player) {
         this.original = original;
         this.player = player;
-        this.channel = player.getSelectedChatChannel();
+        this.channel = player.getChatChannel();
     }
 
     @Override

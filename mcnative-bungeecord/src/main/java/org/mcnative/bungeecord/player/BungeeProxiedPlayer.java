@@ -19,10 +19,12 @@
 
 package org.mcnative.bungeecord.player;
 
+import io.netty.channel.Channel;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.prematic.libraries.utility.annonations.Internal;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -39,8 +41,12 @@ import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
+import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteDecoder;
+import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteEncoder;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
+import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftResourcePackSendPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
@@ -49,6 +55,7 @@ import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
+import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -428,7 +435,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     public void postLogin(net.md_5.bungee.api.connection.ProxiedPlayer original){
         this.original = original;
         connection.setState(ConnectionState.GAME);
-        connection.injectProtocolHandlersToPipeline();
+        connection.injectUpstreamProtocolHandlersToPipeline();
     }
 
     @Internal
@@ -439,6 +446,23 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     @Internal
     public void setServer(MinecraftServer server){
         this.server = server;
+    }
+
+    public void injectDownstreamProtocolHandlersToPipeline(){
+        if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED) return;
+        Object connection = ReflectionUtil.getFieldValue(original,"server");
+        if(connection == null) return;
+
+        Object channelWrapper = ReflectionUtil.getFieldValue(connection,"ch");
+        Channel channel = ReflectionUtil.getFieldValue(channelWrapper,"ch",Channel.class);
+
+        channel.pipeline().addAfter("packet-encoder","mcnative-packet-rewrite-encoder"
+                ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
+                        ,Endpoint.DOWNSTREAM, PacketDirection.OUTGOING,this));
+
+         channel.pipeline().addBefore("packet-decoder","mcnative-packet-rewrite-decoder"
+                ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
+                        ,Endpoint.DOWNSTREAM, PacketDirection.INCOMING,this));
     }
 }
 

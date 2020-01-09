@@ -45,8 +45,8 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
-import org.mcnative.proxy.ConnectionHandler;
 import org.mcnative.proxy.ProxyService;
+import org.mcnative.proxy.ServerConnectHandler;
 
 import java.net.InetSocketAddress;
 import java.util.*;
@@ -69,7 +69,7 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     private Collection<MessageEntry> messageListeners;
 
     private ChatChannel serverChat;
-    private ConnectionHandler connectionHandler;
+    private ServerConnectHandler connectionHandler;
     private Tablist defaultTablist;
     private ServerStatusResponse statusResponse;
 
@@ -87,6 +87,14 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     @Override
     public Collection<MinecraftServer> getServers() {
         return serverMap.getServers();
+    }
+
+    @Override
+    public List<MinecraftServer> getServersByPriority() {
+        Collection<MinecraftServer> servers = getServers();
+        List<MinecraftServer> result = servers instanceof List ? (List<MinecraftServer>) servers : new ArrayList<>(servers);
+        result.sort(Comparator.comparingInt(o -> o.getType().ordinal()));
+        return result;
     }
 
     @Override
@@ -110,17 +118,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
         ServerInfo info = net.md_5.bungee.api.ProxyServer.getInstance().constructServerInfo(name,address,"",false);
         this.serverMap.put(info.getName(),info);
         return serverMap.getMappedServer(info);
-    }
-
-    @Override
-    public ConnectionHandler getConnectionHandler() {
-        return connectionHandler;
-    }
-
-    @Override
-    public void setConnectionHandler(ConnectionHandler handler) {
-        Validate.notNull(handler);
-        this.connectionHandler = handler;
     }
 
     @Override

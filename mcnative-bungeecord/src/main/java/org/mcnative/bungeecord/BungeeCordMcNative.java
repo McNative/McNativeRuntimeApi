@@ -23,6 +23,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
+import net.prematic.libraries.dependency.DependencyManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.manager.PluginManager;
@@ -34,13 +35,12 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.DummyDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 
-import java.util.Objects;
+import java.io.File;
 
 public class BungeeCordMcNative implements McNative {
 
@@ -50,6 +50,7 @@ public class BungeeCordMcNative implements McNative {
     private final CommandSender consoleSender;
 
     private final PluginManager pluginManager;
+    private final DependencyManager dependencyManager;
     private final PlayerManager playerManager;
     private final LocalService local;
 
@@ -60,6 +61,7 @@ public class BungeeCordMcNative implements McNative {
         this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
         this.scheduler = new SimpleTaskScheduler();
         this.consoleSender = new McNativeCommand.MappedCommandSender(ProxyServer.getInstance().getConsole());
+        this.dependencyManager = new DependencyManager(new File("plugins/McNative/lib/dependencies"));
 
         this.pluginManager = pluginManager;
         this.playerManager = playerManager;
@@ -102,6 +104,11 @@ public class BungeeCordMcNative implements McNative {
     @Override
     public PluginManager getPluginManager() {
         return pluginManager;
+    }
+
+    @Override
+    public DependencyManager getDependencyManager() {
+        return dependencyManager;
     }
 
     @Override

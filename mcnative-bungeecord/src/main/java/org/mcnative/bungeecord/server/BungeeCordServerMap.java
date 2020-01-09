@@ -104,12 +104,6 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
         return value;
     }
 
-    public void add(MinecraftServer server){
-        if(getServer(server.getName()) != null) throw new IllegalArgumentException("Server is already registered");
-        ServerInfo info = server instanceof ServerInfo ? (ServerInfo) server : new WrappedMcNativeMinecraftServer(server);
-        this.servers.add(new ServerEntry(server,info));
-    }
-
     @Override
     public ServerInfo remove(Object key) {
         ServerEntry server = Iterators.removeOne(this.servers, server1 -> server1.getKey().equals(key));

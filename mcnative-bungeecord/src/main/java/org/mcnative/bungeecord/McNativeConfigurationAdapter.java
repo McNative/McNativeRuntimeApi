@@ -23,6 +23,9 @@ import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.proxy.McNativeProxyConfiguration;
+import org.mcnative.proxy.ProxyService;
 
 import java.util.Collection;
 import java.util.Map;
@@ -43,7 +46,12 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
         this.serverMap.clear();
         this.serverMap.putAll(original.getServers());
         this.original.getServers().clear();
-        //@Todo load McNative servers
+
+        McNativeProxyConfiguration.SERVER_SERVERS.forEach((name, config) -> {
+            MinecraftServer server = ProxyService.getInstance().registerServer(name,config.getAddress());
+            if(config.getPermission() != null) server.setPermission(config.getPermission());
+            if(config.getType() != null) server.setType(config.getType());
+        });
     }
 
     @Override

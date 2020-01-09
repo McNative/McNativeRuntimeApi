@@ -24,17 +24,20 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.prematic.libraries.event.DefaultEventBus;
+import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
+import org.mcnative.bungeecord.network.LocalProxyNetwork;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
 import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
-import org.mcnative.common.EXAMPLE.TEST.Test;
 import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
+import org.mcnative.proxy.McNativeProxyConfiguration;
 
+import java.io.File;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -51,13 +54,15 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
         ProxyServer proxy = ProxyServer.getInstance();
 
+        if(!McNativeProxyConfiguration.load(new JdkPrematicLogger(logger),new File("plugins/McNative/"))) return;
+
         BungeeCordServerMap serverMap = new BungeeCordServerMap();
         BungeeCordPluginManager pluginManager = new BungeeCordPluginManager();
         BungeeCordPlayerManager playerManager = new BungeeCordPlayerManager();
         BungeeCordCommandManager commandManager = new BungeeCordCommandManager(pluginManager,ProxyServer.getInstance().getPluginManager());
 
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
-        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,null,localService);
+        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new LocalProxyNetwork(localService), localService);
         McNative.setInstance(instance);
 
 
@@ -79,11 +84,8 @@ public class McNativeLauncher {
         commandManager.inject();
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised command manager.");
 
-        //initialise connection handlers
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
-        Test.launchTest();
     }
 
     @SuppressWarnings("unchecked")
