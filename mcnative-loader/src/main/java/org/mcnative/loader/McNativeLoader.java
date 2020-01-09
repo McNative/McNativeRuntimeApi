@@ -34,7 +34,7 @@ public class McNativeLoader extends ResourceLoader{
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative"
             ,"http://localhost/mcnative/download/latest.jar"
             ,"http://localhost/mcnative/latest.txt"
-            ,new File("plugins/McNative//Resources/McNative/"));
+            ,new File("plugins/McNative/lib/resources/mcnative/"));
 
     private final Logger logger;
     private final String platform;

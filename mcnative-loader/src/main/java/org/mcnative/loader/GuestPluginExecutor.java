@@ -19,6 +19,8 @@
 
 package org.mcnative.loader;
 
+import net.prematic.libraries.dependency.DependencyGroup;
+import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.RuntimeEnvironment;
@@ -31,6 +33,8 @@ import org.mcnative.common.McNative;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URLClassLoader;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GuestPluginExecutor {
@@ -55,6 +59,21 @@ public class GuestPluginExecutor {
         }else{
             return null;
         }
+    }
+
+    public boolean installDependencies(Logger logger){
+        InputStream stream = loader.getClassLoader().getResourceAsStream("mcnative.json");
+        if(stream == null) return true;
+        Document data = DocumentFileType.JSON.getReader().read(stream);
+        try{
+            DependencyGroup dependencies = McNative.getInstance().getDependencyManager().load(data);
+            dependencies.install();
+            dependencies.loadReflected((URLClassLoader) loader.getClassLoader().asJVMLoader());
+        }catch (Exception exception){
+            logger.log(Level.SEVERE,exception.getMessage());
+            return false;
+        }
+        return true;
     }
 
     public PluginLoader getLoader() {
