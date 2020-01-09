@@ -22,15 +22,21 @@ package org.mcnative.proxy;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface ProxyService extends LocalService, ProxyServer {
 
     Collection<MinecraftServer> getServers();
+
+    Collection<MinecraftServer> getServers(MinecraftServerType type);
+
+    List<MinecraftServer> getServersByPriority();
 
     MinecraftServer getServer(String name);
 
@@ -39,12 +45,6 @@ public interface ProxyService extends LocalService, ProxyServer {
     MinecraftServer getServer(InetSocketAddress address);
 
     MinecraftServer registerServer(String name, InetSocketAddress address);
-
-
-    ConnectionHandler getConnectionHandler();
-
-    void setConnectionHandler(ConnectionHandler handler);
-
 
     static ProxyService getInstance(){
         return (ProxyService) McNative.getInstance().getLocal();

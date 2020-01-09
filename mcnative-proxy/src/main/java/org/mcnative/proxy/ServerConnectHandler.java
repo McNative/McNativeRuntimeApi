@@ -23,7 +23,7 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.MessageComponent;
 
-public interface ConnectionHandler {
+public interface ServerConnectHandler {
 
     MinecraftServer getFallbackServer(MinecraftPlayer player, MinecraftServer kickedFrom);
 
