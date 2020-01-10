@@ -19,24 +19,27 @@
 
 package org.mcnative.common.serviceprovider.punishment;
 
-import net.prematic.databasequery.api.DatabaseCollection;
-import net.prematic.databasequery.api.ForeignKey;
+
+import net.prematic.databasequery.api.collection.DatabaseCollection;
+import net.prematic.databasequery.api.collection.field.FieldOption;
 import net.prematic.databasequery.api.datatype.DataType;
-import net.prematic.databasequery.api.query.option.CreateOption;
+import net.prematic.databasequery.api.query.ForeignKey;
 import net.prematic.databasequery.api.query.result.QueryResult;
 import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import net.prematic.libraries.caching.ArrayCache;
 import net.prematic.libraries.caching.Cache;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class DefaultPunishmentProvider {
+public class DefaultPunishmentProvider implements PunishmentProvider {
 
-   /*
+
     private static int TYPE_BAN = 1;
     private static int TYPE_MUTE = 2;
 
@@ -44,24 +47,21 @@ public class DefaultPunishmentProvider {
     private final Cache<PunishEntry> punishEntryCache;
 
     public DefaultPunishmentProvider() {
-        punishmentStorage = null;
-        punishEntryCache = null;
-      /*
-        this.punishmentStorage = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
+        this.punishmentStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).getDatabase(McNative.getInstance())
                 .createCollection("Punishment")
-                .attribute("id", DataType.INTEGER, CreateOption.AUTO_INCREMENT, CreateOption.PRIMARY_KEY, CreateOption.INDEX)
-                .attribute("playerId", DataType.INTEGER, -1, null, new ForeignKey(McNative.getInstance().getName(), "PlayerData", "id", ForeignKey.Option.CASCADE, null), CreateOption.UNIQUE, CreateOption.INDEX)
-                .attribute("type", DataType.INTEGER, CreateOption.NOT_NULL, CreateOption.INDEX)
-                .attribute("since", DataType.LONG, CreateOption.NOT_NULL)
-                .attribute("duration", DataType.LONG, CreateOption.NOT_NULL)
-                .attribute("reason", DataType.LONG_TEXT).create();
+                .field("id", DataType.INTEGER, FieldOption.AUTO_INCREMENT, FieldOption.PRIMARY_KEY, FieldOption.INDEX)
+                .field("playerId", DataType.UUID, -1, null, new ForeignKey(McNative.getInstance().getName(), "PlayerData", "id", ForeignKey.Option.CASCADE, null), FieldOption.UNIQUE, FieldOption.INDEX, FieldOption.NOT_NULL)
+                .field("type", DataType.INTEGER, FieldOption.NOT_NULL, FieldOption.INDEX)
+                .field("since", DataType.LONG, FieldOption.NOT_NULL)
+                .field("duration", DataType.LONG, FieldOption.NOT_NULL)
+                .field("reason", DataType.LONG_TEXT).create();
 
         this.punishEntryCache = new ArrayCache<PunishEntry>()
                 .setExpireAfterAccess(30, TimeUnit.MINUTES)
-                .setRemoveListener(entry -> McNative.getInstance().getPlayerManager().getOnlinePlayer(entry.playerId) != null)
-                .registerQuery("playerId", (entry, objects) -> entry.playerId == (int) objects[0] && entry.type == (int) objects[1]);
+                .setRemoveListener(entry -> McNative.getInstance().getLocal().getOnlinePlayer(entry.playerId) != null)
+                .registerQuery("playerId", (entry, objects) -> entry.playerId.equals(objects[0]) && entry.type == (int) objects[1]);
 
-}
+    }
 
     @Override
     public Collection<MinecraftPlayer> getBanList() {
@@ -78,7 +78,7 @@ public class DefaultPunishmentProvider {
         Collection<MinecraftPlayer> players = new ArrayList<>();
         QueryResult result = this.punishmentStorage.find().get("playerId").where("type", type).execute();
         for (QueryResultEntry resultEntry : result) {
-            players.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getInt("playerId")));
+            players.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getUniqueId("playerId")));
             cachePunishEntry(resultEntry);
         }
         return players;
@@ -87,55 +87,55 @@ public class DefaultPunishmentProvider {
 
     @Override
     public boolean isBanned(MinecraftPlayer player) {
-        return isPunished(player.getId(), TYPE_BAN);
+        return isPunished(player.getUniqueId(), TYPE_BAN);
     }
 
     @Override
     public String getBanReason(MinecraftPlayer player) {
-        return getPunishReason(player.getId(), TYPE_BAN);
+        return getPunishReason(player.getUniqueId(), TYPE_BAN);
     }
 
     @Override
     public void ban(MinecraftPlayer player, String reason) {
-        punish(player.getId(), reason, -1, TimeUnit.MILLISECONDS, TYPE_BAN);
+        punish(player.getUniqueId(), reason, -1, TimeUnit.MILLISECONDS, TYPE_BAN);
     }
 
     @Override
     public void ban(MinecraftPlayer player, String reason, long time, TimeUnit unit) {
-        punish(player.getId(), reason, time, unit, TYPE_BAN);
+        punish(player.getUniqueId(), reason, time, unit, TYPE_BAN);
     }
 
     @Override
     public void unban(MinecraftPlayer player) {
-        unpunish(player.getId(), TYPE_BAN);
+        unpunish(player.getUniqueId(), TYPE_BAN);
     }
 
     @Override
     public boolean isMuted(MinecraftPlayer player) {
-        return isPunished(player.getId(), TYPE_MUTE);
+        return isPunished(player.getUniqueId(), TYPE_MUTE);
     }
 
     @Override
     public String getMuteReason(MinecraftPlayer player) {
-        return getPunishReason(player.getId(), TYPE_MUTE);
+        return getPunishReason(player.getUniqueId(), TYPE_MUTE);
     }
 
     @Override
     public void mute(MinecraftPlayer player, String reason) {
-        punish(player.getId(), reason, -1, TimeUnit.MILLISECONDS, TYPE_BAN);
+        punish(player.getUniqueId(), reason, -1, TimeUnit.MILLISECONDS, TYPE_BAN);
     }
 
     @Override
     public void mute(MinecraftPlayer player, String reason, long time, TimeUnit unit) {
-        punish(player.getId(), reason, time, unit, TYPE_MUTE);
+        punish(player.getUniqueId(), reason, time, unit, TYPE_MUTE);
     }
 
     @Override
     public void unmute(MinecraftPlayer player) {
-        unpunish(player.getId(), TYPE_MUTE);
+        unpunish(player.getUniqueId(), TYPE_MUTE);
     }
 
-    private boolean isPunished(int id, int type) {
+    private boolean isPunished(UUID id, int type) {
         PunishEntry punishEntry = this.punishEntryCache.get("playerIdAndTypeId", id, type);
         if(punishEntry != null) return true;
 
@@ -147,7 +147,7 @@ public class DefaultPunishmentProvider {
 
     }
 
-    private String getPunishReason(int id, int type) {
+    private String getPunishReason(UUID id, int type) {
         PunishEntry punishEntry = this.punishEntryCache.get("playerIdAndTypeId", id, type);
         if(punishEntry != null) return punishEntry.reason;
 
@@ -159,7 +159,7 @@ public class DefaultPunishmentProvider {
 
     }
 
-    private void punish(int playerId, String reason, long time, TimeUnit unit, int type) {
+    private void punish(UUID playerId, String reason, long time, TimeUnit unit, int type) {
         long since = System.currentTimeMillis();
         int id = this.punishmentStorage.insert()
                 .set("playerId", playerId)
@@ -173,7 +173,7 @@ public class DefaultPunishmentProvider {
 
     }
 
-    private void unpunish(int id, int type) {
+    private void unpunish(UUID id, int type) {
         this.punishmentStorage.delete()
                 .where("playerId", id)
                 .where("type", type)
@@ -183,27 +183,27 @@ public class DefaultPunishmentProvider {
 
     private PunishEntry cachePunishEntry(QueryResultEntry resultEntry) {
         return new PunishEntry(resultEntry.getInt("id"),
-                resultEntry.getInt("playerId"),
+                resultEntry.getUniqueId("playerId"),
                 resultEntry.getInt("type"),
                 resultEntry.getLong("since"),
                 resultEntry.getLong("duration"),
                 resultEntry.getString("reason"));
     }
 
-public static class PunishEntry {
+    public static class PunishEntry {
 
-    final int id, playerId, type;
-    final long since, duration;
-    final String reason;
+        final UUID playerId;
+        final int id, type;
+        final long since, duration;
+        final String reason;
 
-    public PunishEntry(int id, int playerId, int type, long since, long duration, String reason) {
-        this.id = id;
-        this.playerId = playerId;
-        this.type = type;
-        this.since = since;
-        this.duration = duration;
-        this.reason = reason;
+        public PunishEntry(int id, UUID playerId, int type, long since, long duration, String reason) {
+            this.id = id;
+            this.playerId = playerId;
+            this.type = type;
+            this.since = since;
+            this.duration = duration;
+            this.reason = reason;
+        }
     }
-}
-    */
 }

@@ -19,41 +19,39 @@
 
 package org.mcnative.common.serviceprovider.whitelist;
 
-import net.prematic.databasequery.api.DatabaseCollection;
+
+import net.prematic.databasequery.api.collection.DatabaseCollection;
+import net.prematic.databasequery.api.collection.field.FieldOption;
 import net.prematic.databasequery.api.datatype.DataType;
-import net.prematic.databasequery.api.query.option.CreateOption;
 import net.prematic.databasequery.api.query.result.QueryResult;
 import net.prematic.databasequery.api.query.result.QueryResultEntry;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefaultWhitelistProvider {
+public class DefaultWhitelistProvider implements WhitelistProvider {
 
-   /*
+
     private final DatabaseCollection whitelistSettings, whitelistedPlayers;
     private final Collection<MinecraftPlayer> whitelistedPlayersCache;
     private boolean enabled;
 
     public DefaultWhitelistProvider() {
-        whitelistedPlayers = null;
-        whitelistSettings = null;
-        whitelistedPlayersCache = null;
-        /*
-        this.whitelistSettings = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
+        this.whitelistSettings = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).getDatabase(McNative.getInstance())
                 .createCollection("WhitelistSettings")
-                .attribute("enabled", DataType.STRING, CreateOption.NOT_NULL)
+                .field("enabled", DataType.BOOLEAN, FieldOption.NOT_NULL)
                 .create();
-        this.whitelistedPlayers = McNative.getInstance().getConfigurationProvider().getDatabase(McNative.getInstance())
+        this.whitelistedPlayers = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).getDatabase(McNative.getInstance())
                 .createCollection("WhitelistedPlayers")
-                .attribute("playerId", DataType.INTEGER, CreateOption.NOT_NULL)
+                .field("playerId", DataType.UUID, FieldOption.NOT_NULL)
                 .create();
         this.whitelistedPlayersCache = loadWhitelistedPlayers();
         this.enabled = loadWhitelistEnabled();
 
-}
+    }
 
     @Override
     public boolean isEnabled() {
@@ -78,8 +76,8 @@ public class DefaultWhitelistProvider {
 
     @Override
     public void set(MinecraftPlayer player, boolean whitelisted) {
-        if(whitelisted && !isWhitelisted(player)) this.whitelistedPlayers.insert().set("playerId", player.getId()).execute();
-        else if(!whitelisted) this.whitelistedPlayers.delete().where("playerId", player.getId()).execute();
+        if(whitelisted && !isWhitelisted(player)) this.whitelistedPlayers.insert().set("playerId", player.getUniqueId()).execute();
+        else if(!whitelisted) this.whitelistedPlayers.delete().where("playerId", player.getUniqueId()).execute();
     }
 
     @Override
@@ -95,7 +93,7 @@ public class DefaultWhitelistProvider {
     private Collection<MinecraftPlayer> loadWhitelistedPlayers() {
         Collection<MinecraftPlayer> whitelistedPlayers = new ArrayList<>();
         for (QueryResultEntry resultEntry : this.whitelistedPlayers.find().execute()) {
-            whitelistedPlayers.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getInt("playerId")));
+            whitelistedPlayers.add(McNative.getInstance().getPlayerManager().getPlayer(resultEntry.getUniqueId("playerId")));
         }
         return whitelistedPlayers;
     }
@@ -108,5 +106,4 @@ public class DefaultWhitelistProvider {
         }
         return result.first().getBoolean("enabled");
     }
-    */
 }

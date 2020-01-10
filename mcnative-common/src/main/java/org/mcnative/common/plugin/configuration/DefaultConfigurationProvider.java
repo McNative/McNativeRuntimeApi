@@ -20,19 +20,24 @@
 package org.mcnative.common.plugin.configuration;
 
 import net.prematic.databasequery.api.Database;
-import net.prematic.databasequery.api.DatabaseDriver;
+import net.prematic.databasequery.api.driver.DatabaseDriver;
+import net.prematic.databasequery.api.driver.DatabaseDriverFactory;
+import net.prematic.libraries.utility.GeneralUtil;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveMap;
+import org.mcnative.common.McNative;
 
 import java.io.File;
 
 public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     private final CaseIntensiveMap<DatabaseDriver> databaseDrivers;
+    private StorageConfig storageConfig;
 
     public DefaultConfigurationProvider() {
         this.databaseDrivers = new CaseIntensiveHashMap<>();
+        this.storageConfig = new StorageConfig(getConfiguration(McNative.getInstance(), "storage"));
     }
 
     @Override
@@ -47,13 +52,20 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     @Override
     public Database getDatabase(ObjectOwner owner, String name) {
-        throw new UnsupportedOperationException("@Todo implement");
+        StorageConfig.DatabaseEntry entry = this.storageConfig.getDatabaseEntry(owner, name);
+        DatabaseDriver databaseDriver = getDatabaseDriver(entry.getDriverName());
+        if(!databaseDriver.isConnected()) {
+            databaseDriver.connect();
+        }
+        return databaseDriver.getDatabase(entry.getDatabase());
     }
 
     @Override
     public DatabaseDriver getDatabaseDriver(String name) {
         if(!this.databaseDrivers.containsKey(name)) {
-            throw new UnsupportedOperationException("@Todo implement");
+            DatabaseDriver driver = DatabaseDriverFactory.create(name, this.storageConfig.getDriverEntry(name).getDriverConfig(),
+                    McNative.getInstance().getLogger(), GeneralUtil.getDefaultExecutorService());
+            this.databaseDrivers.put(name, driver);
         }
         return this.databaseDrivers.get(name);
     }

@@ -20,7 +20,7 @@
 package org.mcnative.common.plugin.configuration;
 
 import net.prematic.databasequery.api.Database;
-import net.prematic.databasequery.api.DatabaseDriver;
+import net.prematic.databasequery.api.driver.DatabaseDriver;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 
 import java.io.File;

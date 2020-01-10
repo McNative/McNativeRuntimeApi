@@ -38,8 +38,8 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
         if(playerInventory.getHolder() != null && playerInventory.getHolder() instanceof BukkitInventoryOwner) {
 
         }
-        return new BukkitPlayerInventory();
-     }
+        //return new BukkitPlayerInventory();
+    }
 
     @Override
     default Inventory getOpenInventory() {
