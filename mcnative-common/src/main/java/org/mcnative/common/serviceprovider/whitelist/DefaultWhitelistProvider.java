@@ -34,7 +34,6 @@ import java.util.Collection;
 
 public class DefaultWhitelistProvider implements WhitelistProvider {
 
-
     private final DatabaseCollection whitelistSettings, whitelistedPlayers;
     private final Collection<MinecraftPlayer> whitelistedPlayersCache;
     private boolean enabled;

@@ -114,7 +114,11 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateLoginInformation(String name, GameProfile profile, long timeStamp) {
-        //@Todo implement
+        this.provider.playerDataStorage.update()
+                .set("name", name)
+                .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile)))
+                .set("lastPlayed", timeStamp)
+                .execute();
     }
 
     @Override
