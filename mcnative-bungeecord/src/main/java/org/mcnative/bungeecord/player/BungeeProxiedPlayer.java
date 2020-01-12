@@ -434,8 +434,8 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     @Internal
     public void postLogin(net.md_5.bungee.api.connection.ProxiedPlayer original){
         this.original = original;
-        //connection.setState(ConnectionState.GAME);
-       // connection.injectUpstreamProtocolHandlersToPipeline();
+        connection.setState(ConnectionState.GAME);
+        connection.injectUpstreamProtocolHandlersToPipeline();
     }
 
     @Internal
