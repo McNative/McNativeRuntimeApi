@@ -20,8 +20,6 @@
 package org.mcnative.common.serviceprovider.whitelist;
 
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.Collection;
 

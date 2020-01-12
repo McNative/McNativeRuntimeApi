@@ -19,40 +19,45 @@
 
 package org.mcnative.common.plugin.configuration;
 
-import net.prematic.databasequery.api.driver.DatabaseDriverFactory;
 import net.prematic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
+import net.prematic.libraries.utility.reflect.TypeReference;
 import net.pretronic.databasequery.sql.dialect.Dialect;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
 import org.mcnative.common.McNative;
 
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 public class StorageConfig {
 
-    private final Collection<DatabaseDriverEntry> databaseDriverEntries;
+    private final static Type DRIVER_MAP_TYPE = new TypeReference<Map<String, DatabaseDriverConfig<?>>>(){}.getType();
+    private final static Type DATABASE_COLLECTION_TYPE = new TypeReference<Collection<DatabaseEntry>>(){}.getType();
+
+    static {
+        DatabaseDriverConfig.registerDocumentAdapter();
+    }
+
+    private final Map<String, DatabaseDriverConfig<?>> databaseDrivers;
     private final Collection<DatabaseEntry> databaseEntries;
     private Configuration configuration;
 
     public StorageConfig(ConfigurationProvider configurationProvider,Configuration configuration) {
         this.configuration = configurationProvider.getConfiguration(McNative.getInstance(), "storage");
-        this.databaseDriverEntries = new ArrayList<>();
+        this.databaseDrivers = new CaseIntensiveHashMap<>();
         this.databaseEntries = new ArrayList<>();
         this.configuration = configuration;
     }
 
-    public DatabaseDriverEntry getDriverEntry(String name) {
-        DatabaseDriverEntry driverEntry = Iterators.findOne(this.databaseDriverEntries, entry -> entry.name.equalsIgnoreCase(name));
-        if(driverEntry == null) {
-            driverEntry = Iterators.findOne(this.databaseDriverEntries, entry -> entry.name.equalsIgnoreCase("default"));
-            if(driverEntry == null) {
-                throw new IllegalArgumentException("No database driver for name " + name + " found");
-            }
-        }
-        return driverEntry;
+    public DatabaseDriverConfig<?> getDriverConfig(String name) {
+        DatabaseDriverConfig<?> config = this.databaseDrivers.get(name);
+        if(config == null)  throw new IllegalArgumentException("No database driver for name " + name + " found");
+        return config;
     }
 
     public DatabaseEntry getDatabaseEntry(ObjectOwner plugin, String name) {
@@ -66,60 +71,42 @@ public class StorageConfig {
         return databaseEntry;
     }
 
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
     public void createDefault() {
-        this.databaseDriverEntries.clear();
+        this.databaseDrivers.clear();
         this.databaseEntries.clear();
 
-        this.databaseDriverEntries.add(new DatabaseDriverEntry("MySQL",
-                new SQLDatabaseDriverConfigBuilder()
+        this.databaseDrivers.put("MySQL", new SQLDatabaseDriverConfigBuilder()
                         .setAddress(new InetSocketAddress("127.0.0.1", 3306))
                         .setDialect(Dialect.MYSQL)
                         .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
                         .setUsername("McNative")
-                        .setPassword("masked").build()));
+                        .setPassword("masked").build());
 
-        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "MySql"));
+        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "MySQL"));
         save();
     }
 
     public StorageConfig load() {
-        Collection<DatabaseDriverEntry> driverEntries = new ArrayList<>();
-        configuration.getDocument("drivers").forEach(entry -> {
-            DatabaseDriverConfig<?> driverConfig = DatabaseDriverFactory.create(entry.toDocument());
-            driverEntries.add(new DatabaseDriverEntry(entry.getKey(), driverConfig));
-        });
-        Collection<DatabaseEntry> databaseEntries = new ArrayList<>();
-        configuration.getDocument("databases").forEach(entry -> databaseEntries.add(entry.toDocument().getAsObject(DatabaseEntry.class)));
-        this.databaseDriverEntries.addAll(driverEntries);
-        this.databaseEntries.addAll(databaseEntries);
+        configuration.load();
+        if(configuration.isFirstCreation()){
+            createDefault();
+        }else{
+            this.databaseDrivers.putAll(configuration.getObject("drivers",DRIVER_MAP_TYPE));
+            this.databaseEntries.addAll(configuration.getObject("databases",DATABASE_COLLECTION_TYPE));
+        }
         return this;
     }
 
     public StorageConfig save() {
         configuration.clear();
-        configuration.add("drivers", this.databaseDriverEntries);
+        configuration.add("drivers", this.databaseDrivers);
         configuration.add("databases", this.databaseEntries);
         configuration.save();
         return this;
-    }
-
-    static class DatabaseDriverEntry {
-
-        final String name;
-        final DatabaseDriverConfig<?> driverConfig;
-
-        DatabaseDriverEntry(String name, DatabaseDriverConfig<?> driverConfig) {
-            this.name = name;
-            this.driverConfig = driverConfig;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public DatabaseDriverConfig<?> getDriverConfig() {
-            return driverConfig;
-        }
     }
 
     static class DatabaseEntry {

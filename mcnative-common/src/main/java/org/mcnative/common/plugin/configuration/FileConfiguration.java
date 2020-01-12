@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class FileConfiguration extends WrappedDocument implements Configuration{
 
-    public static DocumentFileType FILE_TYPE = DocumentFileType.YAML;//@Todo set from global configuration
+    public static DocumentFileType FILE_TYPE = DocumentFileType.YAML;
 
     private final ObjectOwner owner;
     private final String name;

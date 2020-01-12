@@ -20,7 +20,6 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
-import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 import org.mcnative.common.text.variable.VariableSet;

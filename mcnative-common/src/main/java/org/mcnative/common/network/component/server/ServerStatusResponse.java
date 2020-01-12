@@ -25,10 +25,8 @@ import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.EmptyVariableSet;
 import org.mcnative.common.text.variable.VariableSet;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 

@@ -39,6 +39,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
     public DefaultConfigurationProvider() {
         this.databaseDrivers = new CaseIntensiveHashMap<>();
         this.storageConfig = new StorageConfig(this,getConfiguration(McNative.getInstance(), "storage"));
+        storageConfig.load();
     }
 
     @Override
@@ -49,7 +50,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
     @Override
     public Configuration getConfiguration(ObjectOwner owner, String name) {
         Objects.requireNonNull(owner,name);
-        return new FileConfiguration(owner,name,new File("plugins/"+owner.getName()+"/"+name+".yml"));//@Todo change dynamically and custom file type
+        return new FileConfiguration(owner,name,new File("plugins/"+owner.getName()+"/"+name+"."+FileConfiguration.FILE_TYPE.getEnding()));
     }
 
     @Override
@@ -64,8 +65,9 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     @Override
     public DatabaseDriver getDatabaseDriver(String name) {
+        Objects.requireNonNull(name);
         if(!this.databaseDrivers.containsKey(name)) {
-            DatabaseDriver driver = DatabaseDriverFactory.create(name, this.storageConfig.getDriverEntry(name).getDriverConfig(),
+            DatabaseDriver driver = DatabaseDriverFactory.create(name, this.storageConfig.getDriverConfig(name),
                     McNative.getInstance().getLogger(), GeneralUtil.getDefaultExecutorService());
             this.databaseDrivers.put(name, driver);
         }

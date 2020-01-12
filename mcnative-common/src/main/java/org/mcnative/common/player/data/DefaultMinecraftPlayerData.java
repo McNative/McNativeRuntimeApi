@@ -82,27 +82,39 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
 
     public void updateLastPlayed(long timeStamp) {
-
+        this.provider.getPlayerDataStorage().update()
+                .set("lastPlayed", timeStamp)
+                .where("uniqueId", uniqueId)
+                .execute();
     }
 
     @Override
     public void updateName(String name) {
-
+        this.provider.getPlayerDataStorage().update()
+                .set("name", name)
+                .where("uniqueId", uniqueId)
+                .execute();
     }
 
     @Override
     public void updateGameProfile(GameProfile profile) {
-
+        this.provider.getPlayerDataStorage().update()
+                .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile), false))
+                .where("uniqueId", uniqueId)
+                .execute();
     }
 
     @Override
     public void updateProperties() {
-
+        this.provider.getPlayerDataStorage().update()
+                .set("properties", DocumentFileType.JSON.getWriter().write(this.properties))
+                .where("uniqueId", uniqueId)
+                .execute();
     }
 
     @Override
     public void updateLoginInformation(String name, GameProfile profile, long timeStamp) {
-        this.provider.playerDataStorage.update()
+        this.provider.getPlayerDataStorage().update()
                 .set("name", name)
                 .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile)))
                 .set("lastPlayed", timeStamp)

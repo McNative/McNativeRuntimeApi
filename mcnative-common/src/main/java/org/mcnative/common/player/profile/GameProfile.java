@@ -21,10 +21,7 @@ package org.mcnative.common.player.profile;
 
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.utility.Iterators;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -76,6 +73,10 @@ public class GameProfile {
 
     public static GameProfile fromJson(String json){
         return fromDocument(DocumentFileType.JSON.getReader().read(json));
+    }
+
+    public static GameProfile fromJsonPart(UUID uniqueId, String name,String texture){
+        return new GameProfile(uniqueId,name,DocumentFileType.JSON.getReader().read(texture).getAsArray(new Property[]{}));
     }
 
     public static GameProfile fromDocument(Document document){
