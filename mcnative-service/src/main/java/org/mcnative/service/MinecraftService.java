@@ -22,7 +22,6 @@ package org.mcnative.service;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
-import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 

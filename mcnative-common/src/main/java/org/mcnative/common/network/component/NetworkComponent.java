@@ -20,7 +20,6 @@
 package org.mcnative.common.network.component;
 
 import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import org.mcnative.common.network.messaging.MessageReceiver;
 

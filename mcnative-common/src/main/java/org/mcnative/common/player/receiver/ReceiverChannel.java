@@ -26,7 +26,6 @@ import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.function.Consumer;
 
 public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {

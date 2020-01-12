@@ -22,9 +22,6 @@ package org.mcnative.common.event.player;
 import net.prematic.libraries.event.Cancellable;
 import net.prematic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.player.ChatChannel;
-import org.mcnative.common.player.receiver.ReceiverChannel;
-import org.mcnative.common.text.components.ChatComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 public interface MinecraftPlayerChatEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 

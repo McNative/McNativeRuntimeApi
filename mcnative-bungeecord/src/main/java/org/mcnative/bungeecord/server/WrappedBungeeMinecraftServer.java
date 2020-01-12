@@ -20,7 +20,6 @@
 package org.mcnative.bungeecord.server;
 
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
@@ -28,6 +27,7 @@ import net.prematic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessagingProvider;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -35,13 +35,11 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
-import org.mcnative.common.network.component.server.MinecraftServerType;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class WrappedBungeeMinecraftServer implements MinecraftServer {
 

@@ -22,16 +22,13 @@ package org.mcnative.common.protocol.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.*;
-import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 //@Todo implement cancellation
 public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPacket> {

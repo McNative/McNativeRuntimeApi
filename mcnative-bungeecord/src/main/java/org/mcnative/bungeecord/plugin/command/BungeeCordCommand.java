@@ -22,7 +22,6 @@ package org.mcnative.bungeecord.plugin.command;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.BaseComponentSerializer;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.prematic.libraries.command.command.Command;
 import net.prematic.libraries.command.manager.CommandManager;
@@ -35,7 +34,6 @@ import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.plugin.CustomCommandSender;
 import org.mcnative.common.serviceprovider.permission.Permissable;
 import org.mcnative.common.serviceprovider.permission.PermissionGroup;
-import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.text.Text;
 
 import java.util.Arrays;

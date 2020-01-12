@@ -22,7 +22,6 @@ package org.mcnative.common.player;
 import net.prematic.libraries.command.sender.CommandSender;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
-import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;

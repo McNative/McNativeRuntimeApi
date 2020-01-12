@@ -23,10 +23,8 @@ import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.utility.Iterators;
-import org.mcnative.bungeecord.BungeeCordService;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
-import org.mcnative.common.network.component.NetworkComponent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -36,8 +34,10 @@ import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxyService;
 
 import java.net.InetSocketAddress;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.UUID;
 
 public class LocalProxyNetwork implements Network {
 

@@ -20,7 +20,6 @@
 package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
-import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.player.PlayerSettings;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -30,9 +29,7 @@ import org.mcnative.common.protocol.packet.PacketIdentifier;
 
 import java.util.Locale;
 
-import static org.mcnative.common.protocol.packet.MinecraftPacket.newIdentifier;
-import static org.mcnative.common.protocol.packet.MinecraftPacket.on;
-import static org.mcnative.common.protocol.packet.MinecraftPacket.map;
+import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftClientSettingsPacket implements MinecraftPacket {
 

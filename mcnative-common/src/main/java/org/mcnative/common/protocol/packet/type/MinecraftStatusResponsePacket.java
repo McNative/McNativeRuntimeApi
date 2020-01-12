@@ -26,9 +26,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
 
-import static org.mcnative.common.protocol.packet.MinecraftPacket.newIdentifier;
-import static org.mcnative.common.protocol.packet.MinecraftPacket.on;
-import static org.mcnative.common.protocol.packet.MinecraftPacket.map;
+import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftStatusResponsePacket implements MinecraftPacket {
 

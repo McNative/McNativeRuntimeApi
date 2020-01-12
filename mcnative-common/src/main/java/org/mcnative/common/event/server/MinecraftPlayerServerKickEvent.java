@@ -22,7 +22,6 @@ package org.mcnative.common.event.server;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.event.NetworkEvent;
-import org.mcnative.common.text.components.ChatComponent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 

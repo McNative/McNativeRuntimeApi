@@ -20,9 +20,7 @@
 package org.mcnative.common.protocol.netty;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
@@ -31,7 +29,6 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
 

@@ -22,9 +22,8 @@ package org.mcnative.common.network;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
-import org.mcnative.common.network.component.NetworkComponent;
-import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ProxyServer;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;

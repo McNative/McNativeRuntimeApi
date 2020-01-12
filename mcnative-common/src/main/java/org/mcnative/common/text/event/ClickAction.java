@@ -22,7 +22,6 @@ package org.mcnative.common.text.event;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 

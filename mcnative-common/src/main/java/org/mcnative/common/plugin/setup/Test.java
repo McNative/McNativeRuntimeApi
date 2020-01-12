@@ -19,8 +19,6 @@
 
 package org.mcnative.common.plugin.setup;
 
-import org.mcnative.common.text.Text;
-
 public class Test {
 
 

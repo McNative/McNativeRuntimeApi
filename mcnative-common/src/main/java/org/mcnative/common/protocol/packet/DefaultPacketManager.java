@@ -20,17 +20,12 @@
 package org.mcnative.common.protocol.packet;
 
 import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.connection.ConnectionState;
-import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class DefaultPacketManager implements PacketManager {
 
