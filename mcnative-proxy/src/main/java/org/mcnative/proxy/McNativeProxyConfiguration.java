@@ -20,16 +20,15 @@
 package org.mcnative.proxy;
 
 import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.adapter.defaults.InetSocketAddressAdapter;
 import net.prematic.libraries.document.annotations.DocumentKey;
 import net.prematic.libraries.document.annotations.DocumentRequired;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.logging.SimplePrematicLogger;
 import net.prematic.libraries.utility.StringUtil;
 import net.prematic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.plugin.configuration.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -134,6 +133,7 @@ public class McNativeProxyConfiguration {
 
         try{
             FORMAT = type;
+            FileConfiguration.FILE_TYPE = type;
             Document config = type.getReader().read(configFile);
             Document.loadConfigurationClass(McNativeProxyConfiguration.class,config);
             type.getWriter().write(configFile,config);

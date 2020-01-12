@@ -27,6 +27,7 @@ import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.prematic.libraries.dependency.DependencyManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
+import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.Validate;
@@ -39,7 +40,7 @@ import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.data.DummyDataProvider;
+import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
@@ -74,6 +75,8 @@ public class BungeeCordMcNative implements McNative {
         this.playerManager = playerManager;
         this.network = network;
         this.local = local;
+
+        SLF4JStaticBridge.trySetLogger(logger);
     }
 
     @Override
@@ -154,7 +157,7 @@ public class BungeeCordMcNative implements McNative {
 
     public void registerDefaultProviders(){
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
-        pluginManager.registerService(this, PlayerDataProvider.class,new DummyDataProvider());
+        pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

@@ -109,8 +109,7 @@ public class McNativeBungeePluginManager extends PluginManager {
         if(manager != null){
             manager.accept(event);
             event.postCall();
-        }
-        else{
+        }else{
             T result = eventBus.callEvent(event);
             event.postCall();
             return result;

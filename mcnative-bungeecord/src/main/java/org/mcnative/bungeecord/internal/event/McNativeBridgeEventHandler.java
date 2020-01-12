@@ -20,7 +20,6 @@
 package org.mcnative.bungeecord.internal.event;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.SkinConfiguration;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
@@ -105,19 +104,19 @@ public final class McNativeBridgeEventHandler {
 
         //PostLogin
         eventBus.registerMappedClass(MinecraftPlayerPostLoginEvent.class, PostLoginEvent.class);
-    //    pluginManager.registerMangedEvent(PostLoginEvent.class,this::handlePostLogin);
+        pluginManager.registerMangedEvent(PostLoginEvent.class,this::handlePostLogin);
 
         //Connect Server
         eventBus.registerMappedClass(MinecraftPlayerServerConnectEvent.class, ServerConnectEvent.class);
-        //    pluginManager.registerMangedEvent(ServerConnectEvent.class,this::handleServerConnect);
+        pluginManager.registerMangedEvent(ServerConnectEvent.class,this::handleServerConnect);
 
         //Connected Server
         eventBus.registerMappedClass(MinecraftPlayerServerConnectedEvent.class, ServerConnectedEvent.class);
-        //    pluginManager.registerMangedEvent(ServerConnectedEvent.class,this::handleServerConnected);
+        pluginManager.registerMangedEvent(ServerConnectedEvent.class,this::handleServerConnected);
 
         //Switch Server
         eventBus.registerMappedClass(MinecraftPlayerServerSwitchEvent.class, ServerSwitchEvent.class);
-        //    pluginManager.registerMangedEvent(ServerSwitchEvent.class,this::handleServerSwitch);
+        pluginManager.registerMangedEvent(ServerSwitchEvent.class,this::handleServerSwitch);
 
         //Server Kick
         eventBus.registerMappedClass(MinecraftPlayerServerKickEvent.class, ServerKickEvent.class);
@@ -141,11 +140,11 @@ public final class McNativeBridgeEventHandler {
 
         //Permission
         eventBus.registerMappedClass(org.mcnative.common.event.PermissionCheckEvent.class, PermissionCheckEvent.class);
-      //  pluginManager.registerMangedEvent(PermissionCheckEvent.class,this::handlePermissionCheck);
+        pluginManager.registerMangedEvent(PermissionCheckEvent.class,this::handlePermissionCheck);
 
         //Settings
         eventBus.registerMappedClass(MinecraftPlayerSettingsChangedEvent.class, SettingsChangedEvent.class);
-      //  pluginManager.registerMangedEvent(SettingsChangedEvent.class,this::handleSettingsChange);
+        pluginManager.registerMangedEvent(SettingsChangedEvent.class,this::handleSettingsChange);
 
         //Reload
         eventBus.registerMappedClass(ServiceReloadedEvent.class, ProxyReloadEvent.class);
@@ -157,8 +156,6 @@ public final class McNativeBridgeEventHandler {
         ServerStatusResponse defaultResponse = ProxyService.getInstance().getStatusResponse();
         if(defaultResponse != null) mcNativeEvent.setResponse(defaultResponse);
         eventBus.callEvents(ProxyPingEvent.class,event,mcNativeEvent);
-        event.postCall();
-
     }
 
     private void handleLogin(LoginEvent event){
@@ -195,7 +192,7 @@ public final class McNativeBridgeEventHandler {
                 event.setCancelled(false);
             }
         }else pendingPlayers.put(player.getUniqueId(),player);
-        event.postCall();
+
     }
 
     private void handlePostLogin(PostLoginEvent event){
@@ -204,12 +201,10 @@ public final class McNativeBridgeEventHandler {
             event.getPlayer().disconnect(TextComponent.fromLegacyText("§cInternal server error."));
             return;
         }
-        System.out.println("POST");
         player.postLogin(event.getPlayer());
         playerManager.registerPlayer(player);
         MinecraftPlayerPostLoginEvent mcNativeEvent = new BungeeMinecraftPostLoginEvent(player);
         eventBus.callEvents(PostLoginEvent.class,event,mcNativeEvent);
-        event.postCall();
     }
 
     private void handleServerConnect(ServerConnectEvent event){
@@ -226,7 +221,6 @@ public final class McNativeBridgeEventHandler {
             MessageComponent<?> message = handler.getNoFallBackServerMessage(player);
             if(message != null) player.disconnect(message);
         }
-        event.postCall();
     }
 
     private void handleServerConnected(ServerConnectedEvent event){
@@ -235,15 +229,13 @@ public final class McNativeBridgeEventHandler {
         MinecraftPlayerServerConnectedEvent mcNativeEvent = new BungeeServerConnectedEvent(player,server);
         eventBus.callEvents(ServerConnectedEvent.class,event,mcNativeEvent);
         ((BungeeProxiedPlayer)player).setServer(server);
-      //  ((BungeeProxiedPlayer) player).injectDownstreamProtocolHandlersToPipeline();
-        event.postCall();
+        ((BungeeProxiedPlayer) player).injectDownstreamProtocolHandlersToPipeline();
     }
 
     private void handleServerSwitch(ServerSwitchEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftPlayerServerSwitchEvent mcNativeEvent = new BungeeServerSwitchEvent(player);
         eventBus.callEvents(ServerSwitchEvent.class,event,mcNativeEvent);
-        event.postCall();
     }
 
     private void handleServerKick(ServerKickEvent event){
@@ -258,14 +250,12 @@ public final class McNativeBridgeEventHandler {
             MessageComponent<?> message = handler.getNoFallBackServerMessage(player);
             if(message != null) mcNativeEvent.setKickReason(message);
         }
-        event.postCall();
     }
 
     private void handleLogout(PlayerDisconnectEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftPlayerLogoutEvent mcNativeEvent = new BungeeMinecraftLogoutEvent(player);
         eventBus.callEvents(PlayerDisconnectEvent.class,event,mcNativeEvent);
-        event.postCall();
     }
 
     private void handleChatEvent(ChatEvent event) {
@@ -278,7 +268,6 @@ public final class McNativeBridgeEventHandler {
                 mcNativeEvent.getChannel().chat(player,event.getMessage());
             }
         }else eventBus.callEvent(event);
-        event.postCall();
     }
 
     private void handleTabComplete(TabCompleteEvent event){
@@ -288,7 +277,6 @@ public final class McNativeBridgeEventHandler {
             this.tabCompleteCursors.put(event.getSender(),event.getCursor());
             eventBus.callEvents(TabCompleteEvent.class,event,mcNativeEvent);
         }else eventBus.callEvent(event);
-        event.postCall();
     }
 
     private void handleTabCompleteResponse(TabCompleteResponseEvent event){
@@ -298,7 +286,6 @@ public final class McNativeBridgeEventHandler {
             MinecraftPlayerTabCompleteResponseEvent mcNativeEvent = new BungeeTabCompleteResponseEvent(event,player,cursor);
             eventBus.callEvents(TabCompleteEvent.class,event,mcNativeEvent);
         }else eventBus.callEvent(event);
-        event.postCall();
     }
 
     private void handlePermissionCheck(PermissionCheckEvent event){
@@ -323,13 +310,11 @@ public final class McNativeBridgeEventHandler {
 
         BungeePermissionCheckEvent mcNativeEvent = new BungeePermissionCheckEvent(event,sender,handler);
         eventBus.callEvents(PermissionCheckEvent.class,event,mcNativeEvent);
-        event.postCall();
     }
 
     private void handleProxyReload(ProxyReloadEvent event){
         ServiceReloadedEvent mcNativeEvent = new BungeeServiceReloadedEvent();
         eventBus.callEvents(ProxyReloadEvent.class,event,mcNativeEvent);
-        event.postCall();
     }
 
     private void handleSettingsChange(SettingsChangedEvent event){
@@ -338,7 +323,6 @@ public final class McNativeBridgeEventHandler {
         MinecraftPlayerSettingsChangedEvent mcNativeEvent = new BungeeMinecraftPlayerSettingsChangedEvent(player,settings);
         eventBus.callEvents(PermissionCheckEvent.class,event,mcNativeEvent);
         ((BungeeProxiedPlayer)player).setSettings(settings);
-        event.postCall();
     }
 
     private PlayerSettings mapSettings(ProxiedPlayer player){

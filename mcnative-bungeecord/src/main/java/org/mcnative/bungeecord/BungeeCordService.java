@@ -48,7 +48,6 @@ import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxyService;
-import org.mcnative.proxy.ServerConnectHandler;
 
 import java.net.InetSocketAddress;
 import java.util.*;
