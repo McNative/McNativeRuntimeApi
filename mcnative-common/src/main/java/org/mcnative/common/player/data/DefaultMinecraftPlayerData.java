@@ -34,7 +34,8 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     private final GameProfile gameProfile;
     private final Document properties;
 
-    public DefaultMinecraftPlayerData(DefaultPlayerDataProvider provider, String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile, Document properties) {
+    public DefaultMinecraftPlayerData(DefaultPlayerDataProvider provider, String name, UUID uniqueId, long xBoxId
+            , long firstPlayed, long lastPlayed, GameProfile gameProfile, Document properties) {
         this.provider = provider;
         this.name = name;
         this.uniqueId = uniqueId;
@@ -44,6 +45,8 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
         this.gameProfile = gameProfile;
         this.properties = properties;
     }
+
+
 
     @Override
     public String getName() {
