@@ -31,6 +31,5 @@ public interface ServerListPingEvent extends MinecraftEvent{
 
     ServerStatusResponse getResponse();
 
-    void setResponse(ServerStatusResponse ping);
-
+    void setResponse(ServerStatusResponse response);
 }

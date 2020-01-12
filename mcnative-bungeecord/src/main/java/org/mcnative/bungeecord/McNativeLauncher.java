@@ -64,7 +64,7 @@ public class McNativeLauncher {
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
         BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new LocalProxyNetwork(localService), localService);
         McNative.setInstance(instance);
-
+        instance.registerDefaultProviders();
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");

@@ -19,23 +19,23 @@
 
 package org.mcnative.bungeecord.internal.event;
 
-import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.connection.PendingConnection;
-import org.mcnative.common.network.component.server.ServerStatusResponse;
+import net.md_5.bungee.api.event.ProxyPingEvent;
+import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.common.event.ServerListPingEvent;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
 
 import java.net.InetSocketAddress;
 
-//@Todo Implement
 public class BungeeServerListPingEvent implements ServerListPingEvent {
 
     private final PendingConnection connection;
-    private ServerPing ping;
-    private ServerStatusResponse response;
+    private final ProxyPingEvent event;
+    private BungeeCordServerStatusResponse response;
 
-    public BungeeServerListPingEvent(PendingConnection connection, ServerPing ping) {
+    public BungeeServerListPingEvent(PendingConnection connection, ProxyPingEvent event) {
         this.connection = connection;
-        this.ping = ping;
+        this.event = event;
     }
 
     @Override
@@ -50,11 +50,25 @@ public class BungeeServerListPingEvent implements ServerListPingEvent {
 
     @Override
     public ServerStatusResponse getResponse() {
-        return null;
+        if(response == null) response = new BungeeCordServerStatusResponse(event.getResponse());
+        else response.setPing(event.getResponse());
+        return response;
     }
 
     @Override
-    public void setResponse(ServerStatusResponse ping) {
-
+    public void setResponse(ServerStatusResponse response) {
+        if(response instanceof BungeeCordServerStatusResponse){
+            this.response = (BungeeCordServerStatusResponse) response;
+            this.event.setResponse(((BungeeCordServerStatusResponse)response).getPing());
+        }else{
+            ServerStatusResponse original = getResponse();
+            original.setFavicon(response.getFavicon());
+            original.setMaxPlayers(response.getMaxPlayers());
+            original.setOnlinePlayers(response.getOnlinePlayers());
+            original.setDescription(response.getDescription());
+            original.setPlayerInfo(response.getPlayerInfo());
+            original.setVersion(response.getVersion());
+        }
     }
+
 }

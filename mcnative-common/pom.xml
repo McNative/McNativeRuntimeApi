@@ -79,8 +79,14 @@
         </dependency>
         <dependency>
             <groupId>net.prematic.libraries</groupId>
+            <artifactId>prematiclibraries-dependency</artifactId>
+            <version>${dependency.pretronic.libraries.dependency}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.prematic.libraries</groupId>
             <artifactId>prematiclibraries-caching</artifactId>
-            <version>1.0.0</version>
+            <version>${dependency.pretronic.libraries.caching}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

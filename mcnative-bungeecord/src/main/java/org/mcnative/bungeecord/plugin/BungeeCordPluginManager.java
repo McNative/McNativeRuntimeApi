@@ -36,6 +36,7 @@ import org.mcnative.common.McNative;
 import java.io.File;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class BungeeCordPluginManager implements PluginManager {
 
@@ -151,14 +152,27 @@ public class BungeeCordPluginManager implements PluginManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getService(Class<T> serviceClass) {
+        T result = getServiceOrDefault(serviceClass);
+        if(result == null) throw new IllegalArgumentException("Service "+serviceClass+" is not available.");
+        return result;
+    }
+
+    @Override
+    public <T> T getServiceOrDefault(Class<T> serviceClass) {
+        return getServiceOrDefault(serviceClass,null);
+    }
+
+    @Override
+    public <T> T getServiceOrDefault(Class<T> serviceClass, Supplier<T> supplier) {
         List<ServiceEntry> services = Iterators.filter(this.services, entry -> entry.serviceClass.equals(serviceClass));
         services.sort((o1, o2) -> {
             if(o1.priority < o2.priority) return -1;
             else if(o1.priority > o2.priority) return 1;
             return 0;
         });
-        if(services.size() == 0) throw new IllegalArgumentException("Service "+serviceClass+" is not available.");
-        return (T) services.get(0).service;
+        if(services.size() > 0) return  (T) services.get(0).service;
+        else if(supplier != null) return supplier.get();
+        return null;
     }
 
     @Override

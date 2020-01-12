@@ -84,7 +84,7 @@ public class BungeePendingConnection implements PendingConnection {
 
     @Override
     public void setUniqueId(UUID uniqueId) {
-        original.setUniqueId(uniqueId);
+        //original.setUniqueId(uniqueId);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class BungeePendingConnection implements PendingConnection {
 
     @Override
     public void disconnect(MessageComponent<?> reason, VariableSet variables) {
-        String state = getRawState().toString();
+        /*String state = getRawState().toString();
         if(state.equals("STATUS") || state.equals("PING")) channel.close();
         else{
             MinecraftDisconnectPacket packet = new MinecraftDisconnectPacket();
@@ -132,7 +132,7 @@ public class BungeePendingConnection implements PendingConnection {
             packet.setVariables(variables);
             setClosing();
             channel.eventLoop().schedule(() -> channelWrapperClose(packet), 250, TimeUnit.MILLISECONDS);
-        }
+        }*/
     }
 
     private Object getRawState(){
@@ -140,16 +140,16 @@ public class BungeePendingConnection implements PendingConnection {
     }
 
     private void channelWrapperClose(Object packet){
-        ReflectionUtil.invokeMethod(channelWrapper,"close",new Class[]{Object.class},new Object[]{packet});
+        //ReflectionUtil.invokeMethod(channelWrapper,"close",new Class[]{Object.class},new Object[]{packet});
     }
 
     private void setClosing(){
-        ReflectionUtil.changeFieldValue(channelWrapper,"closing",true);
+        //ReflectionUtil.changeFieldValue(channelWrapper,"closing",true);
     }
 
     @Override
     public void sendPacket(MinecraftPacket packet) {
-        if(channel.isOpen() && channel.isActive() && channel.isRegistered()) channel.writeAndFlush(packet);
+        //if(channel.isOpen() && channel.isActive() && channel.isRegistered()) channel.writeAndFlush(packet);
     }
 
     @Override

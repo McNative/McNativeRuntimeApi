@@ -22,6 +22,7 @@ package org.mcnative.bungeecord.server;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.utility.Iterators;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
@@ -67,6 +69,10 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     public Collection<MinecraftServer> getServers(){
         return Iterators.map(this.servers, entry -> entry.mcNative);
+    }
+
+    public Collection<MinecraftServer> getServers(MinecraftServerType type){
+        return Iterators.map(this.servers, entry -> entry.mcNative, entry -> entry.mcNative.getType().equals(type));
     }
 
     public MinecraftServer getServer(String name){

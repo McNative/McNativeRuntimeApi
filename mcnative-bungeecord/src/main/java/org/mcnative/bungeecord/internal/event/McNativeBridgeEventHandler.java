@@ -20,7 +20,9 @@
 package org.mcnative.bungeecord.internal.event;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.SkinConfiguration;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
@@ -55,6 +57,7 @@ import org.mcnative.common.event.server.MinecraftPlayerServerConnectedEvent;
 import org.mcnative.common.event.server.MinecraftPlayerServerKickEvent;
 import org.mcnative.common.event.server.MinecraftPlayerServerSwitchEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerSettings;
@@ -102,19 +105,19 @@ public final class McNativeBridgeEventHandler {
 
         //PostLogin
         eventBus.registerMappedClass(MinecraftPlayerPostLoginEvent.class, PostLoginEvent.class);
-        pluginManager.registerMangedEvent(PostLoginEvent.class,this::handlePostLogin);
+    //    pluginManager.registerMangedEvent(PostLoginEvent.class,this::handlePostLogin);
 
         //Connect Server
         eventBus.registerMappedClass(MinecraftPlayerServerConnectEvent.class, ServerConnectEvent.class);
-        pluginManager.registerMangedEvent(ServerConnectEvent.class,this::handleServerConnect);
+        //    pluginManager.registerMangedEvent(ServerConnectEvent.class,this::handleServerConnect);
 
         //Connected Server
         eventBus.registerMappedClass(MinecraftPlayerServerConnectedEvent.class, ServerConnectedEvent.class);
-        pluginManager.registerMangedEvent(ServerConnectedEvent.class,this::handleServerConnected);
+        //    pluginManager.registerMangedEvent(ServerConnectedEvent.class,this::handleServerConnected);
 
         //Switch Server
         eventBus.registerMappedClass(MinecraftPlayerServerSwitchEvent.class, ServerSwitchEvent.class);
-        pluginManager.registerMangedEvent(ServerSwitchEvent.class,this::handleServerSwitch);
+        //    pluginManager.registerMangedEvent(ServerSwitchEvent.class,this::handleServerSwitch);
 
         //Server Kick
         eventBus.registerMappedClass(MinecraftPlayerServerKickEvent.class, ServerKickEvent.class);
@@ -138,24 +141,24 @@ public final class McNativeBridgeEventHandler {
 
         //Permission
         eventBus.registerMappedClass(org.mcnative.common.event.PermissionCheckEvent.class, PermissionCheckEvent.class);
-        pluginManager.registerMangedEvent(PermissionCheckEvent.class,this::handlePermissionCheck);
+      //  pluginManager.registerMangedEvent(PermissionCheckEvent.class,this::handlePermissionCheck);
 
         //Settings
         eventBus.registerMappedClass(MinecraftPlayerSettingsChangedEvent.class, SettingsChangedEvent.class);
-        pluginManager.registerMangedEvent(SettingsChangedEvent.class,this::handleSettingsChange);
+      //  pluginManager.registerMangedEvent(SettingsChangedEvent.class,this::handleSettingsChange);
 
         //Reload
         eventBus.registerMappedClass(ServiceReloadedEvent.class, ProxyReloadEvent.class);
         pluginManager.registerMangedEvent(ProxyReloadEvent.class,this::handleProxyReload);
     }
 
-    /*
-    @Todo Implement ProxyPingEvent
-     */
     private void handleProxyPing(ProxyPingEvent event) {
-        BungeeServerListPingEvent mcNativeEvent = new BungeeServerListPingEvent(event.getConnection(),event.getResponse());
+        BungeeServerListPingEvent mcNativeEvent = new BungeeServerListPingEvent(event.getConnection(),event);
+        ServerStatusResponse defaultResponse = ProxyService.getInstance().getStatusResponse();
+        if(defaultResponse != null) mcNativeEvent.setResponse(defaultResponse);
         eventBus.callEvents(ProxyPingEvent.class,event,mcNativeEvent);
         event.postCall();
+
     }
 
     private void handleLogin(LoginEvent event){
@@ -197,6 +200,11 @@ public final class McNativeBridgeEventHandler {
 
     private void handlePostLogin(PostLoginEvent event){
         BungeeProxiedPlayer player = pendingPlayers.remove(event.getPlayer().getUniqueId());
+        if(player == null){
+            event.getPlayer().disconnect(TextComponent.fromLegacyText("§cInternal server error."));
+            return;
+        }
+        System.out.println("POST");
         player.postLogin(event.getPlayer());
         playerManager.registerPlayer(player);
         MinecraftPlayerPostLoginEvent mcNativeEvent = new BungeeMinecraftPostLoginEvent(player);
@@ -209,7 +217,7 @@ public final class McNativeBridgeEventHandler {
         MinecraftServer server = serverMap.getMappedServer(event.getTarget());
         if(server.getPermission() != null && !player.hasPermission(server.getPermission())) event.setCancelled(true);
         MinecraftPlayerServerConnectEvent mcNativeEvent = new BungeeServerConnectEvent(event,serverMap,player);
-        ServerConnectHandler handler = ProxyService.getInstance().getConnectionHandler();
+        ServerConnectHandler handler = McNative.getInstance().getRegistry().getServiceOrDefault(ServerConnectHandler.class);
         if(handler != null && player.getServer() == null){
             mcNativeEvent.setTarget(handler.getFallbackServer(player,player.getServer()));
         }
@@ -227,7 +235,7 @@ public final class McNativeBridgeEventHandler {
         MinecraftPlayerServerConnectedEvent mcNativeEvent = new BungeeServerConnectedEvent(player,server);
         eventBus.callEvents(ServerConnectedEvent.class,event,mcNativeEvent);
         ((BungeeProxiedPlayer)player).setServer(server);
-        ((BungeeProxiedPlayer) player).injectDownstreamProtocolHandlersToPipeline();
+      //  ((BungeeProxiedPlayer) player).injectDownstreamProtocolHandlersToPipeline();
         event.postCall();
     }
 
@@ -241,7 +249,7 @@ public final class McNativeBridgeEventHandler {
     private void handleServerKick(ServerKickEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftPlayerServerKickEvent mcNativeEvent = new BungeeServerKickEvent(serverMap,event,player);
-        ServerConnectHandler handler = ProxyService.getInstance().getConnectionHandler();
+        ServerConnectHandler handler = McNative.getInstance().getRegistry().getService(ServerConnectHandler.class);
         if(handler != null){
             mcNativeEvent.setFallbackServer(handler.getFallbackServer(player,player.getServer()));
         }

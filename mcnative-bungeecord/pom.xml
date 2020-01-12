@@ -80,7 +80,7 @@
             <artifactId>bungeecord-api</artifactId>
             <version>${dependency.bungeecord.version}</version>
             <type>jar</type>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

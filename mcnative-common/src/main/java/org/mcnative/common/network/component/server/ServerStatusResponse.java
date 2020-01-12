@@ -19,13 +19,17 @@
 
 package org.mcnative.common.network.component.server;
 
+import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.variable.EmptyVariableSet;
 import org.mcnative.common.text.variable.VariableSet;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface ServerStatusResponse {
@@ -37,9 +41,13 @@ public interface ServerStatusResponse {
     ServerStatusResponse setVersion(String name, MinecraftProtocolVersion protocol);
 
 
-    MessageComponent<?>[] getDescription();
+    MessageComponent<?> getDescription();
 
-    ServerStatusResponse setDescription(MessageComponent<?>[] description);
+    default ServerStatusResponse setDescription(MessageComponent<?> description){
+        return setDescription(description, EmptyVariableSet.newEmptySet());
+    }
+
+    ServerStatusResponse setDescription(MessageComponent<?> description,VariableSet variables);
 
     default ServerStatusResponse setDescription(MessageComponent<?> line1, MessageComponent<?> line2){
         return setDescription(line1, line2,VariableSet.newEmptySet());
@@ -47,24 +55,12 @@ public interface ServerStatusResponse {
 
     ServerStatusResponse setDescription(MessageComponent<?> line1, MessageComponent<?> line2, VariableSet variables);
 
-    default ServerStatusResponse setLine1(MessageComponent<?> component){
-        return setLine1(component,VariableSet.newEmptySet());
-    }
-
-    ServerStatusResponse setLine1(MessageComponent<?> component, VariableSet variables);
-
-    default ServerStatusResponse setLine2(MessageComponent<?> component){
-        return setLine2(component,VariableSet.newEmptySet());
-    }
-
-    ServerStatusResponse setLine2(MessageComponent<?> component, VariableSet variables);
-
 
     String getFavicon();
 
     ServerStatusResponse setFavicon(String favicon);
 
-    ServerStatusResponse setFavicon(ImageIO image);
+    ServerStatusResponse setFavicon(BufferedImage image);
 
     ServerStatusResponse setFavicon(File location);
 
@@ -79,25 +75,32 @@ public interface ServerStatusResponse {
     ServerStatusResponse setOnlinePlayers(int onlinePlayers);
 
 
-    Collection<PlayerInfo> getPlayerInfo();
+    List<PlayerInfo> getPlayerInfo();
 
-    ServerStatusResponse setPlayerInfo(Collection<PlayerInfo> playerInfo);
+    ServerStatusResponse setPlayerInfo(List<PlayerInfo> playerInfo);
+
+    ServerStatusResponse setPlayerInfo(PlayerInfo[] playerInfo);
 
     ServerStatusResponse addPlayerInfo(PlayerInfo info);
 
-    default ServerStatusResponse addPlayerInfo(String text){
-        return addPlayerInfo(newPlayerInfo(UUID.randomUUID(),text));
-    }
+    ServerStatusResponse addPlayerInfo(String text);
+
+    ServerStatusResponse addPlayerInfo(UUID uniqueId, String text);
 
     ServerStatusResponse removePlayerInfo(PlayerInfo info);
 
+    ServerStatusResponse clearPlayerInfo();
 
     static ServerStatusResponse newServerPingResponse(){
-        throw new UnsupportedOperationException("McNative is not finished yet");
+        return McNative.getInstance().getObjectCreator().createServerStatusResponse();
     }
 
-    static PlayerInfo newPlayerInfo(UUID uuid,String text){
-        throw new UnsupportedOperationException("McNative is not finished yet");
+    static PlayerInfo newPlayerInfo(String name){
+        return McNative.getInstance().getObjectCreator().createPlayerInfo(name);
+    }
+
+    static PlayerInfo newPlayerInfo(UUID uniqueId,String name){
+        return McNative.getInstance().getObjectCreator().createPlayerInfo(uniqueId,name);
     }
 
     interface PlayerInfo {
@@ -105,6 +108,7 @@ public interface ServerStatusResponse {
         UUID getUniqueId();
 
         String getName();
+
     }
 
 }

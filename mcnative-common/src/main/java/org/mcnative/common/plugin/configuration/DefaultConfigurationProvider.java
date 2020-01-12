@@ -29,6 +29,7 @@ import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveMap;
 import org.mcnative.common.McNative;
 
 import java.io.File;
+import java.util.Objects;
 
 public class DefaultConfigurationProvider implements ConfigurationProvider {
 
@@ -37,7 +38,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     public DefaultConfigurationProvider() {
         this.databaseDrivers = new CaseIntensiveHashMap<>();
-        this.storageConfig = new StorageConfig(getConfiguration(McNative.getInstance(), "storage"));
+        this.storageConfig = new StorageConfig(this,getConfiguration(McNative.getInstance(), "storage"));
     }
 
     @Override
@@ -47,6 +48,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
 
     @Override
     public Configuration getConfiguration(ObjectOwner owner, String name) {
+        Objects.requireNonNull(owner,name);
         return new FileConfiguration(owner,name,new File("plugins/"+owner.getName()+"/"+name+".yml"));//@Todo change dynamically and custom file type
     }
 

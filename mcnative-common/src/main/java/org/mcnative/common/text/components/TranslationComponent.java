@@ -36,15 +36,18 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
 
     public TranslationComponent(String translation) {
         this.translation = translation;
+        this.with = new MessageComponentSet();
     }
 
     public TranslationComponent(String translation, TextColor color) {
         super(color);
+        this.with = new MessageComponentSet();
         this.translation = translation;
     }
 
     public TranslationComponent(String translation, TextColor color, Set<TextStyle> styling) {
         super(color, styling);
+        this.with = new MessageComponentSet();
         this.translation = translation;
     }
 

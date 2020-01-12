@@ -70,7 +70,6 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
         return getFirstPlayed() != 0 || getFirstPlayed() == getLastPlayed();
     }
 
-
     //@Todo per server integration? -> global / Server
     boolean isWhitelisted();
 

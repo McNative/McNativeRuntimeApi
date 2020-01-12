@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.12.19, 19:50
+ * @since 09.01.20, 20:21
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord;
+package org.mcnative.bukkit;
 
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.ServerPing;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
@@ -29,31 +27,19 @@ import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
-import net.prematic.libraries.utility.Validate;
-import org.mcnative.bungeecord.plugin.command.McNativeCommand;
-import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
+import org.bukkit.Bukkit;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
-import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
-import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.player.data.DummyDataProvider;
-import org.mcnative.common.player.data.PlayerDataProvider;
-import org.mcnative.common.plugin.configuration.ConfigurationProvider;
-import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 
-import java.io.File;
-import java.util.UUID;
-
-public class BungeeCordMcNative implements McNative {
+public class BukkitMcNative implements McNative {
 
     private final MinecraftPlatform platform;
     private final PrematicLogger logger;
     private final TaskScheduler scheduler;
     private final CommandSender consoleSender;
-    private final ObjectCreator creator;
 
     private final PluginManager pluginManager;
     private final DependencyManager dependencyManager;
@@ -62,23 +48,22 @@ public class BungeeCordMcNative implements McNative {
 
     private Network network;
 
-    public BungeeCordMcNative(PluginManager pluginManager, PlayerManager playerManager, Network network, LocalService local) {
-        this.platform = new BungeeCordPlatform();
-        this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
+    public BukkitMcNative(CommandSender consoleSender, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
+        this.platform = new BukkitPlatform();
+        this.logger = new JdkPrematicLogger(Bukkit.getLogger());
         this.scheduler = new SimpleTaskScheduler();
-        this.consoleSender = new McNativeCommand.MappedCommandSender(ProxyServer.getInstance().getConsole());
-        this.dependencyManager = new DependencyManager(logger,new File("plugins/McNative/lib/dependencies"));
-        this.creator = new BungeeObjectCreator();
+        this.dependencyManager = new DependencyManager();
 
+        this.consoleSender = consoleSender;
         this.pluginManager = pluginManager;
         this.playerManager = playerManager;
-        this.network = network;
         this.local = local;
+        this.network = network;
     }
 
     @Override
     public String getServiceName() {
-        return ProxyServer.getInstance().getName();
+        return Bukkit.getName();
     }
 
     @Override
@@ -117,18 +102,13 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
-    public ObjectCreator getObjectCreator() {
-        return creator;
-    }
-
-    @Override
     public PlayerManager getPlayerManager() {
         return playerManager;
     }
 
     @Override
     public boolean isNetworkAvailable() {
-        return true;
+        return network != null;
     }
 
     @Override
@@ -138,7 +118,6 @@ public class BungeeCordMcNative implements McNative {
 
     @Override
     public void setNetwork(Network network) {
-        Validate.notNull(network);
         this.network = network;
     }
 
@@ -149,29 +128,6 @@ public class BungeeCordMcNative implements McNative {
 
     @Override
     public void shutdown() {
-        ProxyServer.getInstance().stop();
-    }
-
-    public void registerDefaultProviders(){
-        pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
-        pluginManager.registerService(this, PlayerDataProvider.class,new DummyDataProvider());
-    }
-
-    private static class BungeeObjectCreator implements ObjectCreator{
-
-        @Override
-        public ServerStatusResponse createServerStatusResponse() {
-            return new BungeeCordServerStatusResponse(new ServerPing());
-        }
-
-        @Override
-        public ServerStatusResponse.PlayerInfo createPlayerInfo(String name) {
-            return new BungeeCordServerStatusResponse.DefaultPlayerInfo(name);
-        }
-
-        @Override
-        public ServerStatusResponse.PlayerInfo createPlayerInfo(UUID uniqueId, String name) {
-            return new BungeeCordServerStatusResponse.DefaultPlayerInfo(name,uniqueId);
-        }
+        Bukkit.shutdown();
     }
 }

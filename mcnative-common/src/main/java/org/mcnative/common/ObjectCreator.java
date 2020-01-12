@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:46
+ * @since 11.01.20, 16:46
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.bukkit;
+package org.mcnative.common;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
 
-public class BukkitMcNativeBootstrap extends JavaPlugin {
+import java.util.UUID;
 
-    @Override
-    public void onLoad() {
-        try{
-            McNativeLauncher.launchMcNativeInternal();
-        }catch (Exception exception){
-            exception.printStackTrace();
-            getLogger().info("Could not bootstrap McNative ("+exception.getMessage()+")");
-        }
-    }
+public interface ObjectCreator {
+
+    ServerStatusResponse createServerStatusResponse();
+
+    ServerStatusResponse.PlayerInfo createPlayerInfo(String name);
+
+    ServerStatusResponse.PlayerInfo createPlayerInfo(UUID uniqueId, String name);
+
 }

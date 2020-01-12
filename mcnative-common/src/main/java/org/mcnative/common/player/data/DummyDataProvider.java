@@ -29,7 +29,7 @@ public class DummyDataProvider implements PlayerDataProvider{
     @Override
     public MinecraftPlayerData getPlayerData(String name) {
         if(name.equalsIgnoreCase("Dkrieger")){
-            return new DefaultMinecraftPlayerData(null,1,name,UUID.fromString("cb7f0812-1fbb-4715-976e-a81e52be4b67")
+            return new DefaultMinecraftPlayerData(null,name,UUID.fromString("cb7f0812-1fbb-4715-976e-a81e52be4b67")
                     ,-1,-1,-1,null, Document.newDocument());
         }
         return null;
@@ -38,7 +38,7 @@ public class DummyDataProvider implements PlayerDataProvider{
     @Override
     public MinecraftPlayerData getPlayerData(UUID uniqueId) {
         if(uniqueId.equals(UUID.fromString("cb7f0812-1fbb-4715-976e-a81e52be4b67"))){
-            return new DefaultMinecraftPlayerData(null,1,"Dkrieger",uniqueId
+            return new DefaultMinecraftPlayerData(null,"Dkrieger",uniqueId
                     ,-1,-1,-1,null, Document.newDocument());
         }
         return null;

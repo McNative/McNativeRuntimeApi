@@ -26,6 +26,7 @@ import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 /*
@@ -51,7 +52,7 @@ public class BungeeCordPlatform implements MinecraftPlatform {
 
     @Override
     public Collection<MinecraftProtocolVersion> getJoinableProtocolVersions() {
-        return null;
+        return Collections.singleton(MinecraftProtocolVersion.JE_1_8);
     }
 
     @Override

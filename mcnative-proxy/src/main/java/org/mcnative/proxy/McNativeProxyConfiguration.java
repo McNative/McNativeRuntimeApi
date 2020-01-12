@@ -20,9 +20,12 @@
 package org.mcnative.proxy;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.adapter.defaults.InetSocketAddressAdapter;
 import net.prematic.libraries.document.annotations.DocumentKey;
+import net.prematic.libraries.document.annotations.DocumentRequired;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.logging.SimplePrematicLogger;
 import net.prematic.libraries.utility.StringUtil;
 import net.prematic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
@@ -33,11 +36,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class McNativeProxyConfiguration {
 
-    public static DocumentFileType FORMAT = DocumentFileType.YAML;
+    public static transient DocumentFileType FORMAT = DocumentFileType.YAML;
 
     //@Todo implement configuration
     public static boolean WHITELIST_ENABLED = false;
@@ -46,10 +50,10 @@ public class McNativeProxyConfiguration {
     public static Collection<String> WHITELIST_PLAYERS = Arrays.asList("Dkrieger","FridiousHD"
             ,"cb7f0812-1fbb-4715-976e-a81e52be4b67","21246bcb-b4ad-4d38-8662-69cb8debb7c6");
 
-    public static Map<String,ConfiguredServer> SERVER_SERVERS;
+    public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 
-    @DocumentKey("server.connectToFallback.onJoin.allowNormalServers")
     public static boolean SERVER_CONNECT_PRIORITY_ENABLED = false;
+    @DocumentKey("server.connectToFallback.onJoin.allowNormalServers")
     public static boolean SERVER_CONNECT_PRIORITY_ON_JOIN_ALLOW_ONLY_NORMAL_SERVERS = false;
     public static String SERVER_CONNECT_PRIORITY_NO_FALLBACK = "No fallback server available.";
 
@@ -83,6 +87,7 @@ public class McNativeProxyConfiguration {
 
     public static class ConfiguredServer {
 
+        @DocumentRequired
         private final InetSocketAddress address;
         private final String permission;
         private final MinecraftServerType type;
@@ -134,6 +139,7 @@ public class McNativeProxyConfiguration {
             type.getWriter().write(configFile,config);
         }catch (Exception exception){
             logger.info(McNative.CONSOLE_PREFIX+"Could not load configuration (config."+type.getEnding()+")",exception);
+            exception.printStackTrace();
             return false;
         }
         return true;

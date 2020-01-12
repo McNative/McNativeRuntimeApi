@@ -21,6 +21,7 @@ package org.mcnative.common;
 
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.concurrent.TaskScheduler;
+import net.prematic.libraries.dependency.DependencyManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
@@ -50,6 +51,10 @@ public interface McNative extends ObjectOwner {
     CommandSender getConsoleSender();
 
     PluginManager getPluginManager();
+
+    DependencyManager getDependencyManager();
+
+    ObjectCreator getObjectCreator();
 
     //@Todo move to local?
     PlayerManager getPlayerManager();
@@ -85,11 +90,9 @@ public interface McNative extends ObjectOwner {
     }
 
 
-
     static boolean isAvailable(){
         return getInstance() != null;
     }
-
 
     static McNative getInstance() {
         return InstanceHolder.INSTANCE;

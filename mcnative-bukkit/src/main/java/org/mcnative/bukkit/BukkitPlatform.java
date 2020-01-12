@@ -19,6 +19,7 @@
 
 package org.mcnative.bukkit;
 
+import org.bukkit.Bukkit;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
@@ -36,7 +37,7 @@ public class BukkitPlatform implements MinecraftPlatform {
 
     @Override
     public String getVersion() {
-        return null;
+        return Bukkit.getVersion();
     }
 
     @Override
@@ -52,6 +53,11 @@ public class BukkitPlatform implements MinecraftPlatform {
     @Override
     public boolean isProxy() {
         return false;
+    }
+
+    @Override
+    public boolean isService() {
+        return true;
     }
 
     @Override

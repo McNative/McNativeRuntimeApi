@@ -19,6 +19,7 @@
 
 package org.mcnative.bungeecord;
 
+import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
@@ -33,6 +34,7 @@ import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessageChannelListener;
@@ -55,8 +57,6 @@ import java.util.*;
 @Todo In service
     - Implement connection Handler
     - Implement default tablist
-    - Implement status response
-    - Implement address
  */
 public class BungeeCordService implements LocalService, ProxyServer, ProxyService {
 
@@ -69,12 +69,11 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     private Collection<MessageEntry> messageListeners;
 
     private ChatChannel serverChat;
-    private ServerConnectHandler connectionHandler;
     private Tablist defaultTablist;
     private ServerStatusResponse statusResponse;
 
     public BungeeCordService(PacketManager packetManager, CommandManager commandManager,BungeeCordPlayerManager playerManager
-            , EventBus eventBus,BungeeCordServerMap serverMap) {
+            ,EventBus eventBus,BungeeCordServerMap serverMap) {
         this.packetManager = packetManager;
         this.commandManager = commandManager;
         this.playerManager = playerManager;
@@ -87,6 +86,11 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     @Override
     public Collection<MinecraftServer> getServers() {
         return serverMap.getServers();
+    }
+
+    @Override
+    public Collection<MinecraftServer> getServers(MinecraftServerType type) {
+        return serverMap.getServers(type);
     }
 
     @Override
@@ -230,6 +234,7 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public InetSocketAddress getAddress() {
+        for (ListenerInfo listener : net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners()) return listener.getHost();
         return null;
     }
 

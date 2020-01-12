@@ -37,8 +37,8 @@ public class StorageConfig {
     private final Collection<DatabaseEntry> databaseEntries;
     private Configuration configuration;
 
-    public StorageConfig(Configuration configuration) {
-        this.configuration = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).getConfiguration(McNative.getInstance(), "storage");
+    public StorageConfig(ConfigurationProvider configurationProvider,Configuration configuration) {
+        this.configuration = configurationProvider.getConfiguration(McNative.getInstance(), "storage");
         this.databaseDriverEntries = new ArrayList<>();
         this.databaseEntries = new ArrayList<>();
         this.configuration = configuration;
