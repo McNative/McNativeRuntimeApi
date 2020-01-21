@@ -21,6 +21,7 @@ package org.mcnative.bungeecord.internal.event.server;
 
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.event.server.MinecraftPlayerServerKickEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -28,7 +29,6 @@ import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 //@Todo maybe optimize reason mapping
 public class BungeeServerKickEvent implements MinecraftPlayerServerKickEvent {

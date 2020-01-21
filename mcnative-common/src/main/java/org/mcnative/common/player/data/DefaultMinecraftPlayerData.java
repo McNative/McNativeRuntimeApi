@@ -46,8 +46,6 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
         this.properties = properties;
     }
 
-
-
     @Override
     public String getName() {
         return this.name;
@@ -86,7 +84,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     public void updateLastPlayed(long timeStamp) {
         this.provider.getPlayerDataStorage().update()
-                .set("lastPlayed", timeStamp)
+                .set("LastPlayed", timeStamp)
                 .where("uniqueId", uniqueId)
                 .execute();
     }
@@ -94,7 +92,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     @Override
     public void updateName(String name) {
         this.provider.getPlayerDataStorage().update()
-                .set("name", name)
+                .set("Name", name)
                 .where("uniqueId", uniqueId)
                 .execute();
     }
@@ -102,7 +100,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     @Override
     public void updateGameProfile(GameProfile profile) {
         this.provider.getPlayerDataStorage().update()
-                .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile), false))
+                .set("GameProfile",profile.toJsonPart())
                 .where("uniqueId", uniqueId)
                 .execute();
     }
@@ -110,17 +108,17 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     @Override
     public void updateProperties() {
         this.provider.getPlayerDataStorage().update()
-                .set("properties", DocumentFileType.JSON.getWriter().write(this.properties))
-                .where("uniqueId", uniqueId)
+                .set("Properties", DocumentFileType.JSON.getWriter().write(this.properties))
+                .where("UniqueId", uniqueId)
                 .execute();
     }
 
     @Override
     public void updateLoginInformation(String name, GameProfile profile, long timeStamp) {
         this.provider.getPlayerDataStorage().update()
-                .set("name", name)
-                .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument().add("gameProfile", profile)))
-                .set("lastPlayed", timeStamp)
+                .set("Name", name)
+                .set("GameProfile", profile.toJsonPart())
+                .set("LastPlayed", timeStamp)
                 .execute();
     }
 

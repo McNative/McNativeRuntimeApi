@@ -104,7 +104,7 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
+    public <T> T getAs(Class<T> otherPlayerClass) {
         return McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
     }
 

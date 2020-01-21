@@ -56,7 +56,6 @@ public interface McNative extends ObjectOwner {
 
     ObjectCreator getObjectCreator();
 
-    //@Todo move to local?
     PlayerManager getPlayerManager();
 
     /**

@@ -20,9 +20,10 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -79,18 +80,18 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
+    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         builder.append("{objective=").append(objective).append(".entity=").append(entityName).append(",value=").append(value).append("}");
-        super.toPlainText(builder, variables);
+        super.toPlainText(builder, variables,language);
     }
 
     @Override
-    public Document compile(String key,VariableSet variables) {
+    public Document compile(String key, VariableSet variables, Language language) {
         Document score = Document.newDocument();
         score.add("name",entityName);
         score.add("objective", objective);
         score.add("value",value);
-        return super.compile(key,variables).add("score",score);
+        return super.compile(key,variables,language).add("score",score);
     }
 
     @Override

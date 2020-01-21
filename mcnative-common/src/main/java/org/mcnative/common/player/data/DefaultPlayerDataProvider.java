@@ -24,7 +24,6 @@ import net.prematic.databasequery.api.collection.field.FieldOption;
 import net.prematic.databasequery.api.datatype.DataType;
 import net.prematic.databasequery.api.query.result.QueryResult;
 import net.prematic.databasequery.api.query.result.QueryResultEntry;
-import net.prematic.databasequery.api.query.type.InsertQuery;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.utility.Validate;
@@ -42,13 +41,13 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
     public DefaultPlayerDataProvider() {
         this.playerDataStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
                 .getDatabase(McNative.getInstance()).createCollection("PlayerData")
-                .field("uniqueId", DataType.UUID, FieldOption.NOT_NULL,FieldOption.UNIQUE, FieldOption.INDEX)
-                .field("xBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
-                .field("name", DataType.STRING, 32, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
-                .field("firstPlayed", DataType.LONG, FieldOption.NOT_NULL)
-                .field("lastPlayed", DataType.LONG, FieldOption.NOT_NULL)
-                .field("gameProfile", DataType.LONG_TEXT)
-                .field("properties", DataType.LONG_TEXT)
+                .field("UniqueId", DataType.UUID, FieldOption.NOT_NULL,FieldOption.UNIQUE, FieldOption.INDEX)
+                .field("XBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
+                .field("Name", DataType.STRING, 32, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
+                .field("FirstPlayed", DataType.LONG, FieldOption.NOT_NULL)
+                .field("LastPlayed", DataType.LONG, FieldOption.NOT_NULL)
+                .field("GameProfile", DataType.LONG_TEXT)
+                .field("Properties", DataType.LONG_TEXT)
                 .create();
     }
 
@@ -59,46 +58,47 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
     @Override
     public MinecraftPlayerData getPlayerData(String name) {
         Objects.requireNonNull(name);
-        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("name", name).execute());
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("Name", name).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(UUID uniqueId) {
         Objects.requireNonNull(uniqueId);
-        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("uniqueId", uniqueId).execute());
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("UniqueId", uniqueId).execute());
     }
 
     @Override
     public MinecraftPlayerData getPlayerData(long xBoxId) {
         Validate.isTrue(xBoxId == 0,"XBoxId can't be 0");
-        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("xBoxId", xBoxId).execute());
+        return getPlayerDataByQueryResult(this.playerDataStorage.find().where("XBoxId", xBoxId).execute());
     }
 
     private MinecraftPlayerData getPlayerDataByQueryResult(QueryResult result) {
         if(result.isEmpty()) return null;
         QueryResultEntry entry = result.first();
-        String name = entry.getString("name");
-        UUID uniqueId = entry.getUniqueId("uniqueId");
+        String name = entry.getString("Name");
+        UUID uniqueId = entry.getUniqueId("UniqueId");
         return new DefaultMinecraftPlayerData(this,
                 name,
                 uniqueId,
-                entry.getLong("xBoxId"),
-                entry.getLong("firstPlayed"),
-                entry.getLong("lastPlayed"),
-                GameProfile.fromJsonPart(uniqueId,name,entry.getString("gameProfile")),
-                DocumentFileType.JSON.getReader().read(entry.getString("properties")));
+                entry.getLong("XBoxId"),
+                entry.getLong("FirstPlayed"),
+                entry.getLong("LastPlayed"),
+                GameProfile.fromJsonPart(uniqueId,name,entry.getString("GameProfile")),
+                DocumentFileType.JSON.getReader().read(entry.getString("Properties")));
     }
 
     @Override
     public MinecraftPlayerData createPlayerData(String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile) {
-        InsertQuery insertQuery = this.playerDataStorage.insert()
-                .set("uniqueId", uniqueId)
-                .set("xBoxId", xBoxId)
-                .set("name", name)
-                .set("firstPlayed", firstPlayed)
-                .set("lastPlayed", lastPlayed)
-                .set("gameProfile", DocumentFileType.JSON.getWriter().write(Document.newDocument(gameProfile.getProperties()), false));
-        insertQuery.execute();
+        this.playerDataStorage.insert()
+                .set("UniqueId", uniqueId)
+                .set("XBoxId", xBoxId)
+                .set("Name", name)
+                .set("FirstPlayed", firstPlayed)
+                .set("LastPlayed", lastPlayed)
+                .set("GameProfile", gameProfile.toJsonPart())
+                .set("Properties","{}")
+                .execute();
         return new DefaultMinecraftPlayerData(this, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile, Document.newDocument());
     }
 }

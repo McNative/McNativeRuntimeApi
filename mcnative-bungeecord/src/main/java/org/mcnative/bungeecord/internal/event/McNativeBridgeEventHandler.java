@@ -281,7 +281,7 @@ public final class McNativeBridgeEventHandler {
 
     private void handleTabCompleteResponse(TabCompleteResponseEvent event){
         if(event.getReceiver() instanceof ProxiedPlayer){
-            OnlineMinecraftPlayer player = playerManager.getMappedPlayer((ProxiedPlayer) event.getSender());
+            OnlineMinecraftPlayer player = playerManager.getMappedPlayer((ProxiedPlayer) event.getReceiver());
             String cursor = this.tabCompleteCursors.get(event.getReceiver());
             MinecraftPlayerTabCompleteResponseEvent mcNativeEvent = new BungeeTabCompleteResponseEvent(event,player,cursor);
             eventBus.callEvents(TabCompleteEvent.class,event,mcNativeEvent);

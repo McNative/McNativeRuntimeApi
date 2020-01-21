@@ -31,7 +31,7 @@ import java.util.function.Function;
 
 public class BungeeCordPlayerManager implements PlayerManager {
 
-    private final Map<Class<?>,Function<MinecraftPlayer,MinecraftPlayer>> adapters;
+    private final Map<Class<?>,Function<MinecraftPlayer,?>> adapters;
     private final Collection<ConnectedMinecraftPlayer> onlineMinecraftPlayers;
 
     public BungeeCordPlayerManager() {
@@ -85,14 +85,14 @@ public class BungeeCordPlayerManager implements PlayerManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends MinecraftPlayer> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer, T> translator) {
-        this.adapters.put(playerClass, (Function<MinecraftPlayer, MinecraftPlayer>) translator);
+    public <T> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer, T> translator) {
+        this.adapters.put(playerClass, translator);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends MinecraftPlayer> T translate(Class<T> translatedClass, MinecraftPlayer player) {
-        Function<MinecraftPlayer,MinecraftPlayer> translator = this.adapters.get(translatedClass);
+    public <T> T translate(Class<T> translatedClass, MinecraftPlayer player) {
+        Function<MinecraftPlayer,?> translator = this.adapters.get(translatedClass);
         if(translator == null) throw new IllegalArgumentException(String.format("No translator for player %s class found.",translatedClass));
         return (T) translator.apply(player);
     }

@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.player.bossbar.BarColor;
 import org.mcnative.common.player.bossbar.BarFlag;
 import org.mcnative.common.player.bossbar.BarStyle;
@@ -29,7 +30,6 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.UUID;
 

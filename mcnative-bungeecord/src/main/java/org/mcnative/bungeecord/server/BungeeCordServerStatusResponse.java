@@ -22,6 +22,7 @@ package org.mcnative.bungeecord.server;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.chat.ComponentSerializer;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.utility.io.IORuntimeException;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.component.server.ServerVersion;
@@ -30,7 +31,6 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.TextComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

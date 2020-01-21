@@ -71,6 +71,10 @@ public class GameProfile {
         return DocumentFileType.JSON.getWriter().write(toDocument(),pretty);
     }
 
+    public String toJsonPart(){
+        return DocumentFileType.JSON.getWriter().write(Document.newDocument(properties), false);
+    }
+
     public static GameProfile fromJson(String json){
         return fromDocument(DocumentFileType.JSON.getReader().read(json));
     }

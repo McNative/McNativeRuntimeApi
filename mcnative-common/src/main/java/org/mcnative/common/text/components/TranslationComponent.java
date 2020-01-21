@@ -20,9 +20,10 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
@@ -67,16 +68,15 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
+    public void toPlainText(StringBuilder builder, VariableSet variables,Language language) {
         builder.append("{translation=").append(translation).append("}");
         super.toPlainText(builder, variables);
     }
 
     @Override
-    public Document compile(String key, VariableSet variables) {
-        return super.compile(key,variables).add("translate",translation).add("with",with.compile(variables));
+    public Document compile(String key, VariableSet variables, Language language) {
+        return super.compile(key,variables,language).add("translate",translation).add("with",with.compile(variables,language));
     }
-
 
     @Override
     public void decompile(Document data) {

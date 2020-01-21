@@ -20,6 +20,7 @@
 package org.mcnative.bungeecord.player;
 
 import io.netty.channel.Channel;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
@@ -36,7 +37,6 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftDisconnectPacket;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.lang.reflect.Array;

@@ -23,6 +23,7 @@ import io.netty.channel.Channel;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
@@ -54,7 +55,6 @@ import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.net.InetSocketAddress;
@@ -402,7 +402,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Override
-    public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
+    public <T> T getAs(Class<T> otherPlayerClass) {
         return McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
     }
 

@@ -22,9 +22,9 @@ package org.mcnative.common.text;
 import net.prematic.libraries.document.adapter.DocumentAdapter;
 import net.prematic.libraries.document.entry.DocumentBase;
 import net.prematic.libraries.document.entry.DocumentEntry;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 public class ChatComponentDocumentAdapter implements DocumentAdapter<MessageComponent> {
 
@@ -35,6 +35,6 @@ public class ChatComponentDocumentAdapter implements DocumentAdapter<MessageComp
 
     @Override
     public DocumentEntry write(String key, MessageComponent component) {
-        return component.compile(key, VariableSet.newEmptySet());
+        return component.compile(key, VariableSet.newEmptySet(),null);
     }
 }

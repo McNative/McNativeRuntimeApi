@@ -22,8 +22,9 @@ package org.mcnative.common.text.components;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.DocumentRegistry;
 import net.prematic.libraries.document.entry.ArrayEntry;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
 import org.mcnative.common.text.Text;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,14 +80,14 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
-        components.forEach(component -> component.toPlainText(builder, variables));
+    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
+        components.forEach(component -> component.toPlainText(builder, variables,language));
     }
 
     @Override
-    public Document compile(String key, VariableSet variables) {
+    public Document compile(String key, VariableSet variables, Language language) {
         ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);
-        components.forEach(component -> entry.entries().add(component.compile(variables)));
+        components.forEach(component -> entry.entries().add(component.compile(variables,language)));
         return entry;
     }
 

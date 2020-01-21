@@ -19,11 +19,11 @@
 
 package org.mcnative.common.network.component.server;
 
+import net.prematic.libraries.message.bml.variable.EmptyVariableSet;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.EmptyVariableSet;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

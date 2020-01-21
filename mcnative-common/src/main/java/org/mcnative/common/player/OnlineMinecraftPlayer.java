@@ -20,6 +20,7 @@
 package org.mcnative.common.player;
 
 import net.prematic.libraries.command.sender.CommandSender;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
@@ -32,7 +33,6 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;

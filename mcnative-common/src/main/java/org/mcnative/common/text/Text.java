@@ -95,16 +95,16 @@ public class Text {
 
 
 
-    public static KeyComponent ofMessageKey(String key){
+    public static MessageKeyComponent ofMessageKey(String key){
         return ofMessageKey(key,TextColor.WHITE);
     }
 
-    public static KeyComponent ofMessageKey(String key, TextColor color){
+    public static MessageKeyComponent ofMessageKey(String key, TextColor color){
         return ofMessageKey(key,color,new HashSet<>());
     }
 
-    public static KeyComponent ofMessageKey(String key, TextColor color, Set<TextStyle> styling){
-        return new KeyComponent(key,color,styling);
+    public static MessageKeyComponent ofMessageKey(String key, TextColor color, Set<TextStyle> styling){
+        return new MessageKeyComponent(key,color,styling);
     }
 
 

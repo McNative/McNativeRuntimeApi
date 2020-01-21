@@ -22,6 +22,7 @@ package org.mcnative.bungeecord.network;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.utility.Iterators;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
@@ -30,7 +31,6 @@ import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.proxy.ProxyService;
 
 import java.net.InetSocketAddress;

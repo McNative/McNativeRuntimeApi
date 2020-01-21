@@ -20,28 +20,31 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.message.MessageProvider;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
+import org.mcnative.common.McNative;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Set;
 
-public class KeyComponent extends AbstractChatComponent<KeyComponent>{
+public class MessageKeyComponent extends AbstractChatComponent<MessageKeyComponent>{
 
     private String key;
 
-    public KeyComponent() {}
+    public MessageKeyComponent() {}
 
-    public KeyComponent(String key) {
+    public MessageKeyComponent(String key) {
         this.key = key;
     }
 
-    public KeyComponent(String key, TextColor color) {
+    public MessageKeyComponent(String key, TextColor color) {
         super(color);
         this.key = key;
     }
 
-    public KeyComponent(String key, TextColor color, Set<TextStyle> styling) {
+    public MessageKeyComponent(String key, TextColor color, Set<TextStyle> styling) {
         super(color, styling);
         this.key = key;
     }
@@ -55,17 +58,17 @@ public class KeyComponent extends AbstractChatComponent<KeyComponent>{
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
-        builder.append(replaceVariablesAndTranslate(variables));
-        super.toPlainText(builder, variables);
+    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
+        builder.append(replaceVariablesAndTranslate(variables,language));
+        super.toPlainText(builder, variables,language);
     }
 
     @Override
-    public Document compile(String key, VariableSet variables) {
-        return super.compile(key,variables).add("text",replaceVariablesAndTranslate(variables));
+    public Document compile(String key, VariableSet variables, Language language) {
+        return super.compile(key,variables,language).add("text",replaceVariablesAndTranslate(variables,language));
     }
 
-    private String replaceVariablesAndTranslate(VariableSet variables){
-        return variables.replace(key);//Todo get message form translate engine
+    private String replaceVariablesAndTranslate(VariableSet variables, Language language){
+        return McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
     }
 }

@@ -20,13 +20,14 @@
 package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
 import org.mcnative.common.text.event.TextEvent;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,9 +110,9 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables) {
+    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         if(extras != null && !extras.isEmpty()){
-            extras.forEach(component -> component.toPlainText(builder, variables));
+            extras.forEach(component -> component.toPlainText(builder, variables,language));
         }
     }
 
@@ -139,7 +140,7 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     }
 
     @Override
-    public Document compile(String key, VariableSet variables) {
+    public Document compile(String key, VariableSet variables, Language language) {
         Document document = Document.newDocument(key);
         if(isBold()) document.add("bold",true);
         if(isItalic()) document.add("italic",true);
@@ -211,6 +212,7 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <N extends ChatComponent<?>> N getAs(Class<N> aClass) {
         return (N) this;

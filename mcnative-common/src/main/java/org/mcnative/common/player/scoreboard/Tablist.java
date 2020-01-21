@@ -19,10 +19,10 @@
 
 package org.mcnative.common.player.scoreboard;
 
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.text.components.ChatComponent;
-import org.mcnative.common.text.variable.VariableSet;
 
 import java.util.Collection;
 

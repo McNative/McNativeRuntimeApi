@@ -31,8 +31,8 @@ public interface PlayerManager {
     MinecraftPlayer getPlayer(String name);
 
 
-    <T extends MinecraftPlayer> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer,T> translator);
+    <T> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer,T> translator);
 
-    <T extends MinecraftPlayer> T translate(Class<T> translatedClass, MinecraftPlayer player);
+    <T> T translate(Class<T> translatedClass, MinecraftPlayer player);
 
 }

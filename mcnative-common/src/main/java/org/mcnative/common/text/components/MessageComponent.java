@@ -21,7 +21,8 @@ package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
-import org.mcnative.common.text.variable.VariableSet;
+import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
 
 import java.util.Collection;
 
@@ -37,9 +38,17 @@ public interface MessageComponent<T extends MessageComponent<?>> {
         return toPlainText(VariableSet.newEmptySet());
     }
 
+    default String toPlainText(Language language){
+        return toPlainText(VariableSet.newEmptySet(),language);
+    }
+
     default String toPlainText(VariableSet variables){
+        return toPlainText(variables,null);
+    }
+
+    default String toPlainText(VariableSet variables,Language language){
         StringBuilder builder = new StringBuilder();
-        toPlainText(builder,variables);
+        toPlainText(builder,variables,language);
         return builder.toString();
     }
 
@@ -47,24 +56,50 @@ public interface MessageComponent<T extends MessageComponent<?>> {
         toPlainText(builder,VariableSet.newEmptySet());
     }
 
-    void toPlainText(StringBuilder builder,VariableSet variables);
+    default void toPlainText(StringBuilder builder,Language language){
+        toPlainText(builder,VariableSet.newEmptySet(),language);
+    }
+
+    default void toPlainText(StringBuilder builder,VariableSet variables){
+        toPlainText(builder,variables,null);
+    }
+
+    void toPlainText(StringBuilder builder,VariableSet variables,Language language);
+
 
     default Document compile(){
         return compile(VariableSet.newEmptySet());
     }
 
-    default Document compile(VariableSet variables){
-        return compile(null,variables);
+    default Document compile(Language language){
+        return compile(VariableSet.newEmptySet(),language);
     }
 
-    Document compile(String key, VariableSet variables);
+    default Document compile(VariableSet variables){
+        return compile(variables,null);
+    }
+
+    default Document compile(VariableSet variables,Language language){
+        return compile(null,variables,language);
+    }
+
+    Document compile(String key, VariableSet variables,Language language);
+
 
     default String compileToString(){
-        return compileToString(VariableSet.newEmptySet());
+        return compileToString(VariableSet.newEmptySet(),null);
+    }
+
+    default String compileToString(Language language){
+        return compileToString(VariableSet.newEmptySet(),language);
     }
 
     default String compileToString(VariableSet variables){
-        return DocumentFileType.JSON.getWriter().write(compile(variables),false);
+        return compileToString(variables,null);
+    }
+
+    default String compileToString(VariableSet variables,Language language){
+        return DocumentFileType.JSON.getWriter().write(compile(variables,language),false);
     }
 
     void decompile(Document data);

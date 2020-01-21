@@ -53,7 +53,7 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
     PlayerDesign getDesign(MinecraftPlayer player);
 
     @Nullable
-    <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass);
+    <T> T getAs(Class<T> otherPlayerClass);
 
     @Nullable
     ConnectedMinecraftPlayer getAsConnectedPlayer();

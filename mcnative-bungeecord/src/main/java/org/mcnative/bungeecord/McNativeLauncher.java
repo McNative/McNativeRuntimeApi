@@ -51,7 +51,7 @@ public class McNativeLauncher {
     public static void launchMcNativeInternal(){
         if(McNative.isAvailable()) return;
         Logger logger = ProxyServer.getInstance().getLogger();
-        logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
+        logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...   TEST2 -----------");
         ProxyServer proxy = ProxyServer.getInstance();
 
         if(!McNativeProxyConfiguration.load(new JdkPrematicLogger(logger),new File("plugins/McNative/"))) return;

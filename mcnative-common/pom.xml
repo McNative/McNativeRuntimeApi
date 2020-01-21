@@ -89,12 +89,22 @@
             <version>${dependency.pretronic.libraries.caching}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.prematic.libraries</groupId>
+            <artifactId>prematiclibraries-message</artifactId>
+            <version>${dependency.pretronic.libraries.caching}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- @Todo remove (dynamic load) -->
         <dependency>
             <groupId>net.prematic.databasequery</groupId>
             <artifactId>prematicdatabasequery-sql</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
