@@ -21,6 +21,9 @@ package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
 import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.message.language.Language;
+import net.prematic.libraries.message.language.LanguageAble;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.ChatPosition;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -81,7 +84,7 @@ public class MinecraftChatPacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         if(direction == PacketDirection.OUTGOING){
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
                 message = Text.decompile(MinecraftProtocolUtil.readString(buffer));
@@ -95,16 +98,19 @@ public class MinecraftChatPacket implements MinecraftPacket {
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+        Language language = null;
+        if(connection instanceof LanguageAble) language = ((LanguageAble) connection).getLanguage();
+        
         if(direction == PacketDirection.OUTGOING){
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
-                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet()));
+                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet(),language));
                 buffer.writeByte(position.getId());
             }else{
-                MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet()));
+                MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));
             }
         }else if(direction == PacketDirection.INCOMING){
-            MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet()));
+            MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));
         }
     }
 }

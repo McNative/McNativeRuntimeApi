@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.PlayerSettings;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -71,7 +72,7 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         languageTag = MinecraftProtocolUtil.readString(buffer);
         byte viewDistance = buffer.readByte();
         int chatMode;
@@ -93,7 +94,7 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         MinecraftProtocolUtil.writeString(buffer,languageTag);
         buffer.writeByte(settings.getViewDistance());
         if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_9)){

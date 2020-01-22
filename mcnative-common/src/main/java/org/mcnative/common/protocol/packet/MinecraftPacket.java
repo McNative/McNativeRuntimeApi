@@ -21,15 +21,16 @@ package org.mcnative.common.protocol.packet;
 
 import io.netty.buffer.ByteBuf;
 import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 public interface MinecraftPacket {
 
     PacketIdentifier getIdentifier();
 
-    void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
+    void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
-    void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
+    void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
 
 

@@ -21,6 +21,7 @@ package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
 import net.prematic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -84,7 +85,7 @@ public class MinecraftTitlePacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         action = Action.of(version,MinecraftProtocolUtil.readVarInt(buffer));
         if(action == Action.SET_TITLE || action == Action.SET_SUBTITLE || action == Action.SET_ACTIONBAR){
             data = Text.decompile(MinecraftProtocolUtil.readString(buffer));
@@ -98,7 +99,7 @@ public class MinecraftTitlePacket implements MinecraftPacket {
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version,ByteBuf buffer) {
         MinecraftProtocolUtil.writeVarInt(buffer,action.getId(version));
         if(data != null){
             if(data instanceof MessageComponent){

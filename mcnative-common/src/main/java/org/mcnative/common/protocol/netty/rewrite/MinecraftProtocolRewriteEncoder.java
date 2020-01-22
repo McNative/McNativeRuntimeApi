@@ -57,14 +57,14 @@ public class MinecraftProtocolRewriteEncoder extends MessageToByteEncoder<ByteBu
             if(listeners != null && !listeners.isEmpty()){
                 MinecraftPacket packet = identifier.newPacketInstance();
                 in.markReaderIndex();
-                packet.read(direction,version,in);
+                packet.read(connection,direction,version,in);
 
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
                 listeners.forEach(listener -> listener.handle(event));
 
                 if(event.isRewrite()){
                     packet = event.getPacket();
-                    packet.write(direction,version,out);
+                    packet.write(connection,direction,version,out);
                     return;
                 }else in.resetReaderIndex();
             }

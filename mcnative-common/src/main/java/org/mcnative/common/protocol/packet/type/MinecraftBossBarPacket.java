@@ -21,6 +21,7 @@ package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
 import net.prematic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BarColor;
 import org.mcnative.common.player.bossbar.BarFlag;
 import org.mcnative.common.player.bossbar.BarStyle;
@@ -115,12 +116,12 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
 
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         MinecraftProtocolUtil.writeUUID(buffer,barId);
         MinecraftProtocolUtil.writeVarInt(buffer,action.ordinal());
         if(action == Action.ADD){

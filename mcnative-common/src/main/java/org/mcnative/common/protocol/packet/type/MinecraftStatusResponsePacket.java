@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -49,12 +50,12 @@ public class MinecraftStatusResponsePacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
 
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
 
     }
 }

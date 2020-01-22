@@ -57,6 +57,6 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
             packet = event.getPacket();
         }
         MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));
-        packet.write(direction,this.version,buffer);
+        packet.write(connection,direction,this.version,buffer);
     }
 }

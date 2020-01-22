@@ -55,7 +55,7 @@ public class MinecraftProtocolRewriteDecoder extends MessageToMessageDecoder<Byt
             List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,identifier.getPacketClass());
             if(listeners != null && !listeners.isEmpty()){
                 MinecraftPacket packet = identifier.newPacketInstance();
-                packet.read(direction,version,in);
+                packet.read(connection,direction,version,in);
 
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
                 listeners.forEach(listener -> listener.handle(event));
@@ -65,7 +65,7 @@ public class MinecraftProtocolRewriteDecoder extends MessageToMessageDecoder<Byt
                     packet = event.getPacket();
                     out.clear();
                     MinecraftProtocolUtil.writeVarInt(out,packetId);
-                    packet.write(direction,version,out);
+                    packet.write(connection,direction,version,out);
                 }
             }
         }

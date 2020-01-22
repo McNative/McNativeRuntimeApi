@@ -22,6 +22,7 @@ package org.mcnative.common.protocol.packet.type;
 import io.netty.buffer.ByteBuf;
 import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -70,12 +71,12 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
     }
 
     @Override
-    public void read(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         reason = Text.decompile(MinecraftProtocolUtil.readString(buffer));
     }
 
     @Override
-    public void write(PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+    public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         MinecraftProtocolUtil.writeString(buffer,this.reason.compileToString(variables!=null?variables: VariableSet.newEmptySet()));
     }
 }

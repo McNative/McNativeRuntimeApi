@@ -52,7 +52,7 @@ public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
         PacketIdentifier identifier = packetManager.getPacketIdentifier(connection.getState(),direction,version,packetId);
         if(identifier != null){
             MinecraftPacket packet = identifier.newPacketInstance();
-            packet.read(direction,version,in);
+            packet.read(connection,direction,version,in);
             List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
             if(listeners != null && !listeners.isEmpty()){
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
