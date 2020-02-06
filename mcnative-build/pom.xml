@@ -53,20 +53,27 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.prematic.libraries</groupId>
+            <artifactId>prematiclibraries-resourceloader</artifactId>
+            <version>${dependency.pretronic.libraries.resourceloader}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- External project dependencies -->
 
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>${dependency.bungeecord.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${dependency.bukkit.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
