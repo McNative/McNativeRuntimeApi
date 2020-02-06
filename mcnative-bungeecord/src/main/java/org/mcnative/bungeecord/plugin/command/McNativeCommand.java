@@ -32,7 +32,9 @@ public class McNativeCommand extends Command {
     private final net.prematic.libraries.command.command.Command original;
 
     public McNativeCommand(net.prematic.libraries.command.command.Command original) {
-        super(original.getName(),original.getPermission(),original.getAliases().toArray(new String[]{}));
+        super(original.getConfiguration().getName()
+                ,original.getConfiguration().getPermission()
+                ,original.getConfiguration().getAliases());
         this.original = original;
     }
 
@@ -50,7 +52,7 @@ public class McNativeCommand extends Command {
         }else{
             mapped = new MappedCommandSender(sender);
         }
-        original.execute(mapped,null,strings);
+        original.execute(mapped,strings);
     }
 
     public final static class MappedCommandSender implements CustomCommandSender {

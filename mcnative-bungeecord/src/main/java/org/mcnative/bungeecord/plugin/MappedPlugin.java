@@ -58,6 +58,7 @@ public class MappedPlugin extends MinecraftPlugin {
     public boolean equals(Object obj) {
         if(obj == this) return true;
         else if(obj instanceof MappedPlugin) return plugin.equals(((MappedPlugin) obj).getPlugin());
+        else if(obj instanceof Plugin) return plugin.equals(obj);
         else return plugin.equals(obj);
     }
 
@@ -107,6 +108,21 @@ public class MappedPlugin extends MinecraftPlugin {
         @Override
         public PluginVersion getVersion() {
             return new PluginVersion(original.getVersion(),1);
+        }
+
+        @Override
+        public PluginVersion getLatestVersion() {
+            return null;
+        }
+
+        @Override
+        public void setLatestVersion(PluginVersion pluginVersion) {
+            //Unused
+        }
+
+        @Override
+        public String getMessageModule() {
+            return null;
         }
 
         @Override

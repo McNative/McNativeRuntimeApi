@@ -38,6 +38,8 @@ public class McNativePluginManifest {
 
     @Parameter(required = true)
     private String main;
+
+    private String messageModule;
     private String description;
     private String website;
     private String author;
@@ -58,6 +60,10 @@ public class McNativePluginManifest {
 
     public String getMain() {
         return main;
+    }
+
+    public String getMessageModule() {
+        return messageModule;
     }
 
     public String getDescription() {
@@ -83,6 +89,7 @@ public class McNativePluginManifest {
     }
 
     public void createManifestFile(File location){
+        if(depends == null) this.depends = new HashSet<>();
         getSoftdepends().add("McNative");
         location.getParentFile().mkdirs();
         DocumentFileType.JSON.getWriter().write(location, Document.newDocument(this));

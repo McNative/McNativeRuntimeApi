@@ -55,11 +55,35 @@ public class McNativeLoader extends ResourceLoader{
 
     public boolean install(){//@Todo add update configuration options (In mcnative config / disable auto update)
         if(isAvailable()) return true;
-        if(!isLatestVersion()){
-            VersionInfo version = getLatestVersion();
-            logger.info("(McNative-Loader) Downloading McNative version: "+version.getName()+" Build: "+version.getBuild());
-            download(version);
-            logger.info("(McNative-Loader) Successfully downloaded McNative");
+        VersionInfo current = getCurrentVersion();
+        VersionInfo latest = null;
+
+        try{
+            latest = getLatestVersion();
+        }catch (Exception exception){
+            logger.log(Level.SEVERE,"(McNative-Loader) Could not get latest version ("+exception.getMessage()+")");
+            if(current == null){
+                logger.log(Level.SEVERE,"(McNative-Loader) McNative not available, shutting down");
+                return false;
+            }
+        }
+        if(latest != null){
+            if(isLatestVersion()){
+                logger.info("(McNative-Loader) McNative "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
+            }else{
+                logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
+                try{
+                    download(latest);
+                    logger.info("(McNative-Loader) Successfully downloaded McNative");
+                }catch (Exception exception){
+                    if(current == null){
+                        logger.info("(McNative-Loader) download failed, shutting down");
+                        return false;
+                    }else{
+                        logger.info("(McNative-Loader) download failed, trying to start an older version");
+                    }
+                }
+            }
         }
         return launch();
     }

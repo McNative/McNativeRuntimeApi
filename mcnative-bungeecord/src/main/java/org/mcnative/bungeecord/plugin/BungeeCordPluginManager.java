@@ -20,12 +20,14 @@
 package org.mcnative.bungeecord.plugin;
 
 import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.description.PluginDescription;
 import net.prematic.libraries.plugin.lifecycle.LifecycleState;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.map.callback.CallbackMap;
@@ -117,7 +119,16 @@ public class BungeeCordPluginManager implements PluginManager {
     @Override
     public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
         if(state.equals(LifecycleState.CONSTRUCTION)) this.plugins.add(plugin);
-        else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
+        else if(state.equals(LifecycleState.INITIALISATION)){
+            MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
+            if(messageProvider != null){
+                String module = plugin.getDescription().getMessageModule();
+                if(module != null){
+                    messageProvider.loadPacks(module);
+                    messageProvider.calculateMessages();
+                }
+            }
+        }else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
 
         BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);
@@ -215,12 +226,15 @@ public class BungeeCordPluginManager implements PluginManager {
 
     @Internal
     public net.md_5.bungee.api.plugin.Plugin getMappedPlugin(Plugin<?> original){
-        for (net.md_5.bungee.api.plugin.Plugin plugin : this.original.getPlugins()) if(plugin.equals(original)) return plugin;
+        for (net.md_5.bungee.api.plugin.Plugin plugin : this.original.getPlugins()){
+            if(plugin.equals(original)) return plugin;
+        }
         throw new IllegalArgumentException("McNative Mapping error (plugin / mcnative -> bungee)");
     }
 
     @Internal
     public Plugin<?> getMappedPlugin(net.md_5.bungee.api.plugin.Plugin original){
+        Validate.notNull(original);
         for (Plugin<?> plugin : plugins) if(plugin.equals(original)) return plugin;
         throw new IllegalArgumentException("McNative Mapping error (plugin / bungee -> mcnative)");
     }

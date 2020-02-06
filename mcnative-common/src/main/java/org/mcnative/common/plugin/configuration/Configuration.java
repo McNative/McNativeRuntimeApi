@@ -19,6 +19,8 @@
 
 package org.mcnative.common.plugin.configuration;
 
+import net.prematic.libraries.command.command.configuration.CommandConfiguration;
+import net.prematic.libraries.command.command.configuration.DefaultCommandConfiguration;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.text.components.MessageComponent;
@@ -29,7 +31,13 @@ public interface Configuration extends Document {
 
     ObjectOwner getOwner();
 
-    MessageComponent<?> getText(String key);
+    default CommandConfiguration getCommandConfiguration(String key){
+        return getObject(key,DefaultCommandConfiguration.class);
+    }
+
+    default MessageComponent<?> getText(String key){
+        return getObject(key,MessageComponent.class);
+    }
 
     boolean isFirstCreation();
 

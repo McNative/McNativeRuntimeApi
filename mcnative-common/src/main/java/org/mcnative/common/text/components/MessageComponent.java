@@ -21,12 +21,13 @@ package org.mcnative.common.text.components;
 
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
+import net.prematic.libraries.message.Textable;
 import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.message.language.Language;
 
 import java.util.Collection;
 
-public interface MessageComponent<T extends MessageComponent<?>> {
+public interface MessageComponent<T extends MessageComponent<?>> extends Textable {
 
     Collection<MessageComponent<?>> getExtras();
 
@@ -103,4 +104,8 @@ public interface MessageComponent<T extends MessageComponent<?>> {
     }
 
     void decompile(Document data);
+
+    default String toText(VariableSet variables){
+        return toPlainText(variables);
+    }
 }

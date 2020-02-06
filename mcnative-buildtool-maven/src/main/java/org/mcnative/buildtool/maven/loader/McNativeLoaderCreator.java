@@ -137,7 +137,6 @@ public class McNativeLoaderCreator {
     }
 
     private void createLoaderInfo(LoaderConfiguration loaderConfiguration, String version){
-        System.out.println("URLS: "+loaderConfiguration.getVersionUrl()+" | "+loaderConfiguration.getDownloadUrl());
         Document document = Document.newDocument();
         document.set("version",version);
         document.set("versionUrl",loaderConfiguration.getVersionUrl());

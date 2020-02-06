@@ -24,7 +24,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.manager.CommandManager;
+import net.prematic.libraries.command.command.configuration.CommandConfiguration;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
@@ -36,7 +36,6 @@ import org.mcnative.common.serviceprovider.permission.Permissable;
 import org.mcnative.common.serviceprovider.permission.PermissionGroup;
 import org.mcnative.common.text.Text;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -44,35 +43,22 @@ public class BungeeCordCommand implements Command {
 
     private final net.md_5.bungee.api.plugin.Command original;
     private final ObjectOwner owner;
+    private final CommandConfiguration configuration;
 
     public BungeeCordCommand(net.md_5.bungee.api.plugin.Command original, ObjectOwner owner) {
         this.original = original;
         this.owner = owner;
+        this.configuration = CommandConfiguration.newBuilder()
+                .name(original.getName())
+                .permission(original.getPermission())
+                .aliases(original.getAliases())
+                .create();
     }
 
     public net.md_5.bungee.api.plugin.Command getOriginal() {
         return original;
     }
 
-    @Override
-    public String getName() {
-        return original.getName();
-    }
-
-    @Override
-    public String getDescription() {
-        return "";
-    }
-
-    @Override
-    public String getPermission() {
-        return original.getPermission();
-    }
-
-    @Override
-    public String getPrefix() {
-        return null;
-    }
 
     @Override
     public ObjectOwner getOwner() {
@@ -80,27 +66,12 @@ public class BungeeCordCommand implements Command {
     }
 
     @Override
-    public Collection<String> getAliases() {
-        return Arrays.asList(original.getAliases());
+    public CommandConfiguration getConfiguration() {
+        return configuration;
     }
 
     @Override
-    public boolean hasAlias(String command) {
-        return getName().equalsIgnoreCase(command) || getAliases().contains(command);
-    }
-
-    @Override
-    public void setPrefix(String s) {
-        //Ignored
-    }
-
-    @Override
-    public void init(CommandManager manager, ObjectOwner owner) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void execute(CommandSender sender, String command, String[] arguments) {
+    public void execute(CommandSender sender, String[] arguments) {
         net.md_5.bungee.api.CommandSender mapped;
         if(sender.equals(McNative.getInstance().getConsoleSender())){
             mapped = ProxyServer.getInstance().getConsole();

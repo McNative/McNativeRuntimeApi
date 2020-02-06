@@ -124,7 +124,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public boolean isCached() {
-        return false;
+        return true;
     }
 
     @Override
@@ -134,6 +134,6 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public MinecraftPlayerData reload() {
-        return null;
+        return this;
     }
 }

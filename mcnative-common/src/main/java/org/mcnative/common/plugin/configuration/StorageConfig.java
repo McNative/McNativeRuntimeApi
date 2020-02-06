@@ -28,6 +28,7 @@ import net.pretronic.databasequery.sql.dialect.Dialect;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
 import org.mcnative.common.McNative;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class StorageConfig {
         if(databaseEntry == null) {
             databaseEntry = Iterators.findOne(this.databaseEntries, entry -> entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase("default"));
             if(databaseEntry == null) {
-                throw new IllegalArgumentException("No database for name " + name + " found");
+                throw new IllegalArgumentException("Database "+name+" for " + plugin.getName() + " not found");
             }
         }
         return databaseEntry;
@@ -79,14 +80,27 @@ public class StorageConfig {
         this.databaseDrivers.clear();
         this.databaseEntries.clear();
 
-        this.databaseDrivers.put("MySQL", new SQLDatabaseDriverConfigBuilder()
-                        .setAddress(new InetSocketAddress("127.0.0.1", 3306))
-                        .setDialect(Dialect.MYSQL)
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        this.databaseDrivers.put("Default", new SQLDatabaseDriverConfigBuilder()
+                        .setDialect(Dialect.H2Portable)
+                        .setLocation(new File("plugins/McNative/databases/"))
                         .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
                         .setUsername("McNative")
                         .setPassword("masked").build());
 
-        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "MySQL"));
+        this.databaseDrivers.put("MySQL", new SQLDatabaseDriverConfigBuilder()
+                .setAddress(new InetSocketAddress("127.0.0.1", 3306))
+                .setDialect(Dialect.MYSQL)
+                .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
+                .setUsername("McNative")
+                .setPassword("masked").build());
+
+        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "Default"));
         save();
     }
 
@@ -137,6 +151,16 @@ public class StorageConfig {
 
         public String getDriverName() {
             return driverName;
+        }
+
+        @Override
+        public String toString() {
+            return "DatabaseEntry{" +
+                    "pluginName='" + pluginName + '\'' +
+                    ", name='" + name + '\'' +
+                    ", database='" + database + '\'' +
+                    ", driverName='" + driverName + '\'' +
+                    '}';
         }
     }
 }

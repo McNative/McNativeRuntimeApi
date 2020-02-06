@@ -54,4 +54,12 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
     public void onDisable() {
         if(this.executor != null) this.executor.disableGuestPlugin();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(executor != null && executor.getLoader() != null && executor.getLoader().isInstanceAvailable()){
+            return executor.getLoader().getInstance().equals(obj);
+        }
+        return super.equals(obj);
+    }
 }

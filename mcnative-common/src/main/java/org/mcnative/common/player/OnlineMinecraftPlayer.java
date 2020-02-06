@@ -20,6 +20,7 @@
 package org.mcnative.common.player;
 
 import net.prematic.libraries.command.sender.CommandSender;
+import net.prematic.libraries.message.Textable;
 import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
@@ -164,4 +165,11 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
 
     void check(Consumer<ProtocolCheck> checker);
 
+    default void sendMessage(Textable textable,VariableSet variables) {
+        if(textable instanceof MessageComponent){
+            sendMessage((MessageComponent<?>)textable,variables);
+        }else{
+            this.sendMessage(textable.toText(variables));
+        }
+    }
 }

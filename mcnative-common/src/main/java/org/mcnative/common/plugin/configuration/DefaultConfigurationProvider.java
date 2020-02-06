@@ -67,7 +67,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
     public DatabaseDriver getDatabaseDriver(String name) {
         Objects.requireNonNull(name);
         if(!this.databaseDrivers.containsKey(name)) {
-            DatabaseDriver driver = DatabaseDriverFactory.create(name, this.storageConfig.getDriverConfig(name),
+            DatabaseDriver driver = DatabaseDriverFactory.create("(Database-Driver) "+name, this.storageConfig.getDriverConfig(name),
                     McNative.getInstance().getLogger(), GeneralUtil.getDefaultExecutorService());
             this.databaseDrivers.put(name, driver);
         }

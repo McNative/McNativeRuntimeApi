@@ -23,10 +23,11 @@ import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.command.CommandExecutor;
+import net.prematic.libraries.command.command.NotFoundHandler;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
@@ -51,13 +52,8 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     @Override
-    public String getName() {
-        return "BungeeCord";
-    }
-
-    @Override
     public Command getCommand(String name) {
-        return Iterators.findOne(this.commands, command -> command.getName().equalsIgnoreCase(name));
+        return Iterators.findOne(this.commands, command -> command.getConfiguration().getName().equalsIgnoreCase(name));
     }
 
     @Override
@@ -66,7 +62,7 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     @Override
-    public void setNotFoundHandler(CommandExecutor executor) {
+    public void setNotFoundHandler(NotFoundHandler executor) {
         throw new UnsupportedOperationException("Not found handlers are not supported on BungeeCord, commands will be forwarded to sub server");
     }
 
@@ -76,18 +72,21 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     @Override
-    public void registerCommand(ObjectOwner owner, Command command) {
-        Plugin plugin = getOriginalPlugin(owner);
+    public void registerCommand(Command command) {
+        Validate.notNull(command,command.getConfiguration(),command.getOwner());
+        if(!(command.getOwner() instanceof net.prematic.libraries.plugin.Plugin)){
+            throw new IllegalArgumentException("Owner is not a plugin.");
+        }
+        Plugin plugin = getOriginalPlugin(command.getOwner());
 
         if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
-        this.original.registerCommand(null,new McNativeCommand(command));
+        this.original.registerCommand(plugin,new McNativeCommand(command));
         this.commands.add(command);
-        command.init(this,owner);
     }
 
     @Override
     public void unregisterCommand(String name) {
-        Command result = Iterators.findOne(this.commands, command -> command.getName().equalsIgnoreCase(name));
+        Command result = Iterators.findOne(this.commands, command -> command.getConfiguration().getName().equalsIgnoreCase(name));
         if(result != null) unregisterCommand(result);
     }
 
@@ -118,6 +117,7 @@ public class BungeeCordCommandManager implements CommandManager {
 
     @Internal
     void registerCommand(Plugin plugin, net.md_5.bungee.api.plugin.Command command){
+        Validate.notNull(plugin,command);
         this.commands.add(new BungeeCordCommand(command,pluginManager.getMappedPlugin(plugin)));
     }
 
@@ -135,7 +135,7 @@ public class BungeeCordCommandManager implements CommandManager {
         Plugin plugin;
         if (owner instanceof MappedPlugin) {
             plugin = ((MappedPlugin) owner).getPlugin();
-        } else if (owner instanceof net.prematic.libraries.plugin.Plugin) {
+        }else if (owner instanceof net.prematic.libraries.plugin.Plugin) {
             plugin = pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner);
         } else throw new IllegalArgumentException("Object owner is not a plugin");
         return plugin;

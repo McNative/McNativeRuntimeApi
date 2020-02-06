@@ -66,7 +66,6 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
         return super.compile(key,variables,language).add("text",variables.replace(text));
     }
 
-
     @Override
     public void decompile(Document data) {
         text = data.getString("text");

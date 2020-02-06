@@ -67,7 +67,7 @@ public class MappedCommandMap implements Multimap<Plugin, net.md_5.bungee.api.pl
     @Override
     public boolean put(Plugin plugin, Command command) {
         boolean result = original.put(plugin, command);
-        if(result) manager.registerCommand(plugin,command);
+        if(result && !(command instanceof McNativeCommand)) manager.registerCommand(plugin,command);
         return result;
     }
 

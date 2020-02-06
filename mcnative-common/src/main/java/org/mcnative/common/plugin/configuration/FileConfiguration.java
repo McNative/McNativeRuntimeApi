@@ -24,7 +24,6 @@ import net.prematic.libraries.document.WrappedDocument;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.io.IORuntimeException;
-import org.mcnative.common.text.components.MessageComponent;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,11 +50,6 @@ public class FileConfiguration extends WrappedDocument implements Configuration{
     @Override
     public ObjectOwner getOwner() {
         return owner;
-    }
-
-    @Override
-    public MessageComponent<?> getText(String key) {
-        return getAsObject(MessageComponent.class);
     }
 
     @Override

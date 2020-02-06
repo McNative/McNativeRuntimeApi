@@ -122,8 +122,10 @@ public class Text {
 
     public static String translateAlternateColorCodes(char alternateChar,String text){
         char[] content = text.toCharArray();
-        for(int i = 0; i < text.toCharArray().length; i++) {
-            if(content[i] == alternateChar && ALL_CODES.indexOf(content[i]+1) > -1) content[i] = FORMAT_CHAR;
+        for(int i = 0; i < content.length-1; i++) {
+            if(content[i] == alternateChar && ALL_CODES.indexOf(content[i+1]) > -1){
+                content[i] = FORMAT_CHAR;
+            }
         }
         return new String(content);
     }
