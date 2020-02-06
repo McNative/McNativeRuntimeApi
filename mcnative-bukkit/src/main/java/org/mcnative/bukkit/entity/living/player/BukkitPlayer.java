@@ -19,32 +19,25 @@
 
 package org.mcnative.bukkit.entity.living.player;
 
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.bukkit.Bukkit;
-import org.mcnative.bukkit.BukkitMcNativeBootstrap;
 import org.mcnative.bukkit.entity.BukkitEntity;
 import org.mcnative.bukkit.entity.living.BukkitHumanEntity;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.world.BukkitWorld;
-import org.mcnative.common.connection.ConnectionState;
-import org.mcnative.common.player.DeviceInfo;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PlayerSettings;
-import org.mcnative.common.player.Title;
-import org.mcnative.common.player.bossbar.BossBar;
-import org.mcnative.common.player.receiver.ReceiverChannel;
-import org.mcnative.common.player.scoreboard.BelowNameInfo;
-import org.mcnative.common.player.scoreboard.Tablist;
-import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
+import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.component.server.ServerConnectReason;
+import org.mcnative.common.network.component.server.ServerConnectResult;
+import org.mcnative.common.player.*;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
 import org.mcnative.service.advancement.AdvancementProgress;
@@ -53,10 +46,8 @@ import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> implements Player, BukkitHumanEntity<org.bukkit.entity.Player> {
@@ -87,7 +78,7 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     public void hide(OnlineMinecraftPlayer forPlayer) {
         org.bukkit.entity.Player player = Bukkit.getPlayer(forPlayer.getUniqueId());
         if(player != null) {
-            this.original.hidePlayer(BukkitMcNativeBootstrap.getInstance(), player);
+         //   this.original.hidePlayer(BukkitMcNativeBootstrap.getInstance(), player);
         }
     }
 
@@ -95,7 +86,7 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     public void show(OnlineMinecraftPlayer forPlayer) {
         org.bukkit.entity.Player player = Bukkit.getPlayer(forPlayer.getUniqueId());
         if(player != null) {
-            this.original.showPlayer(BukkitMcNativeBootstrap.getInstance(), player);
+            //       this.original.showPlayer(BukkitMcNativeBootstrap.getInstance(), player);
         }
     }
 
@@ -327,11 +318,6 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public String getClientName() {
-        return null;
-    }
-
-    @Override
     public boolean isOnlineMode() {
         return false;
     }
@@ -347,32 +333,37 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public Sidebar getSidebar() {
+    public ProxyServer getProxy() {
         return null;
     }
 
     @Override
-    public void setSidebar(Sidebar sidebar) {
-
-    }
-
-    @Override
-    public Tablist getTablist() {
+    public MinecraftServer getServer() {
         return null;
     }
 
     @Override
-    public void setTablist(Tablist tablist) {
+    public void connect(MinecraftServer target, ServerConnectReason reason) {
 
     }
 
     @Override
-    public BelowNameInfo getBelowNameInfo() {
+    public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
         return null;
     }
 
     @Override
-    public void setBelowNameInfo(BelowNameInfo info) {
+    public ChatChannel getChatChannel() {
+        return null;
+    }
+
+    @Override
+    public void setChatChannel(ChatChannel channel) {
+
+    }
+
+    @Override
+    public void kick(MessageComponent<?> message, VariableSet variables) {
 
     }
 
@@ -387,17 +378,7 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public Collection<ReceiverChannel> getChatChannels() {
-        return null;
-    }
-
-    @Override
-    public void addChatChannel(ReceiverChannel channel) {
-
-    }
-
-    @Override
-    public void removeChatChannel(ReceiverChannel channel) {
+    public void sendMessage(ChatPosition position, MessageComponent<?> component, VariableSet variables) {
 
     }
 
@@ -432,21 +413,6 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public Collection<BossBar> getActiveBossBars() {
-        return null;
-    }
-
-    @Override
-    public void addBossBar(BossBar bossBar) {
-
-    }
-
-    @Override
-    public void removeBossBar(BossBar bossBar) {
-
-    }
-
-    @Override
     public void playNote(Instrument instrument, Note note) {
 
     }
@@ -467,27 +433,12 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public void setResourcePack(String url) {
-        this.original.setResourcePack(url);
-    }
-
-    @Override
-    public void setResourcePack(String url, String hash) {
-
-    }
-
-    @Override
     public void check(Consumer<ProtocolCheck> checker) {
 
     }
 
     @Override
-    public MinecraftProtocolVersion getProtocolVersion() {
-        return null;
-    }
-
-    @Override
-    public ConnectionState getState() {
+    public InetSocketAddress getVirtualHost() {
         return null;
     }
 
@@ -502,32 +453,12 @@ public class BukkitPlayer extends BukkitOfflinePlayer<org.bukkit.entity.Player> 
     }
 
     @Override
-    public void disconnect(MessageComponent reason, VariableSet variables) {
-
-    }
-
-    @Override
     public void sendPacket(MinecraftPacket packet) {
 
     }
 
     @Override
-    public void sendLocalLoopPacket(MinecraftPacket packet) {
+    public void sendMessage(String s) {
 
-    }
-
-    @Override
-    public void sendData(String channel, byte[] output) {
-
-    }
-
-    @Override
-    public InputStream sendDataQuery(String channel, byte[] output) {
-        return null;
-    }
-
-    @Override
-    public InputStream sendDataQuery(String channel, Consumer<OutputStream> output) {
-        return null;
     }
 }

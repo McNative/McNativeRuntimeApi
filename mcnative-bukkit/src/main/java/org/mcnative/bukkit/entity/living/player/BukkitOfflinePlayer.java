@@ -23,11 +23,13 @@ import net.prematic.libraries.document.Document;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.serviceprovider.permission.PermissionGroup;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.service.entity.living.player.OfflinePlayer;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.location.Location;
@@ -62,11 +64,6 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     @Override
     public void setBedSpawnLocation(Location location) {
 
-    }
-
-    @Override
-    public int getId() {
-        return this.offlinePlayer.getId();
     }
 
     @Override
@@ -115,11 +112,6 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     }
 
     @Override
-    public Collection<String> getGroups() {
-        return this.offlinePlayer.getGroups();
-    }
-
-    @Override
     public Collection<String> getPermissions() {
         return this.offlinePlayer.getPermissions();
     }
@@ -140,8 +132,23 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     }
 
     @Override
+    public <T> T getAs(Class<T> otherPlayerClass) {
+        return null;
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getAsConnectedPlayer() {
+        return null;
+    }
+
+    @Override
     public boolean isPermissionSet(String permission) {
         return this.offlinePlayer.isPermissionSet(permission);
+    }
+
+    @Override
+    public boolean isPermissionAssigned(String permission) {
+        return false;
     }
 
     @Override
@@ -150,14 +157,25 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     }
 
     @Override
-    public void addPermission(String permission) {
-        this.offlinePlayer.addPermission(permission);
+    public void setPermission(String permission, boolean allowed) {
+
     }
 
     @Override
-    public void removePermission(String permission) {
-        this.offlinePlayer.removePermission(permission);
+    public void unsetPermission(String permission) {
+
     }
+
+    @Override
+    public void addGroup(String name) {
+
+    }
+
+    @Override
+    public void removeGroup(String name) {
+
+    }
+
 
     @Override
     public boolean isOperator() {
@@ -175,13 +193,13 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     }
 
     @Override
-    public <T extends MinecraftPlayer> T getAs(Class<T> otherPlayerClass) {
-        return this.offlinePlayer.getAs(otherPlayerClass);
+    public OnlineMinecraftPlayer getAsOnlinePlayer() {
+        return this.offlinePlayer.getAsOnlinePlayer();
     }
 
     @Override
-    public OnlineMinecraftPlayer getAsOnlinePlayer() {
-        return this.offlinePlayer.getAsOnlinePlayer();
+    public boolean isConnected() {
+        return false;
     }
 
     @Override
@@ -252,5 +270,10 @@ public class BukkitOfflinePlayer<P extends org.bukkit.OfflinePlayer> implements 
     @Override
     public PermissionHandler getPermissionHandler() {
         return this.offlinePlayer.getPermissionHandler();
+    }
+
+    @Override
+    public Collection<PermissionGroup> getGroups() {
+        return null;
     }
 }

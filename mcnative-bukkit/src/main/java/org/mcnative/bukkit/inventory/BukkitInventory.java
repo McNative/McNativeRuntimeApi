@@ -23,7 +23,6 @@ import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.Validate;
 import org.bukkit.block.Container;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
-import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
@@ -344,7 +343,7 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
 
     @Override
     public void showAllPlayers() {
-        MinecraftService.getInstance().getPlayerManager().getOnlinePlayers().forEach(player -> player.openInventory(this));
+   //     MinecraftService.getInstance().getPlayerManager().getOnlinePlayers().forEach(player -> player.openInventory(this));
     }
 
     @Override

@@ -22,7 +22,6 @@ package org.mcnative.bukkit.entity.living;
 import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.BukkitInventoryOwner;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
-import org.mcnative.bukkit.inventory.type.BukkitPlayerInventory;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
@@ -39,6 +38,7 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
 
         }
         //return new BukkitPlayerInventory();
+        return null;
     }
 
     @Override

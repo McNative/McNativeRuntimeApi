@@ -31,6 +31,7 @@ import org.bukkit.Bukkit;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
 
@@ -52,7 +53,7 @@ public class BukkitMcNative implements McNative {
         this.platform = new BukkitPlatform();
         this.logger = new JdkPrematicLogger(Bukkit.getLogger());
         this.scheduler = new SimpleTaskScheduler();
-        this.dependencyManager = new DependencyManager();
+        this.dependencyManager =null;
 
         this.consoleSender = consoleSender;
         this.pluginManager = pluginManager;
@@ -99,6 +100,11 @@ public class BukkitMcNative implements McNative {
     @Override
     public DependencyManager getDependencyManager() {
         return dependencyManager;
+    }
+
+    @Override
+    public ObjectCreator getObjectCreator() {
+        return null;
     }
 
     @Override

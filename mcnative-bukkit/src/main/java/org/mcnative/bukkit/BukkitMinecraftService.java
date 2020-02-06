@@ -22,10 +22,11 @@ package org.mcnative.bukkit;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
-import net.prematic.libraries.event.DefaultEventManager;
-import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
@@ -33,33 +34,38 @@ import org.bukkit.Bukkit;
 import org.mcnative.bukkit.plugin.BukkitCommandManager;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessageChannelListener;
-import org.mcnative.common.serviceprovider.whitelist.DefaultWhitelistProvider;
+import org.mcnative.common.player.ChatChannel;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerManager;
-import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
-import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
-import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.player.profile.GameProfileLoader;
 import org.mcnative.common.player.receiver.ReceiverChannel;
 import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
-import org.mcnative.common.registry.Registry;
-import org.mcnative.common.storage.StorageManager;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
+import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
+import org.mcnative.common.serviceprovider.whitelist.DefaultWhitelistProvider;
+import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.variable.VariableSet;
 import org.mcnative.service.MinecraftService;
 import org.mcnative.service.ObjectCreator;
-import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BukkitMinecraftService implements MinecraftService {
 
@@ -67,15 +73,14 @@ public class BukkitMinecraftService implements MinecraftService {
     private final PrematicLogger logger;
 
     private final ObjectCreator objectCreator;
-    private final Registry registry;
 
     private final TaskScheduler scheduler;
     private final CommandManager commandManager;
-    private final EventManager eventManager;
+    //private final EventManager eventManager;
     private final PluginManager pluginManager;
     private final PacketManager packetManager;
     private final PlayerManager playerManager;
-    private final StorageManager storageManager;
+    // private final StorageManager storageManager;
 
     private PermissionProvider permissionHandler;
     private PunishmentProvider punishmentHandler;
@@ -92,14 +97,14 @@ public class BukkitMinecraftService implements MinecraftService {
         this.platform = new BukkitPlatform();
         this.logger = new JdkPrematicLogger(Bukkit.getLogger());
         this.objectCreator = new BukkitObjectCreator();
-        this.registry = null;
+        // this.registry = null;
         this.scheduler = new SimpleTaskScheduler();
         this.commandManager = new BukkitCommandManager();
-        this.eventManager = new DefaultEventManager();
+        // this.eventManager = new DefaultEventManager();
         this.pluginManager = null;
         this.packetManager = new DefaultPacketManager();
         this.playerManager = null;
-        this.storageManager = new StorageManager(null);
+        //this.storageManager = new StorageManager(null);
 
         this.permissionHandler = null;
         this.punishmentHandler = null;
@@ -154,28 +159,8 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public String getServiceName() {
-        return "Bukkit";
-    }
-
-    @Override
-    public MinecraftPlatform getPlatform() {
-        return this.platform;
-    }
-
-    @Override
-    public PrematicLogger getLogger() {
-        return this.logger;
-    }
-
-    @Override
-    public Registry getRegistry() {
-        return this.registry;
-    }
-
-    @Override
-    public TaskScheduler getScheduler() {
-        return this.scheduler;
+    public EventBus getEventBus() {
+        return null;
     }
 
     @Override
@@ -184,13 +169,33 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public EventManager getEventManager() {
-        return this.eventManager;
+    public boolean isOnline() {
+        return false;
     }
 
     @Override
-    public PluginManager getPluginManager() {
-        return this.pluginManager;
+    public Collection<ConnectedMinecraftPlayer> getConnectedPlayers() {
+        return null;
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(int id) {
+        return null;
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(String nme) {
+        return null;
+    }
+
+    @Override
+    public ConnectedMinecraftPlayer getConnectedPlayer(long xBoxId) {
+        return null;
     }
 
     @Override
@@ -199,73 +204,13 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public PlayerManager<Player> getPlayerManager() {
-        return this.playerManager;
+    public ChatChannel getServerChat() {
+        return null;
     }
 
     @Override
-    public StorageManager getStorageManager() {
-        return this.storageManager;
-    }
+    public void setServerChat(ChatChannel channel) {
 
-    @Override
-    public PermissionProvider getPermissionHandler() {
-        return this.permissionHandler;
-    }
-
-    @Override
-    public void setPermissionHandler(PermissionProvider handler) {
-        this.permissionHandler = handler;
-    }
-
-    @Override
-    public PunishmentProvider getPunishmentHandler() {
-        return this.punishmentHandler;
-    }
-
-    @Override
-    public void setPunishmentHandler(PunishmentProvider handler) {
-        this.punishmentHandler = handler;
-    }
-
-    @Override
-    public WhitelistProvider getWhitelistHandler() {
-        return this.whitelistHandler;
-    }
-
-    @Override
-    public void setWhitelistHandler(WhitelistProvider handler) {
-        this.whitelistHandler = handler;
-    }
-
-    @Override
-    public PlayerDataProvider getPlayerDataStorageHandler() {
-        return this.playerDataStorageHandler;
-    }
-
-    @Override
-    public void setPlayerDataStorageHandler(PlayerDataProvider handler) {
-        this.playerDataStorageHandler = handler;
-    }
-
-    @Override
-    public GameProfileLoader getGameProfileLoader() {
-        return this.gameProfileLoader;
-    }
-
-    @Override
-    public void setGameProfileLoader(GameProfileLoader loader) {
-        this.gameProfileLoader = loader;
-    }
-
-    @Override
-    public ReceiverChannel getServerChat() {
-        return this.serverChat;
-    }
-
-    @Override
-    public void setServerChat(ReceiverChannel channel) {
-        this.serverChat = channel;
     }
 
     @Override
@@ -279,6 +224,51 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
+    public ServerStatusResponse getStatusResponse() {
+        return null;
+    }
+
+    @Override
+    public void setStatusResponse(ServerStatusResponse status) {
+
+    }
+
+    @Override
+    public Collection<String> getMessageChannels() {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getMessageChannels(Plugin<?> owner) {
+        return null;
+    }
+
+    @Override
+    public MessageChannelListener getMessageMessageChannelListener(String name) {
+        return null;
+    }
+
+    @Override
+    public void registerMessageChannel(String name, Plugin<?> owner, MessageChannelListener listener) {
+
+    }
+
+    @Override
+    public void unregisterMessageChannel(String name) {
+
+    }
+
+    @Override
+    public void unregisterMessageChannel(MessageChannelListener listener) {
+
+    }
+
+    @Override
+    public void unregisterMessageChannels(Plugin<?> owner) {
+
+    }
+
+    @Override
     public void broadcast(MessageComponent component, VariableSet variables) {
 
     }
@@ -289,28 +279,38 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public Collection<String> getOpenChannels() {
+    public String getName() {
         return null;
     }
 
     @Override
-    public void registerChannel(String name, Plugin owner, MessageChannelListener listener) {
-
+    public int getOnlineCount() {
+        return 0;
     }
 
     @Override
-    public void unregisterChannel(String name) {
-
+    public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
+        return null;
     }
 
     @Override
-    public void unregisterChannel(MessageChannelListener listener) {
-
+    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
+        return null;
     }
 
     @Override
-    public void unregisterChannels(Plugin owner) {
+    public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
+        return null;
+    }
 
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(String nme) {
+        return null;
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
+        return null;
     }
 
     @Override
@@ -324,22 +324,67 @@ public class BukkitMinecraftService implements MinecraftService {
     }
 
     @Override
-    public ServerStatusResponse getPingResponse() {
+    public void kickAll(MessageComponent<?> component, VariableSet variables) {
+
+    }
+
+    @Override
+    public MinecraftProtocolVersion getProtocolVersion() {
         return null;
     }
 
     @Override
-    public void setPingResponse(ServerStatusResponse ping) {
+    public InetSocketAddress getAddress() {
+        return null;
+    }
+
+    @Override
+    public MinecraftServerType getType() {
+        return null;
+    }
+
+    @Override
+    public void setType(MinecraftServerType type) {
 
     }
 
     @Override
-    public void shutdown() {
+    public String getPermission() {
+        return null;
+    }
+
+    @Override
+    public void setPermission(String permission) {
 
     }
 
     @Override
-    public void restart() {
+    public ServerStatusResponse ping() {
+        return null;
+    }
 
+    @Override
+    public CompletableFuture<ServerStatusResponse> pingAsync() {
+        return null;
+    }
+
+    @Override
+    public void sendData(String channel, byte[] data) {
+
+    }
+
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return null;
+    }
+
+    @Override
+    public void sendMessage(String channel, Document request) {
+
+    }
+
+    @Override
+    public Document sendQueryMessage(String channel, Document request) {
+        return null;
     }
 }

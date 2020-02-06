@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.plugin;
 
-import net.prematic.libraries.event.EventManager;
+import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.event.Listener;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class BukkitEventManager implements PluginManager, EventManager {
+public class BukkitEventManager implements PluginManager, EventBus {
 
     //private final EventManager eventManager;
     private final PluginManager pluginManager;
@@ -102,6 +102,11 @@ public class BukkitEventManager implements PluginManager, EventManager {
     }
 
     @Override
+    public void addExecutor(Class<?> aClass, net.prematic.libraries.event.executor.EventExecutor eventExecutor) {
+
+    }
+
+    @Override
     public <T, E extends T> E callEvent(Class<T> aClass, E e) {
         return null;
     }
@@ -114,6 +119,21 @@ public class BukkitEventManager implements PluginManager, EventManager {
     @Override
     public <T, E extends T> CompletableFuture<T> callEventAsync(Class<T> aClass, E e) {
         return null;
+    }
+
+    @Override
+    public <T> void callEvents(Class<T> aClass, Object... objects) {
+
+    }
+
+    @Override
+    public <T> void callEventsAsync(Class<T> aClass, Runnable runnable, Object... objects) {
+
+    }
+
+    @Override
+    public void registerMappedClass(Class<?> aClass, Class<?> aClass1) {
+
     }
 
 

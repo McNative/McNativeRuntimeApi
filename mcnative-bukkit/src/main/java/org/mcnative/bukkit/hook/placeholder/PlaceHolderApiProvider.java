@@ -21,9 +21,9 @@ package org.mcnative.bukkit.hook.placeholder;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
+import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderHook;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
-import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.TextComponent;
 
 import java.util.Collection;

@@ -20,15 +20,14 @@
 package org.mcnative.bukkit.plugin;
 
 import net.prematic.libraries.command.command.Command;
+import net.prematic.libraries.command.command.NotFoundHandler;
 import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.command.notfound.CommandNotFoundHandler;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
-import org.mcnative.common.McNative;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
 import java.lang.reflect.Field;
@@ -38,10 +37,6 @@ import java.util.Map;
 
 public class BukkitCommandManager implements CommandManager {
 
-    @Override
-    public String getName() {
-        return "McNative";
-    }
 
     @Override
     public Command getCommand(String command) {
@@ -74,9 +69,10 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     @Override
-    public void setNotFoundHandler(CommandNotFoundHandler commandNotFoundHandler) {
+    public void setNotFoundHandler(NotFoundHandler notFoundHandler) {
 
     }
+
 
     @Override
     public void dispatchCommand(CommandSender commandSender, String command) {
@@ -84,8 +80,8 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     @Override
-    public void registerCommand(ObjectOwner objectOwner, Command command) {
-        getCommandMap().register("", new MappedCommand(objectOwner, command));
+    public void registerCommand(Command command) {
+
     }
 
     @Override
@@ -95,7 +91,7 @@ public class BukkitCommandManager implements CommandManager {
 
     @Override
     public void unregisterCommand(Command command) {
-        unregisterCommand(command.getName());
+     //   unregisterCommand(command.getName());
     }
 
     @Override
@@ -108,10 +104,9 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     @Override
-    public void unregisterAll() {
-        getBukkitCommands().clear();
-    }
+    public void unregisterCommands() {
 
+    }
     private SimpleCommandMap getCommandMap() {
         try {
             final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -122,12 +117,16 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     private MappedCommand createMappedCommandByBukkitCommand(org.bukkit.command.Command bukkitCommand) {
-        return new MappedCommand(McNative.getInstance(), new Command(bukkitCommand.getName(), bukkitCommand.getDescription(), bukkitCommand.getPermission(), bukkitCommand.getAliases()) {
+        // new Command(bukkitCommand.getName(), bukkitCommand.getDescription(), bukkitCommand.getPermission(), bukkitCommand.getAliases()
+       /*
+        return new MappedCommand(McNative.getInstance(),null) {
             @Override
             public void execute(CommandSender commandSender, String[] args) {
                 bukkitCommand.execute(getBukkitConsoleSender(commandSender), bukkitCommand.getName(), args);
             }
         });
+        */
+       return null;
     }
 
     private org.bukkit.command.CommandSender getBukkitConsoleSender(CommandSender commandSender) {
@@ -151,7 +150,8 @@ public class BukkitCommandManager implements CommandManager {
         private final Command original;
 
         MappedCommand(ObjectOwner owner, Command original) {
-            super(original.getName(), original.getDescription(), "", new ArrayList<>(original.getAliases()));
+            super(null);
+           // super(original.getName(), original.getDescription(), "", new ArrayList<>(original.getAliases()));
             this.owner = owner;
             this.original = original;
         }
