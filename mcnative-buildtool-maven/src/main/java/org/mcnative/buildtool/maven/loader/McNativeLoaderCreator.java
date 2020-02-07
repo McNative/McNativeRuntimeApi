@@ -40,10 +40,8 @@ import java.nio.file.Files;
 
 public class McNativeLoaderCreator {
 
-    //@Todo change url
-    private static final String MCNATIVE_LOADER_URL = "http://localhost/mcnative/download/wrapper/mcnative-wrapper-${version}-sources.jar";
-
-    private static final String MCNATIVE_LOADER_BASE_NAME = "mcnative-wrapper-${version}.zip";
+    private static final String MCNATIVE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/org/mcnative/mcnative-loader/${version}/mcnative-loader-${version}-sources.jar";
+    private static final String MCNATIVE_LOADER_BASE_NAME = "mcnative-loader-${version}.jar";
     private static final String MCNATIVE_LOADER_BASE_PACKAGE = "org.mcnative.loader";
     private static final String MCNATIVE_LOADER_BASE_PATH = MCNATIVE_LOADER_BASE_PACKAGE.replace(".","/");
 
@@ -67,7 +65,7 @@ public class McNativeLoaderCreator {
         this.resourceDirectory = resourceDirectory;
     }
 
-    public void downloadLoaderSource() throws MojoFailureException{
+    public void downloadSource() throws MojoFailureException{
         if(location.exists()) return;
         location.getParentFile().mkdirs();
         log.info("Downloading McNative loader v"+version+".");
@@ -82,7 +80,7 @@ public class McNativeLoaderCreator {
             throw new MojoFailureException(result,message,message);
         }
         result.close();
-        log.info("Successfully downloaded Mcnative wrapper .");
+        log.info("Successfully downloaded Mcnative loader.");
     }
 
     public void unpackLoader() throws MojoExecutionException {

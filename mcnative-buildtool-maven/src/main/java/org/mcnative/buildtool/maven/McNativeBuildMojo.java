@@ -29,6 +29,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.mcnative.buildtool.maven.loader.LoaderConfiguration;
 import org.mcnative.buildtool.maven.loader.McNativeLoaderCreator;
+import org.mcnative.buildtool.maven.loader.ResourceLoaderInstaller;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,14 +41,17 @@ public class McNativeBuildMojo extends AbstractMojo {
     private static final File MCNATIVE_LOADER_RESOURCE_DIRECTORY = new File("target/generated-resources/mcnative-loader/");
     private static final File MCNATIVE_MANIFEST_FILE = new File(MCNATIVE_LOADER_RESOURCE_DIRECTORY,"mcnative.json");
 
-    @Parameter(defaultValue = "${project}", readonly = true, required = true )
+    @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
-    @Parameter( property = "mcnative.loader.location",defaultValue = "${project.basedir}/McNative/")
+    @Parameter( property = "mcnative.loader.location",defaultValue = "${project.basedir}/lib/")
     private String loaderLocation;
 
     @Parameter( property = "mcnative.loader.version" ,defaultValue = "1.0.0")
     private String loaderVersion;
+
+    @Parameter( property = "resource.loader.version" ,defaultValue = "1.0.0")
+    private String resourceLoaderVersion;
 
     @Parameter( property = "mcnative.manifest",readonly = true,required =true)
     private McNativePluginManifest manifest;
@@ -68,10 +72,18 @@ public class McNativeBuildMojo extends AbstractMojo {
         MCNATIVE_LOADER_RESOURCE_DIRECTORY.mkdirs();
 
         String basePackage = project.getGroupId()+".loader";
+        ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
+                ,new File(loaderLocation),MCNATIVE_LOADER_SOURCE_DIRECTORY);
+
         McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),loaderVersion,basePackage
                 ,new File(loaderLocation),MCNATIVE_LOADER_SOURCE_DIRECTORY,MCNATIVE_LOADER_RESOURCE_DIRECTORY);
-        creator.downloadLoaderSource();
+
+        installer.downloadSource();
+        creator.downloadSource();
+
+        installer.unpackLoader();
         creator.unpackLoader();
+
         creator.renamePackages();
         creator.createManifests(loaderConfig,manifest);
 
