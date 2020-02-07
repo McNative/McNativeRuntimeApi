@@ -28,6 +28,13 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
+    <distributionManagement>
+        <repository>
+            <id>pretronic</id>
+            <url>https://repository.prematic.net/repository/pretronic/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <!-- Project settings -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,4 +77,10 @@
         <module>mcnative-build</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>pretronic</id>
+            <url>https://repository.prematic.net/repository/pretronic/</url>
+        </repository>
+    </repositories>
 </project>

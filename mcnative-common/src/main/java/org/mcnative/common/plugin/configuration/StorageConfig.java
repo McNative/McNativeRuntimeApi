@@ -87,7 +87,7 @@ public class StorageConfig {
         }
 
         this.databaseDrivers.put("Default", new SQLDatabaseDriverConfigBuilder()
-                        .setDialect(Dialect.H2Portable)
+                        .setDialect(Dialect.H2_PORTABLE)
                         .setLocation(new File("plugins/McNative/databases/"))
                         .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
                         .setUsername("McNative")
