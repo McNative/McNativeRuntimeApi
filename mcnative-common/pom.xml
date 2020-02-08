@@ -97,7 +97,16 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.prematic.databasequery</groupId>
+            <artifactId>prematicdatabasequery-api</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <!-- @Todo remove (dynamic load) -->
+
         <dependency>
             <groupId>net.prematic.databasequery</groupId>
             <artifactId>prematicdatabasequery-sql</artifactId>
@@ -126,7 +135,6 @@
             <scope>compile</scope>
         </dependency>
 
-
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
@@ -134,18 +142,11 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${test.junit.jupiter}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.prematic.databasequery</groupId>
-            <artifactId>prematicdatabasequery-api</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

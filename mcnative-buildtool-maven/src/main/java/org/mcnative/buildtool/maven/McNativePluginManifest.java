@@ -44,7 +44,7 @@ public class McNativePluginManifest {
     private String website;
     private String author;
     private Set<String> depends;
-    private Set<String> softdepends;
+    private Set<String> softDepends;
 
     public String getName() {
         return name;
@@ -84,8 +84,8 @@ public class McNativePluginManifest {
     }
 
     public Set<String> getSoftdepends() {
-        if(softdepends == null) softdepends = new HashSet<>();
-        return softdepends;
+        if(softDepends == null) softDepends = new HashSet<>();
+        return softDepends;
     }
 
     public void createManifestFile(File location){

@@ -49,7 +49,9 @@ public class McNativeLoader extends ResourceLoader {
         try{
             Method availableMethod = Class.forName("org.mcnative.common.McNative").getMethod("isAvailable");
             return (boolean) availableMethod.invoke(null);
-        }catch (Exception ignored){}
+        }catch (Exception ignored){
+            ignored.printStackTrace();
+        }
         return false;
     }
 
