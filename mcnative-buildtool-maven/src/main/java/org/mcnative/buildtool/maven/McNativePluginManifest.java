@@ -91,6 +91,7 @@ public class McNativePluginManifest {
     public void createManifestFile(File location){
         if(depends == null) this.depends = new HashSet<>();
         getSoftdepends().add("McNative");
+        if(messageModule == null) messageModule = getName().replace(" ","_").toLowerCase();
         location.getParentFile().mkdirs();
         DocumentFileType.JSON.getWriter().write(location, Document.newDocument(this));
     }

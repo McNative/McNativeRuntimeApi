@@ -37,20 +37,20 @@ import java.io.IOException;
 @Mojo(name="McNative-Build", defaultPhase = LifecyclePhase.GENERATE_SOURCES,threadSafe = true)
 public class McNativeBuildMojo extends AbstractMojo {
 
-    private static final File MCNATIVE_LOADER_SOURCE_DIRECTORY = new File("target/generated-sources/mcnative-loader/");
-    private static final File MCNATIVE_LOADER_RESOURCE_DIRECTORY = new File("target/generated-resources/mcnative-loader/");
-    private static final File MCNATIVE_MANIFEST_FILE = new File(MCNATIVE_LOADER_RESOURCE_DIRECTORY,"mcnative.json");
+    private static final String MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH = "/../generated-sources/mcnative-loader/";
+    private static final String MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH = "/../generated-resources/mcnative-loader/";
+    private static final String MCNATIVE_MANIFEST_FILE_PATH = MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH+"mcnative.json";
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
-    @Parameter( property = "mcnative.loader.location",defaultValue = "${project.basedir}/lib/")
-    private String loaderLocation;
+    @Parameter( name = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
+    private String mcnativeLoaderLocation;
 
-    @Parameter( property = "mcnative.loader.version" ,defaultValue = "1.0.0")
-    private String loaderVersion;
+    @Parameter( name = "mcnative-loader-version" ,defaultValue = "1.0.0")
+    private String mcnativeLoaderVersion;
 
-    @Parameter( property = "resource.loader.version" ,defaultValue = "1.0.0")
+    @Parameter( name = "resource-loader-version" ,defaultValue = "1.0.0")
     private String resourceLoaderVersion;
 
     @Parameter( property = "mcnative.manifest",readonly = true,required =true)
@@ -61,22 +61,28 @@ public class McNativeBuildMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
-        project.addCompileSourceRoot(MCNATIVE_LOADER_SOURCE_DIRECTORY.getPath());
-        if(MCNATIVE_MANIFEST_FILE.exists()){
-            getLog().warn("McNative manifest already generated.");
+        File sourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
+        File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
+        File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
+
+        project.addCompileSourceRoot(sourceDirectory.getPath());
+
+        if(manifestFile.exists()){
+            getLog().info("McNative manifest already generated.");
             return;
         }
-        this.manifest.createManifestFile(MCNATIVE_MANIFEST_FILE);
 
-        MCNATIVE_LOADER_SOURCE_DIRECTORY.mkdirs();
-        MCNATIVE_LOADER_RESOURCE_DIRECTORY.mkdirs();
+        this.manifest.createManifestFile(manifestFile);
+
+        sourceDirectory.mkdirs();
+        resourceDirectory.mkdirs();
 
         String basePackage = project.getGroupId()+".loader";
         ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
-                ,new File(loaderLocation),MCNATIVE_LOADER_SOURCE_DIRECTORY);
+                ,new File(mcnativeLoaderLocation),sourceDirectory);
 
-        McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),loaderVersion,basePackage
-                ,new File(loaderLocation),MCNATIVE_LOADER_SOURCE_DIRECTORY,MCNATIVE_LOADER_RESOURCE_DIRECTORY);
+        McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
+                ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
 
         installer.downloadSource();
         creator.downloadSource();
@@ -88,7 +94,7 @@ public class McNativeBuildMojo extends AbstractMojo {
         creator.createManifests(loaderConfig,manifest);
 
         try {
-            FileUtils.copyDirectoryStructure(MCNATIVE_LOADER_RESOURCE_DIRECTORY,new File(project.getBuild().getOutputDirectory()));
+            FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
         } catch (IOException e) {
             throw new MojoFailureException(e.getMessage());
         }

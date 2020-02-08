@@ -1,0 +1,15 @@
+commands:
+  permission:
+    name: 'permission'
+    aliases:
+      - 'perms'
+      - 'perm'
+      - 'dkperms'
+    permission: 'dkperms.admin'
+    description: 'Permission Command'
+  rank:
+    name: 'rank'
+    aliases:
+      - 'rang'
+    permission: 'dkperms.rank'
+    description: 'Permission Command'
