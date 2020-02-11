@@ -19,8 +19,8 @@
 
 package org.mcnative.loader;
 
-import net.prematic.resourceloader.ResourceInfo;
-import net.prematic.resourceloader.ResourceLoader;
+import net.prematic.libraries.resourceloader.ResourceInfo;
+import net.prematic.libraries.resourceloader.ResourceLoader;
 
 import java.io.File;
 
