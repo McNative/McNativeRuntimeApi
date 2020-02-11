@@ -4,6 +4,7 @@ final String COMMIT_MESSAGE = "Version change %version%"
 
 final String BRANCH_DEVELOPMENT = "origin/development"
 final String BRANCH_MASTER = "origin/master"
+final String PROJECT_SSH = "git@github.com:DevKrieger/McNative.git"
 
 
 String VERSION = "UNDEFINED"
@@ -131,7 +132,7 @@ pipeline {
                             if [ -d "tempDevelopment" ]; then rm -Rf tempDevelopment; fi
                             mkdir tempDevelopment
                             cd tempDevelopment/
-                            git clone --single-branch --branch development git@github.com:DevKrieger/PrematicLibraries.git
+                            git clone --single-branch --branch development $PROJECT_SSH
                             
                             cd PrematicLibraries/
                             mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version-SNAPSHOT
