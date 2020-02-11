@@ -19,9 +19,9 @@
 
 package org.mcnative.loader;
 
-import net.prematic.resourceloader.ResourceInfo;
-import net.prematic.resourceloader.ResourceLoader;
-import net.prematic.resourceloader.VersionInfo;
+import net.prematic.libraries.resourceloader.ResourceInfo;
+import net.prematic.libraries.resourceloader.ResourceLoader;
+import net.prematic.libraries.resourceloader.VersionInfo;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -29,7 +29,7 @@ import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class McNativeLoader extends ResourceLoader{
+public class McNativeLoader extends ResourceLoader {
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative"
             ,"http://localhost/mcnative/download/latest.jar"
