@@ -31,7 +31,7 @@ import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
 import org.bukkit.Bukkit;
-import org.mcnative.bukkit.plugin.BukkitCommandManager;
+import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.network.NetworkIdentifier;

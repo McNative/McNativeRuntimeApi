@@ -58,6 +58,7 @@ public class BungeePendingConnection implements PendingConnection {
     private net.md_5.bungee.api.connection.PendingConnection original;
     private final Channel channel;
     private final Object channelWrapper;
+    private final GameProfile gameProfile;
 
     private ConnectionState state;
     private MinecraftProtocolVersion version;
@@ -70,6 +71,7 @@ public class BungeePendingConnection implements PendingConnection {
             this.channelWrapper = ReflectionUtil.getFieldValue(PENDING_CONNECTION_HANDLER_CLASS,original, "ch");
             this.channel = ReflectionUtil.getFieldValue(channelWrapper, "ch", Channel.class);
         }else throw new IllegalArgumentException("Invalid pending connection.");
+        this.gameProfile = extractGameProfile();
     }
 
     @Override
@@ -80,6 +82,16 @@ public class BungeePendingConnection implements PendingConnection {
     @Override
     public long getXBoxId() {
         return -1;//Not a bedrock player
+    }
+
+    @Override
+    public GameProfile getGameProfile() {
+        return gameProfile;
+    }
+
+    @Override
+    public void setGameProfile(GameProfile profile) {
+        throw new IllegalArgumentException("Currently not supported on bungeecord servers");
     }
 
     @Override
@@ -95,6 +107,11 @@ public class BungeePendingConnection implements PendingConnection {
     @Override
     public void setOnlineMode(boolean online) {
         original.setOnlineMode(online);
+    }
+
+    @Override
+    public InetSocketAddress getVirtualHost() {
+        return original.getVirtualHost();
     }
 
     @Override
@@ -183,8 +200,7 @@ public class BungeePendingConnection implements PendingConnection {
                         ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
     }
 
-    @Internal
-    public GameProfile extractGameProfile(){
+    private GameProfile extractGameProfile(){
         Object loginResult = ReflectionUtil.getFieldValue(original,"loginProfile");
         Object originalProperties = ReflectionUtil.getFieldValue(loginResult,"properties");
         GameProfile.Property[] properties = new GameProfile.Property[Array.getLength(originalProperties)];

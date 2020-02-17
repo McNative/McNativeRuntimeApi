@@ -94,7 +94,9 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
 
     void chat(String message);
 
-
+    default void sendMessage(String text){
+        sendMessage(Text.of(text));
+    }
 
     default void sendMessage(MessageComponent<?> component){
         sendMessage(component,VariableSet.newEmptySet());

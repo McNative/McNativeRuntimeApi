@@ -26,9 +26,9 @@ import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.service.Effect;
 import org.mcnative.service.entity.Entity;
+import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.entity.living.animal.Animal;
 import org.mcnative.service.entity.living.monster.Monster;
-import org.mcnative.service.entity.living.player.Player;
 import org.mcnative.service.entity.projectile.arrow.Arrow;
 import org.mcnative.service.inventory.item.DroppedItem;
 import org.mcnative.service.inventory.item.ItemStack;
@@ -96,27 +96,26 @@ public class BukkitWorld implements World {
 
     @Override
     public void setSpawnLocation(Location spawnLocation) {
-        this.original.setSpawnLocation(new org.bukkit.Location(((BukkitLocation)spawnLocation).getOriginal().getWorld(),
-                spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch()));
+        this.original.setSpawnLocation(((BukkitLocation)spawnLocation).getOriginal());
     }
 
     @Override
     public boolean isLoaded() {
-        return false;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void load() {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void unload() {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
-    public Chunk getChunk(int x, int z) {
+    public Chunk getChunk(int x, int z) {//@Todo chunks from pool ?
         return new BukkitChunk(this.original.getChunkAt(x, z), this);
     }
 
@@ -252,7 +251,7 @@ public class BukkitWorld implements World {
 
     @Override
     public boolean isDefault() {
-        return false;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
@@ -291,22 +290,22 @@ public class BukkitWorld implements World {
 
     @Override
     public Biome getBiome(int x, int y) {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Biome getBiome(Vector point) {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void setBiome(int x, int z, Biome biome) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void setBiome(Vector point, Biome biome) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
@@ -321,37 +320,37 @@ public class BukkitWorld implements World {
 
     @Override
     public Collection<Entity> getEntities() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Entity> getLivingEntities() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Animal> getAnimals() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Monster> getMonsters() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Player> getPlayers() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Entity> getEntitiesNear(Vector point, Offset offset) {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public Collection<Entity> getEntitiesNear(Vector point, Offset offset, Predicate<Entity> filter) {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override

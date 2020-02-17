@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:51
+ * @since 16.02.20, 14:17
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,14 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living.player;
+package org.mcnative.service.event.player;
 
-import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.service.entity.living.AnimalTamer;
-import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.location.Location;
+import org.mcnative.service.entity.living.Player;
 
-public interface OfflinePlayer extends MinecraftPlayer, AnimalTamer {
+public interface MinecraftEntityPlayerEvent {
 
-    Inventory getEnderchestInventory();
+    Player getPlayer();
 
-    Location getBedSpawnLocation();
-
-    void setBedSpawnLocation(Location location);
+    Player getOnlinePlayer();
 
 }

@@ -44,7 +44,7 @@
         <dependency.bukkit.version>1.14.2-R0.1-SNAPSHOT</dependency.bukkit.version>
         <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
 
-        <dependency.pretronic.libraries.utility>1.0.0</dependency.pretronic.libraries.utility>
+        <dependency.pretronic.libraries.utility>1.0.1-SNAPSHOT</dependency.pretronic.libraries.utility>
         <dependency.pretronic.libraries.document>1.0.0</dependency.pretronic.libraries.document>
         <dependency.pretronic.libraries.concurrent>1.0.0</dependency.pretronic.libraries.concurrent>
         <dependency.pretronic.libraries.command>1.0.0</dependency.pretronic.libraries.command>

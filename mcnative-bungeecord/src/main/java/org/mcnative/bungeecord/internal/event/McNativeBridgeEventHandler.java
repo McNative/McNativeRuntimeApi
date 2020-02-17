@@ -68,9 +68,9 @@ import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.ServerConnectHandler;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class McNativeBridgeEventHandler {
 
@@ -87,8 +87,8 @@ public final class McNativeBridgeEventHandler {
         this.playerManager = playerManager;
         this.serverMap = serverMap;
 
-        this.pendingPlayers = new LinkedHashMap<>();
-        this.tabCompleteCursors = new LinkedHashMap<>();
+        this.pendingPlayers = new ConcurrentHashMap<>();
+        this.tabCompleteCursors = new ConcurrentHashMap<>();
 
         setup();
     }
@@ -179,8 +179,8 @@ public final class McNativeBridgeEventHandler {
                     ,-1
                     ,now
                     ,now
-                    ,connection.extractGameProfile());
-        }else data.updateLoginInformation(connection.getName(),connection.extractGameProfile(),System.currentTimeMillis());
+                    ,connection.getGameProfile());
+        }else data.updateLoginInformation(connection.getName(),connection.getGameProfile(),System.currentTimeMillis());
         BungeeProxiedPlayer player = new BungeeProxiedPlayer(serverMap,connection,data);
 
         MinecraftPlayerLoginEvent loginEvent = new BungeeMinecraftLoginEvent(event,connection,player);

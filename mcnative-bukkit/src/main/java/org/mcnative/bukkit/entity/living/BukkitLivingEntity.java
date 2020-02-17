@@ -21,6 +21,7 @@ package org.mcnative.bukkit.entity.living;
 
 import net.prematic.libraries.utility.Iterators;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.mcnative.bukkit.entity.BukkitEntity;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.world.BukkitWorld;
@@ -138,12 +139,13 @@ public interface BukkitLivingEntity<E extends org.bukkit.entity.LivingEntity> ex
 
     @Override
     default void heal() {
-        setHealth(getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+        getOriginal().setHealth(getMaximumHealth());
     }
 
     @Override
     default double getMaximumHealth() {
-        return getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        AttributeInstance attribute = getOriginal().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        return attribute != null ? attribute.getValue() : 20.0;
     }
 
     @Override

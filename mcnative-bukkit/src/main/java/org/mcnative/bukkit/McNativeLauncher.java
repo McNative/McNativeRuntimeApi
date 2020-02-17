@@ -19,29 +19,75 @@
 
 package org.mcnative.bukkit;
 
+import net.prematic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
+import org.mcnative.bukkit.player.BukkitPlayerManager;
+import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
+import org.mcnative.bukkit.plugin.BukkitPluginManager;
+import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
+import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.common.McNative;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
 
-    public static void launchMcNative(){
-        launchMcNativeInternal();
+    private static Plugin PLUGIN;
+
+    public static Plugin getPlugin() {
+        return PLUGIN;
     }
 
-    public static void launchMcNativeInternal(){
+
+    public static void launchMcNative(){
+        launchMcNativeInternal(null);//@Todo create fake plugin
+    }
+
+    public static void launchMcNativeInternal(Plugin plugin){
         if(McNative.isAvailable()) return;
+        PLUGIN = plugin;
         Logger logger = Bukkit.getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
 
-        //Event
+        BukkitEventBus eventBus = new BukkitEventBus(GeneralUtil.getDefaultExecutorService(),getPlugin());//@Todo add better executor
+        BukkitCommandManager commandManager = new BukkitCommandManager();
+        BukkitPluginManager pluginManager = new BukkitPluginManager(Bukkit.getServicesManager());
+        BukkitService localService = new BukkitService(commandManager,eventBus);
+        BukkitPlayerManager playerManager = new BukkitPlayerManager();
+
+        BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,null);
+        McNative.setInstance(instance);
+        instance.registerDefaultProviders();
+
+        BukkitChannelInjector injector = new BukkitChannelInjector();
+
+        new McNativeBridgeEventHandler(injector,eventBus,playerManager);
+
+        injector.injectChannelInitializer();
 
         //Plugin
 
         //Command
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+    }
+
+    private static void createDummyPlugin(){
+        //@Todo add version
+        PluginDescriptionFile description = new PluginDescriptionFile("McNative","1.0.0",McNativeLauncher.class.getName());
+        McNativeDummyPlugin plugin = new McNativeDummyPlugin(description);
+    }
+
+    private static class McNativeDummyPlugin extends JavaPlugin{
+
+        public McNativeDummyPlugin(PluginDescriptionFile description) {
+            super(null, description, new File(""),null);
+        }
     }
 
 }

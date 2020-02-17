@@ -19,21 +19,28 @@
 
 package org.mcnative.common.connection;
 
+import org.mcnative.common.player.profile.GameProfile;
+
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 public interface PendingConnection extends MinecraftConnection {
 
-    @SuppressWarnings("The player is not fully authenticated yet")
     UUID getUniqueId();
 
-    @SuppressWarnings("The player is not fully authenticated yet")
+    void setUniqueId(UUID uniqueId);
+
     long getXBoxId();
 
 
-    void setUniqueId(UUID uniqueId);
+    GameProfile getGameProfile();
+
+    void setGameProfile(GameProfile profile);
 
 
     boolean isOnlineMode();
 
     void setOnlineMode(boolean online);
+
+    InetSocketAddress getVirtualHost();
 }

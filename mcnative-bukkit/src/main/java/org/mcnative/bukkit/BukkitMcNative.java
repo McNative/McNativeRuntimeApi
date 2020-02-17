@@ -25,6 +25,8 @@ import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.prematic.libraries.dependency.DependencyManager;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
+import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
+import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import org.bukkit.Bukkit;
@@ -34,6 +36,13 @@ import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
+import org.mcnative.common.player.data.DefaultPlayerDataProvider;
+import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
+import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
+import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
+
+import java.io.File;
 
 public class BukkitMcNative implements McNative {
 
@@ -49,17 +58,19 @@ public class BukkitMcNative implements McNative {
 
     private Network network;
 
-    public BukkitMcNative(CommandSender consoleSender, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
+    protected BukkitMcNative(PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.platform = new BukkitPlatform();
         this.logger = new JdkPrematicLogger(Bukkit.getLogger());
         this.scheduler = new SimpleTaskScheduler();
-        this.dependencyManager =null;
+        this.dependencyManager = new DependencyManager(this.logger,new File("McNative/lib/dependencies/"));
 
-        this.consoleSender = consoleSender;
+        this.consoleSender = null;//@Todo implement console service
         this.pluginManager = pluginManager;
         this.playerManager = playerManager;
         this.local = local;
         this.network = network;
+
+        SLF4JStaticBridge.trySetLogger(logger);
     }
 
     @Override
@@ -136,4 +147,11 @@ public class BukkitMcNative implements McNative {
     public void shutdown() {
         Bukkit.shutdown();
     }
+
+    public void registerDefaultProviders(){
+        pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
+        pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
+        pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
+    }
+
 }

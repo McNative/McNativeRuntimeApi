@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:51
+ * @since 16.02.20, 20:44
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,27 @@
  * under the License.
  */
 
-package org.mcnative.service.entity.living.player;
+package org.mcnative.service.entity.living;
 
 import net.prematic.libraries.utility.annonations.Nullable;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
 import org.mcnative.service.advancement.AdvancementProgress;
 import org.mcnative.service.entity.Entity;
-import org.mcnative.service.entity.living.HumanEntity;
+import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.location.Location;
 
-public interface Player extends HumanEntity, OnlineMinecraftPlayer, OfflinePlayer {
+public interface Player extends HumanEntity, OnlineMinecraftPlayer, ConnectedMinecraftPlayer {
+
+    Inventory getEnderchestInventory();
+
+    Location getBedSpawnLocation();
+
+    void setBedSpawnLocation(Location location);
+
 
     void openBook(ItemStack book);
 
@@ -142,6 +150,7 @@ public interface Player extends HumanEntity, OnlineMinecraftPlayer, OfflinePlaye
     AdvancementProgress getAdvancementProgress();
 }
     /*
+    @Todo
     Time
     Weather
     Xp

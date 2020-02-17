@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:46
+ * @since 17.02.20, 19:03
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,8 @@
  * under the License.
  */
 
-package org.mcnative.bukkit;
+package org.mcnative.bukkit.event;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.common.event.ServiceReloadedEvent;
 
-public class BukkitMcNativeBootstrap extends JavaPlugin {
-
-    @Override
-    public void onLoad() {
-        try{
-            McNativeLauncher.launchMcNativeInternal(this);
-        }catch (Exception exception){
-            exception.printStackTrace();
-            getLogger().info("Could not bootstrap McNative ("+exception.getMessage()+")");
-        }
-    }
-}
+public class BukkitServiceReloadEvent implements ServiceReloadedEvent {}
