@@ -30,6 +30,7 @@ import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.plugin.command.McNativeCommand;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
@@ -64,7 +65,7 @@ public class BukkitMcNative implements McNative {
         this.scheduler = new SimpleTaskScheduler();
         this.dependencyManager = new DependencyManager(this.logger,new File("McNative/lib/dependencies/"));
 
-        this.consoleSender = null;//@Todo implement console service
+        this.consoleSender = new McNativeCommand.MappedCommandSender(Bukkit.getConsoleSender());
         this.pluginManager = pluginManager;
         this.playerManager = playerManager;
         this.local = local;

@@ -94,7 +94,7 @@ public class BukkitChannelInjector {
         Iterators.removeOne(this.handshakingConnections, channelConnection -> channelConnection.getChannel().equals(channel));
     }
 
-    //@Todo uninject
+    //@Todo uninject ?
     @SuppressWarnings("unchecked")
     public void injectChannelInitializer(){
         try{
@@ -108,15 +108,6 @@ public class BukkitChannelInjector {
                         field.set(connection,wrapper);
                         return;
                     }
-                    /*
-                    else{
-                        System.out.println("--------------------------- INJECT MANAGER");
-                        field.setAccessible(true);
-                        Object list = field.get(connection);
-                        Object wrapper = new NetworkManagerWrapperList(this, (List) list);
-                        field.set(connection,wrapper);
-                    }
-                     */
                 }
             }
         }catch (Exception e){

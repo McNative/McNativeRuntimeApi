@@ -76,8 +76,10 @@ public class McNativeLauncher {
         McNativeBungeePluginManager newPluginManager = new McNativeBungeePluginManager(originalPluginManager,localService.getEventBus());
         pluginManager.setOriginal(newPluginManager);
         ReflectionUtil.changeFieldValue(proxy,"pluginManager",newPluginManager);
-        new McNativeBridgeEventHandler(newPluginManager,localService.getEventBus(),playerManager,serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
+
+        new McNativeBridgeEventHandler(newPluginManager,localService.getEventBus(),playerManager,serverMap);
+        logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bungeecord events.");
 
 
         //Override command manager

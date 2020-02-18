@@ -226,6 +226,7 @@ public class BungeeCordPluginManager implements PluginManager {
 
     @Internal
     public net.md_5.bungee.api.plugin.Plugin getMappedPlugin(Plugin<?> original){
+        Validate.notNull(original);
         for (net.md_5.bungee.api.plugin.Plugin plugin : this.original.getPlugins()){
             if(plugin.equals(original)) return plugin;
         }

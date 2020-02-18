@@ -106,7 +106,7 @@ public class BukkitPlayerManager implements PlayerManager {
 
     @Internal
     public void registerPlayer(Player player){
-        this.onlineMinecraftPlayers.add((ConnectedMinecraftPlayer) player);
+        this.onlineMinecraftPlayers.add(player);
     }
 
     @Internal

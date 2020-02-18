@@ -20,106 +20,136 @@
 package org.mcnative.bukkit.plugin;
 
 import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.description.PluginDescription;
 import net.prematic.libraries.plugin.lifecycle.LifecycleState;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.utility.Iterators;
+import net.prematic.libraries.utility.Validate;
+import net.prematic.libraries.utility.annonations.Internal;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.*;
 import org.mcnative.bukkit.McNativeLauncher;
+import org.mcnative.common.McNative;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-//@Todo finish implementation
+//@Todo find better parameterized type solution
 public class BukkitPluginManager implements PluginManager {
 
-    private final ServicesManager serviceManager;
+    private final static String LOADER_CLASS_NAME = "org.mcnative.loader.bootstrap.BungeeCordMcNativePluginBootstrap";
 
-    public BukkitPluginManager(ServicesManager serviceManager) {
-        this.serviceManager = serviceManager;
+    private final ServicesManager serviceManager;
+    private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
+    private final Collection<PluginLoader> loaders;
+    private final Collection<Plugin> plugins;
+
+    public BukkitPluginManager() {
+        this.serviceManager = Bukkit.getServicesManager();
+        this.stateListeners = new HashMap<>();
+        this.loaders = new ArrayList<>();
+        this.plugins = new ArrayList<>();
     }
 
     @Override
     public PrematicLogger getLogger() {
-        return null;
+        return McNative.getInstance().getLogger();
     }
 
     @Override
     public Collection<Plugin> getPlugins() {
-        return null;
+        return plugins;
     }
 
     @Override
-    public Plugin getPlugin(String s) {
-        return null;
+    public Plugin getPlugin(String name) {
+        return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getName().equals(name));
     }
 
     @Override
-    public Plugin getPlugin(UUID uuid) {
-        return null;
+    public Plugin getPlugin(UUID id) {
+        return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getId().equals(id));
     }
 
     @Override
-    public boolean isPluginEnabled(String s) {
-        return false;
+    public boolean isPluginEnabled(String name) {
+        Plugin<?> plugin =  getPlugin(name);
+        return plugin != null && plugin.getLoader().isEnabled();
     }
 
     @Override
     public Collection<PluginLoader> getLoaders() {
-        return null;
+        return loaders;
     }
 
     @Override
     public PluginLoader createPluginLoader(File file) {
-        return null;
+        return createPluginLoader(file,null);
     }
 
     @Override
     public PluginLoader createPluginLoader(File file, PluginDescription pluginDescription) {
-        return null;
+        throw new UnsupportedOperationException("Bukkit bridge is not able to detect plugin descriptions");
     }
 
     @Override
     public PluginDescription detectPluginDescription(File file) {
-        return null;
+        throw new UnsupportedOperationException("Bukkit bridge is not able to detect plugin descriptions");
     }
 
     @Override
     public Collection<PluginDescription> detectPluginDescriptions(File file) {
-        return null;
+        throw new UnsupportedOperationException("Bukkit bridge is not able to detect plugin descriptions");
     }
 
     @Override
     public void setLifecycleStateListener(String s, BiConsumer<Plugin, LifecycleState> biConsumer) {
-
+        this.stateListeners.put(s,biConsumer);
     }
 
     @Override
-    public void executeLifecycleStateListener(String s, LifecycleState lifecycleState, Plugin plugin) {
+    public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
+        if(state.equals(LifecycleState.CONSTRUCTION)) this.plugins.add(plugin);
+        else if(state.equals(LifecycleState.INITIALISATION)){
+            MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
+            if(messageProvider != null){
+                String module = plugin.getDescription().getMessageModule();
+                if(module != null){
+                    messageProvider.loadPacks(module);
+                    messageProvider.calculateMessages();
+                }
+            }
+        }else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
 
+        BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
+        if(listener != null) listener.accept(plugin,stateEvent);
     }
 
     @Override
-    public Collection<Plugin> enablePlugins(File file) {
+    public Collection<Plugin> enablePlugins(File file) {//@Todo return mapped plugin
+        try {
+            Bukkit.getPluginManager().loadPlugin(file);
+        } catch (InvalidPluginException | InvalidDescriptionException e) {
+            throw new IllegalArgumentException(e);
+        }
         return null;
     }
 
     @Override
     public void disablePlugins() {
-
+        Bukkit.getPluginManager().disablePlugins();
     }
 
     @Override
     public void provideLoader(PluginLoader pluginLoader) {
-
+        this.loaders.add(pluginLoader);
     }
 
     @Override
@@ -129,6 +159,7 @@ public class BukkitPluginManager implements PluginManager {
 
     @Override
     public <T> Collection<T> getServices(Class<T> serviceClass) {
+        Validate.notNull(serviceClass);
         Collection<RegisteredServiceProvider<T>> services = serviceManager.getRegistrations(serviceClass);
         return Iterators.map(services, RegisteredServiceProvider::getProvider);
     }
@@ -147,6 +178,7 @@ public class BukkitPluginManager implements PluginManager {
 
     @Override
     public <T> T getServiceOrDefault(Class<T> serviceClass, Supplier<T> supplier) {
+        Validate.notNull(serviceClass);
         RegisteredServiceProvider<T> services = serviceManager.getRegistration(serviceClass);
         if(services != null) return services.getProvider();
         else if(supplier != null) return supplier.get();
@@ -154,32 +186,80 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     @Override
-    public <T> void registerService(ObjectOwner objectOwner, Class<T> serviceClass, T service, byte priority) {
-        serviceManager.register(serviceClass,service, McNativeLauncher.getPlugin(), ServicePriority.Normal);//@Todo map service priority and owner
+    public <T> void registerService(ObjectOwner owner, Class<T> serviceClass, T service, byte priority) {
+        Validate.notNull(owner,serviceClass,service);
+
+        org.bukkit.plugin.Plugin mappedOwner;
+        if(owner instanceof Plugin<?>) mappedOwner = getMappedPlugin((Plugin<?>) owner);
+        else mappedOwner = McNativeLauncher.getPlugin();
+
+        serviceManager.register(serviceClass,service,mappedOwner, ServicePriority.Normal);
     }
 
     @Override
     public <T> boolean isServiceAvailable(Class<T> serviceClass) {
+        Validate.notNull(serviceClass);
         return serviceManager.getKnownServices().contains(serviceClass);
     }
 
     @Override
     public void unregisterService(Object o) {
-
+        Validate.notNull(o);
+        serviceManager.unregister(o);
     }
 
     @Override
     public void unregisterServices(Class<?> aClass) {
-
+        Validate.notNull(aClass);
+        for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(aClass)) {
+            serviceManager.unregister(registration.getProvider());
+        }
     }
 
     @Override
-    public void unregisterServices(ObjectOwner objectOwner) {
-
+    public void unregisterServices(ObjectOwner owner) {
+        if(owner instanceof Plugin<?>){
+            serviceManager.unregister(getMappedPlugin((Plugin<?>) owner));
+        }else throw new IllegalArgumentException("It is not possible to unsubscribe services, if the owner is not a plugin");
     }
 
     @Override
     public void shutdown() {
+        //Unused and ignored
+    }
 
+    protected void registerBukkitPlugin(org.bukkit.plugin.Plugin plugin){
+        if(!plugin.getClass().getName().equals(LOADER_CLASS_NAME)) plugins.add(new MappedPlugin(plugin));
+    }
+
+    protected void unregisterBukkitPlugin(org.bukkit.plugin.Plugin plugin){
+        this.plugins.remove(plugin);
+    }
+
+    @Internal
+    public org.bukkit.plugin.Plugin getMappedPlugin(Plugin<?> original){
+        Validate.notNull(original);
+        for (org.bukkit.plugin.Plugin plugin : Bukkit.getPluginManager().getPlugins()){
+            if(plugin.equals(original)) return plugin;
+        }
+        throw new IllegalArgumentException("McNative Mapping error (plugin / mcnative -> bukkit)");
+    }
+
+    @Internal
+    public Plugin<?> getMappedPlugin(org.bukkit.plugin.Plugin original){
+        Validate.notNull(original);
+        for (Plugin<?> plugin : plugins) if(plugin.equals(original)) return plugin;
+        throw new IllegalArgumentException("McNative Mapping error (plugin / bukkit -> mcnative)");
+    }
+
+    @Internal
+    @SuppressWarnings("unchecked")
+    public void inject(){//Must be synchronized for security reasons
+        synchronized (this){
+            List<org.bukkit.plugin.Plugin> original = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
+            McNativePluginWrapperList override = new McNativePluginWrapperList(original,this);
+            ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",override);
+            for (org.bukkit.plugin.Plugin plugin : original) registerBukkitPlugin(plugin);
+        }
     }
 }

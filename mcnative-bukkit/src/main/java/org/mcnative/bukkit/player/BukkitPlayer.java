@@ -541,7 +541,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Internal
-    public void setWorld(BukkitWorld world){//@Todo set world
+    public void setWorld(BukkitWorld world){
         this.world = world;
     }
 

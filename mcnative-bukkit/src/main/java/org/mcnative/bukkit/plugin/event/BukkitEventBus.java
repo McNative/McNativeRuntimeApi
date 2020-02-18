@@ -31,6 +31,7 @@ import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
+import org.mcnative.bukkit.plugin.BukkitPluginManager;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -39,17 +40,18 @@ import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-//@Todo add new unsubscribe method with event and owner
 public class BukkitEventBus implements EventBus {
 
     private final Executor executor;
+    private final BukkitPluginManager pluginManager;
     private final Plugin owner;
     private final Map<Class<?>,Class<?>> mappedClasses;
 
     private final Map<Class<?>, List<EventExecutor>> executors;
 
-    public BukkitEventBus(Executor executor,Plugin owner) {
+    public BukkitEventBus(Executor executor,BukkitPluginManager pluginManager,Plugin owner) {
         this.executor = executor;
+        this.pluginManager = pluginManager;
         this.owner = owner;
         this.executors = new LinkedHashMap<>();
         this.mappedClasses = new HashMap<>();
@@ -118,7 +120,9 @@ public class BukkitEventBus implements EventBus {
         for (HandlerList handlerList : HandlerList.getHandlerLists()) {
             if(handlerList instanceof McNativeHandlerList) ((McNativeHandlerList) handlerList).unregister(owner);
             else{
-                //HandlerList.unregisterAll((Plugin)owner);@Todo check if plugin and unregister
+                if(owner instanceof net.prematic.libraries.plugin.Plugin<?>){
+                    HandlerList.unregisterAll(pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner));
+                }
             }
         }
     }

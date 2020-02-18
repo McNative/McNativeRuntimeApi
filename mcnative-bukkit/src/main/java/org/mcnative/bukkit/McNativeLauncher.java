@@ -54,12 +54,15 @@ public class McNativeLauncher {
         Logger logger = Bukkit.getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
 
-        BukkitEventBus eventBus = new BukkitEventBus(GeneralUtil.getDefaultExecutorService(),getPlugin());//@Todo add better executor
-        BukkitCommandManager commandManager = new BukkitCommandManager();
-        BukkitPluginManager pluginManager = new BukkitPluginManager(Bukkit.getServicesManager());
-        BukkitService localService = new BukkitService(commandManager,eventBus);
+        BukkitPluginManager pluginManager = new BukkitPluginManager();
+        pluginManager.inject();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected plugin manager.");
+
+        BukkitEventBus eventBus = new BukkitEventBus(GeneralUtil.getDefaultExecutorService(),pluginManager,getPlugin());//@Todo add better executor
+        BukkitCommandManager commandManager = new BukkitCommandManager(pluginManager);
         BukkitPlayerManager playerManager = new BukkitPlayerManager();
 
+        BukkitService localService = new BukkitService(commandManager,eventBus);
         BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,null);
         McNative.setInstance(instance);
         instance.registerDefaultProviders();
@@ -67,12 +70,10 @@ public class McNativeLauncher {
         BukkitChannelInjector injector = new BukkitChannelInjector();
 
         new McNativeBridgeEventHandler(injector,eventBus,playerManager);
+        logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bukkit events.");
 
         injector.injectChannelInitializer();
-
-        //Plugin
-
-        //Command
+        logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }

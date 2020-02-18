@@ -19,8 +19,13 @@
 
 package org.mcnative.bukkit.plugin.command;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.mcnative.bukkit.player.BukkitPlayerManager;
+import org.mcnative.common.McNative;
+import org.mcnative.common.plugin.CustomCommandSender;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,8 +44,16 @@ public class McNativeCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender0, String label, String[] args) {
-        CommandSender sender = null;
+    public boolean execute(CommandSender sender, String label, String[] arguments) {
+        net.prematic.libraries.command.sender.CommandSender mapped;
+        if(sender.equals(Bukkit.getConsoleSender())){
+            mapped = McNative.getInstance().getConsoleSender();
+        }else if(sender instanceof Player) {
+            mapped = ((BukkitPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((Player) sender);
+        }else{
+            mapped = new MappedCommandSender(sender);
+        }
+        original.execute(mapped,arguments);
         return true;
     }
 
@@ -49,6 +62,8 @@ public class McNativeCommand extends Command {
         return Collections.emptyList();
     }
 
+
+    //@Todo implement custom permission messages
 
     @Override
     public boolean testPermission(CommandSender target) {
@@ -60,10 +75,72 @@ public class McNativeCommand extends Command {
         return super.testPermissionSilent(target);
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if(obj == this) return true;
+        else return original.equals(obj);
+    }
+
+    public final static class MappedCommandSender implements CustomCommandSender {
+
+        private final CommandSender original;
+
+        public MappedCommandSender(CommandSender original) {
+            this.original = original;
+        }
+
+        @Override
+        public Object getOriginal() {
+            return original;
+        }
+
+        @Override
+        public Class<?> getOriginalClass() {
+            return original.getClass();
+        }
+
+        @Override
+        public boolean instanceOf(Class<?> originalClass) {
+            return original.getClass().isAssignableFrom(originalClass);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> T to(Class<T> originalClass) {
+            return (T) original;
+        }
+
+        @Override
+        public String getName() {
+            return original.getName();
+        }
+
+        @Override
+        public boolean hasPermission(String permission) {
+            return original.hasPermission(permission);
+        }
+
+        @Override
+        public void sendMessage(String message) {
+            original.sendMessage(message);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj == this
+                    || (obj instanceof CustomCommandSender && original.equals(((CustomCommandSender) obj).getOriginal()))
+                    ||  original.equals(obj);
+        }
+
+        @Override
+        public String toString() {
+            return original.toString();
+        }
     }
 
 }

@@ -89,4 +89,8 @@ public class McNativeCommandMap extends SimpleCommandMap {
     public void registerServerAliases() {
         super.registerServerAliases();
     }
+
+    public void unregister(Command command){
+
+    }
 }
