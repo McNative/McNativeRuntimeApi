@@ -23,11 +23,13 @@ import java.util.UUID;
 
 public class NetworkIdentifier {
 
-    public static final NetworkIdentifier BROADCAST = new NetworkIdentifier("Network_Broadcast",new UUID(0,0));
+    public static final NetworkIdentifier BROADCAST = new NetworkIdentifier("Network Broadcast",new UUID(0,0));
 
-    public static final NetworkIdentifier BROADCAST_PROXY = new NetworkIdentifier("Network_Broadcast_Proxy",new UUID(0,1));
+    public static final NetworkIdentifier BROADCAST_PROXY = new NetworkIdentifier("Network Proxy Broadcast",new UUID(0,1));
 
-    public static final NetworkIdentifier BROADCAST_SERVER = new NetworkIdentifier("Network_Broadcast_Server",new UUID(0,2));
+    public static final NetworkIdentifier BROADCAST_SERVER = new NetworkIdentifier("Network Server Broadcast",new UUID(0,2));
+
+    public static final NetworkIdentifier MANAGER_DATA_REQUEST = new NetworkIdentifier("Manager Data Request",new UUID(0,3));
 
     private final String name;
     private final UUID uniqueId;

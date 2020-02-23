@@ -22,11 +22,24 @@ package org.mcnative.common.network.messaging;
 import net.prematic.libraries.document.Document;
 import org.mcnative.common.network.NetworkIdentifier;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 public interface MessageReceiver {
 
     NetworkIdentifier getIdentifier();
 
     void sendMessage(String channel, Document request);
 
-    Document sendQueryMessage(String channel,Document request);
+    default Document sendQueryMessage(String channel, Document request){
+        try {
+            return sendQueryMessageAsync(channel, request).get(3, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new IllegalArgumentException("Query timed out");
+        }
+    }
+
+    CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request);
 }

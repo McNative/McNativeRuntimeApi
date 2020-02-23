@@ -28,10 +28,13 @@ import org.mcnative.common.network.component.server.ProxyServer;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface Network extends ConnectableNetworkComponent {
 
     String getTechnology();
+
+    boolean isConnected();
 
     EventBus getEventBus();
 
@@ -59,11 +62,11 @@ public interface Network extends ConnectableNetworkComponent {
     MinecraftServer getServer(InetSocketAddress address);
 
 
-    void sendBroadcastMessage(Document request);
+    void sendBroadcastMessage(String channel, Document request);
 
-    void sendProxyMessage(Document request);
+    void sendProxyMessage(String channel, Document request);
 
-    void sendServerMessage(Document request);
+    void sendServerMessage(String channel, Document request);
 
 
     default String getName() {
@@ -74,11 +77,15 @@ public interface Network extends ConnectableNetworkComponent {
         return NetworkIdentifier.BROADCAST;
     }
 
-    default void sendMessage(Document request){
-        sendBroadcastMessage(request);
+    default boolean isOnline(){
+        return isConnected();
     }
 
-    default Document sendQueryMessage(Document request){
-        throw new IllegalArgumentException("Invalid request");
+    default void sendMessage(String channel, Document request){
+        sendBroadcastMessage(channel,request);
+    }
+
+    default CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
+        throw new UnsupportedOperationException("It is not possible to broadcast a query message");
     }
 }

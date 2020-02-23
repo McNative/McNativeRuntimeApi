@@ -20,15 +20,25 @@
 package org.mcnative.common.network.messaging;
 
 import net.prematic.libraries.document.Document;
+import org.mcnative.common.network.NetworkIdentifier;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface MessagingProvider {
 
+    String getTechnology();
+
+    default void sendMessage(NetworkIdentifier identifier, String channel, Document request){
+        sendMessage(identifier, channel, request,UUID.randomUUID());
+    }
+
+    void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId);
+
     default void sendMessage(MessageReceiver receiver, String channel, Document request){
         sendMessage(receiver, channel, request,UUID.randomUUID());
     }
+
 
     void sendMessage(MessageReceiver receiver, String channel, Document request, UUID requestId);
 

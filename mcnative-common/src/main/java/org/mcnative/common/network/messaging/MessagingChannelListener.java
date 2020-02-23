@@ -23,8 +23,8 @@ import net.prematic.libraries.document.Document;
 
 import java.util.UUID;
 
-public interface MessageChannelListener {
+public interface MessagingChannelListener {
 
-    Document onMessageReceive(MessageReceiver receiver,UUID requestId, Document request);
+    Document onMessageReceive(MessageReceiver sender,UUID requestId, Document request);
 
 }

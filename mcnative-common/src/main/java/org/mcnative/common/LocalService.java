@@ -20,9 +20,10 @@
 package org.mcnative.common;
 
 import net.prematic.libraries.plugin.Plugin;
+import net.prematic.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessageChannelListener;
+import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.scoreboard.Tablist;
@@ -66,14 +67,19 @@ public interface LocalService extends ConnectableNetworkComponent {
 
     Collection<String> getMessageChannels(Plugin<?> owner);
 
-    MessageChannelListener getMessageMessageChannelListener(String name);
+    MessagingChannelListener getMessageMessageChannelListener(String name);
 
-    void registerMessageChannel(String name, Plugin<?> owner, MessageChannelListener listener);
 
-    void unregisterMessageChannel(String name);
+    void registerMessagingChannel(String channel, Plugin<?> owner, MessagingChannelListener listener);
 
-    void unregisterMessageChannel(MessageChannelListener listener);
+    <I> void registerSynchronizingChannel(String channel, Plugin<?> owner,Class<I> identifier, SynchronisationHandler<?,I> handler);
 
-    void unregisterMessageChannels(Plugin<?> owner);
+
+    void unregisterChannel(String channel);
+
+    void unregisterChannel(MessagingChannelListener listener);
+
+    void unregisterChannels(Plugin<?> owner);
+
 
 }
