@@ -131,6 +131,7 @@ public class McNativeLoaderCreator {
     private void createBukkitManifest(Document document,String loaderVersion){
         document.set("main",basePackage+".bootstrap.BukkitMcNativePluginBootstrap");
         document.set("version",loaderVersion);
+        document.rename("softDepends","softdepend");
         DocumentFileType.YAML.getWriter().write(new File(resourceDirectory,"plugin.yml"),document);
     }
 
