@@ -120,9 +120,11 @@ public class McNativeProxyConfiguration {
             configFile = new File(location,"config.yml");
             type = DocumentFileType.YAML;
             try {
+                configFile.getParentFile().mkdirs();
                 configFile.createNewFile();
             } catch (IOException exception) {
                 logger.error(McNative.CONSOLE_PREFIX+"Could not create configuration file (config.yml)",exception);
+                exception.printStackTrace();
                 return false;
             }
         }else{
