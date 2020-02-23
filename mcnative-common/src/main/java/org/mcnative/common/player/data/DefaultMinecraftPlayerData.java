@@ -85,7 +85,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     public void updateLastPlayed(long timeStamp) {
         this.provider.getPlayerDataStorage().update()
                 .set("LastPlayed", timeStamp)
-                .where("uniqueId", uniqueId)
+                .where("UniqueId", uniqueId)
                 .execute();
     }
 
@@ -93,7 +93,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     public void updateName(String name) {
         this.provider.getPlayerDataStorage().update()
                 .set("Name", name)
-                .where("uniqueId", uniqueId)
+                .where("UniqueId", uniqueId)
                 .execute();
     }
 
@@ -101,7 +101,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     public void updateGameProfile(GameProfile profile) {
         this.provider.getPlayerDataStorage().update()
                 .set("GameProfile",profile.toJsonPart())
-                .where("uniqueId", uniqueId)
+                .where("UniqueId", uniqueId)
                 .execute();
     }
 
@@ -119,6 +119,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
                 .set("Name", name)
                 .set("GameProfile", profile.toJsonPart())
                 .set("LastPlayed", timeStamp)
+                .where("UniqueId",this.uniqueId)
                 .execute();
     }
 

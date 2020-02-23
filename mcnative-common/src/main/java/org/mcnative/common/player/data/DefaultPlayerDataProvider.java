@@ -42,7 +42,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
         this.playerDataStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
                 .getDatabase(McNative.getInstance()).createCollection("PlayerData")
                 .field("UniqueId", DataType.UUID, FieldOption.NOT_NULL,FieldOption.UNIQUE, FieldOption.INDEX)
-                .field("XBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
+                .field("XBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.INDEX)
                 .field("Name", DataType.STRING, 32, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
                 .field("FirstPlayed", DataType.LONG, FieldOption.NOT_NULL)
                 .field("LastPlayed", DataType.LONG, FieldOption.NOT_NULL)
@@ -76,16 +76,21 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
     private MinecraftPlayerData getPlayerDataByQueryResult(QueryResult result) {
         if(result.isEmpty()) return null;
         QueryResultEntry entry = result.first();
-        String name = entry.getString("Name");
-        UUID uniqueId = entry.getUniqueId("UniqueId");
-        return new DefaultMinecraftPlayerData(this,
-                name,
-                uniqueId,
-                entry.getLong("XBoxId"),
-                entry.getLong("FirstPlayed"),
-                entry.getLong("LastPlayed"),
-                GameProfile.fromJsonPart(uniqueId,name,entry.getString("GameProfile")),
-                DocumentFileType.JSON.getReader().read(entry.getString("Properties")));
+        try{
+            String name = entry.getString("Name");
+            UUID uniqueId = entry.getUniqueId("UniqueId");
+            return new DefaultMinecraftPlayerData(this,
+                    name,
+                    uniqueId,
+                    entry.getLong("XBoxId"),
+                    entry.getLong("FirstPlayed"),
+                    entry.getLong("LastPlayed"),
+                    GameProfile.fromJsonPart(uniqueId,name,entry.getString("GameProfile")),
+                    DocumentFileType.JSON.getReader().read(entry.getString("Properties")));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
