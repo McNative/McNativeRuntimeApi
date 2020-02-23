@@ -158,7 +158,7 @@ public class BungeeCordCommand implements Command {
 
         @Override
         public Collection<String> getPermissions() {
-            if(original instanceof Permissable) return ((Permissable) original).getAllPermissions();
+            if(original instanceof Permissable) return ((Permissable) original).getEffectivePermissions();
             else return Collections.emptyList();
         }
 

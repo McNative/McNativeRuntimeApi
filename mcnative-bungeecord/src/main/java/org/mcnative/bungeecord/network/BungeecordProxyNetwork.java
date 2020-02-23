@@ -23,35 +23,39 @@ import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.Iterators;
+import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.messaging.MessagingProvider;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.proxy.ProxyService;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
-public class LocalProxyNetwork implements Network {
+public class BungeecordProxyNetwork implements Network {
 
     private final ProxyService service;
-    private final Collection<NetworkIdentifier> identifiers;
 
-    public LocalProxyNetwork(ProxyService service) {
+    public BungeecordProxyNetwork(ProxyService service) {
         this.service = service;
-        this.identifiers = new ArrayList<>();
     }
 
     @Override
     public String getTechnology() {
-        return "Simple Proxy Network";
+        return "BungeeCord Proxy Network";
+    }
+
+    @Override
+    public boolean isConnected() {
+        return true;
     }
 
     @Override
@@ -66,16 +70,12 @@ public class LocalProxyNetwork implements Network {
 
     @Override
     public NetworkIdentifier getIdentifier(String name) {
-        NetworkIdentifier result = Iterators.findOne(this.identifiers, identifier -> identifier.getName().equals(name));
-        if(result != null) return result;
-        result = new NetworkIdentifier(name,UUID.randomUUID());
-        this.identifiers.add(result);
-        return result;
+        return new NetworkIdentifier(name,UUID.nameUUIDFromBytes(name.getBytes()));
     }
 
     @Override
     public CommandManager getCommandManager() {
-        throw new UnsupportedOperationException("Network events are currently not supported");
+        throw new UnsupportedOperationException("Network commands are currently not supported");
     }
 
     @Override
@@ -124,18 +124,21 @@ public class LocalProxyNetwork implements Network {
     }
 
     @Override
-    public void sendBroadcastMessage(Document request) {
-
+    public void sendBroadcastMessage(String channel,Document request) {
+        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+                .sendMessage(NetworkIdentifier.BROADCAST,channel,request);
     }
 
     @Override
-    public void sendProxyMessage(Document request) {
-        //Unused can only one proxy registered
+    public void sendProxyMessage(String channel,Document request) {
+        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+                .sendMessage(NetworkIdentifier.BROADCAST_PROXY,channel,request);
     }
 
     @Override
-    public void sendServerMessage(Document request) {
-
+    public void sendServerMessage(String channel,Document request) {
+        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+                .sendMessage(NetworkIdentifier.BROADCAST_SERVER,channel,request);
     }
 
     @Override
@@ -200,6 +203,12 @@ public class LocalProxyNetwork implements Network {
 
     @Override
     public Document sendQueryMessage(String channel, Document request) {
+
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
         return null;
     }
 }

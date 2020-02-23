@@ -204,8 +204,8 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
     }
 
     @Override
-    public Document sendQueryMessage(String channel, Document request) {
-        return McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendQueryMessage(this,channel,request);
+    public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
+        return McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendQueryMessageAsync(this,channel,request);
     }
 
     @Override

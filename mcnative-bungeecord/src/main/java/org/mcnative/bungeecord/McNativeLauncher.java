@@ -27,7 +27,7 @@ import net.prematic.libraries.event.DefaultEventBus;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
-import org.mcnative.bungeecord.network.LocalProxyNetwork;
+import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
@@ -62,7 +62,7 @@ public class McNativeLauncher {
         BungeeCordCommandManager commandManager = new BungeeCordCommandManager(pluginManager,ProxyServer.getInstance().getPluginManager());
 
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
-        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new LocalProxyNetwork(localService), localService);
+        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new BungeecordProxyNetwork(localService), localService);
         McNative.setInstance(instance);
         instance.registerDefaultProviders();
 
@@ -88,6 +88,7 @@ public class McNativeLauncher {
 
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+
     }
 
     @SuppressWarnings("unchecked")
