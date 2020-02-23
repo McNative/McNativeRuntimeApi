@@ -33,7 +33,7 @@ public interface Permissable {
 
     Collection<String> getPermissions();
 
-    Collection<String> getAllPermissions();
+    Collection<String> getEffectivePermissions();
 
 
     PlayerDesign getDesign();
@@ -46,6 +46,8 @@ public interface Permissable {
     boolean isPermissionAssigned(String permission);
 
     boolean hasPermission(String permission);
+
+    PermissionResult hasPermissionExact(String permission);
 
 
     void setPermission(String permission, boolean allowed);

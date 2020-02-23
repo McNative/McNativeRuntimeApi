@@ -26,6 +26,7 @@ import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.PermissionGroup;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionResult;
 import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
 import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
 
@@ -36,8 +37,8 @@ import java.util.function.BiFunction;
 
 public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
-    private MinecraftPlayerData data;
-    private PermissionHandler permissionHandler;
+    protected MinecraftPlayerData data;
+    protected PermissionHandler permissionHandler;
 
     public OfflineMinecraftPlayer(MinecraftPlayerData data) {
         this.data = data;
@@ -138,7 +139,6 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         McNative.getInstance().getRegistry().getService(WhitelistProvider.class).set(this,whitelisted);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public PermissionHandler getPermissionHandler() {
         if(permissionHandler == null){
@@ -170,9 +170,10 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public Collection<String> getAllPermissions() {
-        return getPermissionHandler().getAllPermissions();
+    public Collection<String> getEffectivePermissions() {
+        return getPermissionHandler().getEffectivePermissions();
     }
+
 
     @Override
     public Collection<PermissionGroup> getGroups() {
@@ -192,6 +193,11 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return getPermissionHandler().hasPermission(permission);
+    }
+
+    @Override
+    public PermissionResult hasPermissionExact(String permission) {
+        return getPermissionHandler().hasPermissionExact(permission);
     }
 
     @Override
