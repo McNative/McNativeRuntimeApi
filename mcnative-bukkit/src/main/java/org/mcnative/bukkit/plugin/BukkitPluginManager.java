@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 //@Todo find better parameterized type solution
 public class BukkitPluginManager implements PluginManager {
 
-    private final static String LOADER_CLASS_NAME = "org.mcnative.loader.bootstrap.BungeeCordMcNativePluginBootstrap";
+    private final static String LOADER_CLASS_NAME = "BukkitMcNativePluginBootstrap";
 
     private final ServicesManager serviceManager;
     private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
@@ -229,7 +229,7 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     protected void registerBukkitPlugin(org.bukkit.plugin.Plugin plugin){
-        if(!plugin.getClass().getName().equals(LOADER_CLASS_NAME)) plugins.add(new MappedPlugin(plugin));
+        if(!plugin.getClass().getSimpleName().equals(LOADER_CLASS_NAME)) plugins.add(new MappedPlugin(plugin));
     }
 
     protected void unregisterBukkitPlugin(org.bukkit.plugin.Plugin plugin){
@@ -237,10 +237,12 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     @Internal
-    public org.bukkit.plugin.Plugin getMappedPlugin(Plugin<?> original){
+    public org.bukkit.plugin.Plugin getMappedPlugin(Plugin<?> original){//@Todo find better solution
         Validate.notNull(original);
         for (org.bukkit.plugin.Plugin plugin : Bukkit.getPluginManager().getPlugins()){
-            if(plugin.equals(original)) return plugin;
+            if(plugin.getClass().getSimpleName().equals(LOADER_CLASS_NAME) && plugin.getName().equals(original.getName())){
+                return plugin;
+            }
         }
         throw new IllegalArgumentException("McNative Mapping error (plugin / mcnative -> bukkit)");
     }

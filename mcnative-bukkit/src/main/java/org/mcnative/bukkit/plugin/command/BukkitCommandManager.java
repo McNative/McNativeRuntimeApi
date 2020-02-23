@@ -23,11 +23,12 @@ import net.prematic.libraries.command.command.Command;
 import net.prematic.libraries.command.command.NotFoundHandler;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.command.SimpleCommandMap;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.common.McNative;
@@ -41,11 +42,17 @@ public class BukkitCommandManager implements CommandManager {
     private final List<Command> commands;
     private final McNativeCommandMap commandMap;
 
+    private NotFoundHandler handler;
+
     public BukkitCommandManager(BukkitPluginManager pluginManager) {
         this.pluginManager = pluginManager;
         this.commands = new ArrayList<>();
 
-        this.commandMap = null;//@Todo get and inject wrapper
+        this.commandMap = inject();
+    }
+
+    public NotFoundHandler getNotFoundHandler() {
+        return handler;
     }
 
     @Override
@@ -59,8 +66,9 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     @Override
-    public void setNotFoundHandler(NotFoundHandler notFoundHandler) {//@Todo implement not found handler
-        throw new IllegalArgumentException("Currently not supported");
+    public void setNotFoundHandler(NotFoundHandler notFoundHandler) {
+        Validate.notNull(notFoundHandler);
+        this.handler = notFoundHandler;
     }
 
     @Override
@@ -80,13 +88,9 @@ public class BukkitCommandManager implements CommandManager {
         if(!(command.getOwner() instanceof net.prematic.libraries.plugin.Plugin)){
             throw new IllegalArgumentException("Owner is not a plugin.");
         }
-        Plugin<?> plugin = pluginManager.getMappedPlugin((org.bukkit.plugin.Plugin) command.getOwner());
-
-        if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
-        commandMap.register("",new McNativeCommand(command));
+        commandMap.register(command.getOwner().getName().toLowerCase(),new McNativeCommand(command));
         this.commands.add(command);
     }
-
 
     @Override
     public void unregisterCommand(String name) {
@@ -98,25 +102,42 @@ public class BukkitCommandManager implements CommandManager {
     public void unregisterCommand(Command command) {
         if(command instanceof BukkitCommand){
             this.commands.remove(command);
-            commandMap.unregister(((BukkitCommand) command).getOriginal());
+            this.commandMap.unregister(((BukkitCommand) command).getOriginal());
         }else{
-            for (org.bukkit.command.Command bukkitCommand : commandMap.getCommands()) {
-                if(bukkitCommand.equals(command)){
-                    this.commands.remove(command);
-                    commandMap.unregister(bukkitCommand);
-                    return;
-                }
-            }
+            this.commandMap.unregister(command);
         }
     }
 
     @Override
     public void unregisterCommand(ObjectOwner owner) {
-
+        List<Command> result = Iterators.remove(this.commands, command -> command.getOwner().equals(owner));
+        for (Command command : result) {
+            if(command instanceof BukkitCommand){
+                commandMap.unregister(((BukkitCommand) command).getOriginal());
+            }else{
+                commandMap.unregister(command);
+            }
+        }
     }
 
     @Override
     public void unregisterCommands() {
         commandMap.clearCommands();
     }
+
+    public void provideCommand(Command command){
+        this.commands.add(command);
+    }
+
+    public void clearCommands(){
+        this.commands.clear();
+    }
+
+    private McNativeCommandMap inject(){
+        SimpleCommandMap original = ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"commandMap",SimpleCommandMap.class);
+        McNativeCommandMap override = new McNativeCommandMap(this,original);
+        ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"commandMap",override);
+        return override;
+    }
+
 }

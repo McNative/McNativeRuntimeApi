@@ -30,6 +30,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.AuthorNagException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 import org.mcnative.common.McNative;
@@ -124,7 +125,36 @@ public class McNativeHandlerList extends HandlerList implements org.bukkit.plugi
     }
 
     public void callEvents(Object... objects){
-        for (EventExecutor executor : executors) executor.execute(objects);
+        for (EventExecutor executor : executors){
+            try {
+                executor.execute(objects);
+            } catch (AuthorNagException ex) {
+                if(executor instanceof BukkitEventExecutor){
+                    Plugin plugin = ((BukkitEventExecutor) executor).getRegistration().getPlugin();
+
+                    if (plugin.isNaggable()) {
+                        plugin.setNaggable(false);
+
+                        Bukkit.getLogger().log(Level.SEVERE, String.format(
+                                "Nag author(s): '%s' of '%s' about the following: %s",
+                                plugin.getDescription().getAuthors(),
+                                plugin.getDescription().getFullName(),
+                                ex.getMessage()
+                        ));
+                    }
+                }else{
+                    Bukkit.getLogger().log(Level.SEVERE, "Could not pass event " +eventClass.getSimpleName() + " to " + executor.getOwner().getName(), ex);
+                }
+            } catch (Throwable ex) {
+                String plugin;
+                if(executor instanceof BukkitEventExecutor){
+                    plugin = ((BukkitEventExecutor) executor).getRegistration().getPlugin().getDescription().getFullName();
+                }else{
+                    plugin = executor.getOwner().getName();
+                }
+                Bukkit.getLogger().log(Level.SEVERE, "Could not pass event " + eventClass.getSimpleName() + " to " + plugin, ex);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

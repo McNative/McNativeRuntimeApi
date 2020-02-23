@@ -35,6 +35,14 @@ public class BukkitReflectionUtil {
         }
     }
 
+    public static Class<?> getCraftClass(String className){
+        try {
+            return Class.forName(BUKKIT_BASE + "." + className);
+        } catch (ClassNotFoundException e) {
+            throw new ReflectException(e);
+        }
+    }
+
     public static Class<?> getMNSClass(String className){
         try {
             return Class.forName(NMS_BASE + "." + className);

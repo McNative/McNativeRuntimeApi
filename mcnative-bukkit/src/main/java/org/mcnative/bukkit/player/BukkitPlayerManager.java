@@ -99,7 +99,7 @@ public class BukkitPlayerManager implements PlayerManager {
 
     @Internal
     public BukkitPlayer getMappedPlayer(org.bukkit.entity.Player player0){
-        ConnectedMinecraftPlayer result = Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId() == player0.getUniqueId());
+        ConnectedMinecraftPlayer result = Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(player0.getUniqueId()));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
         return (BukkitPlayer) result;
     }

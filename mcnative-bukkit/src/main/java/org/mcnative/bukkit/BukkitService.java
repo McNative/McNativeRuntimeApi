@@ -27,13 +27,16 @@ import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.prematic.synchronisation.SynchronisationHandler;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessageChannelListener;
+import org.mcnative.common.network.messaging.MessagingChannelListener;
+import org.mcnative.common.network.messaging.SynchronisationMessagingAdapter;
 import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -57,6 +60,7 @@ import java.util.concurrent.CompletableFuture;
 public class BukkitService implements MinecraftService, MinecraftServer {
 
     private final PacketManager packetManager;
+    private final BukkitPlayerManager playerManager;
     private final CommandManager commandManager;
     private final EventBus eventBus;
 
@@ -66,12 +70,12 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     private Tablist defaultTablist;
     private ServerStatusResponse statusResponse;
 
-    protected BukkitService(CommandManager commandManager, EventBus eventBus) {
+    protected BukkitService(CommandManager commandManager,BukkitPlayerManager playerManager, EventBus eventBus) {
         this.packetManager = new DefaultPacketManager();
         this.commandManager = commandManager;
+        this.playerManager = playerManager;
         this.eventBus = eventBus;
         this.messageListeners = new ArrayList<>();
-
     }
 
     @Override
@@ -106,27 +110,27 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public Collection<ConnectedMinecraftPlayer> getConnectedPlayers() {
-        return null;
+        return playerManager.getConnectedPlayers();
     }
 
     @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(int id) {
-        return null;
+        return playerManager.getConnectedPlayer(id);
     }
 
     @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(UUID uniqueId) {
-        return null;
+        return playerManager.getConnectedPlayer(uniqueId);
     }
 
     @Override
-    public ConnectedMinecraftPlayer getConnectedPlayer(String nme) {
-        return null;
+    public ConnectedMinecraftPlayer getConnectedPlayer(String name) {
+        return playerManager.getConnectedPlayer(name);
     }
 
     @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(long xBoxId) {
-        return null;
+        return playerManager.getConnectedPlayer(xBoxId);
     }
 
     @Override
@@ -165,8 +169,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-
-
     @Override
     public Collection<String> getMessageChannels() {
         return Iterators.map(this.messageListeners, entry -> entry.name);
@@ -181,33 +183,38 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     }
 
     @Override
-    public MessageChannelListener getMessageMessageChannelListener(String name) {
+    public MessagingChannelListener getMessageMessageChannelListener(String name) {
         Validate.notNull(name);
         MessageEntry result = Iterators.findOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
         return result != null ? result.listener : null;
     }
 
     @Override
-    public void registerMessageChannel(String name, Plugin<?> owner, MessageChannelListener listener) {
+    public void registerMessagingChannel(String name, Plugin<?> owner, MessagingChannelListener listener) {
         Validate.notNull(name,owner,listener);
         if(getMessageMessageChannelListener(name) != null) throw new IllegalArgumentException("Message channel "+name+" already in use");
         this.messageListeners.add(new MessageEntry(name,owner,listener));
     }
 
     @Override
-    public void unregisterMessageChannel(String name) {
+    public <I> void registerSynchronizingChannel(String channel, Plugin<?> owner, Class<I> identifier, SynchronisationHandler<?, I> handler) {
+        registerMessagingChannel(channel,owner,new SynchronisationMessagingAdapter(channel,identifier,handler));
+    }
+
+    @Override
+    public void unregisterChannel(String name) {
         Validate.notNull(name);
         Iterators.removeOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
     }
 
     @Override
-    public void unregisterMessageChannel(MessageChannelListener listener) {
+    public void unregisterChannel(MessagingChannelListener listener) {
         Validate.notNull(listener);
         Iterators.removeSilent(this.messageListeners, entry -> entry.listener.equals(listener));
     }
 
     @Override
-    public void unregisterMessageChannels(Plugin<?> owner) {
+    public void unregisterChannels(Plugin<?> owner) {
         Validate.notNull(owner);
         Iterators.removeSilent(this.messageListeners, entry -> entry.owner.equals(owner));
     }
@@ -361,13 +368,18 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    @Override
+    public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
+        return null;
+    }
+
     private static class MessageEntry {
 
         private final String name;
         private final ObjectOwner owner;
-        private final MessageChannelListener listener;
+        private final MessagingChannelListener listener;
 
-        public MessageEntry(String name, ObjectOwner owner, MessageChannelListener listener) {
+        public MessageEntry(String name, ObjectOwner owner, MessagingChannelListener listener) {
             this.name = name;
             this.owner = owner;
             this.listener = listener;

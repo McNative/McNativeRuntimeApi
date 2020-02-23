@@ -28,6 +28,7 @@ import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.player.connection.ChannelConnection;
+import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.bukkit.plugin.event.McNativeHandlerList;
 import org.mcnative.bukkit.world.BukkitWorld;
@@ -50,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class McNativeBridgeEventHandler {
 
     private final BukkitEventBus eventBus;
+    private final BukkitCommandManager commandManager;
     private final BukkitChannelInjector injector;
     private final BukkitPlayerManager playerManager;
     private final Map<UUID,BukkitPendingConnection> pendingConnections;
@@ -58,6 +60,7 @@ public class McNativeBridgeEventHandler {
         this.injector = injector;
         this.eventBus = eventBus;
         this.playerManager = playerManager;
+        commandManager = null;
 
         this.pendingConnections = new ConcurrentHashMap<>();
 
@@ -192,7 +195,25 @@ public class McNativeBridgeEventHandler {
         handler.callEvents(event,mcnativeEvent);
     }
 
+    private void handleWorldChangedEvent(McNativeHandlerList handler,PlayerCommandPreprocessEvent event){
+        handler.callEvents(event);
 
+        String command = event.getMessage();
+
+        //if (commandManager.dispatchBukkitCommand(event.getPlayer(),event.getMessage())) return;
+
+        if(commandManager.getNotFoundHandler() != null){
+       //     commandManager.getNotFoundHandler().handle();
+        }else{
+
+        }
+
+        //commandManager.getNotFoundHandler().handle();
+        //@Todo implement paper spigot command
+
+
+        event.setCancelled(true);
+    }
 
     private void handleServerReload(McNativeHandlerList handler, ServerLoadEvent event){
         if(event.getType() == ServerLoadEvent.LoadType.RELOAD){

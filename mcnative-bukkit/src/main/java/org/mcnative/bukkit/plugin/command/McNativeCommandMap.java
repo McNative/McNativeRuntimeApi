@@ -19,78 +19,120 @@
 
 package org.mcnative.bukkit.plugin.command;
 
+import net.prematic.libraries.command.command.NotFoundHandler;
+import net.prematic.libraries.plugin.Plugin;
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
+import org.mcnative.common.McNative;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class McNativeCommandMap extends SimpleCommandMap {
 
-    public McNativeCommandMap(Server server) {
-        super(server);
+    private final BukkitCommandManager commandManager;
+    private final SimpleCommandMap original;
+    private final Map<String,Command> commands;
+
+    @SuppressWarnings("unchecked")
+    public McNativeCommandMap(BukkitCommandManager commandManager,SimpleCommandMap original) {
+        super(Bukkit.getServer());
+        this.commandManager = commandManager;
+        this.original = original;
+        System.out.println("NEW COMMAND MAP "+original);
+        this.commands = (Map<String, Command>) ReflectionUtil.getFieldValue(original,"knownCommands");
     }
 
     @Override
     public void setFallbackCommands() {
-        super.setFallbackCommands();
+        original.setFallbackCommands();
     }
 
     @Override
     public void registerAll(String fallbackPrefix, List<Command> commands) {
-        super.registerAll(fallbackPrefix, commands);
+        original.registerAll(fallbackPrefix, commands);
     }
 
     @Override
     public boolean register(String fallbackPrefix, Command command) {
-        return super.register(fallbackPrefix, command);
+        if(original == null) return false;
+        return register(command.getName(),fallbackPrefix, command);
     }
 
     @Override
     public boolean register(String label, String fallbackPrefix, Command command) {
-        return super.register(label, fallbackPrefix, command);
+        boolean result =  original.register(label, fallbackPrefix, command);
+        if(result && !(command instanceof McNativeCommand)){
+            commandManager.provideCommand(new BukkitCommand(command,getOwner(fallbackPrefix)));
+        }
+        return result;
+    }
+
+    private ObjectOwner getOwner(String name){
+        Plugin<?> plugin = McNative.getInstance().getPluginManager().getPlugin(name);
+        return plugin != null ? plugin : ObjectOwner.SYSTEM;
     }
 
     @Override
-    public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
-        return super.dispatch(sender, commandLine);
+    public boolean dispatch(CommandSender sender, String command) throws CommandException {
+        if(!original.dispatch(sender,command)){
+            NotFoundHandler handler = commandManager.getNotFoundHandler();
+            if(handler != null){
+                String[] arguments = command.split(" ");
+                handler.handle(McNativeCommand.getMappedSender(sender),arguments[0], Arrays.copyOfRange(arguments,1,arguments.length));
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public synchronized void clearCommands() {
-        super.clearCommands();
+        commandManager.clearCommands();
+        original.clearCommands();
     }
 
     @Override
     public Command getCommand(String name) {
-        return super.getCommand(name);
+        return original.getCommand(name);
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine) {
-        return super.tabComplete(sender, cmdLine);
+        return original.tabComplete(sender, cmdLine);
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine, Location location) {
-        return super.tabComplete(sender, cmdLine, location);
+        return original.tabComplete(sender, cmdLine, location);
     }
 
     @Override
     public Collection<Command> getCommands() {
-        return super.getCommands();
+        System.out.println("GET COMMANDS");
+        return original.getCommands();
     }
 
     @Override
     public void registerServerAliases() {
-        super.registerServerAliases();
+        original.registerServerAliases();
     }
 
-    public void unregister(Command command){
 
+
+    public void unregister(Object command){
+        for (Map.Entry<String, Command> entry : commands.entrySet()) {
+            if(entry.getValue().equals(command)){
+                commands.remove(entry.getKey());
+            }
+        }
     }
 }

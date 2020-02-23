@@ -43,17 +43,25 @@ public class McNativeCommand extends Command {
         this.original = original;
     }
 
+    public net.prematic.libraries.command.command.Command getOriginal() {
+        return original;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = original.getConfiguration().getDescription();
+        return description != null ? description : "";
+    }
+
+    @Override
+    public String getUsage() {
+        return "/"+original.getConfiguration().getName()+" help";
+    }
+
     @Override
     public boolean execute(CommandSender sender, String label, String[] arguments) {
-        net.prematic.libraries.command.sender.CommandSender mapped;
-        if(sender.equals(Bukkit.getConsoleSender())){
-            mapped = McNative.getInstance().getConsoleSender();
-        }else if(sender instanceof Player) {
-            mapped = ((BukkitPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((Player) sender);
-        }else{
-            mapped = new MappedCommandSender(sender);
-        }
-        original.execute(mapped,arguments);
+        McNative.getInstance().getScheduler().createTask(McNative.getInstance()).async()
+                .execute(() -> original.execute(getMappedSender(sender),arguments));
         return true;
     }
 
@@ -61,7 +69,6 @@ public class McNativeCommand extends Command {
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         return Collections.emptyList();
     }
-
 
     //@Todo implement custom permission messages
 
@@ -79,6 +86,18 @@ public class McNativeCommand extends Command {
     public boolean equals(Object obj) {
         if(obj == this) return true;
         else return original.equals(obj);
+    }
+
+    public static net.prematic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
+        net.prematic.libraries.command.sender.CommandSender mapped;
+        if(sender.equals(Bukkit.getConsoleSender())){
+            mapped = McNative.getInstance().getConsoleSender();
+        }else if(sender instanceof Player) {
+            mapped = ((BukkitPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((Player) sender);
+        }else{
+            mapped = new MappedCommandSender(sender);
+        }
+        return mapped;
     }
 
     public final static class MappedCommandSender implements CustomCommandSender {

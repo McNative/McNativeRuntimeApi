@@ -27,7 +27,9 @@ import org.mcnative.bukkit.entity.BukkitEntity;
 import org.mcnative.bukkit.entity.living.BukkitHumanEntity;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
+import org.mcnative.bukkit.player.permission.BukkitPermissionHandler;
 import org.mcnative.bukkit.world.BukkitWorld;
+import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -49,6 +51,8 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
 import org.mcnative.common.protocol.support.ProtocolCheck;
+import org.mcnative.common.serviceprovider.permission.PermissionHandler;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.Effect;
 import org.mcnative.service.GameMode;
@@ -73,11 +77,30 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     private ChatChannel chatChannel;
 
     private BukkitWorld world;
+    private boolean permissibleInjected;
 
     public BukkitPlayer(org.bukkit.entity.Player original, PendingConnection connection,MinecraftPlayerData playerData) {
         super(playerData);
         this.original = original;
         this.connection = connection;
+        this.permissibleInjected = false;
+    }
+
+    @Override
+    public PermissionHandler getPermissionHandler() {
+        System.out.println("GETTING PERM HANDLER");
+        if(permissionHandler == null){
+            permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);
+            System.out.println("NEW HANDLER "+permissionHandler.getClass());
+            System.out.println("Data: "+(!permissibleInjected && !(permissionHandler instanceof BukkitPermissionHandler)));
+            if(!permissibleInjected && !(permissionHandler instanceof BukkitPermissionHandler)){
+                new McNativePermissible(original,this).inject();
+                permissibleInjected = true;
+            }
+        }else if(!permissionHandler.isCached()){
+            permissionHandler = permissionHandler.reload();
+        }
+        return permissionHandler;
     }
 
     @Override

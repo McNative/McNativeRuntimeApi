@@ -20,10 +20,12 @@
 package org.mcnative.bukkit;
 
 import net.prematic.libraries.utility.GeneralUtil;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
@@ -33,6 +35,7 @@ import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.common.McNative;
 
 import java.io.File;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -43,9 +46,8 @@ public class McNativeLauncher {
         return PLUGIN;
     }
 
-
     public static void launchMcNative(){
-        launchMcNativeInternal(null);//@Todo create fake plugin
+        launchMcNativeInternal(createDummyPlugin());
     }
 
     public static void launchMcNativeInternal(Plugin plugin){
@@ -62,7 +64,7 @@ public class McNativeLauncher {
         BukkitCommandManager commandManager = new BukkitCommandManager(pluginManager);
         BukkitPlayerManager playerManager = new BukkitPlayerManager();
 
-        BukkitService localService = new BukkitService(commandManager,eventBus);
+        BukkitService localService = new BukkitService(commandManager,playerManager,eventBus);
         BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,null);
         McNative.setInstance(instance);
         instance.registerDefaultProviders();
@@ -78,16 +80,22 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
-    private static void createDummyPlugin(){
+    @SuppressWarnings("unchecked")
+    private static Plugin createDummyPlugin(){
         //@Todo add version
         PluginDescriptionFile description = new PluginDescriptionFile("McNative","1.0.0",McNativeLauncher.class.getName());
         McNativeDummyPlugin plugin = new McNativeDummyPlugin(description);
+
+        List<Plugin> plugins = (List<Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
+        plugins.add(plugin);
+        return plugin;
     }
 
     private static class McNativeDummyPlugin extends JavaPlugin{
 
         public McNativeDummyPlugin(PluginDescriptionFile description) {
-            super(null, description, new File(""),null);
+            super(new JavaPluginLoader(Bukkit.getServer()), description, new File(""),new File("plugins/mcnative.jar"));
+            setEnabled(true);
         }
     }
 
