@@ -78,7 +78,7 @@ public class McNativeLoader extends ResourceLoader {
                     download(latest);
                     logger.info("(McNative-Loader) Successfully downloaded McNative");
                 }catch (Exception exception){
-                    if(current == null){
+                    if(current == null || current.equals(VersionInfo.UNKNOWN)){
                         logger.info("(McNative-Loader) download failed, shutting down");
                         return false;
                     }else{

@@ -62,7 +62,7 @@ public class GuestPluginExecutor {
     }
 
     public boolean installDependencies(Logger logger){
-        InputStream stream = loader.getClassLoader().getResourceAsStream("mcnative.json");
+        InputStream stream = loader.getClassLoader().getResourceAsStream("dependencies.json");
         if(stream == null) return true;
         Document data = DocumentFileType.JSON.getReader().read(stream);
         try{
@@ -70,7 +70,7 @@ public class GuestPluginExecutor {
             dependencies.install();
             dependencies.loadReflected((URLClassLoader) loader.getClassLoader().asJVMLoader());
         }catch (Exception exception){
-            logger.log(Level.SEVERE,exception.getMessage());
+            logger.log(Level.SEVERE,String.format("Could not install dependencies %s",exception.getMessage()));
             return false;
         }
         return true;

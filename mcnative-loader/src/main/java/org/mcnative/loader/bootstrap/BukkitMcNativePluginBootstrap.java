@@ -19,8 +19,8 @@
 
 package org.mcnative.loader.bootstrap;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.plugin.description.PluginVersion;
+import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
@@ -46,22 +46,32 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
             this.executor.loadGuestPlugin();
 
             PluginVersion version = this.executor.getLoader().getDescription().getVersion();
-            ProxyServer.getInstance().getPluginManager().getPlugin(getDescription().getName()).getDescription()
-                    .setVersion(version.getName()+"-"+version.getBuild());
+            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName()+"-"+version.getBuild());
         }catch (Exception exception){
             this.executor = null;
-            getLogger().log(Level.SEVERE,String.format("Could not bootstrap plugin (%s)",exception.getMessage()));
+            getLogger().log(Level.SEVERE,String.format("Could not load plugin (%s)",exception.getMessage()));
             getServer().getPluginManager().disablePlugin(this);
         }
     }
 
     @Override
     public void onEnable() {
-        if(this.executor != null) this.executor.enableGuestPlugin();
+        try{
+            if(this.executor != null) this.executor.enableGuestPlugin();
+        }catch (Exception exception){
+            this.executor = null;
+            getLogger().log(Level.SEVERE,String.format("Could not enable plugin (%s)",exception.getMessage()));
+            getServer().getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
     public void onDisable() {
-        if(this.executor != null) this.executor.disableGuestPlugin();
+        try{
+            if(this.executor != null) this.executor.disableGuestPlugin();
+        }catch (Exception exception){
+            this.executor = null;
+            getLogger().log(Level.SEVERE,String.format("Could not disable plugin (%s)",exception.getMessage()));
+        }
     }
 }
