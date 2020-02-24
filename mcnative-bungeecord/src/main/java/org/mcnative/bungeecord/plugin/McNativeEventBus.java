@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.event.EventHandler;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.event.executor.MethodEventExecutor;
 import net.prematic.libraries.utility.annonations.Internal;
@@ -63,8 +64,20 @@ public class McNativeEventBus extends net.md_5.bungee.event.EventBus {
     }
 
     @Override
-    public void register(Object listener) {//@Todo implement default events
-        eventBus.subscribe(new PluginObjectOwner(findOwner(listener)),listener);
+    public void register(Object listener) {//@Todo implement real mapped owner
+        for(Method method : listener.getClass().getDeclaredMethods()){
+            try{
+                EventHandler handler = method.getAnnotation(EventHandler.class);
+                if(handler != null && method.getParameterTypes().length == 1){
+                    Class<?> eventClass = method.getParameterTypes()[0];
+                    Class<?> mappedClass = eventBus.getMappedClass(eventClass);
+                    if(mappedClass == null) mappedClass = eventClass;
+                    eventBus.addExecutor(mappedClass,new MethodEventExecutor(ObjectOwner.SYSTEM,handler.priority(),listener,eventClass,method));
+                }
+            }catch (Exception exception){
+                throw new IllegalArgumentException("Could not register listener "+listener,exception);
+            }
+        }
     }
 
     @Override
