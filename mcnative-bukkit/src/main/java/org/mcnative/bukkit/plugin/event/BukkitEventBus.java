@@ -171,6 +171,11 @@ public class BukkitEventBus implements EventBus {
     }
 
     @Override
+    public Class<?> getMappedClass(Class<?> original) {
+        return this.mappedClasses.get(original);
+    }
+
+    @Override
     public <T, E extends T> void callEventAsync(Class<T> executionClass, E event, Consumer<T> callback) {
         if(callback != null) executor.execute(()-> callback.accept(callEvent(executionClass,event)));
         else executor.execute(()-> callEvent(event));
