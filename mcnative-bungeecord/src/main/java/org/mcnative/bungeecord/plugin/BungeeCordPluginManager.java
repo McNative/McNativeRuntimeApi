@@ -19,6 +19,7 @@
 
 package org.mcnative.bungeecord.plugin;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.Plugin;
@@ -49,13 +50,15 @@ public class BungeeCordPluginManager implements PluginManager {
     private final Collection<PluginLoader> loaders;
     private final Collection<Plugin> plugins;
 
-    private net.md_5.bungee.api.plugin.PluginManager original;
+    private final net.md_5.bungee.api.plugin.PluginManager original;
 
     public BungeeCordPluginManager() {
+        this.original = ProxyServer.getInstance().getPluginManager();
         this.services = new ArrayList<>();
         this.stateListeners = new LinkedHashMap<>();
         this.loaders = new ArrayList<>();
         this.plugins = new ArrayList<>();
+        inject();
     }
 
     @Override
@@ -242,7 +245,7 @@ public class BungeeCordPluginManager implements PluginManager {
 
     @Internal
     @SuppressWarnings("unchecked")
-    public void inject(net.md_5.bungee.api.plugin.PluginManager original){
+    private void inject(){
         Map<String, net.md_5.bungee.api.plugin.Plugin> oldMap = ReflectionUtil.getFieldValue(original,"plugins",Map.class);
 
         CallbackMap<String, net.md_5.bungee.api.plugin.Plugin> newMap = new LinkedHashCallbackMap<>();
@@ -253,11 +256,6 @@ public class BungeeCordPluginManager implements PluginManager {
 
         ReflectionUtil.changeFieldValue(original,"plugins",newMap);
         newMap.putAll(oldMap);
-    }
-
-    @Internal
-    public void setOriginal(net.md_5.bungee.api.plugin.PluginManager original){
-        this.original = original;
     }
 
     private static class ServiceEntry {

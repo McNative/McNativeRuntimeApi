@@ -49,6 +49,7 @@ public class BungeeCordCommandManager implements CommandManager {
         this.pluginManager = pluginManager;
         this.original = original;
         this.commands = new ArrayList<>();
+        inject();
     }
 
     @Override
@@ -143,7 +144,7 @@ public class BungeeCordCommandManager implements CommandManager {
 
     @Internal
     @SuppressWarnings("unchecked")
-    public void inject(){
+    private void inject(){
         Multimap<Plugin, net.md_5.bungee.api.plugin.Command> oldMap = ReflectionUtil.getFieldValue(original,"commandsByPlugin", Multimap.class);
         MappedCommandMap newMap = new MappedCommandMap(this,oldMap);
         ReflectionUtil.changeFieldValue(original,"commandsByPlugin",newMap);

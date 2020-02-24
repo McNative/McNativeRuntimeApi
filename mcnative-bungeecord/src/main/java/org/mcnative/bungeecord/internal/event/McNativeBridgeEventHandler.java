@@ -36,7 +36,7 @@ import org.mcnative.bungeecord.internal.event.server.BungeeServerSwitchEvent;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.player.BungeePendingConnection;
 import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
-import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
+import org.mcnative.bungeecord.plugin.McNativeEventBus;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
@@ -74,14 +74,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class McNativeBridgeEventHandler {
 
-    private final McNativeBungeePluginManager pluginManager;
+    private final McNativeEventBus pluginManager;
     private final BungeeCordPlayerManager playerManager;
     private final BungeeCordServerMap serverMap;
     private final EventBus eventBus;
     private final Map<UUID, BungeeProxiedPlayer> pendingPlayers;
     private final Map<Connection,String> tabCompleteCursors;
 
-    public McNativeBridgeEventHandler(McNativeBungeePluginManager pluginManager, EventBus eventBus, BungeeCordPlayerManager playerManager,BungeeCordServerMap serverMap) {
+    public McNativeBridgeEventHandler(McNativeEventBus pluginManager, EventBus eventBus, BungeeCordPlayerManager playerManager,BungeeCordServerMap serverMap) {
         this.pluginManager = pluginManager;
         this.eventBus = eventBus;
         this.playerManager = playerManager;

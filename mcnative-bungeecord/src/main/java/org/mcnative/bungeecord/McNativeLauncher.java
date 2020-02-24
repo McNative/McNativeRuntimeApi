@@ -30,7 +30,7 @@ import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
-import org.mcnative.bungeecord.plugin.McNativeBungeePluginManager;
+import org.mcnative.bungeecord.plugin.McNativeEventBus;
 import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
@@ -57,9 +57,16 @@ public class McNativeLauncher {
         if(!McNativeProxyConfiguration.load(new JdkPrematicLogger(logger),new File("plugins/McNative/"))) return;
 
         BungeeCordServerMap serverMap = new BungeeCordServerMap();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected server map.");
+
         BungeeCordPluginManager pluginManager = new BungeeCordPluginManager();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
+
         BungeeCordPlayerManager playerManager = new BungeeCordPlayerManager();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised player manager.");
+
         BungeeCordCommandManager commandManager = new BungeeCordCommandManager(pluginManager,ProxyServer.getInstance().getPluginManager());
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected command manager.");
 
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
         BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new BungeecordProxyNetwork(localService), localService);
@@ -70,25 +77,13 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
 
 
-        //Override plugin manager
-        PluginManager originalPluginManager = proxy.getPluginManager();
-        pluginManager.inject(originalPluginManager);
-        McNativeBungeePluginManager newPluginManager = new McNativeBungeePluginManager(originalPluginManager,localService.getEventBus());
-        pluginManager.setOriginal(newPluginManager);
-        ReflectionUtil.changeFieldValue(proxy,"pluginManager",newPluginManager);
-        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised plugin manager.");
+        McNativeEventBus eventBus = new McNativeEventBus(localService.getEventBus());
+        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected event bus.");
 
-        new McNativeBridgeEventHandler(newPluginManager,localService.getEventBus(),playerManager,serverMap);
+        new McNativeBridgeEventHandler(eventBus,localService.getEventBus(),playerManager,serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bungeecord events.");
 
-
-        //Override command manager
-        commandManager.inject();
-        logger.info(McNative.CONSOLE_PREFIX+"McNative initialised command manager.");
-
-
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
     }
 
     @SuppressWarnings("unchecked")
