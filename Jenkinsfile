@@ -143,6 +143,7 @@ pipeline {
                             cd ..
                             cd ..
                             if [ -d "tempDevelopment" ]; then rm -Rf tempDevelopment; fi
+
                             """
                         }
                     }
