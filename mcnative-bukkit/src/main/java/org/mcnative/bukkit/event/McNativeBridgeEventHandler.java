@@ -173,6 +173,7 @@ public class McNativeBridgeEventHandler {
 
     private void handleLogoutEvent(McNativeHandlerList handler, PlayerQuitEvent event){
         Player player = playerManager.getMappedPlayer(event.getPlayer());
+        playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
 
         BukkitQuitEvent mcnativeEvent = new BukkitQuitEvent(event,player);
         handler.callEvents(mcnativeEvent,event);

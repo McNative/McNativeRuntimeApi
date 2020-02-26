@@ -88,11 +88,8 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public PermissionHandler getPermissionHandler() {
-        System.out.println("GETTING PERM HANDLER");
         if(permissionHandler == null){
             permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);
-            System.out.println("NEW HANDLER "+permissionHandler.getClass());
-            System.out.println("Data: "+(!permissibleInjected && !(permissionHandler instanceof BukkitPermissionHandler)));
             if(!permissibleInjected && !(permissionHandler instanceof BukkitPermissionHandler)){
                 new McNativePermissible(original,this).inject();
                 permissibleInjected = true;

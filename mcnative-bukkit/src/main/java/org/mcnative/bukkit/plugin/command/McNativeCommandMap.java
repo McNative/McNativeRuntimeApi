@@ -47,7 +47,6 @@ public class McNativeCommandMap extends SimpleCommandMap {
         super(Bukkit.getServer());
         this.commandManager = commandManager;
         this.original = original;
-        System.out.println("NEW COMMAND MAP "+original);
         this.commands = (Map<String, Command>) ReflectionUtil.getFieldValue(original,"knownCommands");
     }
 
@@ -117,7 +116,6 @@ public class McNativeCommandMap extends SimpleCommandMap {
 
     @Override
     public Collection<Command> getCommands() {
-        System.out.println("GET COMMANDS");
         return original.getCommands();
     }
 

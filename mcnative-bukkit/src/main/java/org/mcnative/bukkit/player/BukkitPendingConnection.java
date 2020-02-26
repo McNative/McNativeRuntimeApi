@@ -170,5 +170,6 @@ public class BukkitPendingConnection implements PendingConnection {
         this.channel.pipeline().addBefore("decoder","mcnative-packet-rewrite-decoder"
                 ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
+
     }
 }
