@@ -47,7 +47,7 @@
         <dependency.pretronic.libraries.utility>1.0.9-SNAPSHOT</dependency.pretronic.libraries.utility>
         <dependency.pretronic.libraries.document>1.0.9-SNAPSHOT</dependency.pretronic.libraries.document>
         <dependency.pretronic.libraries.concurrent>1.0.9-SNAPSHOT</dependency.pretronic.libraries.concurrent>
-        <dependency.pretronic.libraries.command>1.0.9-SNAPSHOT</dependency.pretronic.libraries.command>
+        <dependency.pretronic.libraries.command>1.0.11-SNAPSHOT</dependency.pretronic.libraries.command>
         <dependency.pretronic.libraries.event>1.0.9-SNAPSHOT</dependency.pretronic.libraries.event>
         <dependency.pretronic.libraries.plugin>1.0.9-SNAPSHOT</dependency.pretronic.libraries.plugin>
         <dependency.pretronic.libraries.dependency>1.0.9-SNAPSHOT</dependency.pretronic.libraries.dependency>

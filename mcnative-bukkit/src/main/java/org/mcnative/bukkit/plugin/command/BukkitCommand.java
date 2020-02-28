@@ -56,7 +56,6 @@ public class BukkitCommand implements Command {
         return original;
     }
 
-
     @Override
     public ObjectOwner getOwner() {
         return owner;

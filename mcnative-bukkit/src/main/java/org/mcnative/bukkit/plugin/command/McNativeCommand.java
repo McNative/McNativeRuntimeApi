@@ -19,6 +19,8 @@
 
 package org.mcnative.bukkit.plugin.command;
 
+import net.prematic.libraries.command.Completable;
+import net.prematic.libraries.message.bml.variable.VariableSet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,14 +28,19 @@ import org.bukkit.entity.Player;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.MessageComponent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
+//@Todo create message fallback component
 public class McNativeCommand extends Command {
 
     private final net.prematic.libraries.command.command.Command original;
+    private final MessageComponent<?> noPermissionMessage;
 
     public McNativeCommand(net.prematic.libraries.command.command.Command original) {
         super(original.getConfiguration().getName()
@@ -41,6 +48,8 @@ public class McNativeCommand extends Command {
                 , ""
                 , Arrays.asList(original.getConfiguration().getAliases()));
         this.original = original;
+
+        this.noPermissionMessage = Text.ofMessageKey("mcnative.command.nopermission");
     }
 
     public net.prematic.libraries.command.command.Command getOriginal() {
@@ -65,21 +74,39 @@ public class McNativeCommand extends Command {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        return Collections.emptyList();
+        if(original instanceof Completable){
+            Collection<String> result = ((Completable) original).complete(getMappedSender(sender),args);
+            if(result != null){
+                if(result instanceof List) return (List<String>) original;
+                else return new ArrayList<>(result);
+            }
+        }
+        return super.tabComplete(sender, alias, args);
     }
 
     //@Todo implement custom permission messages
 
     @Override
     public boolean testPermission(CommandSender target) {
-        return super.testPermission(target);
+        boolean result = testPermissionSilent(target);
+        if(!result){
+            VariableSet variables = VariableSet.create()
+                    .add("command.name",original.getConfiguration().getName())
+                    .add("command.permission",original.getConfiguration().getPermission())
+                    .add("command.description",original.getConfiguration().getDescription())
+                    .add("sender.name",target.getName());
+
+        }
+        return result;
     }
 
     @Override
     public boolean testPermissionSilent(CommandSender target) {
-        return super.testPermissionSilent(target);
+        String permission = original.getConfiguration().getPermission();
+        return permission == null || target.hasPermission(original.getConfiguration().getPermission());
     }
 
     @Override

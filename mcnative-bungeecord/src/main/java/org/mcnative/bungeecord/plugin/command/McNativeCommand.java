@@ -23,11 +23,18 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
+import net.prematic.libraries.command.Completable;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
 
-public class McNativeCommand extends Command {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+public class McNativeCommand extends Command implements TabExecutor {
 
     private final net.prematic.libraries.command.command.Command original;
 
@@ -44,15 +51,31 @@ public class McNativeCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        net.prematic.libraries.command.sender.CommandSender mapped;
-        if(sender.equals(ProxyServer.getInstance().getConsole())){
-            mapped = McNative.getInstance().getConsoleSender();
-        }else if(sender instanceof ProxiedPlayer) {
-            mapped = ((BungeeCordPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((ProxiedPlayer) sender);
-        }else{
-            mapped = new MappedCommandSender(sender);
-        }
+        net.prematic.libraries.command.sender.CommandSender mapped = getMappedSender(sender);
         original.execute(mapped,strings);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if(original instanceof Completable){
+            Collection<String> result = ((Completable) original).complete(getMappedSender(sender),args);
+            if(result != null){
+                if(result instanceof List) return (List<String>) original;
+                else return new ArrayList<>(result);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private net.prematic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
+        if(sender.equals(ProxyServer.getInstance().getConsole())){
+            return McNative.getInstance().getConsoleSender();
+        }else if(sender instanceof ProxiedPlayer) {
+            return ((BungeeCordPlayerManager) McNative.getInstance().getPlayerManager()).getMappedPlayer((ProxiedPlayer) sender);
+        }else{
+            return new MappedCommandSender(sender);
+        }
     }
 
     public final static class MappedCommandSender implements CustomCommandSender {
