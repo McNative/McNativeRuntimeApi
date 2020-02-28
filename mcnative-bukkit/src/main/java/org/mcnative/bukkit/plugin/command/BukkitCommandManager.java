@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.plugin.command;
 
+import net.prematic.libraries.command.NotFoundHandler;
 import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.command.NotFoundHandler;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.utility.Iterators;

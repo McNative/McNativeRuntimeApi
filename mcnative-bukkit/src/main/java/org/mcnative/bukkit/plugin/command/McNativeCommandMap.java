@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.plugin.command;
 
-import net.prematic.libraries.command.command.NotFoundHandler;
+import net.prematic.libraries.command.NotFoundHandler;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
