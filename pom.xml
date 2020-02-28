@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.12-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -56,7 +56,7 @@
         <dependency.pretronic.libraries.synchronisation>1.0.9-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>1.0.9-SNAPSHOT</dependency.pretronic.libraries.logging>
 
-        <dependency.pretronic.databasequery>1.0.3-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.databasequery>1.0.5-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
 
