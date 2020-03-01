@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.17-SNAPSHOT</version>
+    <version>1.0.21-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -47,11 +47,11 @@
         <dependency.pretronic.libraries.utility>1.0.11-SNAPSHOT</dependency.pretronic.libraries.utility>
         <dependency.pretronic.libraries.document>1.0.11-SNAPSHOT</dependency.pretronic.libraries.document>
         <dependency.pretronic.libraries.concurrent>1.0.11-SNAPSHOT</dependency.pretronic.libraries.concurrent>
-        <dependency.pretronic.libraries.command>1.0.11-SNAPSHOT</dependency.pretronic.libraries.command>
+        <dependency.pretronic.libraries.command>1.0.18-SNAPSHOT</dependency.pretronic.libraries.command>
         <dependency.pretronic.libraries.event>1.0.11-SNAPSHOT</dependency.pretronic.libraries.event>
         <dependency.pretronic.libraries.plugin>1.0.11-SNAPSHOT</dependency.pretronic.libraries.plugin>
         <dependency.pretronic.libraries.dependency>1.0.11-SNAPSHOT</dependency.pretronic.libraries.dependency>
-        <dependency.pretronic.libraries.caching>1.0.9-SNAPSHOT</dependency.pretronic.libraries.caching>
+        <dependency.pretronic.libraries.caching>1.0.16-SNAPSHOT</dependency.pretronic.libraries.caching>
         <dependency.pretronic.libraries.resourceloader>1.0.11-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
         <dependency.pretronic.libraries.synchronisation>1.0.11-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>1.0.11-SNAPSHOT</dependency.pretronic.libraries.logging>
