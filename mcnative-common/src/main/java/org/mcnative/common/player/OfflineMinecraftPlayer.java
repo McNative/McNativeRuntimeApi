@@ -23,7 +23,6 @@ import net.prematic.libraries.document.Document;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;
-import org.mcnative.common.serviceprovider.permission.PermissionGroup;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionResult;
@@ -176,7 +175,7 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
 
     @Override
-    public Collection<PermissionGroup> getGroups() {
+    public Collection<String> getGroups() {
         return getPermissionHandler().getGroups();
     }
 

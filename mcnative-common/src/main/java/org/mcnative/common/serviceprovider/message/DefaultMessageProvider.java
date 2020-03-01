@@ -213,7 +213,7 @@ public class DefaultMessageProvider implements MessageProvider {
                 start = i;
             }else if(content[i] == '}' && start != -1){
                 String key = message.substring(start+1,i);
-                builder.append(pack.getMessage(key));
+                builder.append(replaceInternalVariables(pack,pack.getMessage(key)));
                 start = -1;
             }else if(start == -1){
                 builder.append(content[i]);

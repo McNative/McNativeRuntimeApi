@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.02.20, 14:19
+ * @since 01.03.20, 15:43
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,22 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.permission;
+package org.mcnative.bungeecord.player.permission;
 
-import net.prematic.libraries.utility.Iterators;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionResult;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.BiFunction;
 
-//@Todo implement design workaround and crate vault integration
-public class BukkitPermissionHandler implements PermissionHandler {
+public class BungeeCordPermissionHandler implements PermissionHandler {
 
-    private final Player player;
+    private final ProxiedPlayer player;
 
-    public BukkitPermissionHandler(Player player) {
+    public BungeeCordPermissionHandler(ProxiedPlayer player) {
         this.player = player;
     }
 
@@ -47,7 +43,7 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public boolean setCached(boolean b) {
-        return false;
+        return false;//Unused
     }
 
     @Override
@@ -57,37 +53,37 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public Collection<String> getGroups() {
-        return Collections.emptyList();
+        return player.getGroups();
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return Iterators.map(player.getEffectivePermissions(), PermissionAttachmentInfo::getPermission);
+        return player.getPermissions();
     }
 
     @Override
     public Collection<String> getEffectivePermissions() {
-        return getPermissions();
+        return player.getPermissions();
     }
 
     @Override
     public PlayerDesign getDesign() {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer forPlayer) {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return player.isPermissionSet(permission);
+        return player.getPermissions().contains(permission);
     }
 
     @Override
     public boolean isPermissionAssigned(String permission) {
-        return player.isPermissionSet(permission);
+        return player.getPermissions().contains(permission);
     }
 
     @Override
@@ -102,36 +98,36 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public void setPermission(String permission, boolean allowed) {
-        throw new UnsupportedOperationException("Not supported");
+        player.setPermission(permission,allowed);
     }
 
     @Override
     public void unsetPermission(String permission) {
-        throw new UnsupportedOperationException("Not supported");
+        player.getPermissions().remove(permission);
     }
 
     @Override
     public void addGroup(String name) {
-        throw new UnsupportedOperationException("Not supported");
+        player.addGroups(name);
     }
 
     @Override
     public void removeGroup(String name) {
-        throw new UnsupportedOperationException("Not supported");
+        player.removeGroups(name);
     }
 
     @Override
     public boolean isOperator() {
-        return player.isOp();
+        throw new UnsupportedOperationException("BungeeCord does not support operators");
     }
 
     @Override
     public void setOperator(boolean operator) {
-        player.setOp(operator);
+        throw new UnsupportedOperationException("BungeeCord does not support operators");
     }
 
     @Override
     public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
     }
 }

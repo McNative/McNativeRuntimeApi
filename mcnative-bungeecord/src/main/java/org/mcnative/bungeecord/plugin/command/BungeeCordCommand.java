@@ -26,14 +26,12 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import net.prematic.libraries.command.command.Command;
 import net.prematic.libraries.command.command.configuration.CommandConfiguration;
 import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.plugin.CustomCommandSender;
 import org.mcnative.common.serviceprovider.permission.Permissable;
-import org.mcnative.common.serviceprovider.permission.PermissionGroup;
 import org.mcnative.common.text.Text;
 
 import java.util.Collection;
@@ -130,7 +128,7 @@ public class BungeeCordCommand implements Command {
 
         @Override
         public Collection<String> getGroups() {
-            if(original instanceof Permissable) return Iterators.map(((Permissable) original).getGroups(), PermissionGroup::getName);
+            if(original instanceof Permissable) return ((Permissable) original).getGroups();
             else return Collections.emptyList();
         }
 

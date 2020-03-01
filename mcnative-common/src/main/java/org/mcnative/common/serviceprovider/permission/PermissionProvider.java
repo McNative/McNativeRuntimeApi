@@ -31,7 +31,11 @@ public interface PermissionProvider {
 
     PermissionHandler getPlayerHandler(MinecraftPlayer player);
 
-    PermissionGroup createGroup(String name);
+    boolean createGroup(String name);
 
     boolean deleteGroup(String name);
+
+    void setGroupPermission(String group, String permission, boolean allowed);
+
+    void unsetGroupPermission(String group,String permission);
 }

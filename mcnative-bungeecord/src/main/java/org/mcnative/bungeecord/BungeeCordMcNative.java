@@ -32,6 +32,7 @@ import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
 import net.prematic.libraries.utility.Validate;
+import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.common.LocalService;
@@ -46,6 +47,7 @@ import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.io.File;
 import java.util.UUID;
@@ -161,6 +163,7 @@ public class BungeeCordMcNative implements McNative {
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
+        pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

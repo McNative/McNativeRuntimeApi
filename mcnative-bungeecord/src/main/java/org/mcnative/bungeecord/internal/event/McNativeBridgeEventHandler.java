@@ -36,6 +36,7 @@ import org.mcnative.bungeecord.internal.event.server.BungeeServerSwitchEvent;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.player.BungeePendingConnection;
 import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
+import org.mcnative.bungeecord.player.permission.BungeeCordPermissionHandler;
 import org.mcnative.bungeecord.plugin.McNativeEventBus;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
@@ -306,7 +307,9 @@ public final class McNativeBridgeEventHandler {
             sender = new McNativeCommand.MappedCommandSender(event.getSender());
         }
 
-        if(handler != null) event.setHasPermission(handler.hasPermission(event.getPermission()));
+        if(handler != null && !(handler instanceof BungeeCordPermissionHandler)){
+            event.setHasPermission(handler.hasPermission(event.getPermission()));
+        }
 
         BungeePermissionCheckEvent mcNativeEvent = new BungeePermissionCheckEvent(event,sender,handler);
         eventBus.callEvents(PermissionCheckEvent.class,event,mcNativeEvent);

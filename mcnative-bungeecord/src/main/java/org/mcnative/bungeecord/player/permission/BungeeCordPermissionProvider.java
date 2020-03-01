@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 22.02.20, 14:19
+ * @since 01.03.20, 15:44
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,48 +17,52 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.permission;
+package org.mcnative.bungeecord.player.permission;
 
+import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.util.Collection;
 
-public class BukkitPermissionProvider implements PermissionProvider {
+public class BungeeCordPermissionProvider implements PermissionProvider {
 
     @Override
     public Collection<MinecraftPlayer> getOperators() {
-        return null;
+        throw new UnsupportedOperationException("BungeeCord does not support operators");
     }
 
     @Override
     public Collection<String> getGroups() {
-        return null;
+        throw new UnsupportedOperationException("BungeeCord does not support listing permission groups");
     }
 
     @Override
     public PermissionHandler getPlayerHandler(MinecraftPlayer player) {
-        return null;
+        if(player instanceof BungeeProxiedPlayer){
+            return new BungeeCordPermissionHandler(((BungeeProxiedPlayer) player).getOriginal());
+        }
+        throw new UnsupportedOperationException("BungeeCord does not support offline permissions");
     }
 
     @Override
     public boolean createGroup(String name) {
-        throw new IllegalArgumentException("Bukkit permission provides does not support permission groups");
+        throw new UnsupportedOperationException("BungeeCord permission groups are only configure able");
     }
 
     @Override
     public boolean deleteGroup(String name) {
-        throw new IllegalArgumentException("Bukkit permission provides does not support permission groups");
+        throw new UnsupportedOperationException("BungeeCord permission groups are only configure able");
     }
 
     @Override
     public void setGroupPermission(String group, String permission, boolean allowed) {
-        throw new IllegalArgumentException("Bukkit permission provides does not support permission groups");
+        throw new UnsupportedOperationException("BungeeCord permission groups are only configure able");
     }
 
     @Override
     public void unsetGroupPermission(String group, String permission) {
-        throw new IllegalArgumentException("Bukkit permission provides does not support permission groups");
+        throw new UnsupportedOperationException("BungeeCord permission groups are only configure able");
     }
 }

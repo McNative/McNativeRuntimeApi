@@ -70,7 +70,13 @@ public class McNativeCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String label, String[] arguments) {
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).async()
-                .execute(() -> original.execute(getMappedSender(sender),arguments));
+                .execute(() -> {
+                    try {
+                        original.execute(getMappedSender(sender),arguments);
+                    }catch (Exception exception){//@Todo optimize error message
+                        exception.printStackTrace();
+                    }
+                });
         return true;
     }
 

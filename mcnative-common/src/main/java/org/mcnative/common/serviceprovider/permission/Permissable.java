@@ -29,7 +29,7 @@ public interface Permissable {
 
     PermissionHandler getPermissionHandler();
 
-    Collection<PermissionGroup> getGroups();
+    Collection<String> getGroups();
 
     Collection<String> getPermissions();
 
