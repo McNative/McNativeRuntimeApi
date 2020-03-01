@@ -39,6 +39,7 @@ import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -51,8 +52,6 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
 
     private final Executor executor;
     private final Map<UUID,CompletableFuture<Document>> resultListeners;
-
-    private Player transport;
 
     public PluginMessageGateway(Executor executor) {
         this.executor = executor;
@@ -67,13 +66,13 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
 
     @Override
     public String getTechnology() {
-        return "Plugin Messages";
+        return "Plugin Messaging";
     }
 
     @Override
     public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
-        byte[] data = writeData(channel,request,requestId,receiver.getUniqueId());
-        transport.sendPluginMessage(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST,data);
+        byte[] data = writeData(receiver.getUniqueId(),requestId,channel,request,true);
+        sendData(CHANNEL_NAME_REQUEST,data);
     }
 
     @Override
@@ -101,49 +100,80 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
         return result;
     }
 
-    private byte[] writeData(String channel, Document request,UUID requestId, UUID receiver) {
+    private byte[] writeData(UUID instance,UUID id,String channel, Document data,boolean request) {
         ByteBuf buffer = Unpooled.directBuffer();
-        MinecraftProtocolUtil.writeUUID(buffer,receiver);//Receiver
-        MinecraftProtocolUtil.writeString(buffer,channel);//Channel
-        MinecraftProtocolUtil.writeUUID(buffer,requestId);//RequestId
-        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,request,false);//Request
-        byte[] data = new byte[buffer.readableBytes()];
-        buffer.readBytes(data);
+        MinecraftProtocolUtil.writeUUID(buffer,instance);//Destination or Source
+        MinecraftProtocolUtil.writeUUID(buffer,id);//Id
+
+        if(request) MinecraftProtocolUtil.writeString(buffer,channel);//Channel
+
+        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,data,false);//Data
+        byte[] data0 = new byte[buffer.readableBytes()];
+        buffer.readBytes(data0);
         buffer.release();
-        return data;
+        return data0;
     }
 
     @Override
     public void onPluginMessageReceived(String tag, Player unused0, byte[] data) {
         ByteBuf buffer = Unpooled.copiedBuffer(data);
-        UUID senderId = MinecraftProtocolUtil.readUUID(buffer);
-        String channel = MinecraftProtocolUtil.readString(buffer);
-        UUID requestId = MinecraftProtocolUtil.readUUID(buffer);
-        Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
 
         if(tag.equals(CHANNEL_NAME_REQUEST)){
+            UUID senderId = MinecraftProtocolUtil.readUUID(buffer);
+            UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
+            String channel = MinecraftProtocolUtil.readString(buffer);
+
             MessagingChannelListener listener = McNative.getInstance().getLocal().getMessageMessageChannelListener(channel);
             if(listener != null){
                 MinecraftServer sender = McNative.getInstance().getNetwork().getServer(senderId);
-                Document result = listener.onMessageReceive(sender,requestId,document);
+                Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                Document result = listener.onMessageReceive(sender,identifier,document);
                 if(result != null){
-                    byte[] response = writeData(channel,result,requestId,senderId);
-                    sender.sendData(CHANNEL_NAME_RESPONSE,response);
+                    byte[] response = writeData(senderId,identifier,channel,result,false);
+                    unused0.sendPluginMessage(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE,response);
                 }
             }
         }else if(tag.equals(CHANNEL_NAME_RESPONSE)){
-            CompletableFuture<Document> resultListener = resultListeners.get(requestId);
-            if(resultListener != null) resultListener.complete(document);
+            UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
+            CompletableFuture<Document> resultListener = resultListeners.remove(identifier);
+            if(resultListener != null){
+                Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                resultListener.complete(document);
+            }
         }
-
         buffer.release();
     }
 
+    public void sendData(String channel, byte[] data){
+        Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
+
+        if(iterator.hasNext()){
+            iterator.next().sendPluginMessage(McNativeLauncher.getPlugin(),channel,data);
+        }else{
+            throw new UnsupportedOperationException("The McNative plugin messaging gateway needs at least one player to communicate with the proxy server");
+        }
+    }
+
+
    /*
-    ToClient
-        UUID | Sender
+    ToProxy - Request
+        UUID | Destination
+        UUID | Id
         String | Channel
-        UUID | Request Id
+        Document | Request
+     ToServer - Request
+        UUID sender
+        UUID | Id
+        String | Channel
+        Document | Request
+
+
+     ToProxy - Response
+        UUID | Destination
+        UUID | Id
+        Document | Request
+     ToServer - Response
+        UUID | Id
         Document | Request
     */
 }

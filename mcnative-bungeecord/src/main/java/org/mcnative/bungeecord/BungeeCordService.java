@@ -211,7 +211,7 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public void registerMessagingChannel(String channel, Plugin<?> owner, MessagingChannelListener listener) {
-        Validate.notNull(channel,owner,listener);
+        Validate.notNull(channel,listener);//@Todo validate owner
         if(getMessageMessageChannelListener(channel) != null) throw new IllegalArgumentException("Message channel "+channel+" already in use");
         this.messageListeners.add(new MessageEntry(channel,owner,listener));
     }

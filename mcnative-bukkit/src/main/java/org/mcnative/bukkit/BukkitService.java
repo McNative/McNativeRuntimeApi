@@ -191,7 +191,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public void registerMessagingChannel(String name, Plugin<?> owner, MessagingChannelListener listener) {
-        Validate.notNull(name,owner,listener);
+        Validate.notNull(name,listener);//@Todo validate owner
         if(getMessageMessageChannelListener(name) != null) throw new IllegalArgumentException("Message channel "+name+" already in use");
         this.messageListeners.add(new MessageEntry(name,owner,listener));
     }

@@ -27,12 +27,14 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
+import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.common.McNative;
+import org.mcnative.common.network.Network;
 
 import java.io.File;
 import java.util.List;
@@ -65,7 +67,8 @@ public class McNativeLauncher {
         BukkitPlayerManager playerManager = new BukkitPlayerManager();
 
         BukkitService localService = new BukkitService(commandManager,playerManager,eventBus);
-        BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,null);
+        Network network = loadNetwork();
+        BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,network);
         McNative.setInstance(instance);
         instance.registerDefaultProviders();
 
@@ -78,6 +81,15 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+
+        Test.test();
+    }
+
+    private static Network loadNetwork(){
+        if(!Bukkit.getOnlineMode()){//@Todo add configuration
+            return new BungeeCordProxyNetwork();
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
