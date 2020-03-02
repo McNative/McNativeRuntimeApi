@@ -266,6 +266,11 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     }
 
     @Override
+    public void sendData(String channel, byte[] data, boolean queued) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
     public String getName() {
         return Bukkit.getName();
     }

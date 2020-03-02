@@ -33,12 +33,24 @@ import java.util.Set;
 
 public class Text {
 
+    public static TextComponent EMPTY = of("");
+
+    public static TextComponent SPACE = of(" ");
+
+    public static TextComponent NEW_LINE = of("\n");
+
+
+
     public static final char FORMAT_CHAR = '\u00A7';
     public static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
     public static final char DEFAULT_ALTERNATE_COLOR_CHAR = '&';
 
     public static TextBuilder newBuilder(){
         return new TextBuilder();
+    }
+
+    public static GroupMessageComponent newGroup(){
+        return new GroupMessageComponent();
     }
 
     public static TextComponent of(String text){
