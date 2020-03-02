@@ -81,8 +81,6 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
-        Test.test();
     }
 
     private static Network loadNetwork(){

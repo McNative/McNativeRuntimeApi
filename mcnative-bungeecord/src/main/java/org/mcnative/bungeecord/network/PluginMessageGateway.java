@@ -46,20 +46,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-/*
-Request
-    ToProxy
-        UUID | Receiver
-        String | Channel
-        UUID | Request Id
-        Document | Request
-    ToClient
-        UUID | Sender
-        String | Channel
-        UUID | Request Id
-        Document | Request
-
- */
 public class PluginMessageGateway implements MessagingProvider,Listener {
 
     private final String CHANNEL_NAME_REQUEST = "mcnative:request";
@@ -84,6 +70,11 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
     @Override
     public String getTechnology() {
         return "Plugin Messages";
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return true;
     }
 
     @Override

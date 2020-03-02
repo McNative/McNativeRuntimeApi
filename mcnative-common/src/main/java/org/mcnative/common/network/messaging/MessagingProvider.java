@@ -29,6 +29,8 @@ public interface MessagingProvider {
 
     String getTechnology();
 
+    boolean isAvailable();
+
     default void sendMessage(NetworkIdentifier identifier, String channel, Document request){
         sendMessage(identifier, channel, request,UUID.randomUUID());
     }

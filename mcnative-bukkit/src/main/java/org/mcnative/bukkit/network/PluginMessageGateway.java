@@ -70,6 +70,11 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
     }
 
     @Override
+    public boolean isAvailable() {
+        return !Bukkit.getOnlinePlayers().isEmpty();
+    }
+
+    @Override
     public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
         byte[] data = writeData(receiver.getUniqueId(),requestId,channel,request,true);
         sendData(CHANNEL_NAME_REQUEST,data);

@@ -90,8 +90,6 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bungeecord events.");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
-        Test.test();
     }
 
     @SuppressWarnings("unchecked")
