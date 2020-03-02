@@ -83,7 +83,9 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
             UUID sender = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId();
             byte[] data = writeData(sender,requestId,channel,request);
             for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
-                server.sendData(CHANNEL_NAME_REQUEST,data);
+                if(server.getOnlineCount() > 0){
+                    server.sendData(CHANNEL_NAME_REQUEST,data);
+                }
             }
         }else throw new UnsupportedOperationException("Network identifier is not supported");
     }

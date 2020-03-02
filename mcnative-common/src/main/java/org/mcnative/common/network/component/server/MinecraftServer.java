@@ -47,6 +47,10 @@ public interface MinecraftServer extends ConnectableNetworkComponent {
     CompletableFuture<ServerStatusResponse> pingAsync();
 
 
-    void sendData(String channel, byte[] data);
+    default void sendData(String channel, byte[] data){
+        sendData(channel, data,false);
+    }
+
+    void sendData(String channel, byte[] data, boolean queued);
 
 }

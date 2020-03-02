@@ -111,8 +111,8 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
     }
 
     @Override
-    public void sendData(String channel, byte[] data) {
-        original.sendData(channel, data);
+    public void sendData(String channel, byte[] data,boolean queued) {
+        original.sendData(channel, data,queued);
     }
 
     @Override
