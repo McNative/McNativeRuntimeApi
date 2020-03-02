@@ -55,6 +55,7 @@ import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class BungeeCordMcNative implements McNative {
 
@@ -138,6 +139,11 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
+    public ExecutorService getExecutorService() {
+        return GeneralUtil.getDefaultExecutorService();
+    }
+
+    @Override
     public boolean isNetworkAvailable() {
         return true;
     }
@@ -168,7 +174,7 @@ public class BungeeCordMcNative implements McNative {
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
-        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(GeneralUtil.getDefaultExecutorService(),serverMap));
+        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService(),serverMap));
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

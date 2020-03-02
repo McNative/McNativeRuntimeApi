@@ -49,6 +49,7 @@ import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 public class BukkitMcNative implements McNative {
 
@@ -130,6 +131,11 @@ public class BukkitMcNative implements McNative {
     }
 
     @Override
+    public ExecutorService getExecutorService() {
+        return GeneralUtil.getDefaultExecutorService();
+    }
+
+    @Override
     public boolean isNetworkAvailable() {
         return network != null;
     }
@@ -159,7 +165,7 @@ public class BukkitMcNative implements McNative {
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BukkitPermissionProvider());
-        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(GeneralUtil.getDefaultExecutorService()));
+        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService()));
     }
 
 }
