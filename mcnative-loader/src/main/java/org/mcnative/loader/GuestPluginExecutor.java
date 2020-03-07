@@ -131,6 +131,8 @@ public class GuestPluginExecutor {
             if(resourceLoader.isLatestVersion()){
                 logger.info("(Resource-Loader) "+name+" "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
             }else{
+                info.setDownloadUrl(replaceLoaderVariables(loader,loader.getString("downloadUrl"),latest));
+
                 logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName()+" - "+latest.getBuild());
                 try{
                     resourceLoader.download(latest);
