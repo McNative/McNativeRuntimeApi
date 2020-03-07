@@ -136,7 +136,7 @@ pipeline {
                             mkdir tempDevelopment
                             cd tempDevelopment/
                             git clone --single-branch --branch development $PROJECT_SSH
-                            
+
                             cd $PROJECT_NAME/
                             mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version-SNAPSHOT
 
@@ -153,8 +153,13 @@ pipeline {
                     int buildNumber = env.BUILD_NUMBER;
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                         httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
-                        responseHandle: 'NONE', url: "https://192.168.1.35:44367/resource/$RESOURCE_ID/versions/create",
-                        requestBody: "{\"Name\":\"$VERSION\", \"Qualifier\":\"SNAPSHOT\", \"BuildNumber\":$buildNumber}")
+                        responseHandle: 'NONE',
+                        url: "https://192.168.1.35:44367/v1/resource/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
+
+                    httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
+                         httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
+                         responseHandle: 'NONE', uploadFile: "**/target/mcnative-bungeecord-$VERSION.jar",
+                         url: "https://192.168.1.35:44367/v1/resource/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord");
                 }
             }
         }
