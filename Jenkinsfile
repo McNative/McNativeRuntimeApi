@@ -150,6 +150,9 @@ pipeline {
                             """
                         }
                     }
+
+
+
                     int buildNumber = env.BUILD_NUMBER;
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                         httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
