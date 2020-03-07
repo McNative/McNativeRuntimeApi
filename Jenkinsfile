@@ -158,6 +158,8 @@ pipeline {
                         url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
 
 
+
+
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                          httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
                          multipartName: 'file',
