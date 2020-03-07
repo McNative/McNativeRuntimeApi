@@ -160,7 +160,7 @@ pipeline {
 
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                          httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
-                         multipartName: 'mcnative-bungeecord',
+                         multipartName: 'file',
                          responseHandle: 'NONE',
                          uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
                          url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
