@@ -61,36 +61,57 @@ public class McNativeBuildMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
+        System.out.println("DEBUG POSITION 0");
         File sourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
         File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
         File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
+
+        System.out.println("DEBUG POSITION 1");
 
         project.addCompileSourceRoot(sourceDirectory.getPath());
 
         this.manifest.createManifestFile(manifestFile);
 
+        System.out.println("DEBUG POSITION 2");
+
         sourceDirectory.mkdirs();
         resourceDirectory.mkdirs();
+
+        System.out.println("DEBUG POSITION 3");
 
         String basePackage = project.getGroupId()+".loader";
         ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
                 ,new File(mcnativeLoaderLocation),sourceDirectory);
 
+        System.out.println("DEBUG POSITION 4");
+
         McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
                 ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
+
+        System.out.println("DEBUG POSITION 5");
 
         installer.downloadSource();
         creator.downloadSource();
 
+        System.out.println("DEBUG POSITION 6");
+
         installer.unpackLoader();
         creator.unpackLoader();
 
+        System.out.println("DEBUG POSITION 7");
+
         creator.renamePackages();
+
+        System.out.println("DEBUG POSITION 8");
+
         creator.createManifests(loader,manifest);
+
+        System.out.println("DEBUG POSITION 9");
 
         try {
             FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
         } catch (IOException e) {
+            e.printStackTrace();
             throw new MojoFailureException(e.getMessage());
         }
     }
