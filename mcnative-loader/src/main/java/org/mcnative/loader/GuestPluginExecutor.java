@@ -29,6 +29,9 @@ import net.prematic.libraries.plugin.description.PluginDescription;
 import net.prematic.libraries.plugin.loader.DefaultPluginLoader;
 import net.prematic.libraries.plugin.loader.PluginLoader;
 import net.prematic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
+import net.prematic.libraries.resourceloader.ResourceInfo;
+import net.prematic.libraries.resourceloader.ResourceLoader;
+import net.prematic.libraries.resourceloader.VersionInfo;
 import org.mcnative.common.McNative;
 
 import java.io.File;
@@ -39,29 +42,45 @@ import java.util.logging.Logger;
 
 public class GuestPluginExecutor {
 
+    private final File location;
+    private final Logger logger;
     private final RuntimeEnvironment<McNative> environment;
-    private final PluginLoader loader;
+    private PluginLoader loader;
 
     public GuestPluginExecutor(File location, Logger logger, String runtimeName) {
+        this.location = location;
+        this.logger = logger;
         this.environment = new RuntimeEnvironment<>(runtimeName, McNative.getInstance());
-        this.loader = setup(location,logger);
     }
 
-    private PluginLoader setup(File location,Logger logger){
+    public boolean install(){
         InputStream stream = getClass().getClassLoader().getResourceAsStream("mcnative.json");
         if(stream != null){
-            PluginDescription description = DefaultPluginDescription.create(
-                    McNative.getInstance().getPluginManager()
-                    , DocumentFileType.JSON.getReader().read(stream));
-            return new DefaultPluginLoader(McNative.getInstance().getPluginManager(),environment
-                    ,new JdkPrematicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
-                    ,location,description,false);
+            setupLoader(stream);
         }else{
-            return null;
+            InputStream streamLoader = getClass().getClassLoader().getResourceAsStream("mcnative-loader.json");
+            if(streamLoader == null){
+                logger.log(Level.SEVERE,"Invalid or corrupt mcnative plugin (mcnative.json or mcnative-loader.json is not available)");
+                return false;
+            }else{
+                try{
+                    Document loaderInfo = DocumentFileType.JSON.getReader().read(streamLoader);
+                    if(downloadResource(loaderInfo)){
+                        stream = getClass().getClassLoader().getResourceAsStream("mcnative.json");
+                        setupLoader(stream);
+                    }else{
+                        return false;
+                    }
+                }catch (Exception exception){
+                    logger.log(Level.SEVERE,String.format("Could not install plugin %s",exception.getMessage()));
+                    return false;
+                }
+            }
         }
+        return true;
     }
 
-    public boolean installDependencies(Logger logger){
+    public boolean installDependencies(){
         InputStream stream = loader.getClassLoader().getResourceAsStream("dependencies.json");
         if(stream == null) return true;
         Document data = DocumentFileType.JSON.getReader().read(stream);
@@ -74,6 +93,82 @@ public class GuestPluginExecutor {
             return false;
         }
         return true;
+    }
+
+    private void setupLoader(InputStream descriptionStream){
+        PluginDescription description = DefaultPluginDescription.create(
+                McNative.getInstance().getPluginManager()
+                , DocumentFileType.JSON.getReader().read(descriptionStream));
+        this.loader = new DefaultPluginLoader(McNative.getInstance().getPluginManager(),environment
+                ,new JdkPrematicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
+                ,location,description,false);
+    }
+
+    private boolean downloadResource(Document loader){
+        String name = loader.getString("plugin.name");
+
+        ResourceInfo info = new ResourceInfo(name,new File("plugins/McNative/lib/resources/"+name));
+        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl"),null));
+
+        ResourceLoader resourceLoader = new ResourceLoader(info);
+
+        VersionInfo current = resourceLoader.getCurrentVersion();
+        VersionInfo latest = null;
+
+        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl"),current));
+
+        try{
+            latest = resourceLoader.getLatestVersion();
+        }catch (Exception exception){
+            logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest version ("+exception.getMessage()+")");
+            if(current == null){
+                logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
+                return false;
+            }
+        }
+
+        if(latest != null){
+            if(resourceLoader.isLatestVersion()){
+                logger.info("(Resource-Loader) "+name+" "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
+            }else{
+                logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName()+" - "+latest.getBuild());
+                try{
+                    resourceLoader.download(latest);
+                    logger.info("(McNative-Loader) Successfully downloaded ");
+                }catch (Exception exception){
+                    if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                        logger.info("(McNative-Loader) download failed, shutting down");
+                        return false;
+                    }else{
+                        logger.info("(McNative-Loader) download failed, trying to start an older version");
+                    }
+                }
+            }
+        }
+
+        try{
+            ClassLoader classLoader = getClass().getClassLoader();
+            resourceLoader.loadReflected((URLClassLoader) classLoader);
+        }catch (Exception exception){
+            logger.log(Level.SEVERE,"(Resource-Loader) Could not load "+name+" ("+exception.getMessage()+")");
+            return false;
+        }
+
+        return true;
+    }
+
+    private String replaceLoaderVariables(Document loaderConfig,String input,VersionInfo versionInfo){
+        String output = input
+                .replace("{plugin.name}",loaderConfig.getString("plugin.name"))
+                .replace("{plugin.id}",loaderConfig.getString("plugin.id"))
+                .replace("{plugin.name}",loaderConfig.getString("plugin.name"));
+        if(versionInfo != null){
+            output = output
+                    .replace("{version.name}",versionInfo.getName())
+                    .replace("{version.qualifier}",versionInfo.getQualifier())
+                    .replace("{version.build}",String.valueOf(versionInfo.getBuild()));
+        }
+        return output;
     }
 
     public PluginLoader getLoader() {

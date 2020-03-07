@@ -40,8 +40,8 @@ import java.nio.file.Files;
 
 public class McNativeLoaderCreator {
 
-    private static final String MCNATIVE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/org/mcnative/mcnative-loader/${version}/mcnative-loader-${version}-sources.jar";
-    private static final String MCNATIVE_LOADER_BASE_NAME = "mcnative-loader-${version}.jar";
+    private static final String MCNATIVE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/org/mcnative/mcnative-loader/{version}/mcnative-loader-{version}-sources.jar";
+    private static final String MCNATIVE_LOADER_BASE_NAME = "mcnative-loader-{version}.jar";
     private static final String MCNATIVE_LOADER_BASE_PACKAGE = "org.mcnative.loader";
     private static final String MCNATIVE_LOADER_BASE_PATH = MCNATIVE_LOADER_BASE_PACKAGE.replace(".","/");
 
@@ -113,13 +113,18 @@ public class McNativeLoaderCreator {
     public void createManifests(LoaderConfiguration loaderConfiguration, McNativePluginManifest manifest){
         Document document = Document.newDocument(manifest);
         String loaderVersion;
-        if(loaderConfiguration != null && loaderConfiguration.getVersion() != null) loaderVersion = "Loader-"+loaderConfiguration.getVersion();
-        else loaderVersion = "Loader-"+manifest.getVersion().getName()+"-"+manifest.getVersion().getBuild();
+
+        if(loaderConfiguration != null && loaderConfiguration.getVersion() != null) loaderVersion = "Loader "+loaderConfiguration.getVersion();
+        else loaderVersion = "Loader "+manifest.getVersion().getName()+"-"+manifest.getVersion().getBuild();
 
         createBungeeCordManifest(document.copy(null),loaderVersion);
         createBukkitManifest(document.copy(null),loaderVersion);
 
-        if(loaderConfiguration != null) createLoaderInfo(loaderConfiguration,version);
+        if(loaderConfiguration != null){
+            if(loaderConfiguration.getVersion() == null) loaderConfiguration.setVersion(manifest.getVersion().getName());
+            loaderConfiguration.setPlugin(manifest);
+            createLoaderInfo(loaderConfiguration);
+        }
     }
 
     private void createBungeeCordManifest(Document document,String loaderVersion){
@@ -135,12 +140,10 @@ public class McNativeLoaderCreator {
         DocumentFileType.YAML.getWriter().write(new File(resourceDirectory,"plugin.yml"),document);
     }
 
-    private void createLoaderInfo(LoaderConfiguration loaderConfiguration, String version){
-        Document document = Document.newDocument();
-        document.set("version",version);
-        document.set("versionUrl",loaderConfiguration.getVersionUrl());
-        document.set("downloadUrl",loaderConfiguration.getDownloadUrl());
-        DocumentFileType.JSON.getWriter().write(new File(resourceDirectory,"mcnative-loader.json"),document);
+    private void createLoaderInfo(LoaderConfiguration loaderConfiguration){
+        DocumentFileType.JSON.getWriter()
+                .write(new File(resourceDirectory,"mcnative-loader.json")
+                ,Document.newDocument(loaderConfiguration));
     }
 
 }

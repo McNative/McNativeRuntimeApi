@@ -33,6 +33,8 @@ public class McNativePluginManifest {
     private String name;
     private String category;
 
+    private String id;
+
     @Parameter(required = true)
     private PluginVersion version;
 
@@ -48,6 +50,10 @@ public class McNativePluginManifest {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getCategory() {

@@ -23,6 +23,7 @@ import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.prematic.libraries.utility.Iterators;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
@@ -36,11 +37,14 @@ import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 public class BungeeCordProxyNetwork implements Network {
 
     private NetworkIdentifier localIdentifier;
+    private ProxyServer proxy;
+    private Collection<MinecraftServer> servers;
 
     @Override
     public String getTechnology() {
@@ -70,47 +74,50 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public NetworkIdentifier getIdentifier(String name) {
-        return null;
+        MinecraftServer server = getServer(name);
+        return server != null ? server.getIdentifier() : null;
     }
 
     @Override
     public Collection<ProxyServer> getProxies() {
-        return null;
+        return Collections.singleton(proxy);
     }
 
     @Override
     public ProxyServer getProxy(String name) {
-        return null;
+        return proxy.getName().equalsIgnoreCase(name) ? proxy : null;
     }
 
     @Override
     public ProxyServer getProxy(UUID uniqueId) {
-        return null;
+        return proxy.getIdentifier().getUniqueId().equals(uniqueId) ? proxy : null;
     }
 
     @Override
     public ProxyServer getProxy(InetSocketAddress address) {
-        return null;
+        return proxy.getAddress().equals(address) ? proxy: null;
     }
 
     @Override
     public Collection<MinecraftServer> getServers() {
-        return null;
+        return servers;
     }
 
     @Override
     public MinecraftServer getServer(String name) {
-        return null;
+        if(localIdentifier.getName().equalsIgnoreCase(name)) return (MinecraftServer) McNative.getInstance().getLocal();
+        else return Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name));
     }
 
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
-        return null;
+        if(localIdentifier.getUniqueId().equals(uniqueId)) return (MinecraftServer) McNative.getInstance().getLocal();
+        else return Iterators.findOne(this.servers, server -> server.getIdentifier().getUniqueId().equals(uniqueId));
     }
 
     @Override
     public MinecraftServer getServer(InetSocketAddress address) {
-        return null;
+        return Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
     }
 
     @Override
@@ -184,5 +191,10 @@ public class BungeeCordProxyNetwork implements Network {
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
 
+    }
+
+    public void requestServer(){
+        Document document = Document.newDocument();
+       // localIdentifier = document.get
     }
 }

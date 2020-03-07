@@ -31,7 +31,7 @@ import java.io.File;
 
 public class ResourceLoaderInstaller {
 
-    private static final String RESOURCE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/net/prematic/libraries/prematiclibraries-resourceloader/${version}/prematiclibraries-resourceloader-${version}-sources.jar";
+    private static final String RESOURCE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/net/prematic/libraries/prematiclibraries-resourceloader/{version}/prematiclibraries-resourceloader-{version}-sources.jar";
     private static final String RESOURCE_LOADER_BASE_NAME = "resource-loader-${version}.jar";
 
     private final Log log;
@@ -52,7 +52,7 @@ public class ResourceLoaderInstaller {
         log.info("Downloading Resource loader v"+version+".");
         HttpClient client = new HttpClient();
 
-        client.setUrl(RESOURCE_LOADER_URL.replace("${version}",this.version));
+        client.setUrl(RESOURCE_LOADER_URL.replace("{version}",this.version));
 
         HttpResult result = client.connect();
         if(result.getCode() == 200) result.save(location);

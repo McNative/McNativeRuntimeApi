@@ -20,6 +20,7 @@
 package org.mcnative.buildtool.maven.loader;
 
 import org.apache.maven.plugins.annotations.Parameter;
+import org.mcnative.buildtool.maven.McNativePluginManifest;
 
 public class LoaderConfiguration {
 
@@ -31,7 +32,7 @@ public class LoaderConfiguration {
     @Parameter(required = true)
     private String downloadUrl;
 
-    private boolean licensing = false;
+    private McNativePluginManifest plugin;
 
     public String getVersion() {
         return version;
@@ -45,7 +46,15 @@ public class LoaderConfiguration {
         return downloadUrl;
     }
 
-    public boolean isLicensing() {
-        return licensing;
+    public McNativePluginManifest getPlugin() {
+        return plugin;
+    }
+
+    public void setPlugin(McNativePluginManifest plugin) {
+        this.plugin = plugin;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
