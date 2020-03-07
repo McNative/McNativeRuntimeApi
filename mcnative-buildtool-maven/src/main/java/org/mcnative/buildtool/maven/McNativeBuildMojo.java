@@ -61,58 +61,64 @@ public class McNativeBuildMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
-        System.out.println("DEBUG POSITION 0");
-        File sourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
-        File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
-        File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
+        try{
+            System.out.println("DEBUG POSITION 0");
+            File sourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
+            File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
+            File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
 
-        System.out.println("DEBUG POSITION 1");
+            System.out.println("DEBUG POSITION 1");
 
-        project.addCompileSourceRoot(sourceDirectory.getPath());
+            project.addCompileSourceRoot(sourceDirectory.getPath());
 
-        this.manifest.createManifestFile(manifestFile);
+            System.out.println("DEBUG POSITION 1.5");
 
-        System.out.println("DEBUG POSITION 2");
+            this.manifest.createManifestFile(manifestFile);
 
-        sourceDirectory.mkdirs();
-        resourceDirectory.mkdirs();
+            System.out.println("DEBUG POSITION 2");
 
-        System.out.println("DEBUG POSITION 3");
+            sourceDirectory.mkdirs();
+            resourceDirectory.mkdirs();
 
-        String basePackage = project.getGroupId()+".loader";
-        ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
-                ,new File(mcnativeLoaderLocation),sourceDirectory);
+            System.out.println("DEBUG POSITION 3");
 
-        System.out.println("DEBUG POSITION 4");
+            String basePackage = project.getGroupId()+".loader";
+            ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
+                    ,new File(mcnativeLoaderLocation),sourceDirectory);
 
-        McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
-                ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
+            System.out.println("DEBUG POSITION 4");
 
-        System.out.println("DEBUG POSITION 5");
+            McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
+                    ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
 
-        installer.downloadSource();
-        creator.downloadSource();
+            System.out.println("DEBUG POSITION 5");
 
-        System.out.println("DEBUG POSITION 6");
+            installer.downloadSource();
+            creator.downloadSource();
 
-        installer.unpackLoader();
-        creator.unpackLoader();
+            System.out.println("DEBUG POSITION 6");
 
-        System.out.println("DEBUG POSITION 7");
+            installer.unpackLoader();
+            creator.unpackLoader();
 
-        creator.renamePackages();
+            System.out.println("DEBUG POSITION 7");
 
-        System.out.println("DEBUG POSITION 8");
+            creator.renamePackages();
 
-        creator.createManifests(loader,manifest);
+            System.out.println("DEBUG POSITION 8");
 
-        System.out.println("DEBUG POSITION 9");
+            creator.createManifests(loader,manifest);
 
-        try {
-            FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new MojoFailureException(e.getMessage());
+            System.out.println("DEBUG POSITION 9");
+
+            try {
+                FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new MojoFailureException(e.getMessage());
+            }
+        }catch (Exception exception){
+            exception.printStackTrace();
         }
     }
 }
