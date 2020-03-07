@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public class McNativeLoader extends ResourceLoader {
 
     private static final String VERSION_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
-    private static final String DOWNLOAD_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={platform}";
+    private static final String DOWNLOAD_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={edition}";
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 
@@ -78,6 +78,7 @@ public class McNativeLoader extends ResourceLoader {
                 MCNATIVE.setDownloadUrl(DOWNLOAD_URL
                         .replace("{build}",String.valueOf(latest.getBuild()))
                         .replace("{edition}",platform));
+                System.out.println(MCNATIVE.getDownloadUrl());
 
                 logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
                 try{
@@ -85,7 +86,8 @@ public class McNativeLoader extends ResourceLoader {
                     logger.info("(McNative-Loader) Successfully downloaded McNative");
                 }catch (Exception exception){
                     if(current == null || current.equals(VersionInfo.UNKNOWN)){
-                        logger.info("(McNative-Loader) download failed, shutting down");
+                        exception.printStackTrace();
+                        logger.log(Level.SEVERE,"(McNative-Loader) download failed, shutting down",exception);
                         return false;
                     }else{
                         logger.info("(McNative-Loader) download failed, trying to start an older version");
