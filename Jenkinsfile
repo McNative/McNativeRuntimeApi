@@ -159,9 +159,11 @@ pipeline {
                         responseHandle: 'NONE',
                         url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
 
-                    httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
+                    String path = "mcnative-bungeecord/target/mcnative-bungeecord-$VERSION.jar";
+                    print path
+                    httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                          httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
-                         responseHandle: 'NONE', uploadFile: "**/target/mcnative-bungeecord-$VERSION.jar",
+                         responseHandle: 'NONE', uploadFile: path,
                          url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord");
                 }
             }
