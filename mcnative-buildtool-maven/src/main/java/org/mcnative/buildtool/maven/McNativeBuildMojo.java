@@ -67,11 +67,16 @@ public class McNativeBuildMojo extends AbstractMojo {
             File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
             File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
 
+            sourceDirectory.mkdirs();
+            resourceDirectory.mkdirs();
+
             System.out.println("DEBUG POSITION 1");
 
-            System.out.println(sourceDirectory.getPath());
-            sourceDirectory.mkdirs();
-            System.out.println(sourceDirectory.getPath());
+            System.out.println("PROJECT OUT | "+new File(project.getBuild().getOutputDirectory()).exists()+" | "+project.getBuild().getOutputDirectory());
+            System.out.println("Source OUT | "+sourceDirectory.exists()+" | "+sourceDirectory.getAbsolutePath());
+            System.out.println("Resource OUT | "+resourceDirectory.exists()+" | "+resourceDirectory.getAbsolutePath());
+            System.out.println("MANIFEST OUT | "+manifestFile.exists()+" | "+manifestFile.getAbsolutePath());
+
             project.addCompileSourceRoot(sourceDirectory.getPath());
 
             System.out.println("DEBUG POSITION 1.5");
@@ -79,9 +84,6 @@ public class McNativeBuildMojo extends AbstractMojo {
             this.manifest.createManifestFile(manifestFile);
 
             System.out.println("DEBUG POSITION 2");
-
-            sourceDirectory.mkdirs();
-            resourceDirectory.mkdirs();
 
             System.out.println("DEBUG POSITION 3");
 
