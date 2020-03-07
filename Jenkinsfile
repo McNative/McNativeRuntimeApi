@@ -166,9 +166,10 @@ pipeline {
 
 
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
-                         httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
-                         responseHandle: 'NONE', uploadFile: path,
-                         url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord");
+                         httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
+                         multipartName: 'mcnative-bungeecord-${VERSION}.jar',
+                         responseHandle: 'NONE', uploadFile: "mcnative-bungeecord/target/",
+                         url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
                 }
             }
         }
