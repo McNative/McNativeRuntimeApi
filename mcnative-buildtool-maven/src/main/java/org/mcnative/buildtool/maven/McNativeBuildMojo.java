@@ -37,8 +37,8 @@ import java.io.IOException;
 @Mojo(name="McNative-Build", defaultPhase = LifecyclePhase.GENERATE_SOURCES,threadSafe = true)
 public class McNativeBuildMojo extends AbstractMojo {
 
-    private static final String MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH = "/../generated-sources/mcnative-loader/";
-    private static final String MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH = "/../generated-resources/mcnative-loader/";
+    private static final String MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH = "/generated-sources/mcnative-loader/";
+    private static final String MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH = "/generated-resources/mcnative-loader/";
     private static final String MCNATIVE_MANIFEST_FILE_PATH = MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH+"mcnative.json";
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
@@ -63,9 +63,10 @@ public class McNativeBuildMojo extends AbstractMojo {
     public void execute() throws MojoFailureException, MojoExecutionException {
         try{
             System.out.println("DEBUG POSITION 0");
-            File sourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
-            File resourceDirectory = new File(project.getBuild().getOutputDirectory(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
-            File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
+            File output = new File(project.getBuild().getOutputDirectory());
+            File sourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
+            File resourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
+            File manifestFile = new File(output.getParent(),MCNATIVE_MANIFEST_FILE_PATH);
 
             sourceDirectory.mkdirs();
             resourceDirectory.mkdirs();
