@@ -100,14 +100,9 @@ public class McNativePluginManifest {
         getSoftdepends().add("McNative");
         if(messageModule == null) messageModule = getName().replace(" ","_").toLowerCase();
         location.getParentFile().mkdirs();
-        System.out.println(location.getParentFile().getAbsolutePath());
-        System.out.println("Directory "+location.getParentFile().exists());
         try {
             location.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Directory "+location.exists());
+        } catch (IOException ignored) {}
         DocumentFileType.JSON.getWriter().write(location, Document.newDocument(this));
     }
 }

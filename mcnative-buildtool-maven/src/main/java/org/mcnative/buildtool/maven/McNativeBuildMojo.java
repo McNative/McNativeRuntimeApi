@@ -69,6 +69,9 @@ public class McNativeBuildMojo extends AbstractMojo {
 
             System.out.println("DEBUG POSITION 1");
 
+            System.out.println(sourceDirectory.getPath());
+            sourceDirectory.mkdirs();
+            System.out.println(sourceDirectory.getPath());
             project.addCompileSourceRoot(sourceDirectory.getPath());
 
             System.out.println("DEBUG POSITION 1.5");
