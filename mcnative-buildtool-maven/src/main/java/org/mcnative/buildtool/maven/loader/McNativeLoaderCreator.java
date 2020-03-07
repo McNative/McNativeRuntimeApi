@@ -60,7 +60,7 @@ public class McNativeLoaderCreator {
         this.version = version;
         this.basePackage = basePackage;
         this.baseFolder = new File(sourceDirectory,basePackage.replace(".","/"));
-        this.location = new File(location,MCNATIVE_LOADER_BASE_NAME.replace("${version}",version));
+        this.location = new File(location,MCNATIVE_LOADER_BASE_NAME.replace("{version}",version));
         this.sourceDirectory = sourceDirectory;
         this.resourceDirectory = resourceDirectory;
     }
@@ -71,7 +71,7 @@ public class McNativeLoaderCreator {
         log.info("Downloading McNative loader v"+version+".");
         HttpClient client = new HttpClient();
 
-        client.setUrl(MCNATIVE_LOADER_URL.replace("${version}",this.version));
+        client.setUrl(MCNATIVE_LOADER_URL.replace("{version}",this.version));
 
         HttpResult result = client.connect();
         if(result.getCode() == 200) result.save(location);

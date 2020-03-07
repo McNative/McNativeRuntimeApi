@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 
 public class McNativeLoader extends ResourceLoader {
 
-    private static final String VERSION_URL = "https://localhost:44367/v1/resource/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
-    private static final String DOWNLOAD_URL = "https://localhost:44367/v1/resource/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={platform}";
+    private static final String VERSION_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
+    private static final String DOWNLOAD_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={platform}";
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 
@@ -65,7 +65,7 @@ public class McNativeLoader extends ResourceLoader {
         try{
             latest = getLatestVersion();
         }catch (Exception exception){
-            logger.log(Level.SEVERE,"(McNative-Loader) Could not get latest version ("+exception.getMessage()+")");
+            logger.log(Level.SEVERE,"(McNative-Loader) "+exception.getMessage());
             if(current == null){
                 logger.log(Level.SEVERE,"(McNative-Loader) McNative is not available, shutting down");
                 return false;

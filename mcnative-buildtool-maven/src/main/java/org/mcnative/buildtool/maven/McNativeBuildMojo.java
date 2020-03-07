@@ -67,11 +67,6 @@ public class McNativeBuildMojo extends AbstractMojo {
 
         project.addCompileSourceRoot(sourceDirectory.getPath());
 
-        if(manifestFile.exists()){
-            getLog().info("McNative manifest already generated.");
-            return;
-        }
-
         this.manifest.createManifestFile(manifestFile);
 
         sourceDirectory.mkdirs();
