@@ -152,17 +152,12 @@ pipeline {
                     }
 
                     withCredentials([string(credentialsId: '120a9a64-81a7-4557-80bf-161e3ab8b976', variable: 'SECRET')]) {
-
-                        // the code in here can access $pass and $user
                         int buildNumber = env.BUILD_NUMBER;
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                                 httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
                                 responseHandle: 'NONE',
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
-
-
-
+                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -170,7 +165,15 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord");
+                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
+
+                        httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
+                                httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
+                                multipartName: 'file',
+                                responseHandle: 'NONE',
+                                uploadFile: "mcnative-bukkit/target/mcnative-bukkit-${VERSION}.jar",
+                                customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
+                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bukkit")
                     }
 
                 }
