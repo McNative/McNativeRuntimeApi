@@ -42,7 +42,7 @@ pipeline {
                     VERSION = readMavenPom().getVersion()
                     BRANCH = env.GIT_BRANCH
                     echo "Read information:"
-                    echo env
+
                 }
             }
         }
