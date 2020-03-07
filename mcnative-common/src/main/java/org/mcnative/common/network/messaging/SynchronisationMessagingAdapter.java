@@ -69,21 +69,21 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
         public void create(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
             document.set(ACTION_KEY,0);
-            McNative.getInstance().getNetwork().sendMessage(channel,document);
+            McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
 
         @Override
         public void update(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
             document.set(ACTION_KEY,1);
-            McNative.getInstance().getNetwork().sendMessage(channel,document);
+            McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
 
         @Override
         public void delete(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
             document.set(ACTION_KEY,2);
-            McNative.getInstance().getNetwork().sendMessage(channel,document);
+            McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
     }
 }

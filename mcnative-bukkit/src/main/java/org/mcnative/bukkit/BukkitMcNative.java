@@ -29,21 +29,27 @@ import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
+import net.prematic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.network.PluginMessageGateway;
+import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.network.messaging.MessagingProvider;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 public class BukkitMcNative implements McNative {
 
@@ -125,6 +131,11 @@ public class BukkitMcNative implements McNative {
     }
 
     @Override
+    public ExecutorService getExecutorService() {
+        return GeneralUtil.getDefaultExecutorService();
+    }
+
+    @Override
     public boolean isNetworkAvailable() {
         return network != null;
     }
@@ -153,6 +164,8 @@ public class BukkitMcNative implements McNative {
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
+        pluginManager.registerService(this, PermissionProvider.class,new BukkitPermissionProvider());
+        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService()));
     }
 
 }

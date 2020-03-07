@@ -31,9 +31,12 @@ import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.manager.PluginManager;
 import net.prematic.libraries.plugin.service.ServiceRegistry;
+import net.prematic.libraries.utility.GeneralUtil;
 import net.prematic.libraries.utility.Validate;
+import org.mcnative.bungeecord.network.PluginMessageGateway;
 import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
+import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
@@ -41,6 +44,7 @@ import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.network.messaging.MessagingProvider;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -51,6 +55,7 @@ import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class BungeeCordMcNative implements McNative {
 
@@ -134,6 +139,11 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
+    public ExecutorService getExecutorService() {
+        return GeneralUtil.getDefaultExecutorService();
+    }
+
+    @Override
     public boolean isNetworkAvailable() {
         return true;
     }
@@ -159,11 +169,12 @@ public class BungeeCordMcNative implements McNative {
         ProxyServer.getInstance().stop();
     }
 
-    public void registerDefaultProviders(){
+    public void registerDefaultProviders(BungeeCordServerMap serverMap){
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
+        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService(),serverMap));
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

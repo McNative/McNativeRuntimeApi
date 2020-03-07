@@ -43,13 +43,19 @@ import java.util.logging.Logger;
 
 public class McNativeLauncher {
 
-    public static void launchMcNative(){
-        launchMcNativeInternal();
-        setupDummyPlugin();
+    private static Plugin PLUGIN;
+
+    public static Plugin getPlugin() {
+        return PLUGIN;
     }
 
-    public static void launchMcNativeInternal(){
+    public static void launchMcNative(){
+        launchMcNativeInternal(setupDummyPlugin());
+    }
+
+    public static void launchMcNativeInternal(Plugin plugin){
         if(McNative.isAvailable()) return;
+        PLUGIN = plugin;
         Logger logger = ProxyServer.getInstance().getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
         ProxyServer proxy = ProxyServer.getInstance();
@@ -71,7 +77,7 @@ public class McNativeLauncher {
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
         BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new BungeecordProxyNetwork(localService), localService);
         McNative.setInstance(instance);
-        instance.registerDefaultProviders();
+        instance.registerDefaultProviders(serverMap);
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
@@ -87,7 +93,7 @@ public class McNativeLauncher {
     }
 
     @SuppressWarnings("unchecked")
-    private static void setupDummyPlugin(){
+    private static Plugin setupDummyPlugin(){
         PluginDescription description = new PluginDescription();
         description.setName("McNative");
         description.setVersion("1.0.0");//@Todo update
@@ -100,6 +106,7 @@ public class McNativeLauncher {
                 ,new Object[]{ProxyServer.getInstance(),description});
         Map<String, Plugin> plugins = ReflectionUtil.getFieldValue(PluginManager.class,ProxyServer.getInstance().getPluginManager(),"plugins", Map.class);
         plugins.put(description.getName(),plugin);
+        return plugin;
     }
 
 }

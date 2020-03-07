@@ -104,7 +104,7 @@ public class McNativeEventBus extends net.md_5.bungee.event.EventBus {
                 for (Map.Entry<Byte, Map<Object, Method[]>> entry2 : entry.getValue().entrySet()) {
                     byte priority = entry2.getKey();
                     for (Map.Entry<Object, Method[]> entry3 : entry2.getValue().entrySet()) {
-                        Object listener = entry.getKey();
+                        Object listener = entry3.getKey();
                         for (Method method : entry3.getValue()) {
                             Plugin plugin = findOwner(listener);
                             eventBus.addExecutor(eventClass,new MethodEventExecutor(plugin!=null?
@@ -122,7 +122,7 @@ public class McNativeEventBus extends net.md_5.bungee.event.EventBus {
         for (Map.Entry<Plugin, Listener> entry : this.listenersByPlugin.entries()) {
             if(entry.getValue().equals(listener)) return entry.getKey();
         }
-        throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
+        return null;//throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
     }
 
 }

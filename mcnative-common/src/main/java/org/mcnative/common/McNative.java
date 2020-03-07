@@ -31,6 +31,7 @@ import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 public interface McNative extends ObjectOwner {
@@ -57,6 +58,8 @@ public interface McNative extends ObjectOwner {
     ObjectCreator getObjectCreator();
 
     PlayerManager getPlayerManager();
+
+    ExecutorService getExecutorService();
 
     /**
      * Check if this service instance belongs to a network.

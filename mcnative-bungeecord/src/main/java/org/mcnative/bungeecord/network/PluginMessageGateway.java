@@ -23,12 +23,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.document.type.DocumentFileType;
+import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
@@ -44,20 +46,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-/*
-Request
-    ToProxy
-        UUID | Receiver
-        String | Channel
-        UUID | Request Id
-        Document | Request
-    ToClient
-        UUID | Sender
-        String | Channel
-        UUID | Request Id
-        Document | Request
-
- */
 public class PluginMessageGateway implements MessagingProvider,Listener {
 
     private final String CHANNEL_NAME_REQUEST = "mcnative:request";
@@ -73,6 +61,10 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
         this.serverMap = serverMap;
 
         this.resultListeners = new HashMap<>();
+
+        ProxyServer.getInstance().registerChannel(CHANNEL_NAME_REQUEST);
+        ProxyServer.getInstance().registerChannel(CHANNEL_NAME_RESPONSE);
+        ProxyServer.getInstance().getPluginManager().registerListener(McNativeLauncher.getPlugin(),this);
     }
 
     @Override
@@ -81,16 +73,30 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
     }
 
     @Override
-    public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
+    public boolean isAvailable() {
+        return true;
+    }
 
+    @Override
+    public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
+        if(receiver.equals(NetworkIdentifier.BROADCAST) || receiver.equals(NetworkIdentifier.BROADCAST_SERVER)){
+            UUID sender = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId();
+            byte[] data = writeData(sender,requestId,channel,request);
+            for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
+                if(server.getOnlineCount() > 0){
+                    server.sendData(CHANNEL_NAME_REQUEST,data);
+                }
+            }
+        }else throw new UnsupportedOperationException("Network identifier is not supported");
     }
 
     @Override
     public void sendMessage(MessageReceiver receiver, String channel, Document request,UUID requestId) {
         if(receiver instanceof MinecraftServer){
-            byte[] data = writeData(channel,request,requestId,McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId());
+            UUID sender = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId();
+            byte[] data = writeData(sender,requestId,channel,request);
             ((MinecraftServer) receiver).sendData(CHANNEL_NAME_REQUEST,data);
-        }else throw new IllegalArgumentException("Plugin messaging requires a minecraft server as receiver");
+        }else throw new UnsupportedOperationException("Plugin messaging requires a minecraft server as receiver");
     }
 
     @Override
@@ -111,11 +117,11 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
         return result;
     }
 
-    private byte[] writeData(String channel, Document request,UUID requestId, UUID sender) {
+    private byte[] writeData(UUID sender,UUID requestId,String channel, Document request) {
         ByteBuf buffer = Unpooled.directBuffer();
         MinecraftProtocolUtil.writeUUID(buffer,sender);//Sender
-        MinecraftProtocolUtil.writeString(buffer,channel);//Channel
         MinecraftProtocolUtil.writeUUID(buffer,requestId);//RequestId
+        MinecraftProtocolUtil.writeString(buffer,channel);//Channel
         DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,request,false);//Request
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
@@ -123,9 +129,22 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
         return data;
     }
 
-    private byte[] rewriteData(ByteBuf buffer,MinecraftServer sender){
-        buffer.resetReaderIndex();
-        MinecraftProtocolUtil.writeUUID(buffer,sender.getIdentifier().getUniqueId());
+    private byte[] writeResponse(UUID identifier,Document response) {
+        ByteBuf buffer = Unpooled.directBuffer();
+        MinecraftProtocolUtil.writeUUID(buffer,identifier);//Sender
+        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,response,false);//Response
+        byte[] data = new byte[buffer.readableBytes()];
+        buffer.readBytes(data);
+        buffer.release();
+        return data;
+    }
+
+    private byte[] writeForward(ByteBuf buffer,UUID sender){
+        buffer.markWriterIndex();
+        buffer.setIndex(0,0);
+        MinecraftProtocolUtil.writeUUID(buffer,sender);
+        buffer.resetWriterIndex();
+
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
         return data;
@@ -134,44 +153,71 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
     @EventHandler
     public void handleRequest(PluginMessageEvent event){
         if(event.getSender() instanceof Server){
-            MinecraftServer sender = serverMap.getMappedServer(((Server) event.getSender()).getInfo());
-            ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
-            UUID receiver = MinecraftProtocolUtil.readUUID(buffer);//Receiver
             if(event.getTag().equals(CHANNEL_NAME_REQUEST)){
-                if(NetworkIdentifier.BROADCAST.getUniqueId().equals(receiver) || NetworkIdentifier.BROADCAST_PROXY.getUniqueId().equals(receiver)){
-                    String channel = MinecraftProtocolUtil.readString(buffer);
-                    MessagingChannelListener listener = McNative.getInstance().getLocal().getMessageMessageChannelListener(channel);
-                    if(listener != null){
-                        UUID requestId = MinecraftProtocolUtil.readUUID(buffer);//Request Id
-                        Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));//Request
-                        listener.onMessageReceive(sender,requestId,data);
-                    }
-                }
-                byte[] data = rewriteData(buffer,sender);
-                if(NetworkIdentifier.BROADCAST.getUniqueId().equals(receiver) || NetworkIdentifier.BROADCAST_SERVER.getUniqueId().equals(receiver)){
-                    for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
-                        server.sendData(CHANNEL_NAME_REQUEST,data);
-                    }
-                }else{
-                    MinecraftServer server = McNative.getInstance().getNetwork().getServer(receiver);
-                    server.sendData(CHANNEL_NAME_REQUEST,data);
-                }
+                MinecraftServer sender = serverMap.getMappedServer(((Server) event.getSender()).getInfo());
+                ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
+                handleDataRequest(sender,buffer);
                 buffer.release();
             }else if(event.getTag().equals(CHANNEL_NAME_RESPONSE)){
-                UUID requestId = MinecraftProtocolUtil.readUUID(buffer);//Request Id
-                Document response = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));//Response
+                ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
+                handleDataResponse(buffer);
                 buffer.release();
-                CompletableFuture<Document> resultListener = resultListeners.get(requestId);
-                if(resultListener != null) resultListener.complete(response);
             }
         }
     }
-    /*
-    ToProxy
-        UUID | Receiver
-        String | Channel
-        UUID | Request Id
-        Document | Request
-     */
+
+    private void handleDataRequest(MinecraftServer sender,ByteBuf buffer){
+        UUID destinationId = MinecraftProtocolUtil.readUUID(buffer);
+        UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
+
+        boolean broadcast = NetworkIdentifier.BROADCAST.getUniqueId().equals(destinationId) || NetworkIdentifier.BROADCAST_PROXY.getUniqueId().equals(destinationId);
+        boolean local = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId().equals(destinationId);
+
+        if(broadcast || local){
+            String channel = MinecraftProtocolUtil.readString(buffer);
+            MessagingChannelListener listener = McNative.getInstance().getLocal().getMessageMessageChannelListener(channel);
+            if(listener != null){
+                Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                Document result = listener.onMessageReceive(sender,identifier,data);
+                if(!broadcast && result != null){
+                    byte[] response = writeResponse(identifier,result);
+                    sender.sendData(CHANNEL_NAME_RESPONSE,response);///write result
+                    return;
+                }
+            }
+
+            if(broadcast){
+                byte[] forward = writeForward(buffer,sender.getIdentifier().getUniqueId());
+                for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
+                    if(!server.equals(sender)) server.sendData(CHANNEL_NAME_REQUEST,forward);
+                }
+            }
+        }else{
+            byte[] forward = writeForward(buffer,sender.getIdentifier().getUniqueId());
+            MinecraftServer server = McNative.getInstance().getNetwork().getServer(destinationId);
+            if(server != null){
+                server.sendData(CHANNEL_NAME_REQUEST,forward);
+            }
+        }
+    }
+
+    private void handleDataResponse(ByteBuf buffer){
+        UUID destinationId = MinecraftProtocolUtil.readUUID(buffer);
+        boolean local = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId().equals(destinationId);
+        if(local){
+            UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
+            CompletableFuture<Document> listener = resultListeners.remove(identifier);
+            if(listener != null){
+                Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                listener.complete(data);
+            }
+        }else{
+            MinecraftServer server = McNative.getInstance().getNetwork().getServer(destinationId);
+            if(server != null){
+                byte[] data = new byte[buffer.readableBytes()];
+                buffer.readBytes(data);
+            }
+        }
+    }
 
 }

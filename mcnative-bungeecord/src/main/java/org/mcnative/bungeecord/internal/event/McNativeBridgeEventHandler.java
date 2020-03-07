@@ -242,7 +242,7 @@ public final class McNativeBridgeEventHandler {
     private void handleServerKick(ServerKickEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftPlayerServerKickEvent mcNativeEvent = new BungeeServerKickEvent(serverMap,event,player);
-        ServerConnectHandler handler = McNative.getInstance().getRegistry().getService(ServerConnectHandler.class);
+        ServerConnectHandler handler = McNative.getInstance().getRegistry().getServiceOrDefault(ServerConnectHandler.class);
         if(handler != null){
             mcNativeEvent.setFallbackServer(handler.getFallbackServer(player,player.getServer()));
         }
