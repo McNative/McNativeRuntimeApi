@@ -31,13 +31,17 @@ import java.util.logging.Logger;
 
 public class McNativeLoader extends ResourceLoader {
 
-    private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative"
-            ,"http://localhost/mcnative/download/latest.jar"
-            ,"http://localhost/mcnative/latest.txt"
-            ,new File("plugins/McNative/lib/resources/mcnative/"));
+    private static final String VERSION_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
+    private static final String DOWNLOAD_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={platform}";
+
+    private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 
     private final Logger logger;
     private final String platform;
+
+    static {
+        MCNATIVE.setVersionUrl(VERSION_URL);
+    }
 
     public McNativeLoader(Logger logger, String platform) {
         super(MCNATIVE);
@@ -49,9 +53,7 @@ public class McNativeLoader extends ResourceLoader {
         try{
             Method availableMethod = Class.forName("org.mcnative.common.McNative").getMethod("isAvailable");
             return (boolean) availableMethod.invoke(null);
-        }catch (Exception ignored){
-            ignored.printStackTrace();
-        }
+        }catch (Exception ignored){}
         return false;
     }
 
@@ -63,9 +65,9 @@ public class McNativeLoader extends ResourceLoader {
         try{
             latest = getLatestVersion();
         }catch (Exception exception){
-            logger.log(Level.SEVERE,"(McNative-Loader) Could not get latest version ("+exception.getMessage()+")");
+            logger.log(Level.SEVERE,"(McNative-Loader) "+exception.getMessage());
             if(current == null){
-                logger.log(Level.SEVERE,"(McNative-Loader) McNative not available, shutting down");
+                logger.log(Level.SEVERE,"(McNative-Loader) McNative is not available, shutting down");
                 return false;
             }
         }
@@ -73,6 +75,10 @@ public class McNativeLoader extends ResourceLoader {
             if(isLatestVersion()){
                 logger.info("(McNative-Loader) McNative "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
             }else{
+                MCNATIVE.setDownloadUrl(DOWNLOAD_URL
+                        .replace("{build}",String.valueOf(latest.getBuild()))
+                        .replace("{edition}",platform));
+
                 logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
                 try{
                     download(latest);
@@ -106,5 +112,9 @@ public class McNativeLoader extends ResourceLoader {
 
     public static boolean install(Logger logger,String platform){
         return new McNativeLoader(logger,platform).install();
+    }
+
+    private static ResourceInfo buildResourceInfo(String platform){
+        return null;
     }
 }

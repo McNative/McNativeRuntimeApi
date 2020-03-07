@@ -38,7 +38,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
             this.executor = new GuestPluginExecutor(getFile(),getLogger(),ENVIRONMENT_NAME);
 
-            if(!this.executor.installDependencies(getLogger())){
+            if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
                 return;
             }

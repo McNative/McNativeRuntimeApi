@@ -53,11 +53,11 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Parameter( name = "resource-loader-version" ,defaultValue = "1.0.0")
     private String resourceLoaderVersion;
 
-    @Parameter( property = "mcnative.manifest",readonly = true,required =true)
+    @Parameter( property = "manifest",readonly = true,required =true)
     private McNativePluginManifest manifest;
 
-    @Parameter( property = "mcnative.loader.configuration",readonly = true,required =true)
-    private LoaderConfiguration loaderConfig;
+    @Parameter( property = "loader",readonly = true,required =true)
+    private LoaderConfiguration loader;
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
@@ -66,11 +66,6 @@ public class McNativeBuildMojo extends AbstractMojo {
         File manifestFile = new File(project.getBuild().getOutputDirectory(),MCNATIVE_MANIFEST_FILE_PATH);
 
         project.addCompileSourceRoot(sourceDirectory.getPath());
-
-        if(manifestFile.exists()){
-            getLog().info("McNative manifest already generated.");
-            return;
-        }
 
         this.manifest.createManifestFile(manifestFile);
 
@@ -91,7 +86,7 @@ public class McNativeBuildMojo extends AbstractMojo {
         creator.unpackLoader();
 
         creator.renamePackages();
-        creator.createManifests(loaderConfig,manifest);
+        creator.createManifests(loader,manifest);
 
         try {
             FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));

@@ -38,7 +38,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
             this.executor = new GuestPluginExecutor(getDescription().getFile(),getLogger(),ENVIRONMENT_NAME);
 
-            if(!this.executor.installDependencies(getLogger())){
+            if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
                 return;
             }

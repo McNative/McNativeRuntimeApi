@@ -24,7 +24,7 @@
     <parent>
         <artifactId>McNative</artifactId>
         <groupId>org.mcnative</groupId>
-        <version>1.0.32-SNAPSHOT</version>
+        <version>1.0.33-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -75,21 +75,21 @@
         <dependency>
             <groupId>org.mcnative</groupId>
             <artifactId>mcnative-common</artifactId>
-            <version>1.0.32-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.prematic.libraries</groupId>
             <artifactId>prematiclibraries-plugin</artifactId>
-            <version>1.0.0</version>
+            <version>${dependency.pretronic.libraries.plugin}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.prematic.libraries</groupId>
             <artifactId>prematiclibraries-resourceloader</artifactId>
-            <version>1.0.0</version>
+            <version>${dependency.pretronic.libraries.resourceloader}</version>
             <scope>compile</scope>
         </dependency>
 
