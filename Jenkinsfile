@@ -151,7 +151,7 @@ pipeline {
                         }
                     }
 
-                    withCredentials([usernamePassword(credentialsId: '120a9a64-81a7-4557-80bf-161e3ab8b976', secret: 'secret')]) {
+                    withCredentials([usernamePassword(credentialsId: '120a9a64-81a7-4557-80bf-161e3ab8b976', variable: 'SECRET')]) {
 
                         // the code in here can access $pass and $user
                         int buildNumber = env.BUILD_NUMBER;
