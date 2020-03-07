@@ -121,7 +121,7 @@ public class GuestPluginExecutor {
             latest = resourceLoader.getLatestVersion();
         }catch (Exception exception){
             logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest version ("+exception.getMessage()+")");
-            if(current == null){
+            if(current == null || current.equals(VersionInfo.UNKNOWN)){
                 logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
                 return false;
             }

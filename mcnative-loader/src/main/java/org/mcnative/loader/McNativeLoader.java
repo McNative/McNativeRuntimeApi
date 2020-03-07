@@ -66,7 +66,7 @@ public class McNativeLoader extends ResourceLoader {
             latest = getLatestVersion();
         }catch (Exception exception){
             logger.log(Level.SEVERE,"(McNative-Loader) "+exception.getMessage());
-            if(current == null){
+            if(current == null || current.equals(VersionInfo.UNKNOWN)){
                 logger.log(Level.SEVERE,"(McNative-Loader) McNative is not available, shutting down");
                 return false;
             }
@@ -84,6 +84,7 @@ public class McNativeLoader extends ResourceLoader {
                     download(latest);
                     logger.info("(McNative-Loader) Successfully downloaded McNative");
                 }catch (Exception exception){
+                    exception.printStackTrace();
                     if(current == null || current.equals(VersionInfo.UNKNOWN)){
                         exception.printStackTrace();
                         logger.log(Level.SEVERE,"(McNative-Loader) download failed, shutting down",exception);
