@@ -78,8 +78,7 @@ public class McNativeLoader extends ResourceLoader {
                 MCNATIVE.setDownloadUrl(DOWNLOAD_URL
                         .replace("{build}",String.valueOf(latest.getBuild()))
                         .replace("{edition}",platform));
-                System.out.println(MCNATIVE.getDownloadUrl());
-
+                
                 logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
                 try{
                     download(latest);
