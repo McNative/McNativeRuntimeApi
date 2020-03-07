@@ -162,14 +162,14 @@ pipeline {
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                         httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
                         responseHandle: 'NONE',
-                        url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
+                        url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
 
 
                     httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                          httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
                          multipartName: 'mcnative-bungeecord-${VERSION}.jar',
                          responseHandle: 'NONE', uploadFile: "mcnative-bungeecord/target/",
-                         url: "http://192.168.1.35:5000/v1/resource/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
+                         url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
                 }
             }
         }
