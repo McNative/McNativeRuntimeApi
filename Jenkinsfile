@@ -64,6 +64,7 @@ pipeline {
                         }
                     }
                     sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$VERSION"
+                    echo "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar"
                 }
             }
         }
@@ -152,7 +153,7 @@ pipeline {
                         }
                     }
 
-                    String path = "mcnative-bungeecord/target/mcnative-bungeecord-$VERSION.jar";
+                    String path = "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar";
                     echo "Path:"
                     echo path
                     echo "$path"
