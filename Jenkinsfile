@@ -41,8 +41,6 @@ pipeline {
                 script {
                     VERSION = readMavenPom().getVersion()
                     BRANCH = env.GIT_BRANCH
-                    echo "Read information:"
-
                 }
             }
         }
