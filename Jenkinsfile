@@ -1,6 +1,7 @@
 final String CI_NAME = "PretronicCI"
 final String CI_EMAIL = "ci@pretronic.net"
 final String COMMIT_MESSAGE = "Version change %version%"
+final String RESOURCE_ID = "e5b65750-4dcc-4631-b275-06113b31a416"
 
 final String BRANCH_DEVELOPMENT = "origin/development"
 final String BRANCH_MASTER = "origin/master"
@@ -10,6 +11,8 @@ String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
 boolean SKIP = false
+
+
 
 pipeline {
     agent any
@@ -147,6 +150,11 @@ pipeline {
                             """
                         }
                     }
+                    int buildNumber = $env.BUILD_NUMBER;
+                    httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
+                        httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
+                        responseHandle: 'NONE',url: "https://192.168.1.35:44367/resource/$RESOURCE_ID/versions/create"
+                        requestBody: "{'Name'='$VERSION', 'Qualifier'='SNAPSHOT', 'BuildNumber'=$buildNumber}")
                 }
             }
         }
