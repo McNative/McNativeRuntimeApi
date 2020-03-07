@@ -158,7 +158,7 @@ pipeline {
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                                 httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
                                 responseHandle: 'NONE',
-                                customHeaders:[[name:'token', value:"$secret", maskValue:true]],
+                                customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
                                 url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber");
 
 
@@ -169,7 +169,7 @@ pipeline {
                                 multipartName: 'file',
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
-                                customHeaders:[[name:'token', value:"$secret", maskValue:true]],
+                                customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
                                 url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord");
                     }
 
