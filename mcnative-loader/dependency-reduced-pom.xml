@@ -3,7 +3,7 @@
   <parent>
     <artifactId>McNative</artifactId>
     <groupId>org.mcnative</groupId>
-    <version>1.0.54-SNAPSHOT</version>
+    <version>1.0.55-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mcnative-loader</artifactId>
@@ -52,16 +52,12 @@
       <id>bungeecord-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
-    <repository>
-      <id>sonatype</id>
-      <url>http://central.sonatype.org/</url>
-    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.mcnative</groupId>
       <artifactId>mcnative-common</artifactId>
-      <version>1.0.54-SNAPSHOT</version>
+      <version>1.0.55-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
