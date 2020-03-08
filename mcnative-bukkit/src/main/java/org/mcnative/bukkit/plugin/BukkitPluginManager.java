@@ -19,7 +19,10 @@
 
 package org.mcnative.bukkit.plugin;
 
+import net.prematic.libraries.document.Document;
+import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.logging.PrematicLogger;
+import net.prematic.libraries.message.MessagePack;
 import net.prematic.libraries.message.MessageProvider;
 import net.prematic.libraries.plugin.Plugin;
 import net.prematic.libraries.plugin.description.PluginDescription;
@@ -37,6 +40,8 @@ import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
 
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -117,20 +122,40 @@ public class BukkitPluginManager implements PluginManager {
     @Override
     public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
         if(state.equals(LifecycleState.CONSTRUCTION)) this.plugins.add(plugin);
-        else if(state.equals(LifecycleState.INITIALISATION)){
-            MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
-            if(messageProvider != null){
-                String module = plugin.getDescription().getMessageModule();
-                if(module != null){
-                    messageProvider.loadPacks(module);
-                    messageProvider.calculateMessages();
-                }
-            }
-        }else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
+        else if(state.equals(LifecycleState.INITIALISATION)) loadMessages(plugin);
+        else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
 
         BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);
     }
+
+    private void loadMessages(Plugin plugin) {
+        MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
+        if(messageProvider != null){
+            String module = plugin.getDescription().getMessageModule();
+            if(module != null){
+                List<MessagePack> result = messageProvider.loadPacks(module);
+                if(result.isEmpty()){
+                    String languageTag = Locale.getDefault().toLanguageTag().replace("-","_");
+                    String language = Locale.getDefault().getLanguage();
+                    InputStream stream = plugin.getLoader().getClassLoader().getResourceAsStream("messages/"+languageTag+".yml");
+                    if(stream == null){
+                        stream = plugin.getLoader().getClassLoader().getResourceAsStream("messages/"+language+".yml");
+                    }
+                    if(stream == null){
+                        stream = plugin.getLoader().getClassLoader().getResourceAsStream("messages/default.yml");
+                    }
+                    if(stream != null){
+                        Document pack = DocumentFileType.YAML.getReader().read(stream, StandardCharsets.UTF_8);
+                        messageProvider.importPack(pack);
+                    }
+                }
+
+                messageProvider.calculateMessages();
+            }
+        }
+    }
+
 
     @Override
     public Collection<Plugin> enablePlugins(File file) {//@Todo return mapped plugin

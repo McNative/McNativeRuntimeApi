@@ -41,7 +41,7 @@ import java.util.*;
 
 public class DefaultMessageProvider implements MessageProvider {
 
-    private static String MESSAGE_NOT_FOUND = "The message %key% was not found.";
+    private static final String MESSAGE_NOT_FOUND = "The message %key% was not found.";
 
     private final List<MessagePack> packs;
     private final Map<String,Map<Language,String>> messages;
@@ -101,13 +101,30 @@ public class DefaultMessageProvider implements MessageProvider {
     }
 
     @Override
+    public MessagePack importPack(Document document) {
+        MessagePack pack = MessagePack.fromDocument(document);
+        MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
+        if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
+
+        addPack(pack);
+
+        File folder = new File(owner.getDataFolder(),"messages/");
+        folder.mkdirs();
+        String name = pack.getMeta().getName()+"-"+pack.getMeta().getLanguage().getCode()+".yml";
+        name = name.toLowerCase().replace(" ","-");
+        File location = new File(folder,name);
+        DocumentFileType.YAML.getWriter().write(location,document);
+        return pack;
+    }
+
+    @Override
     public MessagePack getPack(String name) {
         return Iterators.findOne(this.packs, pack -> pack.getMeta().getName().equals(name));
     }
 
     @Override
     public void addPack(MessagePack pack) {
-        if(getPack(pack.getMeta().getName()) != null)throw new IllegalArgumentException("A pack with the name "+pack.getMeta().getName()+" is already available");
+        if(getPack(pack.getMeta().getName()) != null) throw new IllegalArgumentException("A pack with the name "+pack.getMeta().getName()+" is already available");
         this.packs.add(pack);
     }
 
@@ -120,36 +137,47 @@ public class DefaultMessageProvider implements MessageProvider {
 
     //@Todo update from repository
     @Override
-    public void loadPacks(String module) {
+    public List<MessagePack> loadPacks(String module) {
         Validate.notNull(module);
-        for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            if(plugin instanceof MinecraftPlugin
-                    && plugin.getDescription().getMessageModule() != null
-                    && plugin.getDescription().getMessageModule().equalsIgnoreCase(module)){
-                File folder = ((MinecraftPlugin) plugin).getDataFolder();
-                if(folder != null){
-                    File messageFolder = new File(folder,"messages/");
-                    if(messageFolder.exists()){
-                        File[] content = messageFolder.listFiles();
-                        if(content != null){
-                            for (File file : content) {
-                                DocumentFileType type = DocumentRegistry.findType(file);
-                                if(type != null){
-                                    try{
-                                        MessagePack pack = addPack(type.getReader().read(file));
-                                        plugin.getLogger().info("(Message-Provider) Loaded message pack {}",pack.getMeta().getName());
-                                    }catch (Exception exception){
-                                        plugin.getLogger().info("(Message-Provider) Could not load message pack {}",file.getName());
-                                        plugin.getLogger().error(exception);
-                                    }
+        MinecraftPlugin plugin = findModuleOwner(module);
+        if(plugin != null){
+            File folder = plugin.getDataFolder();
+            if(folder != null){
+                File messageFolder = new File(folder,"messages/");
+                if(messageFolder.exists()){
+                    File[] content = messageFolder.listFiles();
+                    if(content != null){
+                        List<MessagePack> result = new ArrayList<>();
+                        for (File file : content) {
+                            DocumentFileType type = DocumentRegistry.findType(file);
+                            if(type != null){
+                                try{
+                                    MessagePack pack = addPack(type.getReader().read(file));
+                                    result.add(pack);
+                                    plugin.getLogger().info("(Message-Provider) Loaded message pack {}",pack.getMeta().getName());
+                                }catch (Exception exception){
+                                    plugin.getLogger().info("(Message-Provider) Could not load message pack {}",file.getName());
+                                    plugin.getLogger().error(exception);
                                 }
                             }
                         }
+                        return result;
                     }
                 }
-                return;
             }
         }
+        return Collections.emptyList();
+    }
+
+    private MinecraftPlugin findModuleOwner(String module){
+        for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
+            if (plugin instanceof MinecraftPlugin
+                    && plugin.getDescription().getMessageModule() != null
+                    && plugin.getDescription().getMessageModule().equalsIgnoreCase(module)) {
+                return (MinecraftPlugin) plugin;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -213,7 +241,10 @@ public class DefaultMessageProvider implements MessageProvider {
                 start = i;
             }else if(content[i] == '}' && start != -1){
                 String key = message.substring(start+1,i);
-                builder.append(replaceInternalVariables(pack,pack.getMessage(key)));
+
+                String subMessage = pack.getMessage(key);
+
+                builder.append(subMessage == null ? "{NOT FOUND}" : replaceInternalVariables(pack,subMessage));
                 start = -1;
             }else if(start == -1){
                 builder.append(content[i]);

@@ -3,7 +3,7 @@
   <parent>
     <artifactId>McNative</artifactId>
     <groupId>org.mcnative</groupId>
-    <version>1.0.0</version>
+    <version>1.0.54-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mcnative-loader</artifactId>
@@ -18,18 +18,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
@@ -37,6 +25,18 @@
             <id>attach-sources</id>
             <goals>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${plugin.shade.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
             </goals>
           </execution>
         </executions>
@@ -52,12 +52,16 @@
       <id>bungeecord-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>http://central.sonatype.org/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.mcnative</groupId>
       <artifactId>mcnative-common</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.54-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -77,8 +81,28 @@
           <groupId>net.prematic.libraries</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>prematiclibraries-dependency</artifactId>
+          <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>prematiclibraries-caching</artifactId>
           <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>prematiclibraries-message</artifactId>
+          <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>prematiclibraries-synchronisation</artifactId>
+          <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>prematiclibraries-logging</artifactId>
+          <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>prematicdatabasequery-api</artifactId>
+          <groupId>net.prematic.databasequery</groupId>
         </exclusion>
         <exclusion>
           <artifactId>prematicdatabasequery-sql</artifactId>
@@ -88,12 +112,20 @@
           <artifactId>HikariCP</artifactId>
           <groupId>com.zaxxer</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>h2</artifactId>
+          <groupId>com.h2database</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>mysql-connector-java</artifactId>
+          <groupId>mysql</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>net.prematic.libraries</groupId>
       <artifactId>prematiclibraries-plugin</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.29-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -101,19 +133,11 @@
           <groupId>net.prematic.libraries</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>prematiclibraries-logging</artifactId>
-          <groupId>net.prematic.libraries</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>prematiclibraries-jarsignature</artifactId>
-          <groupId>net.prematic.libraries</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>netty-all</artifactId>
-          <groupId>io.netty</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>prematiclibraries-utility</artifactId>
+          <groupId>net.prematic.libraries</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>prematiclibraries-logging</artifactId>
           <groupId>net.prematic.libraries</groupId>
         </exclusion>
       </exclusions>
@@ -145,7 +169,7 @@
     <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
-      <version>1.14-SNAPSHOT</version>
+      <version>1.15-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -163,6 +187,14 @@
         <exclusion>
           <artifactId>bungeecord-protocol</artifactId>
           <groupId>net.md-5</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>netty-transport-native-unix-common</artifactId>
+          <groupId>io.netty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>snakeyaml</artifactId>
+          <groupId>org.yaml</groupId>
         </exclusion>
         <exclusion>
           <artifactId>guava</artifactId>

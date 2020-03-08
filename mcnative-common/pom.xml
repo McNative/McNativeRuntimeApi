@@ -93,7 +93,7 @@
         <dependency>
             <groupId>net.prematic.libraries</groupId>
             <artifactId>prematiclibraries-message</artifactId>
-            <version>${dependency.pretronic.libraries.caching}</version>
+            <version>${dependency.pretronic.libraries.message}</version>
             <scope>compile</scope>
         </dependency>
 
