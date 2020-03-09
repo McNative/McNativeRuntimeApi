@@ -38,6 +38,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.*;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
+import org.mcnative.common.event.service.ServiceRegisterEvent;
+import org.mcnative.common.event.service.ServiceUnregisterEvent;
 
 import java.io.File;
 import java.io.InputStream;
@@ -219,6 +221,7 @@ public class BukkitPluginManager implements PluginManager {
         else mappedOwner = McNativeLauncher.getPlugin();
 
         serviceManager.register(serviceClass,service,mappedOwner, ServicePriority.Normal);
+        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(service, owner, priority));
     }
 
     @Override
@@ -231,6 +234,13 @@ public class BukkitPluginManager implements PluginManager {
     public void unregisterService(Object o) {
         Validate.notNull(o);
         serviceManager.unregister(o);
+        for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(o.getClass())) {
+            if(registration.getProvider().equals(o)) {
+                serviceManager.unregister(registration.getProvider());
+                McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
+                        getMappedPlugin(registration.getPlugin())));
+            }
+        }
     }
 
     @Override
@@ -238,13 +248,20 @@ public class BukkitPluginManager implements PluginManager {
         Validate.notNull(aClass);
         for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(aClass)) {
             serviceManager.unregister(registration.getProvider());
+            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
+                    getMappedPlugin(registration.getPlugin())));
         }
     }
 
     @Override
     public void unregisterServices(ObjectOwner owner) {
         if(owner instanceof Plugin<?>){
-            serviceManager.unregister(getMappedPlugin((Plugin<?>) owner));
+            for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(getMappedPlugin((Plugin<?>) owner))) {
+                serviceManager.unregister(registration.getProvider());
+                McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider()
+                        ,getMappedPlugin(registration.getPlugin())));
+            }
+            //serviceManager.unregister(getMappedPlugin((Plugin<?>) owner));
         }else throw new IllegalArgumentException("It is not possible to unsubscribe services, if the owner is not a plugin");
     }
 
@@ -287,6 +304,16 @@ public class BukkitPluginManager implements PluginManager {
             McNativePluginWrapperList override = new McNativePluginWrapperList(original,this);
             ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",override);
             for (org.bukkit.plugin.Plugin plugin : original) registerBukkitPlugin(plugin);
+        }
+    }
+
+    private byte mapServicePriority(ServicePriority priority) {
+        switch (priority) {
+            case Highest: return net.prematic.libraries.plugin.service.ServicePriority.HIGHEST;
+            case High: return net.prematic.libraries.plugin.service.ServicePriority.HIGH;
+            case Low: return net.prematic.libraries.plugin.service.ServicePriority.LOW;
+            case Lowest: return net.prematic.libraries.plugin.service.ServicePriority.LOWEST;
+            default: return net.prematic.libraries.plugin.service.ServicePriority.NORMAL;
         }
     }
 }
