@@ -86,21 +86,21 @@ public class StorageConfig {
             e.printStackTrace();
         }
 
-        this.databaseDrivers.put("Default", new SQLDatabaseDriverConfigBuilder()
-                        .setDialect(Dialect.H2_PORTABLE)
-                        .setLocation(new File("plugins/McNative/databases/"))
-                        .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
-                        .setUsername("McNative")
-                        .setPassword("masked").build());
+        this.databaseDrivers.put("default", new SQLDatabaseDriverConfigBuilder()
+                .setName("Default")
+                .setDialect(Dialect.H2_PORTABLE)
+                .setLocation(new File("plugins/McNative/databases/"))
+                .build());
 
         this.databaseDrivers.put("MySQL", new SQLDatabaseDriverConfigBuilder()
-                .setAddress(new InetSocketAddress("127.0.0.1", 3306))
+                .setName("MySQL")
                 .setDialect(Dialect.MYSQL)
-                .setDataSourceClassName("com.zaxxer.hikari.HikariDataSource")
+                .setAddress(new InetSocketAddress("127.0.0.1", 3306))
                 .setUsername("McNative")
-                .setPassword("masked").build());
+                .setPassword("masked")
+                .build());
 
-        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "Default"));
+        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "default"));
         save();
     }
 

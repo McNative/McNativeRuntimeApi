@@ -31,7 +31,7 @@
     <distributionManagement>
         <repository>
             <id>pretronic</id>
-            <url>https://repository.prematic.net/repository/pretronic/</url>
+            <url>https://repository.pretronic.net/repository/pretronic/</url>
         </repository>
     </distributionManagement>
 
@@ -44,20 +44,20 @@
         <dependency.bukkit.version>1.14.2-R0.1-SNAPSHOT</dependency.bukkit.version>
         <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
 
-        <dependency.pretronic.libraries.utility>1.0.21-SNAPSHOT</dependency.pretronic.libraries.utility>
-        <dependency.pretronic.libraries.document>1.0.29-SNAPSHOT</dependency.pretronic.libraries.document>
-        <dependency.pretronic.libraries.concurrent>1.0.21-SNAPSHOT</dependency.pretronic.libraries.concurrent>
-        <dependency.pretronic.libraries.command>1.0.21-SNAPSHOT</dependency.pretronic.libraries.command>
-        <dependency.pretronic.libraries.event>1.0.21-SNAPSHOT</dependency.pretronic.libraries.event>
-        <dependency.pretronic.libraries.plugin>1.0.29-SNAPSHOT</dependency.pretronic.libraries.plugin>
-        <dependency.pretronic.libraries.dependency>1.0.21-SNAPSHOT</dependency.pretronic.libraries.dependency>
-        <dependency.pretronic.libraries.caching>1.0.21-SNAPSHOT</dependency.pretronic.libraries.caching>
-        <dependency.pretronic.libraries.resourceloader>1.0.21-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
-        <dependency.pretronic.libraries.synchronisation>1.0.21-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
-        <dependency.pretronic.libraries.logging>1.0.21-SNAPSHOT</dependency.pretronic.libraries.logging>
-        <dependency.pretronic.libraries.message>1.0.29-SNAPSHOT</dependency.pretronic.libraries.message>
+        <dependency.pretronic.libraries.utility>1.0.31-SNAPSHOT</dependency.pretronic.libraries.utility>
+        <dependency.pretronic.libraries.document>1.0.31-SNAPSHOT</dependency.pretronic.libraries.document>
+        <dependency.pretronic.libraries.concurrent>1.0.31-SNAPSHOT</dependency.pretronic.libraries.concurrent>
+        <dependency.pretronic.libraries.command>1.0.31-SNAPSHOT</dependency.pretronic.libraries.command>
+        <dependency.pretronic.libraries.event>1.0.31-SNAPSHOT</dependency.pretronic.libraries.event>
+        <dependency.pretronic.libraries.plugin>1.0.31-SNAPSHOT</dependency.pretronic.libraries.plugin>
+        <dependency.pretronic.libraries.dependency>1.0.31-SNAPSHOT</dependency.pretronic.libraries.dependency>
+        <dependency.pretronic.libraries.caching>1.0.31-SNAPSHOT</dependency.pretronic.libraries.caching>
+        <dependency.pretronic.libraries.resourceloader>1.0.31-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
+        <dependency.pretronic.libraries.synchronisation>1.0.31-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
+        <dependency.pretronic.libraries.logging>1.0.31-SNAPSHOT</dependency.pretronic.libraries.logging>
+        <dependency.pretronic.libraries.message>1.0.31-SNAPSHOT</dependency.pretronic.libraries.message>
 
-        <dependency.pretronic.databasequery>1.0.5-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.databasequery>1.0.6-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
 
@@ -83,7 +83,7 @@
     <repositories>
         <repository>
             <id>pretronic</id>
-            <url>https://repository.prematic.net/repository/pretronic/</url>
+            <url>https://repository.pretronic.net/repository/pretronic/</url>
         </repository>
     </repositories>
 
