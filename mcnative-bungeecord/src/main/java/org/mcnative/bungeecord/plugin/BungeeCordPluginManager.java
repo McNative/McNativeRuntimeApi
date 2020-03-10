@@ -38,6 +38,8 @@ import net.prematic.libraries.utility.map.callback.CallbackMap;
 import net.prematic.libraries.utility.map.callback.LinkedHashCallbackMap;
 import net.prematic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
+import org.mcnative.common.event.service.ServiceRegisterEvent;
+import org.mcnative.common.event.service.ServiceUnregisterEvent;
 
 import java.io.File;
 import java.io.InputStream;
@@ -215,6 +217,7 @@ public class BungeeCordPluginManager implements PluginManager {
     @Override
     public <T> void registerService(ObjectOwner owner, Class<T> serviceClass, T service, byte priority) {
         this.services.add(new ServiceEntry(owner,serviceClass,service,priority));
+        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(service, owner, priority));
     }
 
     @Override
@@ -225,17 +228,26 @@ public class BungeeCordPluginManager implements PluginManager {
 
     @Override
     public void unregisterService(Object service) {
-        Iterators.removeOne(this.services, entry -> entry.service.equals(service));
+        ServiceEntry result = Iterators.removeOne(this.services, entry -> entry.service.equals(service));
+        if(result != null) {
+            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+        }
     }
 
     @Override
     public void unregisterServices(Class<?> serviceClass) {
-        Iterators.removeOne(this.services, entry -> entry.serviceClass.equals(serviceClass));
+        ServiceEntry result = Iterators.removeOne(this.services, entry -> entry.serviceClass.equals(serviceClass));
+        if(result != null) {
+            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+        }
     }
 
     @Override
     public void unregisterServices(ObjectOwner owner) {
-        Iterators.removeOne(this.services, entry -> entry.owner.equals(owner));
+        List<ServiceEntry> results = Iterators.remove(this.services, entry -> entry.owner.equals(owner));
+        for (ServiceEntry result : results) {
+            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+        }
     }
 
     @Override

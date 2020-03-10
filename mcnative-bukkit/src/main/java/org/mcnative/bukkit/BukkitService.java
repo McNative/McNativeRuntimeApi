@@ -19,17 +19,21 @@
 
 package org.mcnative.bukkit;
 
+import net.milkbowl.vault.economy.Economy;
 import net.prematic.libraries.command.manager.CommandManager;
 import net.prematic.libraries.document.Document;
 import net.prematic.libraries.event.EventBus;
 import net.prematic.libraries.message.bml.variable.VariableSet;
 import net.prematic.libraries.plugin.Plugin;
+import net.prematic.libraries.plugin.service.ServicePriority;
 import net.prematic.libraries.utility.Iterators;
 import net.prematic.libraries.utility.Validate;
 import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import net.prematic.synchronisation.SynchronisationHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
+import org.mcnative.bukkit.serviceprovider.economy.VaultEconomyProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -45,6 +49,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
+import org.mcnative.common.serviceprovider.economy.EconomyProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.MinecraftService;
 import org.mcnative.service.ObjectCreator;
@@ -76,6 +81,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         this.playerManager = playerManager;
         this.eventBus = eventBus;
         this.messageListeners = new ArrayList<>();
+        initVaultHook();
     }
 
     @Override
@@ -376,6 +382,17 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     @Override
     public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
         return null;
+    }
+
+    private void initVaultHook() {
+        if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
+            RegisteredServiceProvider<Economy> economyService = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+            if (economyService != null) {
+                VaultEconomyProvider vaultEconomyProvider = new VaultEconomyProvider(economyService.getProvider());
+                McNative.getInstance().getRegistry().registerService(McNative.getInstance(), EconomyProvider.class,
+                        vaultEconomyProvider, ServicePriority.LOWEST);
+            }
+        }
     }
 
     private static class MessageEntry {

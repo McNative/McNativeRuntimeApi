@@ -48,8 +48,8 @@
       <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
     <repository>
-      <id>mvdw-software</id>
-      <url>http://repo.mvdw-software.be/content/groups/public/</url>
+      <id>vaultapi</id>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
   <dependencies>
@@ -82,20 +82,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>be.maximvdw</groupId>
-      <artifactId>MVdWPlaceholderAPI</artifactId>
-      <version>3.0.2-SNAPSHOT</version>
+      <groupId>com.github.MilkBowl</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>MVdWUpdater</artifactId>
-          <groupId>be.maximvdw</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-          <groupId>org.eclipse.paho</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 </project>

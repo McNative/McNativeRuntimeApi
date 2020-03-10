@@ -24,7 +24,7 @@
     <parent>
         <artifactId>McNative</artifactId>
         <groupId>org.mcnative</groupId>
-        <version>1.0.57-SNAPSHOT</version>
+        <version>1.0.58-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -75,6 +75,10 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
+            <id>vaultapi</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>mvdw-software</id>
             <url>http://repo.mvdw-software.be/content/groups/public/</url>
         </repository>
@@ -119,7 +123,12 @@
             <version>1.14-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 
