@@ -43,6 +43,7 @@
         <dependency.bungeecord.version>1.15-SNAPSHOT</dependency.bungeecord.version>
         <dependency.bukkit.version>1.14.2-R0.1-SNAPSHOT</dependency.bukkit.version>
         <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
+        <dependency.mvdwplaceholderapi.version>3.0.2-SNAPSHOT</dependency.mvdwplaceholderapi.version>
 
         <dependency.pretronic.libraries.utility>1.0.31-SNAPSHOT</dependency.pretronic.libraries.utility>
         <dependency.pretronic.libraries.document>1.0.31-SNAPSHOT</dependency.pretronic.libraries.document>

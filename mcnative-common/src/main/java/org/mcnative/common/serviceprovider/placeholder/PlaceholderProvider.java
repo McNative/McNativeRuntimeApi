@@ -19,8 +19,9 @@
 
 package org.mcnative.common.serviceprovider.placeholder;
 
+import net.prematic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.player.MinecraftPlayer;
-import org.mcnative.common.text.components.TextComponent;
+import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.Collection;
 
@@ -30,15 +31,23 @@ public interface PlaceholderProvider {
 
     Collection<String> getIdentifiers();
 
-    void registerPlaceHolders(String identifier, PlaceholderHook hook);
+    boolean hasIdentifier(String identifier);
+
+
+    void registerPlaceHolders(ObjectOwner owner,String identifier, PlaceholderHook hook);
+
+    default void registerStaticPlaceHolder(ObjectOwner owner,String placeholder, String value){
+        registerPlaceHolders(owner, placeholder, (PlaceholderReplacer) player -> value);
+    }
 
     void unregisterPlaceHolders(String identifier);
 
-    boolean hasIdentifier(String identifier);
+    void unregisterPlaceHolders(ObjectOwner owner);
+
 
     String translate(MinecraftPlayer player, String identifier, String parameter);
 
     String replacePlaceholders(MinecraftPlayer player, String rawString);
 
-    void replacePlaceholder(MinecraftPlayer player, TextComponent rawComponent);
+    void replacePlaceholders(MinecraftPlayer player, MessageComponent<?> rawComponent);
 }

@@ -24,7 +24,6 @@ import net.prematic.libraries.document.annotations.DocumentKey;
 import net.prematic.libraries.document.annotations.DocumentRequired;
 import net.prematic.libraries.document.type.DocumentFileType;
 import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.utility.StringUtil;
 import net.prematic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServerType;
@@ -33,8 +32,6 @@ import org.mcnative.common.plugin.configuration.FileConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,18 +39,22 @@ public class McNativeProxyConfiguration {
 
     public static transient DocumentFileType FORMAT = DocumentFileType.YAML;
 
-    //@Todo implement configuration
+    public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
+
+    /*
+    //@Todo currently unused and not implemented
     public static boolean WHITELIST_ENABLED = false;
     public static String WHITELIST_MESSAGE = "&6You are not whitelisted on this server.";
     public static String WHITELIST_PERMISSION = "mcnative.whitelist.join";
     public static Collection<String> WHITELIST_PLAYERS = Arrays.asList("Dkrieger","FridiousHD"
             ,"cb7f0812-1fbb-4715-976e-a81e52be4b67","21246bcb-b4ad-4d38-8662-69cb8debb7c6");
 
-    public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
-
     public static boolean SERVER_CONNECT_PRIORITY_ENABLED = false;
-    @DocumentKey("server.connectToFallback.onJoin.allowNormalServers")
+
+    @DocumentKey("server.connect.connectToFallback.onJoin.allowNormalServers")
     public static boolean SERVER_CONNECT_PRIORITY_ON_JOIN_ALLOW_ONLY_NORMAL_SERVERS = false;
+
+    @DocumentKey("server.connect.priority.noFallback")
     public static String SERVER_CONNECT_PRIORITY_NO_FALLBACK = "No fallback server available.";
 
     public static boolean GLOBAL_CHAT_ENABLED = false;
@@ -72,16 +73,16 @@ public class McNativeProxyConfiguration {
     public static String GLOBAL_TABLIST_FORMAT_PLAYER = "%prefix% %player% %suffix%";
     public static String GLOBAL_TABLIST_FORMAT_SERVER = "&8<- %server% &8->";
 
-    public static boolean NETWORK_MESSAGING_ENABLED = true;
 
-    @DocumentKey("messaging.directConnect.enabled")
+        @DocumentKey("messaging.directConnect.enabled")
     public static boolean NETWORK_DIRECT_CONNECT_ENABLED = true;
     @DocumentKey("messaging.directConnect.password")
     public static String NETWORK_DIRECT_CONNECT_PASSWORD = StringUtil.getRandomString(15);
+     */
 
-    @DocumentKey("messaging.packetManipulation.upstream")
+    @DocumentKey("network.messaging.packetManipulation.upstream")
     public static boolean NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED = true;
-    @DocumentKey("messaging.packetManipulation.downstream")
+    @DocumentKey("network.messaging.packetManipulation.downstream")
     public static boolean NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED = false;
 
     public static class ConfiguredServer {

@@ -33,8 +33,10 @@ import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
+import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 import java.io.File;
 import java.util.List;
@@ -81,6 +83,9 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+
+        registerDependencyHooks(pluginManager,playerManager);
+
     }
 
     private static Network loadNetwork(){
@@ -88,6 +93,13 @@ public class McNativeLauncher {
             return new BungeeCordProxyNetwork();
         }
         return null;
+    }
+
+    private static void registerDependencyHooks(BukkitPluginManager pluginManager, BukkitPlayerManager playerManager){
+        if(Bukkit.getPluginManager().getPlugin("PlaceHolderApi") != null){
+            McNative.getInstance().getRegistry().registerService(McNative.getInstance(), PlaceholderProvider.class
+                    ,new PlaceHolderApiProvider(playerManager,pluginManager));
+        }
     }
 
     @SuppressWarnings("unchecked")

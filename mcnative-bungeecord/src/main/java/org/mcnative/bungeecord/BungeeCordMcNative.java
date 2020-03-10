@@ -25,6 +25,7 @@ import net.prematic.libraries.command.sender.CommandSender;
 import net.prematic.libraries.concurrent.TaskScheduler;
 import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.prematic.libraries.dependency.DependencyManager;
+import net.prematic.libraries.event.EventPriority;
 import net.prematic.libraries.logging.PrematicLogger;
 import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
 import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
@@ -52,6 +53,8 @@ import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
+import org.mcnative.common.serviceprovider.placeholder.McNativePlaceholderProvider;
+import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 import java.io.File;
 import java.util.UUID;
@@ -175,6 +178,7 @@ public class BungeeCordMcNative implements McNative {
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
         pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService(),serverMap));
+        pluginManager.registerService(this, PlaceholderProvider.class,new McNativePlaceholderProvider(), EventPriority.LOW);
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{
