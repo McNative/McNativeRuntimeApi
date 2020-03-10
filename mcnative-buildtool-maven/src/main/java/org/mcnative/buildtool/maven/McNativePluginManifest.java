@@ -25,6 +25,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -97,7 +98,7 @@ public class McNativePluginManifest {
 
     public void createManifestFile(File location){
         if(depends == null) this.depends = new HashSet<>();
-        getSoftdepends().add("McNative");
+        getSoftdepends().addAll(Arrays.asList("McNative","PlaceHolderApi","Vault"));
         if(messageModule == null) messageModule = getName().replace(" ","_").toLowerCase();
         location.getParentFile().mkdirs();
         try {
