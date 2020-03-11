@@ -3,7 +3,7 @@
   <parent>
     <artifactId>McNative</artifactId>
     <groupId>org.mcnative</groupId>
-    <version>1.0.60-SNAPSHOT</version>
+    <version>1.0.61-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mcnative-loader</artifactId>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>org.mcnative</groupId>
       <artifactId>mcnative-common</artifactId>
-      <version>1.0.60-SNAPSHOT</version>
+      <version>1.0.61-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
