@@ -101,8 +101,9 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
-
+                    echo BRANCH
                     if (BRANCH == BRANCH_DEVELOPMENT) {
+                        echo "dev"
                         patchVersion++
 
                         String version = major + "." + minorVersion + "." + patchVersion + "-SNAPSHOT"
@@ -117,6 +118,7 @@ pipeline {
                             sh "git push origin HEAD:development -v"
                         }
                     } else if (BRANCH == BRANCH_MASTER) {
+                        echo "master"
                         minorVersion++
                         patchVersion = 0
                         String version = major + "." + minorVersion + "." + patchVersion
