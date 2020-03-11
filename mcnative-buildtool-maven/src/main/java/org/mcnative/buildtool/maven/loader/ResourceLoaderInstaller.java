@@ -31,7 +31,7 @@ import java.io.File;
 
 public class ResourceLoaderInstaller {
 
-    private static final String RESOURCE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/net/prematic/libraries/prematiclibraries-resourceloader/{version}/prematiclibraries-resourceloader-{version}-sources.jar";
+    private static final String RESOURCE_LOADER_URL = "https://repository.pretronic.net/repository/pretronic/net/prematic/libraries/prematiclibraries-resourceloader/{version}/prematiclibraries-resourceloader-{version}-sources.jar";
     private static final String RESOURCE_LOADER_BASE_NAME = "resource-loader-${version}.jar";
 
     private final Log log;
