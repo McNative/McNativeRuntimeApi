@@ -40,7 +40,7 @@ import java.nio.file.Files;
 
 public class McNativeLoaderCreator {
 
-    private static final String MCNATIVE_LOADER_URL = "https://repository.prematic.net/repository/pretronic/org/mcnative/mcnative-loader/{version}/mcnative-loader-{version}-sources.jar";
+    private static final String MCNATIVE_LOADER_URL = "https://repository.pretronic.net/repository/pretronic/org/mcnative/mcnative-loader/{version}/mcnative-loader-{version}-sources.jar";
     private static final String MCNATIVE_LOADER_BASE_NAME = "mcnative-loader-{version}.jar";
     private static final String MCNATIVE_LOADER_BASE_PACKAGE = "org.mcnative.loader";
     private static final String MCNATIVE_LOADER_BASE_PATH = MCNATIVE_LOADER_BASE_PACKAGE.replace(".","/");
