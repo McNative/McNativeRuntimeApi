@@ -56,11 +56,26 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
     @Override
     public Database getDatabase(ObjectOwner owner, String name) {
         StorageConfig.DatabaseEntry entry = this.storageConfig.getDatabaseEntry(owner, name);
-        DatabaseDriver databaseDriver = getDatabaseDriver(entry.getDriverName());
-        if(!databaseDriver.isConnected()) {
-            databaseDriver.connect();
+        if(entry != null) {
+            DatabaseDriver databaseDriver = getDatabaseDriver(entry.getDriverName());
+            if(!databaseDriver.isConnected()) {
+                databaseDriver.connect();
+            }
+            return databaseDriver.getDatabase(entry.getDatabase());
         }
-        return databaseDriver.getDatabase(entry.getDatabase());
+        return null;
+    }
+
+    @Override
+    public Database getDatabase(ObjectOwner owner, String name, boolean configCreate) {
+        Database database = getDatabase(owner, name);
+        if(database == null) {
+            this.storageConfig.addDatabaseEntry(new StorageConfig.DatabaseEntry(owner.getName(),
+                    "Default", owner.getName(), "default"));
+            this.storageConfig.save();
+            database = getDatabase(owner, name);
+        }
+        return database;
     }
 
     @Override

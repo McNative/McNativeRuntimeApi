@@ -72,6 +72,11 @@ public class StorageConfig {
         return databaseEntry;
     }
 
+    public DatabaseEntry addDatabaseEntry(DatabaseEntry entry) {
+        this.databaseEntries.add(entry);
+        return entry;
+    }
+
     public Configuration getConfiguration() {
         return configuration;
     }

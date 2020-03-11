@@ -38,5 +38,7 @@ public interface ConfigurationProvider {
 
     Database getDatabase(ObjectOwner owner,String name);
 
+    Database getDatabase(ObjectOwner owner, String name, boolean configCreate);
+
     DatabaseDriver getDatabaseDriver(String name);
 }
