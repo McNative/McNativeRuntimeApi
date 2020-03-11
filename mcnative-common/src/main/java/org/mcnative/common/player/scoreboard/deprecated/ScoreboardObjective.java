@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player.scoreboard.deprecated;
 
-import net.prematic.libraries.utility.annonations.NotNull;
+import net.pretronic.libraries.utility.annonations.NotNull;
 
 import java.util.Collection;
 

@@ -21,7 +21,7 @@ package org.mcnative.bukkit.serviceprovider.placeholder;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -115,8 +115,8 @@ public class PlaceHolderApiProvider implements PlaceholderProvider {
     }
 
     private Plugin getPlugin(ObjectOwner owner){
-        if(owner instanceof net.prematic.libraries.plugin.Plugin){
-            return pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner);
+        if(owner instanceof net.pretronic.libraries.plugin.Plugin){
+            return pluginManager.getMappedPlugin((net.pretronic.libraries.plugin.Plugin<?>) owner);
         }else{
             return McNativeLauncher.getPlugin();
         }

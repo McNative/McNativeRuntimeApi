@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.inventory.type;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.service.inventory.InventoryOwner;

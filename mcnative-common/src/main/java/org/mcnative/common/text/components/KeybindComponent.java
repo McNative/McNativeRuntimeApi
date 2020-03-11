@@ -19,9 +19,9 @@
 
 package org.mcnative.common.text.components;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.message.language.Language;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 

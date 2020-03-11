@@ -19,9 +19,9 @@
 
 package org.mcnative.buildtool.maven.loader;
 
-import net.prematic.libraries.utility.http.HttpClient;
-import net.prematic.libraries.utility.http.HttpResult;
-import net.prematic.libraries.utility.io.archive.ZipArchive;
+import net.pretronic.libraries.utility.http.HttpClient;
+import net.pretronic.libraries.utility.http.HttpResult;
+import net.pretronic.libraries.utility.io.archive.ZipArchive;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -31,7 +31,7 @@ import java.io.File;
 
 public class ResourceLoaderInstaller {
 
-    private static final String RESOURCE_LOADER_URL = "https://repository.pretronic.net/repository/pretronic/net/prematic/libraries/prematiclibraries-resourceloader/{version}/prematiclibraries-resourceloader-{version}-sources.jar";
+    private static final String RESOURCE_LOADER_URL = "https://repository.pretronic.net/repository/pretronic/net/pretronic/libraries/pretroniclibraries-resourceloader/{version}/pretroniclibraries-resourceloader-{version}-sources.jar";
     private static final String RESOURCE_LOADER_BASE_NAME = "resource-loader-${version}.jar";
 
     private final Log log;

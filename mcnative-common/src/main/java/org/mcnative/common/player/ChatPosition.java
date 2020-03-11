@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
 import java.util.ArrayList;
 import java.util.List;

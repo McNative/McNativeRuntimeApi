@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.player;
 
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.PermissionAttachmentInfo;

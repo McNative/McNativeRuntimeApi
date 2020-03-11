@@ -19,7 +19,7 @@
 
 package org.mcnative.common.plugin;
 
-import net.prematic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.command.sender.CommandSender;
 
 public interface CustomCommandSender extends CommandSender {
 

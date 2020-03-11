@@ -19,7 +19,7 @@
 
 package org.mcnative.common.network.messaging;
 
-import net.prematic.libraries.document.Document;
+import net.pretronic.libraries.document.Document;
 
 import java.util.UUID;
 

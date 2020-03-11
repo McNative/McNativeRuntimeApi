@@ -19,8 +19,8 @@
 
 package org.mcnative.common.event;
 
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 
 public interface PermissionCheckEvent extends MinecraftEvent {

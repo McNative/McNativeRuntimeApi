@@ -19,10 +19,10 @@
 
 package org.mcnative.bukkit.network;
 
-import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;

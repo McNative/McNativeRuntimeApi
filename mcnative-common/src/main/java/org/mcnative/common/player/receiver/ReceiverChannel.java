@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player.receiver;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;

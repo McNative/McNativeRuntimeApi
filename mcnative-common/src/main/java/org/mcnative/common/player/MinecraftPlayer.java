@@ -19,8 +19,8 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.Permissable;

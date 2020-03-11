@@ -19,12 +19,12 @@
 
 package org.mcnative.common.network.component.server;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.adapter.DocumentAdapter;
-import net.prematic.libraries.document.entry.DocumentBase;
-import net.prematic.libraries.document.entry.DocumentEntry;
-import net.prematic.libraries.utility.GeneralUtil;
-import net.prematic.libraries.utility.reflect.TypeReference;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.adapter.DocumentAdapter;
+import net.pretronic.libraries.document.entry.DocumentBase;
+import net.pretronic.libraries.document.entry.DocumentEntry;
+import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 

@@ -21,7 +21,7 @@ package org.mcnative.loader.bootstrap;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.prematic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.plugin.description.PluginVersion;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 

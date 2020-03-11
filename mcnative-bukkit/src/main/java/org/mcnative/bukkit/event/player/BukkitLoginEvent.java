@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.event.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;

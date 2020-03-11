@@ -24,9 +24,9 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.reflect.ReflectException;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.reflect.ReflectException;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.player.profile.GameProfile;
 

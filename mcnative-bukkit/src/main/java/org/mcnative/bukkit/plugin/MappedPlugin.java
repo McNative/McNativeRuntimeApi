@@ -19,14 +19,14 @@
 
 package org.mcnative.bukkit.plugin;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.EmptyDocument;
-import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.description.PluginVersion;
-import net.prematic.libraries.plugin.description.dependency.Dependency;
-import net.prematic.libraries.plugin.description.mainclass.MainClass;
-import net.prematic.libraries.plugin.description.mainclass.SingleMainClass;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.EmptyDocument;
+import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.plugin.description.dependency.Dependency;
+import net.pretronic.libraries.plugin.description.mainclass.MainClass;
+import net.pretronic.libraries.plugin.description.mainclass.SingleMainClass;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.mcnative.common.McNative;
@@ -43,7 +43,7 @@ public class MappedPlugin extends MinecraftPlugin {
     public MappedPlugin(Plugin plugin) {
         this.plugin = plugin;
         initialize(new Description(plugin.getDescription()),null
-                ,new JdkPrematicLogger(plugin.getLogger()), McNative.getInstance());
+                ,new JdkPretronicLogger(plugin.getLogger()), McNative.getInstance());
     }
 
     public Plugin getPlugin() {

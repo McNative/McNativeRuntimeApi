@@ -20,14 +20,14 @@
 package org.mcnative.bukkit.plugin.event;
 
 
-import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.event.Listener;
-import net.prematic.libraries.event.executor.ConsumerEventExecutor;
-import net.prematic.libraries.event.executor.EventExecutor;
-import net.prematic.libraries.event.executor.MethodEventExecutor;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.event.Listener;
+import net.pretronic.libraries.event.executor.ConsumerEventExecutor;
+import net.pretronic.libraries.event.executor.EventExecutor;
+import net.pretronic.libraries.event.executor.MethodEventExecutor;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -120,8 +120,8 @@ public class BukkitEventBus implements EventBus {
         for (HandlerList handlerList : HandlerList.getHandlerLists()) {
             if(handlerList instanceof McNativeHandlerList) ((McNativeHandlerList) handlerList).unregister(owner);
             else{
-                if(owner instanceof net.prematic.libraries.plugin.Plugin<?>){
-                    HandlerList.unregisterAll(pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner));
+                if(owner instanceof net.pretronic.libraries.plugin.Plugin<?>){
+                    HandlerList.unregisterAll(pluginManager.getMappedPlugin((net.pretronic.libraries.plugin.Plugin<?>) owner));
                 }
             }
         }

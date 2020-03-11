@@ -19,21 +19,21 @@
 
 package org.mcnative.bukkit.plugin;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.message.MessagePack;
-import net.prematic.libraries.message.MessageProvider;
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.lifecycle.LifecycleState;
-import net.prematic.libraries.plugin.loader.PluginLoader;
-import net.prematic.libraries.plugin.manager.PluginManager;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.annonations.Internal;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.message.MessagePack;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.lifecycle.LifecycleState;
+import net.pretronic.libraries.plugin.loader.PluginLoader;
+import net.pretronic.libraries.plugin.manager.PluginManager;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.*;
 import org.mcnative.bukkit.McNativeLauncher;
@@ -66,7 +66,7 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     @Override
-    public PrematicLogger getLogger() {
+    public PretronicLogger getLogger() {
         return McNative.getInstance().getLogger();
     }
 
@@ -309,11 +309,11 @@ public class BukkitPluginManager implements PluginManager {
 
     private byte mapServicePriority(ServicePriority priority) {
         switch (priority) {
-            case Highest: return net.prematic.libraries.plugin.service.ServicePriority.HIGHEST;
-            case High: return net.prematic.libraries.plugin.service.ServicePriority.HIGH;
-            case Low: return net.prematic.libraries.plugin.service.ServicePriority.LOW;
-            case Lowest: return net.prematic.libraries.plugin.service.ServicePriority.LOWEST;
-            default: return net.prematic.libraries.plugin.service.ServicePriority.NORMAL;
+            case Highest: return net.pretronic.libraries.plugin.service.ServicePriority.HIGHEST;
+            case High: return net.pretronic.libraries.plugin.service.ServicePriority.HIGH;
+            case Low: return net.pretronic.libraries.plugin.service.ServicePriority.LOW;
+            case Lowest: return net.pretronic.libraries.plugin.service.ServicePriority.LOWEST;
+            default: return net.pretronic.libraries.plugin.service.ServicePriority.NORMAL;
         }
     }
 }

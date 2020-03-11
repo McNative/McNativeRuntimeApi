@@ -19,9 +19,9 @@
 
 package org.mcnative.loader;
 
-import net.prematic.libraries.resourceloader.ResourceInfo;
-import net.prematic.libraries.resourceloader.ResourceLoader;
-import net.prematic.libraries.resourceloader.VersionInfo;
+import net.pretronic.libraries.resourceloader.ResourceInfo;
+import net.pretronic.libraries.resourceloader.ResourceLoader;
+import net.pretronic.libraries.resourceloader.VersionInfo;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 
 public class McNativeLoader extends ResourceLoader {
 
-    private static final String VERSION_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
-    private static final String DOWNLOAD_URL = "https://mirror.prematic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={edition}";
+    private static final String VERSION_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
+    private static final String DOWNLOAD_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={edition}";
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 

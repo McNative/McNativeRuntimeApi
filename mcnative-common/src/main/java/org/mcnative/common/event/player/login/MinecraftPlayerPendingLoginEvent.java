@@ -19,8 +19,8 @@
 
 package org.mcnative.common.event.player.login;
 
-import net.prematic.libraries.event.Cancellable;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.event.Cancellable;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.text.Text;

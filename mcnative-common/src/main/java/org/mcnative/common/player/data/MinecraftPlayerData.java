@@ -19,8 +19,8 @@
 
 package org.mcnative.common.player.data;
 
-import net.prematic.libraries.caching.CacheStateAble;
-import net.prematic.libraries.document.Document;
+import net.pretronic.libraries.caching.CacheStateAble;
+import net.pretronic.libraries.document.Document;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;

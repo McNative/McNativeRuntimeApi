@@ -19,8 +19,8 @@
 
 package org.mcnative.common.network;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.event.EventBus;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.event.EventBus;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;

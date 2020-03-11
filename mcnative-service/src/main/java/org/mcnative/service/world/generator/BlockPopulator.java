@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world.generator;
 
-import net.prematic.libraries.utility.annonations.NotNull;
+import net.pretronic.libraries.utility.annonations.NotNull;
 import org.mcnative.service.world.Chunk;
 
 import java.util.Random;

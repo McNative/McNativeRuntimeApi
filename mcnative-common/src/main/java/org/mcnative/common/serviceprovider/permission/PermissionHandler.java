@@ -19,7 +19,7 @@
 
 package org.mcnative.common.serviceprovider.permission;
 
-import net.prematic.libraries.caching.CacheStateAble;
+import net.pretronic.libraries.caching.CacheStateAble;
 
 public interface PermissionHandler extends Permissable, CacheStateAble<PermissionHandler> {
 

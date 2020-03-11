@@ -19,19 +19,19 @@
 
 package org.mcnative.common.serviceprovider.message;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.DocumentRegistry;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.message.MessagePack;
-import net.prematic.libraries.message.MessageProvider;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.message.language.Language;
-import net.prematic.libraries.message.language.LanguageAble;
-import net.prematic.libraries.message.repository.MessageRepository;
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.DocumentRegistry;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.message.MessagePack;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.language.Language;
+import net.pretronic.libraries.message.language.LanguageAble;
+import net.pretronic.libraries.message.repository.MessageRepository;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.text.Text;

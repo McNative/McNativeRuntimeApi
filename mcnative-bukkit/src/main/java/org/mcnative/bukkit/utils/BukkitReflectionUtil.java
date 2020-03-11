@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.utils;
 
-import net.prematic.libraries.utility.reflect.ReflectException;
+import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.bukkit.Bukkit;
 
 public class BukkitReflectionUtil {

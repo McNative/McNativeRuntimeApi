@@ -19,13 +19,13 @@
 
 package org.mcnative.common.player.profile;
 
-import net.prematic.libraries.caching.ArrayCache;
-import net.prematic.libraries.caching.Cache;
-import net.prematic.libraries.caching.CacheQuery;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.utility.http.HttpClient;
-import net.prematic.libraries.utility.http.HttpResult;
+import net.pretronic.libraries.caching.ArrayCache;
+import net.pretronic.libraries.caching.Cache;
+import net.pretronic.libraries.caching.CacheQuery;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.utility.http.HttpClient;
+import net.pretronic.libraries.utility.http.HttpResult;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

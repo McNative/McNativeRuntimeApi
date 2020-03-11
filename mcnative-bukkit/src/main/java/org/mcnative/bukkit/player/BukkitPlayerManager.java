@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.player;
 
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.MinecraftPlayerData;

@@ -48,72 +48,72 @@
     <dependencies>
 
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-utility</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-utility</artifactId>
             <version>${dependency.pretronic.libraries.utility}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-concurrent</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-concurrent</artifactId>
             <version>${dependency.pretronic.libraries.concurrent}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-command</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-command</artifactId>
             <version>${dependency.pretronic.libraries.command}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-event</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-event</artifactId>
             <version>${dependency.pretronic.libraries.event}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-plugin</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-plugin</artifactId>
             <version>${dependency.pretronic.libraries.plugin}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-dependency</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-dependency</artifactId>
             <version>${dependency.pretronic.libraries.dependency}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-caching</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-caching</artifactId>
             <version>${dependency.pretronic.libraries.caching}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-message</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-message</artifactId>
             <version>${dependency.pretronic.libraries.message}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-synchronisation</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-synchronisation</artifactId>
             <version>${dependency.pretronic.libraries.synchronisation}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.prematic.libraries</groupId>
-            <artifactId>prematiclibraries-logging</artifactId>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-logging</artifactId>
             <version>${dependency.pretronic.libraries.logging}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.prematic.databasequery</groupId>
-            <artifactId>prematicdatabasequery-api</artifactId>
+            <groupId>net.pretronic.databasequery</groupId>
+            <artifactId>pretronicdatabasequery-api</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>
@@ -122,8 +122,8 @@
         <!-- @Todo remove (dynamic load) -->
 
         <dependency>
-            <groupId>net.prematic.databasequery</groupId>
-            <artifactId>prematicdatabasequery-sql</artifactId>
+            <groupId>net.pretronic.databasequery</groupId>
+            <artifactId>pretronicdatabasequery-sql</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>

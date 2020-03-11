@@ -21,19 +21,19 @@ package org.mcnative.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.concurrent.TaskScheduler;
-import net.prematic.libraries.concurrent.simple.SimpleTaskScheduler;
-import net.prematic.libraries.dependency.DependencyManager;
-import net.prematic.libraries.event.EventPriority;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
-import net.prematic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
-import net.prematic.libraries.message.MessageProvider;
-import net.prematic.libraries.plugin.manager.PluginManager;
-import net.prematic.libraries.plugin.service.ServiceRegistry;
-import net.prematic.libraries.utility.GeneralUtil;
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.concurrent.TaskScheduler;
+import net.pretronic.libraries.concurrent.simple.SimpleTaskScheduler;
+import net.pretronic.libraries.dependency.DependencyManager;
+import net.pretronic.libraries.event.EventPriority;
+import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.plugin.manager.PluginManager;
+import net.pretronic.libraries.plugin.service.ServiceRegistry;
+import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.bungeecord.network.PluginMessageGateway;
 import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
@@ -63,7 +63,7 @@ import java.util.concurrent.ExecutorService;
 public class BungeeCordMcNative implements McNative {
 
     private final MinecraftPlatform platform;
-    private final PrematicLogger logger;
+    private final PretronicLogger logger;
     private final TaskScheduler scheduler;
     private final CommandSender consoleSender;
     private final ObjectCreator creator;
@@ -77,7 +77,7 @@ public class BungeeCordMcNative implements McNative {
 
     public BungeeCordMcNative(PluginManager pluginManager, PlayerManager playerManager, Network network, LocalService local) {
         this.platform = new BungeeCordPlatform();
-        this.logger = new JdkPrematicLogger(ProxyServer.getInstance().getLogger());
+        this.logger = new JdkPretronicLogger(ProxyServer.getInstance().getLogger());
         this.scheduler = new SimpleTaskScheduler();
         this.consoleSender = new McNativeCommand.MappedCommandSender(ProxyServer.getInstance().getConsole());
         this.dependencyManager = new DependencyManager(logger,new File("plugins/McNative/lib/dependencies"));
@@ -102,7 +102,7 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
-    public PrematicLogger getLogger() {
+    public PretronicLogger getLogger() {
         return logger;
     }
 

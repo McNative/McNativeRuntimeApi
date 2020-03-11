@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.plugin.event;
 
-import net.prematic.libraries.event.executor.EventExecutor;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.event.executor.EventExecutor;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;

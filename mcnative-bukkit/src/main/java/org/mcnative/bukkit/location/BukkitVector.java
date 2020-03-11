@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.location;
 
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.util.NumberConversions;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.service.location.Location;

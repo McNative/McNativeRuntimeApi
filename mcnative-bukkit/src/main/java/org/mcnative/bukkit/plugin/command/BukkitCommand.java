@@ -19,10 +19,10 @@
 
 package org.mcnative.bukkit.plugin.command;
 
-import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.command.configuration.CommandConfiguration;
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.command.command.Command;
+import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.permissions.Permission;

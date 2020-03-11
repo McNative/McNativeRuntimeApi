@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 

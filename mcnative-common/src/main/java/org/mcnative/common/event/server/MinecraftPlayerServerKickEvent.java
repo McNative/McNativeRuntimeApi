@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.server;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.event.NetworkEvent;

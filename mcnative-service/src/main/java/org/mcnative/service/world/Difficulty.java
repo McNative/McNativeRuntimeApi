@@ -19,8 +19,8 @@
 
 package org.mcnative.service.world;
 
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
 import java.util.ArrayList;
 import java.util.Collection;

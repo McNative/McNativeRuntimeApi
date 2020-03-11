@@ -22,15 +22,15 @@ package org.mcnative.bungeecord.plugin.command;
 import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
-import net.prematic.libraries.command.NotFoundHandler;
-import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.annonations.Internal;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.command.NotFoundHandler;
+import net.pretronic.libraries.command.command.Command;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.MappedPlugin;
 
@@ -75,7 +75,7 @@ public class BungeeCordCommandManager implements CommandManager {
     @Override
     public void registerCommand(Command command) {
         Validate.notNull(command,command.getConfiguration(),command.getOwner());
-        if(!(command.getOwner() instanceof net.prematic.libraries.plugin.Plugin)){
+        if(!(command.getOwner() instanceof net.pretronic.libraries.plugin.Plugin)){
             throw new IllegalArgumentException("Owner is not a plugin.");
         }
         Plugin plugin = getOriginalPlugin(command.getOwner());
@@ -136,8 +136,8 @@ public class BungeeCordCommandManager implements CommandManager {
         Plugin plugin;
         if (owner instanceof MappedPlugin) {
             plugin = ((MappedPlugin) owner).getPlugin();
-        }else if (owner instanceof net.prematic.libraries.plugin.Plugin) {
-            plugin = pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) owner);
+        }else if (owner instanceof net.pretronic.libraries.plugin.Plugin) {
+            plugin = pluginManager.getMappedPlugin((net.pretronic.libraries.plugin.Plugin<?>) owner);
         } else throw new IllegalArgumentException("Object owner is not a plugin");
         return plugin;
     }

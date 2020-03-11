@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.event.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.entity.living.Player;

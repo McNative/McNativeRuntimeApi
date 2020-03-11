@@ -19,14 +19,14 @@
 
 package org.mcnative.bukkit.plugin.command;
 
-import net.prematic.libraries.command.NotFoundHandler;
-import net.prematic.libraries.command.command.Command;
-import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.command.NotFoundHandler;
+import net.pretronic.libraries.command.command.Command;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
 import org.mcnative.bukkit.player.BukkitPlayer;
@@ -85,7 +85,7 @@ public class BukkitCommandManager implements CommandManager {
     @Override
     public void registerCommand(Command command) {
         Validate.notNull(command,command.getConfiguration(),command.getOwner());
-        if(!(command.getOwner() instanceof net.prematic.libraries.plugin.Plugin)){
+        if(!(command.getOwner() instanceof net.pretronic.libraries.plugin.Plugin)){
             throw new IllegalArgumentException("Owner is not a plugin.");
         }
         commandMap.register(command.getOwner().getName().toLowerCase(),new McNativeCommand(command));

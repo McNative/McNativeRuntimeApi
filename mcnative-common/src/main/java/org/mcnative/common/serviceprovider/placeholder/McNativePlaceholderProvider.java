@@ -19,9 +19,9 @@
 
 package org.mcnative.common.serviceprovider.placeholder;
 
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.TextComponent;

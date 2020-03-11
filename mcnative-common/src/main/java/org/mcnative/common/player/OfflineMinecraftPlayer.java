@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.document.Document;
+import net.pretronic.libraries.document.Document;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;

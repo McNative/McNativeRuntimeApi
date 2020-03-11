@@ -20,9 +20,9 @@
 package org.mcnative.bungeecord.player;
 
 import io.netty.channel.Channel;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.annonations.Internal;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;

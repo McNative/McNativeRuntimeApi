@@ -58,7 +58,7 @@ public class McNativePackageMojo extends AbstractMojo {
             archiver.setOutputFile(new File(project.getBuild().getDirectory(),name));
             archiver.getArchiver().addDirectory(new File(project.getBuild().getOutputDirectory())
                     ,new String[]{
-                            "**/net/prematic/libraries/resourceloader/**"
+                            "**/net/pretronic/libraries/resourceloader/**"
                             ,"**/"+basePath+"/**"
                             ,"**/mcnative-loader.json"
                             ,"**/plugin.yml"

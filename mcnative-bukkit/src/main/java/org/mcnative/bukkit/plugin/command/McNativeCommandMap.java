@@ -19,10 +19,10 @@
 
 package org.mcnative.bukkit.plugin.command;
 
-import net.prematic.libraries.command.NotFoundHandler;
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.command.NotFoundHandler;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

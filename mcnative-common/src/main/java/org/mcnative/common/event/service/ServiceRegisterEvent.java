@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.service;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
 public class ServiceRegisterEvent extends ServiceEvent {
 

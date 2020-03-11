@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.server;
 
-import net.prematic.libraries.event.Cancellable;
+import net.pretronic.libraries.event.Cancellable;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;

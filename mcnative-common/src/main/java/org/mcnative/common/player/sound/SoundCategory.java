@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player.sound;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 
 import java.util.ArrayList;
 import java.util.Collection;

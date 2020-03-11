@@ -20,8 +20,8 @@
 package org.mcnative.bukkit.player;
 
 import io.netty.channel.Channel;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;

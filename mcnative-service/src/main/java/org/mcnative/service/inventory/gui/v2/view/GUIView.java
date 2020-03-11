@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.gui.v2.view;
 
-import net.prematic.libraries.document.Document;
+import net.pretronic.libraries.document.Document;
 import org.mcnative.service.inventory.gui.v2.GUI;
 import org.mcnative.service.inventory.gui.v2.GUIContext;
 

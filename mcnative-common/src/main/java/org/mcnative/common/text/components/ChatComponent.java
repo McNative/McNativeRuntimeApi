@@ -19,7 +19,7 @@
 
 package org.mcnative.common.text.components;
 
-import net.prematic.libraries.utility.interfaces.Castable;
+import net.pretronic.libraries.utility.interfaces.Castable;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;

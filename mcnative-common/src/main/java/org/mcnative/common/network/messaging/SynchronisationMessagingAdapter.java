@@ -19,10 +19,10 @@
 
 package org.mcnative.common.network.messaging;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.utility.reflect.TypeReference;
-import net.prematic.synchronisation.SynchronisationCaller;
-import net.prematic.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.utility.reflect.TypeReference;
+import net.pretronic.synchronisation.SynchronisationCaller;
+import net.pretronic.synchronisation.SynchronisationHandler;
 import org.mcnative.common.McNative;
 
 import java.util.UUID;

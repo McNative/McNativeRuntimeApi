@@ -19,8 +19,8 @@
 
 package org.mcnative.common.event;
 
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.event.Cancellable;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.event.Cancellable;
 
 public interface CommandExecuteEvent extends Cancellable {
 

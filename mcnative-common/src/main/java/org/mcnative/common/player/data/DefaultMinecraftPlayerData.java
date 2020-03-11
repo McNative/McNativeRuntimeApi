@@ -19,8 +19,8 @@
 
 package org.mcnative.common.player.data;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;

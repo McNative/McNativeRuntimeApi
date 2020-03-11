@@ -25,11 +25,11 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
-import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.event.executor.MethodEventExecutor;
-import net.prematic.libraries.utility.annonations.Internal;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.event.executor.MethodEventExecutor;
+import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;

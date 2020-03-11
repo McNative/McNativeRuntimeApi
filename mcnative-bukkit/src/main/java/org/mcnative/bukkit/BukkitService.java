@@ -20,16 +20,16 @@
 package org.mcnative.bukkit;
 
 import net.milkbowl.vault.economy.Economy;
-import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.service.ServicePriority;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.plugin.service.ServicePriority;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.synchronisation.SynchronisationHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;

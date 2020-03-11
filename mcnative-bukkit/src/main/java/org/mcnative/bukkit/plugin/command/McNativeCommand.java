@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.plugin.command;
 
-import net.prematic.libraries.command.Completable;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.command.Completable;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,10 +39,10 @@ import java.util.List;
 //@Todo create message fallback component
 public class McNativeCommand extends Command {
 
-    private final net.prematic.libraries.command.command.Command original;
+    private final net.pretronic.libraries.command.command.Command original;
     private final MessageComponent<?> noPermissionMessage;
 
-    public McNativeCommand(net.prematic.libraries.command.command.Command original) {
+    public McNativeCommand(net.pretronic.libraries.command.command.Command original) {
         super(original.getConfiguration().getName()
                 , original.getConfiguration().getDescription()
                 , ""
@@ -52,7 +52,7 @@ public class McNativeCommand extends Command {
         this.noPermissionMessage = Text.ofMessageKey("mcnative.command.nopermission");
     }
 
-    public net.prematic.libraries.command.command.Command getOriginal() {
+    public net.pretronic.libraries.command.command.Command getOriginal() {
         return original;
     }
 
@@ -121,8 +121,8 @@ public class McNativeCommand extends Command {
         else return original.equals(obj);
     }
 
-    public static net.prematic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
-        net.prematic.libraries.command.sender.CommandSender mapped;
+    public static net.pretronic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
+        net.pretronic.libraries.command.sender.CommandSender mapped;
         if(sender.equals(Bukkit.getConsoleSender())){
             mapped = McNative.getInstance().getConsoleSender();
         }else if(sender instanceof Player) {

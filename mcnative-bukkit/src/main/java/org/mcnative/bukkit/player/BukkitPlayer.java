@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.entity.BukkitEntity;

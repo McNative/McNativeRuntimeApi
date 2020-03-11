@@ -19,13 +19,13 @@
 
 package org.mcnative.buildtool.maven.loader;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.utility.http.HttpClient;
-import net.prematic.libraries.utility.http.HttpResult;
-import net.prematic.libraries.utility.io.FileUtil;
-import net.prematic.libraries.utility.io.IORuntimeException;
-import net.prematic.libraries.utility.io.archive.ZipArchive;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.utility.http.HttpClient;
+import net.pretronic.libraries.utility.http.HttpResult;
+import net.pretronic.libraries.utility.io.FileUtil;
+import net.pretronic.libraries.utility.io.IORuntimeException;
+import net.pretronic.libraries.utility.io.archive.ZipArchive;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;

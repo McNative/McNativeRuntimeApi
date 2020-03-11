@@ -19,7 +19,7 @@
 
 package org.mcnative.common.connection;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.Text;

@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.recipe.type;
 
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.recipe.NamedRecipe;
 import org.mcnative.service.inventory.recipe.choice.RecipeChoice;

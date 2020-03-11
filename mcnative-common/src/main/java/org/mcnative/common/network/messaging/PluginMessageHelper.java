@@ -19,9 +19,9 @@
 
 package org.mcnative.common.network.messaging;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.utility.io.IORuntimeException;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.utility.io.IORuntimeException;
 
 import java.io.IOException;
 import java.io.InputStream;

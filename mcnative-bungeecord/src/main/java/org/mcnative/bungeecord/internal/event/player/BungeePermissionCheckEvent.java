@@ -19,7 +19,7 @@
 
 package org.mcnative.bungeecord.internal.event.player;
 
-import net.prematic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.command.sender.CommandSender;
 import org.mcnative.common.event.PermissionCheckEvent;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 

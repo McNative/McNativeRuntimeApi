@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.recipe.type;
 
-import net.prematic.libraries.utility.map.Pair;
+import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.recipe.Recipe;
 

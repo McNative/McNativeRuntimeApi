@@ -19,7 +19,7 @@
 
 package org.mcnative.service.world;
 
-import net.prematic.libraries.utility.annonations.Experimental;
+import net.pretronic.libraries.utility.annonations.Experimental;
 
 @Experimental
 public interface ExplosionBuilder {

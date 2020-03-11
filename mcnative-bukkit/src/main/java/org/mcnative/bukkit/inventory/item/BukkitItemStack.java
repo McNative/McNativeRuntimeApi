@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.inventory.item;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mcnative.service.NBTTag;

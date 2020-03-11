@@ -19,9 +19,9 @@
 
 package org.mcnative.common.text;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.entry.DocumentEntry;
-import net.prematic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.entry.DocumentEntry;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import org.mcnative.common.text.components.*;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;

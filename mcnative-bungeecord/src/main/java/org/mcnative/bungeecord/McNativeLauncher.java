@@ -23,9 +23,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
-import net.prematic.libraries.event.DefaultEventBus;
-import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.event.DefaultEventBus;
+import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
@@ -60,7 +60,7 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
         ProxyServer proxy = ProxyServer.getInstance();
 
-        if(!McNativeProxyConfiguration.load(new JdkPrematicLogger(logger),new File("plugins/McNative/"))) return;
+        if(!McNativeProxyConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
 
         BungeeCordServerMap serverMap = new BungeeCordServerMap();
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected server map.");

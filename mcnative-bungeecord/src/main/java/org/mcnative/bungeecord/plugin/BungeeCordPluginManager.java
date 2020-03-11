@@ -20,23 +20,23 @@
 package org.mcnative.bungeecord.plugin;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.message.MessagePack;
-import net.prematic.libraries.message.MessageProvider;
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.lifecycle.LifecycleState;
-import net.prematic.libraries.plugin.loader.PluginLoader;
-import net.prematic.libraries.plugin.manager.PluginManager;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
-import net.prematic.libraries.utility.annonations.Internal;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.map.callback.CallbackMap;
-import net.prematic.libraries.utility.map.callback.LinkedHashCallbackMap;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.message.MessagePack;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.lifecycle.LifecycleState;
+import net.pretronic.libraries.plugin.loader.PluginLoader;
+import net.pretronic.libraries.plugin.manager.PluginManager;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.map.callback.CallbackMap;
+import net.pretronic.libraries.utility.map.callback.LinkedHashCallbackMap;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.event.service.ServiceRegisterEvent;
 import org.mcnative.common.event.service.ServiceUnregisterEvent;
@@ -69,7 +69,7 @@ public class BungeeCordPluginManager implements PluginManager {
     }
 
     @Override
-    public PrematicLogger getLogger() {
+    public PretronicLogger getLogger() {
         return McNative.getInstance().getLogger();
     }
 

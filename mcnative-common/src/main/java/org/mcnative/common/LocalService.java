@@ -19,8 +19,8 @@
 
 package org.mcnative.common;
 
-import net.prematic.libraries.plugin.Plugin;
-import net.prematic.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessagingChannelListener;

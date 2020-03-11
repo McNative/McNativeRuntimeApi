@@ -19,19 +19,19 @@
 
 package org.mcnative.loader;
 
-import net.prematic.libraries.dependency.DependencyGroup;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.logging.bridge.JdkPrematicLogger;
-import net.prematic.libraries.plugin.RuntimeEnvironment;
-import net.prematic.libraries.plugin.description.DefaultPluginDescription;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.loader.DefaultPluginLoader;
-import net.prematic.libraries.plugin.loader.PluginLoader;
-import net.prematic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
-import net.prematic.libraries.resourceloader.ResourceInfo;
-import net.prematic.libraries.resourceloader.ResourceLoader;
-import net.prematic.libraries.resourceloader.VersionInfo;
+import net.pretronic.libraries.dependency.DependencyGroup;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.plugin.RuntimeEnvironment;
+import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
+import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
+import net.pretronic.libraries.plugin.loader.PluginLoader;
+import net.pretronic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
+import net.pretronic.libraries.resourceloader.ResourceInfo;
+import net.pretronic.libraries.resourceloader.ResourceLoader;
+import net.pretronic.libraries.resourceloader.VersionInfo;
 import org.mcnative.common.McNative;
 
 import java.io.File;
@@ -100,7 +100,7 @@ public class GuestPluginExecutor {
                 McNative.getInstance().getPluginManager()
                 , DocumentFileType.JSON.getReader().read(descriptionStream));
         this.loader = new DefaultPluginLoader(McNative.getInstance().getPluginManager(),environment
-                ,new JdkPrematicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
+                ,new JdkPretronicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
                 ,location,description,false);
     }
 

@@ -19,7 +19,7 @@
 
 package org.mcnative.bungeecord.internal.event.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
 import org.mcnative.common.text.components.MessageComponent;

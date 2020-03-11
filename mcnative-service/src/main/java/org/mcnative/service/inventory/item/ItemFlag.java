@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.item;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 
 import java.util.ArrayList;

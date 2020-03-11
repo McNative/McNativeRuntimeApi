@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player.sound;
 
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Validate;
 
 import java.util.HashMap;
 import java.util.Map;

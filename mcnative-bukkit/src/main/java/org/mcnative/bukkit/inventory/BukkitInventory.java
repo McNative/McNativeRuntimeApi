@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.inventory;
 
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.block.Container;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.service.entity.living.HumanEntity;

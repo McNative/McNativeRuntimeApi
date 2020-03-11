@@ -21,7 +21,7 @@ package org.mcnative.bungeecord.internal.event.player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.event.LoginEvent;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.player.MinecraftPlayer;

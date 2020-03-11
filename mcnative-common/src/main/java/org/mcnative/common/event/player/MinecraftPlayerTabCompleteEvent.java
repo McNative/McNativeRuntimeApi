@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.player;
 
-import net.prematic.libraries.event.Cancellable;
+import net.pretronic.libraries.event.Cancellable;
 
 import java.util.List;
 

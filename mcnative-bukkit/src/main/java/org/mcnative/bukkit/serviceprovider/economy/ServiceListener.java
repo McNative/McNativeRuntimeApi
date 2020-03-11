@@ -20,8 +20,8 @@
 package org.mcnative.bukkit.serviceprovider.economy;
 
 import net.milkbowl.vault.economy.Economy;
-import net.prematic.libraries.event.Listener;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.event.Listener;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
@@ -56,8 +56,8 @@ public class ServiceListener {
     }
 
     private Plugin findPlugin(ObjectOwner objectOwner) {
-        if(objectOwner instanceof net.prematic.libraries.plugin.Plugin<?>) {
-            return this.pluginManager.getMappedPlugin((net.prematic.libraries.plugin.Plugin<?>) objectOwner);
+        if(objectOwner instanceof net.pretronic.libraries.plugin.Plugin<?>) {
+            return this.pluginManager.getMappedPlugin((net.pretronic.libraries.plugin.Plugin<?>) objectOwner);
         } else {
             return McNativeLauncher.getPlugin();
         }
@@ -65,16 +65,16 @@ public class ServiceListener {
 
     private ServicePriority mapPriority(byte priority) {
         switch (priority) {
-            case net.prematic.libraries.plugin.service.ServicePriority.HIGHEST : {
+            case net.pretronic.libraries.plugin.service.ServicePriority.HIGHEST : {
                 return ServicePriority.Highest;
             }
-            case net.prematic.libraries.plugin.service.ServicePriority.HIGH : {
+            case net.pretronic.libraries.plugin.service.ServicePriority.HIGH : {
                 return ServicePriority.High;
             }
-            case net.prematic.libraries.plugin.service.ServicePriority.LOW : {
+            case net.pretronic.libraries.plugin.service.ServicePriority.LOW : {
                 return ServicePriority.Low;
             }
-            case net.prematic.libraries.plugin.service.ServicePriority.LOWEST : {
+            case net.pretronic.libraries.plugin.service.ServicePriority.LOWEST : {
                 return ServicePriority.Lowest;
             }
             default: {

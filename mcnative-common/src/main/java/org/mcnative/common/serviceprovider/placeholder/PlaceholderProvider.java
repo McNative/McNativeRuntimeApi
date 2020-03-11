@@ -19,7 +19,7 @@
 
 package org.mcnative.common.serviceprovider.placeholder;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.MessageComponent;
 

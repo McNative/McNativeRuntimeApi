@@ -19,13 +19,13 @@
 
 package org.mcnative.common.plugin.configuration;
 
-import net.prematic.databasequery.api.driver.config.DatabaseDriverConfig;
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
-import net.prematic.libraries.utility.reflect.TypeReference;
+import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.databasequery.sql.dialect.Dialect;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
+import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.McNative;
 
 import java.io.File;

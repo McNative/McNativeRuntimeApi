@@ -19,11 +19,11 @@
 
 package org.mcnative.bukkit.network;
 
-import net.prematic.libraries.command.manager.CommandManager;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.event.EventBus;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Iterators;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;

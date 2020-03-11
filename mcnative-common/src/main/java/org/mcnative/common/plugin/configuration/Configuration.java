@@ -19,10 +19,10 @@
 
 package org.mcnative.common.plugin.configuration;
 
-import net.prematic.libraries.command.command.configuration.CommandConfiguration;
-import net.prematic.libraries.command.command.configuration.DefaultCommandConfiguration;
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
+import net.pretronic.libraries.command.command.configuration.DefaultCommandConfiguration;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.text.components.MessageComponent;
 
 public interface Configuration extends Document {

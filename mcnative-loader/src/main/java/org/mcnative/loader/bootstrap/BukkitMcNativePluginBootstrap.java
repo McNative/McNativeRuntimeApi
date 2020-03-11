@@ -19,8 +19,8 @@
 
 package org.mcnative.loader.bootstrap;
 
-import net.prematic.libraries.plugin.description.PluginVersion;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;

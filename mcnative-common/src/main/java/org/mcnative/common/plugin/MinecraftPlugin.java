@@ -19,9 +19,9 @@
 
 package org.mcnative.common.plugin;
 
-import net.prematic.databasequery.api.Database;
-import net.prematic.databasequery.api.driver.DatabaseDriver;
-import net.prematic.libraries.plugin.Plugin;
+import net.pretronic.databasequery.api.Database;
+import net.pretronic.databasequery.api.driver.DatabaseDriver;
+import net.pretronic.libraries.plugin.Plugin;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.configuration.Configuration;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;

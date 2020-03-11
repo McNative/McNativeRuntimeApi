@@ -19,11 +19,11 @@
 
 package org.mcnative.common.plugin.configuration;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.WrappedDocument;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
-import net.prematic.libraries.utility.io.IORuntimeException;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.WrappedDocument;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.io.IORuntimeException;
 
 import java.io.File;
 import java.io.IOException;

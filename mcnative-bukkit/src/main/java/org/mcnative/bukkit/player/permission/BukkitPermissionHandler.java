@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.player.permission;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.mcnative.common.player.MinecraftPlayer;

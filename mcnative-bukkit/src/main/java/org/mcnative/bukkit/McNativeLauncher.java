@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit;
 
-import net.prematic.libraries.utility.GeneralUtil;
-import net.prematic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;

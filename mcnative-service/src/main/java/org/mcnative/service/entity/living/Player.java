@@ -19,7 +19,7 @@
 
 package org.mcnative.service.entity.living;
 
-import net.prematic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.service.Effect;

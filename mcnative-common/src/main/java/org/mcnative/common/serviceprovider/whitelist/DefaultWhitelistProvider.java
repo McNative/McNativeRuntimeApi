@@ -20,11 +20,11 @@
 package org.mcnative.common.serviceprovider.whitelist;
 
 
-import net.prematic.databasequery.api.collection.DatabaseCollection;
-import net.prematic.databasequery.api.collection.field.FieldOption;
-import net.prematic.databasequery.api.datatype.DataType;
-import net.prematic.databasequery.api.query.result.QueryResult;
-import net.prematic.databasequery.api.query.result.QueryResultEntry;
+import net.pretronic.databasequery.api.collection.DatabaseCollection;
+import net.pretronic.databasequery.api.collection.field.FieldOption;
+import net.pretronic.databasequery.api.datatype.DataType;
+import net.pretronic.databasequery.api.query.result.QueryResult;
+import net.pretronic.databasequery.api.query.result.QueryResultEntry;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;

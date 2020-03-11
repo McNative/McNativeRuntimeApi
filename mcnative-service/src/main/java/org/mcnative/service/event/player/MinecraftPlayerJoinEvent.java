@@ -19,7 +19,7 @@
 
 package org.mcnative.service.event.player;
 
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.location.Location;
 

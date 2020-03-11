@@ -19,7 +19,7 @@
 
 package org.mcnative.common.protocol.packet;
 
-import net.prematic.libraries.event.Cancellable;
+import net.pretronic.libraries.event.Cancellable;
 import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;

@@ -19,8 +19,8 @@
 
 package org.mcnative.service.advancement;
 
-import net.prematic.libraries.utility.Iterators;
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.JEProtocolSupport;
 

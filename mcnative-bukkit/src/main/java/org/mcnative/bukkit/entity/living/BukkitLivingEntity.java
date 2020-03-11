@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.entity.living;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.mcnative.bukkit.entity.BukkitEntity;

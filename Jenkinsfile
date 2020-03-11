@@ -160,7 +160,7 @@ pipeline {
                                 httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
                                 responseHandle: 'NONE',
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/create?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -168,7 +168,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -176,7 +176,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bukkit/target/mcnative-bukkit-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.prematic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bukkit")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bukkit")
                     }
 
                 }

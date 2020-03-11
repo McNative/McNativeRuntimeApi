@@ -19,7 +19,7 @@
 
 package org.mcnative.common.event.player.settings;
 
-import net.prematic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.player.PlayerSettings;
 

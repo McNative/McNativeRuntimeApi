@@ -21,7 +21,7 @@ package org.mcnative.bukkit.serviceprovider.economy;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.OfflinePlayer;
 import org.mcnative.common.McNative;
 import org.mcnative.common.serviceprovider.economy.EconomyProvider;

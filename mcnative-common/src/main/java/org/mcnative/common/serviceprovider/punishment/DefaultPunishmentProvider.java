@@ -20,14 +20,14 @@
 package org.mcnative.common.serviceprovider.punishment;
 
 
-import net.prematic.databasequery.api.collection.DatabaseCollection;
-import net.prematic.databasequery.api.collection.field.FieldOption;
-import net.prematic.databasequery.api.datatype.DataType;
-import net.prematic.databasequery.api.query.ForeignKey;
-import net.prematic.databasequery.api.query.result.QueryResult;
-import net.prematic.databasequery.api.query.result.QueryResultEntry;
-import net.prematic.libraries.caching.ArrayCache;
-import net.prematic.libraries.caching.Cache;
+import net.pretronic.databasequery.api.collection.DatabaseCollection;
+import net.pretronic.databasequery.api.collection.field.FieldOption;
+import net.pretronic.databasequery.api.datatype.DataType;
+import net.pretronic.databasequery.api.query.ForeignKey;
+import net.pretronic.databasequery.api.query.result.QueryResult;
+import net.pretronic.databasequery.api.query.result.QueryResultEntry;
+import net.pretronic.libraries.caching.ArrayCache;
+import net.pretronic.libraries.caching.Cache;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;

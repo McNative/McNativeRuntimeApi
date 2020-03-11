@@ -19,14 +19,14 @@
 
 package org.mcnative.common;
 
-import net.prematic.libraries.command.sender.CommandSender;
-import net.prematic.libraries.concurrent.TaskScheduler;
-import net.prematic.libraries.dependency.DependencyManager;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.plugin.manager.PluginManager;
-import net.prematic.libraries.plugin.service.ServiceRegistry;
-import net.prematic.libraries.utility.annonations.Nullable;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.concurrent.TaskScheduler;
+import net.pretronic.libraries.dependency.DependencyManager;
+import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.plugin.manager.PluginManager;
+import net.pretronic.libraries.plugin.service.ServiceRegistry;
+import net.pretronic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
@@ -43,7 +43,7 @@ public interface McNative extends ObjectOwner {
 
     MinecraftPlatform getPlatform();
 
-    PrematicLogger getLogger();
+    PretronicLogger getLogger();
 
     ServiceRegistry getRegistry();
 

@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit.plugin;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.plugin.Plugin;
 
 public class BukkitPluginOwner implements ObjectOwner {

@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.gui.v2;
 
-import net.prematic.libraries.document.Document;
+import net.pretronic.libraries.document.Document;
 
 public interface GUIAction {
 

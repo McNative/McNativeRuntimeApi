@@ -19,7 +19,7 @@
 
 package org.mcnative.bukkit;
 
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;

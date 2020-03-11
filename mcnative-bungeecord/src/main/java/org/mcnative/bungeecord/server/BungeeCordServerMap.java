@@ -20,7 +20,7 @@
 package org.mcnative.bungeecord.server;
 
 import net.md_5.bungee.api.config.ServerInfo;
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 

@@ -19,12 +19,12 @@
 
 package org.mcnative.proxy;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.annotations.DocumentKey;
-import net.prematic.libraries.document.annotations.DocumentRequired;
-import net.prematic.libraries.document.type.DocumentFileType;
-import net.prematic.libraries.logging.PrematicLogger;
-import net.prematic.libraries.utility.map.Pair;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.annotations.DocumentKey;
+import net.pretronic.libraries.document.annotations.DocumentRequired;
+import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
@@ -111,7 +111,7 @@ public class McNativeProxyConfiguration {
         }
     }
 
-    public static boolean load(PrematicLogger logger, File location){
+    public static boolean load(PretronicLogger logger, File location){
         logger.info(McNative.CONSOLE_PREFIX+"Searching configuration file");
         Pair<File,DocumentFileType> configSpec = Document.findExistingType(location,"config");
         File configFile;

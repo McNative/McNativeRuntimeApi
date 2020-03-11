@@ -19,7 +19,7 @@
 
 package org.mcnative.common.protocol.packet;
 
-import net.prematic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;

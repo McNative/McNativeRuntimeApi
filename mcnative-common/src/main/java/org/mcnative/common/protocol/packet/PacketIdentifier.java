@@ -19,7 +19,7 @@
 
 package org.mcnative.common.protocol.packet;
 
-import net.prematic.libraries.utility.reflect.UnsafeInstanceCreator;
+import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 

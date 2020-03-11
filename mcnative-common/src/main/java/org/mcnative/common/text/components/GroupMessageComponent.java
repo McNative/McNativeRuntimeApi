@@ -19,12 +19,12 @@
 
 package org.mcnative.common.text.components;
 
-import net.prematic.libraries.document.Document;
-import net.prematic.libraries.document.DocumentRegistry;
-import net.prematic.libraries.document.entry.ArrayEntry;
-import net.prematic.libraries.message.bml.variable.VariableSet;
-import net.prematic.libraries.message.language.Language;
-import net.prematic.libraries.utility.Validate;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.DocumentRegistry;
+import net.pretronic.libraries.document.entry.ArrayEntry;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.language.Language;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.text.Text;
 
 import java.util.Collection;

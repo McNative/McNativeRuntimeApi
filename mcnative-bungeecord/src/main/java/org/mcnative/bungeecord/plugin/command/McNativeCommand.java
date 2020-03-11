@@ -24,7 +24,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.prematic.libraries.command.Completable;
+import net.pretronic.libraries.command.Completable;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
@@ -36,22 +36,22 @@ import java.util.List;
 
 public class McNativeCommand extends Command implements TabExecutor {
 
-    private final net.prematic.libraries.command.command.Command original;
+    private final net.pretronic.libraries.command.command.Command original;
 
-    public McNativeCommand(net.prematic.libraries.command.command.Command original) {
+    public McNativeCommand(net.pretronic.libraries.command.command.Command original) {
         super(original.getConfiguration().getName()
                 ,original.getConfiguration().getPermission()
                 ,original.getConfiguration().getAliases());
         this.original = original;
     }
 
-    public net.prematic.libraries.command.command.Command getOriginal() {
+    public net.pretronic.libraries.command.command.Command getOriginal() {
         return original;
     }
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        net.prematic.libraries.command.sender.CommandSender mapped = getMappedSender(sender);
+        net.pretronic.libraries.command.sender.CommandSender mapped = getMappedSender(sender);
         original.execute(mapped,strings);
     }
 
@@ -68,7 +68,7 @@ public class McNativeCommand extends Command implements TabExecutor {
         return Collections.emptyList();
     }
 
-    private net.prematic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
+    private net.pretronic.libraries.command.sender.CommandSender getMappedSender(CommandSender sender){
         if(sender.equals(ProxyServer.getInstance().getConsole())){
             return McNative.getInstance().getConsoleSender();
         }else if(sender instanceof ProxiedPlayer) {

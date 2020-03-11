@@ -20,7 +20,7 @@
 package org.mcnative.bungeecord.plugin;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
 public class PluginObjectOwner implements ObjectOwner {
 

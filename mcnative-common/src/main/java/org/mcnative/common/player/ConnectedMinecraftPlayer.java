@@ -19,7 +19,7 @@
 
 package org.mcnative.common.player;
 
-import net.prematic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.command.sender.CommandSender;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;

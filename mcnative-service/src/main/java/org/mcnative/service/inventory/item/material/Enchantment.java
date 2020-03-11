@@ -19,7 +19,7 @@
 
 package org.mcnative.service.inventory.item.material;
 
-import net.prematic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.service.NamespacedKey;
 import org.mcnative.service.inventory.item.ItemStack;
 

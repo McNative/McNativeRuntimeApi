@@ -19,8 +19,8 @@
 
 package org.mcnative.common.network.component.server;
 
-import net.prematic.libraries.message.bml.variable.EmptyVariableSet;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.EmptyVariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;

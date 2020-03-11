@@ -19,10 +19,10 @@
 
 package org.mcnative.common.plugin;
 
-import net.prematic.libraries.plugin.RuntimeEnvironment;
-import net.prematic.libraries.plugin.description.PluginDescription;
-import net.prematic.libraries.plugin.lifecycle.LifecycleState;
-import net.prematic.libraries.plugin.loader.PluginLoader;
+import net.pretronic.libraries.plugin.RuntimeEnvironment;
+import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.lifecycle.LifecycleState;
+import net.pretronic.libraries.plugin.loader.PluginLoader;
 import org.mcnative.common.McNative;
 
 public class MinecraftLifecycleState extends LifecycleState<McNative> {

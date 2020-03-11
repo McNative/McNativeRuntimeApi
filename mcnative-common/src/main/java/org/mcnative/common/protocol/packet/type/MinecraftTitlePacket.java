@@ -20,7 +20,7 @@
 package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
-import net.prematic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
