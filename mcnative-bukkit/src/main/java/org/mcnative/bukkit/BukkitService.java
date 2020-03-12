@@ -29,7 +29,7 @@ import net.pretronic.libraries.plugin.service.ServicePriority;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import net.pretronic.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;

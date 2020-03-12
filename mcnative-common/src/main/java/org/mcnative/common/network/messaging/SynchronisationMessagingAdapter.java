@@ -21,8 +21,8 @@ package org.mcnative.common.network.messaging;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.utility.reflect.TypeReference;
-import net.pretronic.synchronisation.SynchronisationCaller;
-import net.pretronic.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.synchronisation.SynchronisationCaller;
+import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.common.McNative;
 
 import java.util.UUID;
