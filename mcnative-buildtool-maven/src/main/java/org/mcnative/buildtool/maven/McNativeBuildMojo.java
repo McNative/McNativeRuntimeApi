@@ -47,10 +47,10 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Parameter( name = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
     private String mcnativeLoaderLocation;
 
-    @Parameter( name = "mcnative-loader-version" ,defaultValue = "1.0.0")
+    @Parameter( name = "mcnative-loader-version" ,defaultValue = "v1.0.69-SNAPSHOT")
     private String mcnativeLoaderVersion;
 
-    @Parameter( name = "resource-loader-version" ,defaultValue = "1.0.0")
+    @Parameter( name = "resource-loader-version" ,defaultValue = "1.0.33-SNAPSHOT")
     private String resourceLoaderVersion;
 
     @Parameter( property = "manifest",readonly = true,required =true)
@@ -62,7 +62,6 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
         try{
-            System.out.println("DEBUG POSITION 0");
             File output = new File(project.getBuild().getOutputDirectory());
             File sourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
             File resourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
@@ -71,51 +70,26 @@ public class McNativeBuildMojo extends AbstractMojo {
             sourceDirectory.mkdirs();
             resourceDirectory.mkdirs();
 
-            System.out.println("DEBUG POSITION 1");
-
-            System.out.println("PROJECT OUT | "+new File(project.getBuild().getOutputDirectory()).exists()+" | "+project.getBuild().getOutputDirectory());
-            System.out.println("Source OUT | "+sourceDirectory.exists()+" | "+sourceDirectory.getAbsolutePath());
-            System.out.println("Resource OUT | "+resourceDirectory.exists()+" | "+resourceDirectory.getAbsolutePath());
-            System.out.println("MANIFEST OUT | "+manifestFile.exists()+" | "+manifestFile.getAbsolutePath());
-
             project.addCompileSourceRoot(sourceDirectory.getPath());
 
-            System.out.println("DEBUG POSITION 1.5");
-
             this.manifest.createManifestFile(manifestFile);
-
-            System.out.println("DEBUG POSITION 2");
-
-            System.out.println("DEBUG POSITION 3");
 
             String basePackage = project.getGroupId()+".loader";
             ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
                     ,new File(mcnativeLoaderLocation),sourceDirectory);
 
-            System.out.println("DEBUG POSITION 4");
-
             McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
                     ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
-
-            System.out.println("DEBUG POSITION 5");
 
             installer.downloadSource();
             creator.downloadSource();
 
-            System.out.println("DEBUG POSITION 6");
-
             installer.unpackLoader();
             creator.unpackLoader();
 
-            System.out.println("DEBUG POSITION 7");
-
             creator.renamePackages();
 
-            System.out.println("DEBUG POSITION 8");
-
             creator.createManifests(loader,manifest);
-
-            System.out.println("DEBUG POSITION 9");
 
             try {
                 FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
