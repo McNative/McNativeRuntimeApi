@@ -46,7 +46,7 @@ public class DynamicTextSidebarModule extends AbstractSidebarModule{
         return new DynamicEntry(prefix,value,valueGetter.apply(player).toString());
     }
 
-    public class DynamicEntry implements SidebarEntry{
+    private static class DynamicEntry implements SidebarEntry{
 
         private final String prefix, value, suffix;
 

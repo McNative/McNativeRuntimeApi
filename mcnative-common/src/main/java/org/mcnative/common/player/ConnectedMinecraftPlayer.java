@@ -34,9 +34,11 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     void setSidebar(Sidebar sidebar);
 
+
     Tablist getTablist();
 
     void setTablist(Tablist tablist);
+
 
     BelowNameInfo getBelowNameInfo();
 

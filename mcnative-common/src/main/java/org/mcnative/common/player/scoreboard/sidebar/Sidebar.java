@@ -26,6 +26,9 @@ import java.util.Collection;
 
 public interface Sidebar {
 
+    Collection<OnlineMinecraftPlayer> getPlayers();
+
+
     String getTitle();
 
     void setTitle(String title);
@@ -48,11 +51,8 @@ public interface Sidebar {
 
     void updateModule(SidebarModule module, OnlineMinecraftPlayer player);
 
-    static PrivateSidebar newPrivateSidebar(){
-        return null;
-    }
 
-    static GlobalSidebar newGlobalSidebar(){
+    static Sidebar newSidebar(){
         return null;
     }
 

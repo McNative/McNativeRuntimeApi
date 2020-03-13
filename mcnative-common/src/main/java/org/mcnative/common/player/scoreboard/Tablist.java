@@ -33,27 +33,27 @@ public interface Tablist {
 
     void setHeader(String message);
 
-    default void setHeader(ChatComponent component){
+    default void setHeader(ChatComponent<?> component){
         setHeader(component,VariableSet.newEmptySet());
     }
 
-    void setHeader(ChatComponent component, VariableSet variables);
+    void setHeader(ChatComponent<?> component, VariableSet variables);
 
 
     void setFooter(String message);
 
-    default void setFooter(ChatComponent component){
+    default void setFooter(ChatComponent<?> component){
         setFooter(component,VariableSet.newEmptySet());
     }
 
-    void setFooter(ChatComponent component, VariableSet variables);
+    void setFooter(ChatComponent<?> component, VariableSet variables);
 
 
-    default void setHeaderAndFooter(ChatComponent header, ChatComponent footer){
+    default void setHeaderAndFooter(ChatComponent<?> header, ChatComponent<?> footer){
         setHeaderAndFooter(header, footer,VariableSet.newEmptySet());
     }
 
-    void setHeaderAndFooter(ChatComponent header, ChatComponent footer, VariableSet variables);
+    void setHeaderAndFooter(ChatComponent<?> header, ChatComponent<?> footer, VariableSet variables);
 
     void clearHeaderAndFooter();
 
