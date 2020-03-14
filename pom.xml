@@ -52,7 +52,7 @@
         <dependency.pretronic.libraries.event>1.0.33-SNAPSHOT</dependency.pretronic.libraries.event>
         <dependency.pretronic.libraries.plugin>1.0.33-SNAPSHOT</dependency.pretronic.libraries.plugin>
         <dependency.pretronic.libraries.dependency>1.0.33-SNAPSHOT</dependency.pretronic.libraries.dependency>
-        <dependency.pretronic.libraries.caching>1.0.33-SNAPSHOT</dependency.pretronic.libraries.caching>
+        <dependency.pretronic.libraries.caching>1.0.34-SNAPSHOT</dependency.pretronic.libraries.caching>
         <dependency.pretronic.libraries.resourceloader>1.0.33-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
         <dependency.pretronic.libraries.synchronisation>1.0.33-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>1.0.33-SNAPSHOT</dependency.pretronic.libraries.logging>
