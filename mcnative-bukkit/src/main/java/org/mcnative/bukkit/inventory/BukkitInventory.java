@@ -41,6 +41,7 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
     protected final I original;
 
     public BukkitInventory(InventoryOwner owner, I original) {
+        this.owner = owner;
         this.original = original;
     }
 

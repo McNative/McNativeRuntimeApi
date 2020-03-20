@@ -22,6 +22,7 @@ package org.mcnative.bukkit.entity.living;
 import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.BukkitInventoryOwner;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
+import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
@@ -34,11 +35,11 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
     default PlayerInventory getInventory() {
         org.bukkit.inventory.PlayerInventory playerInventory = getOriginal().getInventory();
         InventoryOwner owner = null;
-        if(playerInventory.getHolder() != null && playerInventory.getHolder() instanceof BukkitInventoryOwner) {
-
+        if(playerInventory.getHolder() != null) {
+            //owner = new BukkitInventoryOwner(playerInventory.getHolder());
         }
-        //return new BukkitPlayerInventory();
-        return null;
+        return MinecraftService.getInstance().getObjectCreator().newInventory(owner, PlayerInventory.class,
+                playerInventory.getSize(), null);
     }
 
     @Override
@@ -63,7 +64,7 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
 
     @Override
     default void openInventory(Inventory inventory) {
-        getOriginal().openInventory(((BukkitInventory)inventory).getOriginal());
+        getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal());
     }
 
     @Override

@@ -35,11 +35,11 @@ import org.mcnative.service.inventory.type.*;
 
 public class BukkitObjectCreator implements ObjectCreator {
 
-    //@Todo implements InventoryOwner
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title) {
-        InventoryHolder holder = owner != null ? new BukkitInventoryOwner(owner) : null;
+        InventoryHolder holder = null;
+        //owner != null ? new BukkitInventoryOwner(owner) : null;
         if(inventoryClass == AnvilInventory.class) {
             return (T) new BukkitAnvilInventory(owner, (org.bukkit.inventory.AnvilInventory)
                     Bukkit.createInventory(holder, InventoryType.ANVIL, title));
@@ -53,7 +53,7 @@ public class BukkitObjectCreator implements ObjectCreator {
             return (T) new BukkitCartographyInventory(owner, (org.bukkit.inventory.CartographyInventory)
                     Bukkit.createInventory(holder, InventoryType.CARTOGRAPHY, title));
         } else if(inventoryClass == ChestInventory.class) {
-            return (T) new BukkitChestInventory(owner, Bukkit.createInventory(null, size, title));
+            return (T) new BukkitChestInventory<>(owner, Bukkit.createInventory(null, size, title));
         } else if(inventoryClass == CraftingInventory.class) {
             return (T) new BukkitCraftingInventory(owner, (org.bukkit.inventory.CraftingInventory)
                     Bukkit.createInventory(holder, InventoryType.CRAFTING, title));
