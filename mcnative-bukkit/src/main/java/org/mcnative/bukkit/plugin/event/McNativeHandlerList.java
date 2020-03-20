@@ -38,8 +38,6 @@ import org.mcnative.common.McNative;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -206,7 +204,9 @@ public class McNativeHandlerList extends HandlerList implements org.bukkit.plugi
                     return;
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
         Bukkit.getLogger().log(Level.SEVERE,McNative.CONSOLE_PREFIX+" McNative is not able to bridge the event "+eventClass+" from the bukkit platform to the mcnative environment. Please contact the pretronic support for more information.");
     }
 
@@ -217,14 +217,9 @@ public class McNativeHandlerList extends HandlerList implements org.bukkit.plugi
 
     private static Object setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
 
-        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            modifiersField.setAccessible(true);
-            return null;
-        });
+        ReflectionUtil.grantFinalPrivileges(field);
 
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
         Object oldValue = field.get(null);
         field.set(null, newValue);
         return oldValue;
