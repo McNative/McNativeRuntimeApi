@@ -42,7 +42,7 @@ public class BukkitChannelInjector {
     private final static Class<?> GAME_PROFILE_CLASS = BukkitReflectionUtil.getClass("com.mojang.authlib.GameProfile");
     private final static Class<?> LOGIN_LISTENER_CLASS = BukkitReflectionUtil.getMNSClass("LoginListener");
 
-    private final static Field PACKET_LISTENER_FIELD = ReflectionUtil.findTypeBySimpleName(PACKET_HANDLER_CLASS,"PacketListener");
+    private final static Field PACKET_LISTENER_FIELD = ReflectionUtil.findFieldBySimpleName(PACKET_HANDLER_CLASS,"PacketListener");
     private final static Field GAME_PROFILE_FIELD = ReflectionUtil.findFieldByType(LOGIN_LISTENER_CLASS,GAME_PROFILE_CLASS);
     private final static Field UUID_GAME_PROFILE_FIELD = ReflectionUtil.getField(GAME_PROFILE_CLASS,"id");
     private final static Field NAME_GAME_PROFILE_FIELD = ReflectionUtil.getField(GAME_PROFILE_CLASS,"name");
