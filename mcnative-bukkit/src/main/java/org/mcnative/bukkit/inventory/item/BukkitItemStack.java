@@ -20,6 +20,7 @@
 package org.mcnative.bukkit.inventory.item;
 
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mcnative.service.NBTTag;
@@ -127,7 +128,9 @@ public class BukkitItemStack implements ItemStack {
 
     @Override
     public void setMaterial(Material material) {
-        this.original.setType(org.bukkit.Material.getMaterial(material.getName()));
+        org.bukkit.Material bukkitMaterial = org.bukkit.Material.getMaterial(material.getName());
+        Validate.notNull(bukkitMaterial, "Can't map bukkit material " + material.getName());
+        this.original.setType(bukkitMaterial);
     }
 
     @Override

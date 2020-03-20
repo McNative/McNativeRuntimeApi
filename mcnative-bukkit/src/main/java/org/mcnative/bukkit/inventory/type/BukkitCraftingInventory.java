@@ -22,6 +22,7 @@ package org.mcnative.bukkit.inventory.type;
 import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
+import org.mcnative.bukkit.inventory.recipe.BukkitRecipe;
 import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.recipe.Recipe;
@@ -55,7 +56,7 @@ public class BukkitCraftingInventory extends BukkitInventory<org.bukkit.inventor
 
     @Override
     public Recipe getRecipe() {
-        return null;
+        return new BukkitRecipe(original.getRecipe());
     }
 
     @Override

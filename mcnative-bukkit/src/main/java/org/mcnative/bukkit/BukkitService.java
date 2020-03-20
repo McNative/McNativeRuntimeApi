@@ -74,6 +74,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     private ChatChannel serverChat;
     private Tablist defaultTablist;
     private ServerStatusResponse statusResponse;
+    private final ObjectCreator objectCreator;
 
     protected BukkitService(CommandManager commandManager,BukkitPlayerManager playerManager, EventBus eventBus) {
         this.packetManager = new DefaultPacketManager();
@@ -81,12 +82,13 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         this.playerManager = playerManager;
         this.eventBus = eventBus;
         this.messageListeners = new ArrayList<>();
+        this.objectCreator = new BukkitObjectCreator();
         initVaultHook();
     }
 
     @Override
     public ObjectCreator getObjectCreator() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return this.objectCreator;
     }
 
     @Override
