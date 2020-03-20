@@ -19,6 +19,7 @@
 
 package org.mcnative.service.inventory;
 
+import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
@@ -150,7 +151,7 @@ public interface Inventory extends Iterable<ItemStack> {
 
 
 
-    /*static Inventory newInventory(){
-        return MinecraftService.getInstance().getObjectCreator().newInventory();
-    }*/
+    static <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title){
+        return MinecraftService.getInstance().getObjectCreator().newInventory(owner, inventoryClass, size, title);
+    }
 }
