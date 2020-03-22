@@ -18,18 +18,34 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player;
+package org.mcnative.service.event.player.inventory;
 
-import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.service.entity.living.Player;
+import org.mcnative.service.inventory.ClickType;
+import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.InventoryAction;
+import org.mcnative.service.inventory.item.ItemStack;
 
-public interface MinecraftEntityPlayerEvent extends MinecraftOnlinePlayerEvent {
+public interface MinecraftPlayerInventoryClickEvent extends MinecraftPlayerInventoryInteractEvent {
 
-    @Override
-    Player getPlayer();
+    InventoryAction getAction();
 
-    @Override
-    Player getOnlinePlayer();
+    ClickType getClickType();
 
+    ItemStack getClickedItem();
+
+    ItemStack getCursor();
+
+    int getHotbarButton​();
+
+    int getRawSlot();
+
+    int getSlot();
+
+    Inventory.SlotType getSlotType();
+
+    boolean isLeftClick();
+
+    boolean isRightClick();
+
+    boolean isShiftClick();
 }

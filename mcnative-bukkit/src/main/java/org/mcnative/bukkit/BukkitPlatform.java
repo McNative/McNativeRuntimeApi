@@ -42,7 +42,7 @@ public class BukkitPlatform implements MinecraftPlatform {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return null;
+        return MinecraftProtocolVersion.JE_1_15_2;
     }
 
     @Override

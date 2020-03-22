@@ -18,18 +18,15 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player;
+package org.mcnative.bukkit.event.player.inventory;
 
-import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.mcnative.service.entity.living.Player;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
 
-public interface MinecraftEntityPlayerEvent extends MinecraftOnlinePlayerEvent {
+public class BukkitPlayerInventoryCloseEvent extends BukkitPlayerInventoryEvent<InventoryCloseEvent> implements MinecraftPlayerInventoryCloseEvent {
 
-    @Override
-    Player getPlayer();
-
-    @Override
-    Player getOnlinePlayer();
-
+    public BukkitPlayerInventoryCloseEvent(InventoryCloseEvent original, Player player) {
+        super(original, player);
+    }
 }

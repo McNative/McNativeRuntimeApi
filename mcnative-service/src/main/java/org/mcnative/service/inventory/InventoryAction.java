@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 16.11.19, 15:55
+ * @since 21.03.20, 13:56
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +18,29 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.inventory;
+package org.mcnative.service.inventory;
 
-import org.bukkit.inventory.InventoryHolder;
-import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.InventoryOwner;
+//Copied from bukkit api
+public enum InventoryAction {
 
-public class BukkitInventoryOwner implements InventoryOwner {
-
-    private final InventoryHolder holder;
-
-    public BukkitInventoryOwner(InventoryHolder holder) {
-        this.holder = holder;
-    }
-
-    @Override
-    public Inventory getLinkedInventory() {
-        return null;
-    }
+    NOTHING,
+    PICKUP_ALL,
+    PICKUP_SOME,
+    PICKUP_HALF,
+    PICKUP_ONE,
+    PLACE_ALL,
+    PLACE_SOME,
+    PLACE_ONE,
+    SWAP_WITH_CURSOR,
+    DROP_ALL_CURSOR,
+    DROP_ONE_CURSOR,
+    DROP_ALL_SLOT,
+    DROP_ONE_SLOT,
+    MOVE_TO_OTHER_INVENTORY,
+    HOTBAR_MOVE_AND_READD,
+    HOTBAR_SWAP,
+    CLONE_STACK,
+    COLLECT_TO_CURSOR,
+    UNKNOWN,
+    ;
 }

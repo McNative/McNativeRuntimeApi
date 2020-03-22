@@ -20,10 +20,11 @@
 package org.mcnative.service.entity.living;
 
 import org.mcnative.service.inventory.Inventory;
+import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.type.PlayerInventory;
 
-public interface HumanEntity extends LivingEntity {
+public interface HumanEntity extends LivingEntity, InventoryOwner {
 
     PlayerInventory getInventory();
 
@@ -40,4 +41,9 @@ public interface HumanEntity extends LivingEntity {
     void openPlayerInventory();
 
     void closeInventory();
+
+    @Override
+    default Inventory getLinkedInventory() {
+        return getInventory();
+    }
 }

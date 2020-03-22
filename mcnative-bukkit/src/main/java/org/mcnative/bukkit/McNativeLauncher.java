@@ -1,8 +1,9 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 09.01.20, 20:22
+ * @author Philipp Elvin Friedhoff
+ * @since 21.03.20, 13:56
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@
 package org.mcnative.bukkit;
 
 import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -85,7 +87,6 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
         registerDependencyHooks(pluginManager,playerManager);
-
     }
 
     private static Network loadNetwork(){

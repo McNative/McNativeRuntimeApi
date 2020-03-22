@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 21.03.20, 13:56
+ * @since 21.03.20, 13:58
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,18 +18,25 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player;
+package org.mcnative.bukkit.event.player.inventory;
 
-import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.mcnative.service.entity.living.Player;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryOpenEvent;
 
-public interface MinecraftEntityPlayerEvent extends MinecraftOnlinePlayerEvent {
+public class BukkitPlayerInventoryOpenEvent extends BukkitPlayerInventoryEvent<InventoryOpenEvent> implements MinecraftPlayerInventoryOpenEvent {
+
+    public BukkitPlayerInventoryOpenEvent(InventoryOpenEvent original, Player player) {
+        super(original, player);
+    }
 
     @Override
-    Player getPlayer();
+    public boolean isCancelled() {
+        return getOriginal().isCancelled();
+    }
 
     @Override
-    Player getOnlinePlayer();
-
+    public void setCancelled(boolean cancelled) {
+        getOriginal().setCancelled(cancelled);
+    }
 }

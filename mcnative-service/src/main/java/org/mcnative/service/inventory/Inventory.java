@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 23.08.19, 22:06
+ * @since 21.03.20, 13:56
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,5 +154,15 @@ public interface Inventory extends Iterable<ItemStack> {
 
     static <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title){
         return MinecraftService.getInstance().getObjectCreator().newInventory(owner, inventoryClass, size, title);
+    }
+
+    enum SlotType {
+        ARMOR,
+        CONTAINER,
+        CRAFTING,
+        FUEL,
+        OUTSIDE,
+        QUICKBAR,
+        RESULT
     }
 }

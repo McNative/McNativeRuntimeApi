@@ -1,8 +1,9 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 09.02.20, 19:03
+ * @author Philipp Elvin Friedhoff
+ * @since 21.03.20, 13:56
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.entity.BukkitEntity;
 import org.mcnative.bukkit.entity.living.BukkitHumanEntity;
+import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.player.permission.BukkitPermissionHandler;
@@ -78,12 +80,14 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     private BukkitWorld world;
     private boolean permissibleInjected;
+    private boolean joining;
 
     public BukkitPlayer(org.bukkit.entity.Player original, PendingConnection connection,MinecraftPlayerData playerData) {
         super(playerData);
         this.original = original;
         this.connection = connection;
         this.permissibleInjected = false;
+        this.joining = false;
     }
 
     @Override
@@ -618,5 +622,27 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     @Override
     public void setResourcePack(String url, String hash) {
         throw new UnsupportedOperationException("Currently not supported");
+    }
+
+    @Override
+    public void openInventory(Inventory inventory) {
+
+        if(isJoining()) {
+            Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), ()->
+                    getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal()));
+        } else {
+            getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal());
+        }
+    }
+
+    @Internal
+    public boolean isJoining() {
+        return joining;
+    }
+
+    @Internal
+    public BukkitPlayer setJoining(boolean joining) {
+        this.joining = joining;
+        return this;
     }
 }

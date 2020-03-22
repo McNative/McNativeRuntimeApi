@@ -18,18 +18,27 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player;
+package org.mcnative.service.event.player.inventory;
 
-import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.service.entity.living.Player;
+import org.mcnative.service.inventory.DragType;
+import org.mcnative.service.inventory.item.ItemStack;
 
-public interface MinecraftEntityPlayerEvent extends MinecraftOnlinePlayerEvent {
+import java.util.Map;
+import java.util.Set;
 
-    @Override
-    Player getPlayer();
+public interface MinecraftPlayerInventoryDragEvent extends MinecraftPlayerInventoryInteractEvent {
 
-    @Override
-    Player getOnlinePlayer();
+    Map<Integer, ItemStack> getNewItems​();
 
+    Set<Integer> getRawSlots​();
+
+    Set<Integer> getInventorySlots​();
+
+    ItemStack getCursor​();
+
+    void setCursor(ItemStack cursor);
+
+    ItemStack getOldCursor();
+
+    DragType getDragType();
 }

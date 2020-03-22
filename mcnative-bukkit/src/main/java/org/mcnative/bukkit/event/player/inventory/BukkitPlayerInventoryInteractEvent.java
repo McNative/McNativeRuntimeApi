@@ -18,18 +18,25 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player;
+package org.mcnative.bukkit.event.player.inventory;
 
-import org.mcnative.common.event.MinecraftEvent;
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.mcnative.service.entity.living.Player;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryInteractEvent;
 
-public interface MinecraftEntityPlayerEvent extends MinecraftOnlinePlayerEvent {
+public class BukkitPlayerInventoryInteractEvent<T extends InventoryInteractEvent> extends BukkitPlayerInventoryEvent<T> implements MinecraftPlayerInventoryInteractEvent {
+
+    public BukkitPlayerInventoryInteractEvent(T original, Player player) {
+        super(original, player);
+    }
 
     @Override
-    Player getPlayer();
+    public boolean isCancelled() {
+        return getOriginal().isCancelled();
+    }
 
     @Override
-    Player getOnlinePlayer();
-
+    public void setCancelled(boolean cancelled) {
+        getOriginal().setCancelled(cancelled);
+    }
 }

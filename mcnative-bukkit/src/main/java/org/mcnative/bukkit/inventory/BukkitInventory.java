@@ -21,15 +21,25 @@ package org.mcnative.bukkit.inventory;
 
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.block.Container;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.*;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
+import org.mcnative.bukkit.inventory.type.*;
+import org.mcnative.common.McNative;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
+import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -51,7 +61,10 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
 
     @Override
     public String getTitle() {
-        return this.original instanceof Container ? ((Container)this.original).getCustomName() : null;
+        if(McNative.getInstance().getPlatform().getProtocolVersion().isNewerOrSame(MinecraftProtocolVersion.JE_1_14_1)) {
+            return this.original instanceof Container ? ((Container)this.original).getCustomName() : null;
+        }
+        return (String) ReflectionUtil.invokeMethod(org.bukkit.inventory.Inventory.class, original, "getName", new Object[0]);
     }
 
     @Override
@@ -344,7 +357,7 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
 
     @Override
     public void showAllPlayers() {
-   //     MinecraftService.getInstance().getPlayerManager().getOnlinePlayers().forEach(player -> player.openInventory(this));
+        //     MinecraftService.getInstance().getPlayerManager().getOnlinePlayers().forEach(player -> player.openInventory(this));
     }
 
     @Override
@@ -375,7 +388,7 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
     @Override
     public Iterator<ItemStack> iterator() {
         Iterator<org.bukkit.inventory.ItemStack> bukkitIterator = this.original.iterator();
-        Iterator<ItemStack> iterator = new Iterator<ItemStack>() {
+        return new Iterator<ItemStack>() {
             @Override
             public boolean hasNext() {
                 return bukkitIterator.hasNext();
@@ -386,6 +399,61 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
                 return new BukkitItemStack(bukkitIterator.next());
             }
         };
-        return iterator;
+    }
+
+    public static BukkitInventory<?> mapInventory(org.bukkit.inventory.Inventory inventory) {
+        if(inventory instanceof AnvilInventory) {
+            return new BukkitAnvilInventory(mapInventoryHolder(inventory.getHolder()), (AnvilInventory)inventory);
+        } else if(inventory instanceof HorseInventory) {
+            return new BukkitArmorableHorseInventory(mapInventoryHolder(inventory.getHolder()), (HorseInventory)inventory);
+        } else if(inventory instanceof BeaconInventory) {
+            return new BukkitBeaconInventory(mapInventoryHolder(inventory.getHolder()), (BeaconInventory) inventory);
+        } else if(inventory instanceof BrewerInventory) {
+            return new BukkitBrewerInventory(mapInventoryHolder(inventory.getHolder()), (BrewerInventory)inventory);
+        } else if(inventory instanceof CraftingInventory) {
+            return new BukkitCraftingInventory(mapInventoryHolder(inventory.getHolder()), (CraftingInventory) inventory);
+        } else if(inventory instanceof DoubleChestInventory) {
+            return new BukkitDoubleChestInventory(mapInventoryHolder(inventory.getHolder()), (DoubleChestInventory)inventory);
+        } else if(inventory instanceof EnchantingInventory) {
+            return new BukkitEnchantingInventory(mapInventoryHolder(inventory.getHolder()), (EnchantingInventory)inventory);
+        } else if(inventory instanceof FurnaceInventory) {
+            return new BukkitFurnaceInventory(mapInventoryHolder(inventory.getHolder()), (FurnaceInventory) inventory);
+        } else if(McNative.getInstance().getPlatform().getProtocolVersion().isNewerOrSame(MinecraftProtocolVersion.JE_1_11)
+                && inventory instanceof LlamaInventory) {
+            return new BukkitLlamaInventory(mapInventoryHolder(inventory.getHolder()), (LlamaInventory) inventory);
+        } else if(McNative.getInstance().getPlatform().getProtocolVersion().isNewerOrSame(MinecraftProtocolVersion.JE_1_11) &&
+                inventory instanceof AbstractHorseInventory) {
+            return new BukkitHorseInventory<>(mapInventoryHolder(inventory.getHolder()), (AbstractHorseInventory)inventory);
+        } else if(inventory instanceof PlayerInventory) {
+            return new BukkitPlayerInventory(mapInventoryHolder(inventory.getHolder()), (PlayerInventory)inventory);
+        } else if(inventory.getType() == InventoryType.CHEST) {
+            return new BukkitChestInventory<>(mapInventoryHolder(inventory.getHolder()), inventory);
+        } else if(McNative.getInstance().getPlatform().getProtocolVersion().isNewerOrSame(MinecraftProtocolVersion.JE_1_14)) {
+            if(inventory instanceof CartographyInventory) {
+                return new BukkitCartographyInventory(mapInventoryHolder(inventory.getHolder()), (CartographyInventory) inventory);
+            } else if(inventory instanceof GrindstoneInventory) {
+                return new BukkitGrindstoneInventory(mapInventoryHolder(inventory.getHolder()), (GrindstoneInventory) inventory);
+            } else if(inventory instanceof LecternInventory) {
+                return new BukkitLecternInventory(mapInventoryHolder(inventory.getHolder()), (LecternInventory) inventory);
+            } else if(inventory instanceof LoomInventory) {
+                return new BukkitLoomInventory(mapInventoryHolder(inventory.getHolder()), (LoomInventory) inventory);
+            } else if(inventory instanceof StonecutterInventory) {
+                return new BukkitStonecutterInventory(mapInventoryHolder(inventory.getHolder()), (StonecutterInventory) inventory);
+            }
+        }
+        return new BukkitInventory<>(mapInventoryHolder(inventory.getHolder()), inventory);
+    }
+
+    public static InventoryOwner mapInventoryHolder(InventoryHolder inventoryHolder) {
+        if(inventoryHolder instanceof org.bukkit.entity.Player) {
+            OnlineMinecraftPlayer player = MinecraftService.getInstance()
+                    .getOnlinePlayer(((org.bukkit.entity.Player)inventoryHolder).getUniqueId());
+            if(player instanceof Player) {
+                return (Player) player;
+            } else {
+                throw new IllegalArgumentException("Can't map inventory holder. Online player is not an entity player.");
+            }
+        }
+        return new BukkitInventoryOwner(inventoryHolder);
     }
 }

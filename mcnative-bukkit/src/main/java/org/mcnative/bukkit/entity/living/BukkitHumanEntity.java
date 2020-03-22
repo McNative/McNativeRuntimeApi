@@ -33,18 +33,12 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
 
     @Override
     default PlayerInventory getInventory() {
-        org.bukkit.inventory.PlayerInventory playerInventory = getOriginal().getInventory();
-        InventoryOwner owner = null;
-        if(playerInventory.getHolder() != null) {
-            //owner = new BukkitInventoryOwner(playerInventory.getHolder());
-        }
-        return MinecraftService.getInstance().getObjectCreator().newInventory(owner, PlayerInventory.class,
-                playerInventory.getSize(), null);
+        return (PlayerInventory) BukkitInventory.mapInventory(getOriginal().getInventory());
     }
 
     @Override
     default Inventory getOpenInventory() {
-        return null;
+        return BukkitInventory.mapInventory(getOriginal().getOpenInventory().getTopInventory());
     }
 
     @Override

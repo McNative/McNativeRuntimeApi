@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 16.11.19, 15:55
+ * @since 21.03.20, 14:32
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +20,20 @@
 
 package org.mcnative.bukkit.inventory;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
 
-public class BukkitInventoryOwner implements InventoryOwner {
+public class BukkitInventoryHolder implements InventoryHolder {
 
-    private final InventoryHolder holder;
+    private final InventoryOwner owner;
 
-    public BukkitInventoryOwner(InventoryHolder holder) {
-        this.holder = holder;
+    public BukkitInventoryHolder(InventoryOwner owner) {
+        this.owner = owner;
     }
 
     @Override
-    public Inventory getLinkedInventory() {
-        return null;
+    public Inventory getInventory() {
+        return ((BukkitInventory<?>)owner.getLinkedInventory()).getOriginal();
     }
 }
