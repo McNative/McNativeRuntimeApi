@@ -1,4 +1,4 @@
-
+/*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
