@@ -76,11 +76,11 @@ public class BungeeCordCommandManager implements CommandManager {
     public void registerCommand(Command command) {
         Validate.notNull(command,command.getConfiguration(),command.getOwner());
         if(!(command.getOwner() instanceof net.pretronic.libraries.plugin.Plugin)){
-            throw new IllegalArgumentException("Owner is not a plugin.");
+            //throw new IllegalArgumentException("Owner is not a plugin.");
         }
         Plugin plugin = getOriginalPlugin(command.getOwner());
 
-        if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
+        //if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
         this.original.registerCommand(plugin,new McNativeCommand(command));
         this.commands.add(command);
     }
@@ -133,12 +133,12 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     private Plugin getOriginalPlugin(ObjectOwner owner) {
-        Plugin plugin;
+        Plugin plugin = null;
         if (owner instanceof MappedPlugin) {
             plugin = ((MappedPlugin) owner).getPlugin();
         }else if (owner instanceof net.pretronic.libraries.plugin.Plugin) {
             plugin = pluginManager.getMappedPlugin((net.pretronic.libraries.plugin.Plugin<?>) owner);
-        } else throw new IllegalArgumentException("Object owner is not a plugin");
+        } //else throw new IllegalArgumentException("Object owner is not a plugin");
         return plugin;
     }
 

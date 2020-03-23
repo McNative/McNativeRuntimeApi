@@ -163,7 +163,7 @@ public class BukkitMcNative implements McNative {
         Bukkit.shutdown();
     }
 
-    public void registerDefaultProviders(){
+    protected void registerDefaultProviders(){
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
@@ -172,4 +172,7 @@ public class BukkitMcNative implements McNative {
         pluginManager.registerService(this, PlaceholderProvider.class,new McNativePlaceholderProvider(), EventPriority.LOW);
     }
 
+    protected void registerDefaultCommands() {
+        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
+    }
 }

@@ -38,6 +38,7 @@ import org.mcnative.common.Messages;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class McNativePasteLogCommand extends BasicCommand {
 
@@ -55,12 +56,13 @@ public class McNativePasteLogCommand extends BasicCommand {
 
         logger.info("----------------------------------------");
         logger.info("Pretronic Paste");
+        logger.info(" ");
         logger.info("McNative version: " + version);
-        logger.info("Protocol version: " + protocolVersion.getName() + "|" + protocolVersion.getEdition().getName());
+        logger.info("Protocol version: " + protocolVersion.getName() + " | " + protocolVersion.getEdition().getName());
         logger.info("Java version: " + javaVersion);
         logger.info(" ");
         logger.info("Operation system: " + SystemInfo.getOsName() + " version " + SystemInfo.getOsVersion());
-        logger.info("OS architecture" + SystemInfo.getOsArch());
+        logger.info("OS architecture: " + SystemInfo.getOsArch());
         logger.info(" ");
         logger.info("Max memory: " + SystemInfo.getMaxMemory());
         logger.info("Free memory: " + SystemInfo.getFreeMemory());
@@ -68,10 +70,12 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("Total free memory: " + SystemInfo.getTotalFreeMemory());
         logger.info("----------------------------------------");
 
-        String content = FileUtil.readContent(new File("logs/latest.log"));
-        String url = publishLogAndGetUrl(content);
-
-        sender.sendMessage(Messages.COMMAND_PASTE_SUCCESSFUL, VariableSet.create().add("url", url));
+        McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {
+            String content = FileUtil.readContent(McNative.getInstance().getPlatform().getLatestLogLocation());
+            String url = publishLogAndGetUrl(content);
+            logger.info("See your log on " + url);
+            sender.sendMessage(Messages.COMMAND_PASTE_SUCCESSFUL, VariableSet.create().add("url", url));
+        });
     }
 
     private String publishLogAndGetUrl(String content) {

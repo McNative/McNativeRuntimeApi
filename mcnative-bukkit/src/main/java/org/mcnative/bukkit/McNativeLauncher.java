@@ -75,6 +75,7 @@ public class McNativeLauncher {
         BukkitMcNative instance = new BukkitMcNative(pluginManager,playerManager,localService,network);
         McNative.setInstance(instance);
         instance.registerDefaultProviders();
+        instance.registerDefaultCommands();
 
         BukkitChannelInjector injector = new BukkitChannelInjector();
 

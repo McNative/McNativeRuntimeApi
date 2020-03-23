@@ -25,10 +25,17 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.function.Consumer;
 
 public class BukkitPlatform implements MinecraftPlatform {
+
+    private final File latestLogLocation;
+
+    public BukkitPlatform() {
+        this.latestLogLocation = new File("logs/latest.log");
+    }
 
     @Override
     public String getName() {
@@ -58,6 +65,11 @@ public class BukkitPlatform implements MinecraftPlatform {
     @Override
     public boolean isService() {
         return true;
+    }
+
+    @Override
+    public File getLatestLogLocation() {
+        return this.latestLogLocation;
     }
 
     @Override

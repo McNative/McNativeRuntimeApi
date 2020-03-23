@@ -1,0 +1,25 @@
+meta:
+  name: 'McNative English'
+  bml: true
+  module: 'McNative'
+  language:
+    name: 'English'
+    localizedName: 'English'
+    code: 'en'
+messages:
+  prefix.user: "&8» &cMcNative &8|&f"
+  command.mcNative.paste.successful: "&aYou have successful pasted your log on &e{url}"
+  command.info.admin: "${prefix.user} McNative info:
+   &8» &7Version: &e{version}
+   &8» &7Protocol version: &e{protocolVersion}
+   &8» &7Java version: &e{javaVersion}
+
+   &8» &7OS name: &e{osName}
+   &8» &7OS version: &e{osVersion}
+   &8» &7OS arch: &e{osArch}
+
+   &8» &7Max memory: &e{maxMemory}
+   &8» &7Allocated memory: &e{allocatedMemory}
+   &8» &7Free memory: &e{freeMemory}
+   &8» &7Total free memory: &e{totalFreeMemory}"
+  command.info.user: "${prefix.user} See https://mcnative.org"

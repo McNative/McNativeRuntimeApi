@@ -38,7 +38,7 @@ public class McNativeCommand extends MainCommand implements NotFindable {
         this.infoCommand = new McNativeInfoCommand(owner);
         registerCommand(infoCommand);
         registerCommand(new McNativePluginsCommand(owner));
-        registerCommand(new McNativeInfoCommand(owner));
+        registerCommand(new McNativePasteLogCommand(owner));
     }
 
     @Override

@@ -172,13 +172,18 @@ public class BungeeCordMcNative implements McNative {
         ProxyServer.getInstance().stop();
     }
 
-    public void registerDefaultProviders(BungeeCordServerMap serverMap){
+    protected void registerDefaultProviders(BungeeCordServerMap serverMap){
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
         pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService(),serverMap));
         pluginManager.registerService(this, PlaceholderProvider.class,new McNativePlaceholderProvider(), EventPriority.LOW);
+    }
+
+    protected void registerDefaultCommands() {
+        System.out.println("register commands");
+        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

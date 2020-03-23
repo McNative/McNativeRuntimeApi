@@ -25,6 +25,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -34,6 +35,12 @@ import java.util.function.Consumer;
     - Versions
  */
 public class BungeeCordPlatform implements MinecraftPlatform {
+
+    private final File latestLogLocation;
+
+    public BungeeCordPlatform() {
+        this.latestLogLocation = new File("proxy.log.0");
+    }
 
     @Override
     public String getName() {
@@ -63,6 +70,11 @@ public class BungeeCordPlatform implements MinecraftPlatform {
     @Override
     public boolean isService() {
         return false;
+    }
+
+    @Override
+    public File getLatestLogLocation() {
+        return this.latestLogLocation;
     }
 
     @Override

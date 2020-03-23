@@ -22,6 +22,7 @@ package org.mcnative.common;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -38,6 +39,8 @@ public interface MinecraftPlatform {
     boolean isProxy();
 
     boolean isService();
+
+    File getLatestLogLocation();
 
     void check(Consumer<ProtocolCheck> checker);
 
