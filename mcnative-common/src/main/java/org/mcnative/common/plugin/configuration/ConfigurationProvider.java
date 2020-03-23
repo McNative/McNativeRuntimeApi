@@ -38,6 +38,10 @@ public interface ConfigurationProvider {
 
     Database getDatabase(ObjectOwner owner,String name);
 
+    default Database getDatabase(ObjectOwner owner, boolean configCreate) {
+        return getDatabase(owner, "default", configCreate);
+    }
+
     Database getDatabase(ObjectOwner owner, String name, boolean configCreate);
 
     DatabaseDriver getDatabaseDriver(String name);

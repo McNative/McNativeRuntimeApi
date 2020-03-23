@@ -23,6 +23,7 @@ import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.databasequery.sql.dialect.Dialect;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.reflect.TypeReference;
@@ -58,16 +59,15 @@ public class StorageConfig {
     public DatabaseDriverConfig<?> getDriverConfig(String name) {
         DatabaseDriverConfig<?> config = this.databaseDrivers.get(name);
         if(config == null)  throw new IllegalArgumentException("No database driver for name " + name + " found");
-        return config;
+        return config.copy();
     }
 
     public DatabaseEntry getDatabaseEntry(ObjectOwner plugin, String name) {
-        DatabaseEntry databaseEntry = Iterators.findOne(this.databaseEntries, entry -> entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase(name));
+        DatabaseEntry databaseEntry = Iterators.findOne(this.databaseEntries, entry ->
+                entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase(name));
         if(databaseEntry == null) {
-            databaseEntry = Iterators.findOne(this.databaseEntries, entry -> entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase("default"));
-            if(databaseEntry == null) {
-                throw new IllegalArgumentException("Database "+name+" for " + plugin.getName() + " not found");
-            }
+            databaseEntry = Iterators.findOne(this.databaseEntries, entry ->
+                    entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase("default"));
         }
         return databaseEntry;
     }
@@ -97,7 +97,7 @@ public class StorageConfig {
                 .setLocation(new File("plugins/McNative/databases/"))
                 .build());
 
-        this.databaseDrivers.put("MySQL", new SQLDatabaseDriverConfigBuilder()
+        this.databaseDrivers.put("mysql", new SQLDatabaseDriverConfigBuilder()
                 .setName("MySQL")
                 .setDialect(Dialect.MYSQL)
                 .setAddress(new InetSocketAddress("127.0.0.1", 3306))
@@ -105,8 +105,9 @@ public class StorageConfig {
                 .setPassword("masked")
                 .build());
 
-        this.databaseEntries.add(new DatabaseEntry("McNative", "Default", "McNative", "default"));
+        this.databaseEntries.add(new DatabaseEntry("McNative", "default", "McNative", "default"));
         save();
+        System.out.println("set default");
     }
 
     public StorageConfig load() {

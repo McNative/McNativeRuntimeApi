@@ -23,6 +23,7 @@ import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveMap;
@@ -63,24 +64,28 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
             }
             return databaseDriver.getDatabase(entry.getDatabase());
         }
-        return null;
+        throw new IllegalArgumentException("No database found for plugin " + owner.getName() + " and name " + name);
     }
 
     @Override
     public Database getDatabase(ObjectOwner owner, String name, boolean configCreate) {
-        Database database = getDatabase(owner, name);
-        if(database == null) {
+        try {
+            Database database = getDatabase(owner, name);
+            if(database != null) return database;
+        } catch (IllegalArgumentException ignored) {}
+        if(configCreate) {
             this.storageConfig.addDatabaseEntry(new StorageConfig.DatabaseEntry(owner.getName(),
-                    "Default", owner.getName(), "default"));
+                    "default", owner.getName(), "default"));
+            System.out.println("CREATE...");
             this.storageConfig.save();
-            database = getDatabase(owner, name);
+            return getDatabase(owner, name);
         }
-        return database;
+        throw new IllegalArgumentException("Can't create or get database for " + owner.getName() + " with name " + name);
     }
 
     @Override
     public DatabaseDriver getDatabaseDriver(String name) {
-        Objects.requireNonNull(name);
+        Validate.notNull(name);
         if(!this.databaseDrivers.containsKey(name)) {
             DatabaseDriver driver = DatabaseDriverFactory.create("(Database-Driver) "+name, this.storageConfig.getDriverConfig(name),
                     McNative.getInstance().getLogger(), GeneralUtil.getDefaultExecutorService());
