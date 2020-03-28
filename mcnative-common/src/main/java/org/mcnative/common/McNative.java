@@ -100,6 +100,12 @@ public interface McNative extends ObjectOwner {
         return InstanceHolder.INSTANCE;
     }
 
+    @SuppressWarnings("unchecked")
+    static <T extends McNative> T getInstance(Class<T> instanceClass) {
+        if(getInstance().getClass() != instanceClass) throw new IllegalArgumentException("McNative is not an instance of " + instanceClass.getName());
+        return (T) getInstance();
+    }
+
     static void setInstance(McNative instance) {
         if(InstanceHolder.INSTANCE != null) throw new IllegalArgumentException("Instance is already set.");
         InstanceHolder.INSTANCE = instance;
