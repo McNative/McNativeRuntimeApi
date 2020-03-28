@@ -46,7 +46,7 @@
         <dependency.mvdwplaceholderapi.version>3.0.2-SNAPSHOT</dependency.mvdwplaceholderapi.version>
 
         <dependency.pretronic.libraries.utility>1.0.45-SNAPSHOT</dependency.pretronic.libraries.utility>
-        <dependency.pretronic.libraries.document>1.0.40-SNAPSHOT</dependency.pretronic.libraries.document>
+        <dependency.pretronic.libraries.document>1.0.49-SNAPSHOT</dependency.pretronic.libraries.document>
         <dependency.pretronic.libraries.concurrent>1.0.40-SNAPSHOT</dependency.pretronic.libraries.concurrent>
         <dependency.pretronic.libraries.command>1.0.40-SNAPSHOT</dependency.pretronic.libraries.command>
         <dependency.pretronic.libraries.event>1.0.40-SNAPSHOT</dependency.pretronic.libraries.event>
