@@ -20,6 +20,7 @@
 package org.mcnative.proxy;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.annotations.DocumentIgnored;
 import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.annotations.DocumentRequired;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -39,6 +40,7 @@ public class McNativeProxyConfiguration {
 
     public static transient DocumentFileType FORMAT = DocumentFileType.YAML;
 
+    @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 
     /*
