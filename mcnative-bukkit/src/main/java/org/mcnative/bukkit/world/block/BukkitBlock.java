@@ -19,6 +19,8 @@
 
 package org.mcnative.bukkit.world.block;
 
+import net.pretronic.libraries.utility.Iterators;
+import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.world.BukkitChunk;
 import org.mcnative.bukkit.world.BukkitWorld;
@@ -58,12 +60,12 @@ public class BukkitBlock implements Block {
 
     @Override
     public Material getMaterial() {
-        return null;
+        return Material.getMaterial(original.getType().name());
     }
 
     @Override
     public void setMaterial(Material material) {
-
+        original.setType(org.bukkit.Material.valueOf(material.getName()));
     }
 
     @Override
@@ -98,12 +100,12 @@ public class BukkitBlock implements Block {
 
     @Override
     public Biome getBiome() {
-        return null;
+        return Biome.getBiome(original.getBiome().name());
     }
 
     @Override
     public void setBiome(Biome biome) {
-
+        original.setBiome(org.bukkit.block.Biome.valueOf(biome.getName()));
     }
 
     @Override
@@ -133,12 +135,12 @@ public class BukkitBlock implements Block {
 
     @Override
     public Block getRelativeBlock(Offset offset) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Block getRelativeBlock(BlockDirection direction) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -153,12 +155,12 @@ public class BukkitBlock implements Block {
 
     @Override
     public boolean isBlockDirectionPowered(BlockDirection direction) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean isBlockIndirectlyPowered(BlockDirection direction) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -168,7 +170,7 @@ public class BukkitBlock implements Block {
 
     @Override
     public int getPower(BlockDirection direction) {
-        return 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -178,36 +180,36 @@ public class BukkitBlock implements Block {
 
     @Override
     public void breakNaturally(ItemStack tool) {
-
+        original.breakNaturally(((BukkitItemStack)tool).getOriginal());
     }
 
     @Override
     public Collection<ItemStack> getDrops() {
-        return null;
+        return Iterators.map(original.getDrops(), BukkitItemStack::new);
     }
 
     @Override
     public Collection<ItemStack> getDrops(ItemStack tool) {
-        return null;
+        return Iterators.map(original.getDrops(((BukkitItemStack)tool).getOriginal()), BukkitItemStack::new);
     }
 
     @Override
     public boolean isAllowDrops() {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void setAllowDrop(boolean allowDrop) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void update() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void update(OnlineMinecraftPlayer player) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

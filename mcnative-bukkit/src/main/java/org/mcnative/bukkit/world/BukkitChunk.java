@@ -19,6 +19,7 @@
 
 package org.mcnative.bukkit.world;
 
+import org.mcnative.bukkit.world.block.BukkitBlock;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
@@ -42,6 +43,7 @@ import org.mcnative.service.world.block.Block;
 import org.mcnative.service.world.block.data.BlockData;
 import org.mcnative.service.world.particle.Particle;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Predicate;
@@ -61,10 +63,12 @@ public class BukkitChunk implements Chunk {
     }
 
     @Override
-    public World getWorld() {
+    public BukkitWorld getWorld() {
         return this.world;
     }
 
+
+    //@Todo can have multiple biomes
     @Override
     public Biome getBiome() {
         return null;
@@ -72,22 +76,26 @@ public class BukkitChunk implements Chunk {
 
     @Override
     public void setBiome(Biome biome) {
-
+        for(int x = getOriginal().getX(); x <= getOriginal().getX(); x++) {
+            for(int z = getOriginal().getZ(); z <= getOriginal().getZ(); z++) {
+                getWorld().setBiome(x, z, biome);
+            }
+        }
     }
 
     @Override
     public boolean isLoaded() {
-        return false;
+        return getOriginal().isLoaded();
     }
 
     @Override
     public boolean isInUse() {
-        return false;
+        return getOriginal().getEntities().length != 0;
     }
 
     @Override
     public boolean isGenerated() {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -102,17 +110,17 @@ public class BukkitChunk implements Chunk {
 
     @Override
     public void tryUnload() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void refresh() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void regenerate() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -127,257 +135,270 @@ public class BukkitChunk implements Chunk {
 
     @Override
     public void fill(Material material) {
-
+        for(int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 0; y < 256; y++) {
+                    getOriginal().getBlock(x, y, z).setType(org.bukkit.Material.valueOf(material.getName()));
+                }
+            }
+        }
     }
 
     @Override
     public void fill(int z, Material material) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void fill(int startZ, int endZ, Material material) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Iterator<Block> iterator() {
-        return null;
+        Collection<Block> blocks = new ArrayList<>();
+        for(int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 0; y < 256; y++) {
+                    blocks.add(new BukkitBlock(getOriginal().getBlock(x, y, z), getWorld()));
+                }
+            }
+        }
+        return blocks.iterator();
     }
 
     @Override
     public Block getBlock(int x, int y, int z) {
-        return null;
+        return new BukkitBlock(getOriginal().getBlock(x, y, z), getWorld());
     }
 
     @Override
     public Block getBlock(Vector location) {
-        return null;
+        return getBlock(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     @Override
     public Block getHighestBlock(int x, int y) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Block getHighestBlock(Vector location) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Block getLowestBlock(int x, int y) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Block getLowestBlock(Vector location) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Biome getBiome(int x, int y) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Biome getBiome(Vector point) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void setBiome(int x, int y, Biome biome) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void setBiome(Vector point, Biome biome) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public double getTemperature(int x, int z) {
-
-        return 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public double getHumidity(int x, int z) {
-        return 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Entity> getEntities() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Entity> getLivingEntities() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Animal> getAnimals() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Monster> getMonsters() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Player> getPlayers() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Entity> getEntitiesNear(Vector point, Offset offset) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Collection<Entity> getEntitiesNear(Vector point, Offset offset, Predicate<Entity> filter) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset, Predicate<Entity> filter) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> Collection<E> getEntities(Class<E> entityClass) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> E spawnEntity(Location location, Class<?> clazz) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> E spawnNoAIEntity(Location location, Class<?> clazz) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <A extends Arrow> A spawnArrow(Vector point, Vector direction, float speed, float spread, Class<A> arrowClass) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Arrow spawnArrow(Vector point, Vector direction) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Iterable<OnlineMinecraftPlayer> receivers) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Offset offset, Iterable<? extends OnlineMinecraftPlayer> receivers) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Offset offset) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public DroppedItem dropItem(Vector location, ItemStack item) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public DroppedItem dropItemNaturally(Vector location, ItemStack item) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, float power) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, float power, boolean fire) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, float power, boolean fire, boolean destroyBlocks) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power, boolean fire) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power, boolean fire, boolean destroyBlocks) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void strikeLightning(Vector location, boolean damage) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void createFallingBlock(Vector point, Material material) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void createFallingBlock(Vector point, BlockData data) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playEffect(Location location, Effect effect) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playEffect(Location location, Effect effect, Offset offset) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playSound(Vector point, Sound sound, float volume, float pitch) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playSound(Vector point, Sound sound, SoundCategory category, float volume, float pitch) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean generateTree(Vector location, TreeType treeType) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

@@ -23,6 +23,8 @@ import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.concurrent.TaskScheduler;
 import net.pretronic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.pretronic.libraries.dependency.DependencyManager;
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.event.EventPriority;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
@@ -67,6 +69,7 @@ public class BukkitMcNative implements McNative {
     private final LocalService local;
 
     private Network network;
+    private final Document serverProperties;
 
     protected BukkitMcNative(PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.platform = new BukkitPlatform();
@@ -79,6 +82,8 @@ public class BukkitMcNative implements McNative {
         this.playerManager = playerManager;
         this.local = local;
         this.network = network;
+
+        this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 
         SLF4JStaticBridge.trySetLogger(logger);
     }
@@ -161,6 +166,10 @@ public class BukkitMcNative implements McNative {
     @Override
     public void shutdown() {
         Bukkit.shutdown();
+    }
+
+    public Document getServerProperties() {
+        return serverProperties;
     }
 
     protected void registerDefaultProviders(){

@@ -30,10 +30,12 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.utility.io.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.serviceprovider.economy.VaultEconomyProvider;
+import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -56,6 +58,7 @@ import org.mcnative.service.ObjectCreator;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,22 +96,26 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public World getDefaultWorld() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return getWorld(McNative.getInstance(BukkitMcNative.class).getServerProperties().getString("level-name"));
     }
 
     @Override
     public World getWorld(String name) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new BukkitWorld(Bukkit.getWorld(name));
     }
 
     @Override
     public World loadWorld(String name) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        File file = new File(name);
+        if(file.exists()) {
+            return new BukkitWorld(Bukkit.createWorld(new org.bukkit.WorldCreator(name)));
+        }
+        throw new IllegalArgumentException("World " + name + " doesn't exist. Try to generate it.");
     }
 
     @Override
     public void unloadWorld(World world, boolean save) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Bukkit.unloadWorld(((BukkitWorld)world).getOriginal(), save);
     }
 
     @Override

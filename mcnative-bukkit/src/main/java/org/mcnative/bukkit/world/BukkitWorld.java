@@ -19,8 +19,11 @@
 
 package org.mcnative.bukkit.world;
 
+import net.pretronic.libraries.utility.Iterators;
+import org.mcnative.bukkit.BukkitMcNative;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.world.block.BukkitBlock;
+import org.mcnative.common.McNative;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
@@ -251,7 +254,7 @@ public class BukkitWorld implements World {
 
     @Override
     public boolean isDefault() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return McNative.getInstance(BukkitMcNative.class).getServerProperties().getString("level-name").equals(getName());
     }
 
     @Override
@@ -289,23 +292,23 @@ public class BukkitWorld implements World {
     }
 
     @Override
-    public Biome getBiome(int x, int y) {
-        throw new UnsupportedOperationException("Currently not supported");
+    public Biome getBiome(int x, int z) {
+        return Biome.getBiome(getOriginal().getBiome(x, z).name());
     }
 
     @Override
     public Biome getBiome(Vector point) {
-        throw new UnsupportedOperationException("Currently not supported");
+        return getBiome(point.getBlockX(), point.getBlockZ());
     }
 
     @Override
     public void setBiome(int x, int z, Biome biome) {
-        throw new UnsupportedOperationException("Currently not supported");
+        getOriginal().setBiome(x, z, org.bukkit.block.Biome.valueOf(biome.getName()));
     }
 
     @Override
     public void setBiome(Vector point, Biome biome) {
-        throw new UnsupportedOperationException("Currently not supported");
+        setBiome(point.getBlockX(), point.getBlockZ(), biome);
     }
 
     @Override
@@ -340,7 +343,7 @@ public class BukkitWorld implements World {
 
     @Override
     public Collection<Player> getPlayers() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return Iterators.map(getOriginal().getPlayers(), player -> (Player) McNative.getInstance().getPlayerManager().getPlayer(player.getUniqueId()));
     }
 
     @Override
@@ -355,136 +358,142 @@ public class BukkitWorld implements World {
 
     @Override
     public <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> Collection<E> getEntitiesNear(Class<E> entityType, Vector point, Offset offset, Predicate<Entity> filter) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> Collection<E> getEntities(Class<E> entityClass) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> E spawnEntity(Location location, Class<?> clazz) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <E extends Entity> E spawnNoAIEntity(Location location, Class<?> clazz) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public <A extends Arrow> A spawnArrow(Vector point, Vector direction, float speed, float spread, Class<A> arrowClass) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public Arrow spawnArrow(Vector point, Vector direction) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Iterable<OnlineMinecraftPlayer> receivers) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Offset offset, Iterable<? extends OnlineMinecraftPlayer> receivers) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void spawnParticle(Vector point, Particle particle, int amount, Offset offset) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public DroppedItem dropItem(Vector location, ItemStack item) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public DroppedItem dropItemNaturally(Vector location, ItemStack item) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, float power) {
-        return false;
+        return getOriginal().createExplosion(point.getBlockX(), point.getBlockY(), point.getBlockZ(), power);
     }
 
     @Override
     public boolean createExplosion(Vector point, float power, boolean fire) {
-        return false;
+        return getOriginal().createExplosion(point.getBlockX(), point.getBlockY(), point.getBlockZ(), power, fire);
     }
 
     @Override
     public boolean createExplosion(Vector point, float power, boolean fire, boolean destroyBlocks) {
-        return false;
+        return getOriginal().createExplosion(point.getBlockX(), point.getBlockY(), point.getBlockZ(), power, fire, destroyBlocks);
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power, boolean fire) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean createExplosion(Vector point, Offset offset, float power, boolean fire, boolean destroyBlocks) {
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void strikeLightning(Vector location, boolean damage) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void createFallingBlock(Vector point, Material material) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void createFallingBlock(Vector point, BlockData data) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playEffect(Location location, Effect effect) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playEffect(Location location, Effect effect, Offset offset) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playSound(Vector point, Sound sound, float volume, float pitch) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public void playSound(Vector point, Sound sound, SoundCategory category, float volume, float pitch) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
     public boolean generateTree(Vector location, TreeType treeType) {
-        return false;
+        return getOriginal().generateTree(new org.bukkit.Location(getOriginal(), location.getBlockX(), location.getBlockY(), location.getBlockZ())
+                , org.bukkit.TreeType.valueOf(treeType.getName()));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BukkitWorld && ((BukkitWorld)obj).getName().equals(getName());
     }
 }
