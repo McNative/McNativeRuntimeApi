@@ -101,7 +101,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .set("Name", name)
                 .set("FirstPlayed", firstPlayed)
                 .set("LastPlayed", lastPlayed)
-                .set("GameProfile", gameProfile.toJsonPart())
+                .set("GameProfile", gameProfile == null ? "{}" : gameProfile.toJsonPart())
                 .set("Properties","{}")
                 .execute();
         return new DefaultMinecraftPlayerData(this, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile, Document.newDocument());
