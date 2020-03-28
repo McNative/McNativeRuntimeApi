@@ -56,7 +56,7 @@
         <dependency.pretronic.libraries.resourceloader>1.0.49-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
         <dependency.pretronic.libraries.synchronisation>1.0.49-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>1.0.49-SNAPSHOT</dependency.pretronic.libraries.logging>
-        <dependency.pretronic.libraries.message>1.0.49-SNAPSHOT</dependency.pretronic.libraries.message>
+        <dependency.pretronic.libraries.message>1.0.40-SNAPSHOT</dependency.pretronic.libraries.message>
 
         <dependency.pretronic.databasequery>1.1.7-SNAPSHOT</dependency.pretronic.databasequery>
 
