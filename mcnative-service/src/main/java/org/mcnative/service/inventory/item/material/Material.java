@@ -19,6 +19,7 @@
 
 package org.mcnative.service.inventory.item.material;
 
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.service.NamespacedKey;
@@ -1039,6 +1040,12 @@ public class Material implements NamespacedKey {
 
     public static Material register(Material material) {
         MATERIALS.add(material);
+        return material;
+    }
+
+    public static Material getMaterial(String name) {
+        Material material = Iterators.findOne(MATERIALS, material0 -> material0.getName().equals(name));
+        if(material == null) throw new IllegalArgumentException("Material with name " + name + " doesn't exist");
         return material;
     }
 
