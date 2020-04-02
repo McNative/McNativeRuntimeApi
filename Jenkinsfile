@@ -76,7 +76,7 @@ pipeline {
             when { equals expected: false, actual: SKIP }
             steps {
                 configFileProvider([configFile(fileId: 'afe25550-309e-40c1-80ad-59da7989fb4e', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy -DuniqueVersion=false'
+                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
                 }
             }
         }
