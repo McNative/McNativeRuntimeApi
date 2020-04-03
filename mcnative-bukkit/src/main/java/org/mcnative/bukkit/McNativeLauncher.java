@@ -20,14 +20,12 @@
 
 package org.mcnative.bukkit;
 
+import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.utility.GeneralUtil;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.plugin.PluginManager;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
@@ -48,6 +46,8 @@ public class McNativeLauncher {
 
     private static Plugin PLUGIN;
 
+    private static PluginManager originalManager;
+
     public static Plugin getPlugin() {
         return PLUGIN;
     }
@@ -61,6 +61,8 @@ public class McNativeLauncher {
         PLUGIN = plugin;
         Logger logger = Bukkit.getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
+
+        if(!McNativeBukkitConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
 
         BukkitPluginManager pluginManager = new BukkitPluginManager();
         pluginManager.inject();
@@ -90,6 +92,19 @@ public class McNativeLauncher {
         registerDependencyHooks(pluginManager,playerManager);
     }
 
+    public static void shutdown(){
+        if(!McNative.isAvailable()) return;
+        McNative instance = McNative.getInstance();
+
+        instance.getLogger().shutdown();
+        instance.getScheduler().shutdown();
+        instance.getExecutorService().shutdown();
+        instance.getPluginManager().shutdown();
+
+        Logger logger = Bukkit.getLogger();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative is stopping, please wait...");
+    }
+
     private static Network loadNetwork(){
         if(!Bukkit.getOnlineMode()){//@Todo add configuration
             return new BungeeCordProxyNetwork();
@@ -107,20 +122,9 @@ public class McNativeLauncher {
     @SuppressWarnings("unchecked")
     private static Plugin createDummyPlugin(){
         //@Todo add version
-        PluginDescriptionFile description = new PluginDescriptionFile("McNative","1.0.0",McNativeLauncher.class.getName());
-        McNativeDummyPlugin plugin = new McNativeDummyPlugin(description);
-
+        McNativeDummyPlugin plugin = new McNativeDummyPlugin("@Todo - Init version info");
         List<Plugin> plugins = (List<Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         plugins.add(plugin);
         return plugin;
     }
-
-    private static class McNativeDummyPlugin extends JavaPlugin{
-
-        public McNativeDummyPlugin(PluginDescriptionFile description) {
-            super(new JavaPluginLoader(Bukkit.getServer()), description, new File(""),new File("plugins/mcnative.jar"));
-            setEnabled(true);
-        }
-    }
-
 }
