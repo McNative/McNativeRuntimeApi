@@ -11,8 +11,8 @@ String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
 boolean SKIP = false
-int OLD_BUILD_NUMBER = -1;
-int BUILD_NUMBER = -1;
+String OLD_BUILD_NUMBER = -1;
+String BUILD_NUMBER = -1;
 
 
 
@@ -56,7 +56,7 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
-                    int buildNumber = versionSplit[3].toInteger()
+                    String buildNumber = versionSplit[3]
 
                     OLD_BUILD_NUMBER = buildNumber
 
