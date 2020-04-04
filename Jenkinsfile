@@ -66,7 +66,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Build & Deploy') {
             when { equals expected: false, actual: SKIP }
             steps {
                 configFileProvider([configFile(fileId: 'afe25550-309e-40c1-80ad-59da7989fb4e', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
