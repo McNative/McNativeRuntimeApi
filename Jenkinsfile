@@ -11,6 +11,8 @@ String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
 boolean SKIP = false
+int OLD_BUILD_NUMBER = -1;
+int BUILD_NUMBER = -1;
 
 
 
@@ -41,6 +43,7 @@ pipeline {
                 script {
                     VERSION = readMavenPom().getVersion()
                     BRANCH = env.GIT_BRANCH
+                    BUILD_NUMBER = env.BUILD_NUMBER
                 }
             }
         }
@@ -53,10 +56,13 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
+                    int buildNumber = versionSplit[3].toInteger()
 
-                    if(BRANCH.equalsIgnoreCase(BRANCH_MASTER)) {
-                        VERSION = major + "." + minorVersion + "." + patchVersion
-                    } else if (BRANCH.equalsIgnoreCase(BRANCH_DEVELOPMENT)) {
+                    OLD_BUILD_NUMBER = buildNumber
+
+                    VERSION = major + "." + minorVersion + "." + patchVersion + "." + buildNumber
+
+                    if (BRANCH.equalsIgnoreCase(BRANCH_DEVELOPMENT)) {
                         if (!VERSION.endsWith("-SNAPSHOT")) {
                             VERSION = VERSION + '-SNAPSHOT'
                         }
@@ -66,17 +72,11 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            when { equals expected: false, actual: SKIP }
-            steps {
-                sh 'mvn -B clean install'
-            }
-        }
         stage('Deploy') {
             when { equals expected: false, actual: SKIP }
             steps {
                 configFileProvider([configFile(fileId: 'afe25550-309e-40c1-80ad-59da7989fb4e', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
+                    sh 'mvn -B -gs $MAVEN_GLOBAL_SETTINGS clean deploy'
                 }
             }
         }
@@ -91,13 +91,13 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: '120a9a64-81a7-4557-80bf-161e3ab8b976', variable: 'SECRET')]) {
-                        int buildNumber = env.BUILD_NUMBER;
+
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON',
                                 httpMode: 'POST', ignoreSslErrors: true,timeout: 3000,
                                 responseHandle: 'NONE',
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
                                 url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/create" +
-                                        "?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$buildNumber")
+                                        "?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$OLD_BUILD_NUMBER")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -105,7 +105,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bungeecord")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$OLD_BUILD_NUMBER/publish?edition=bungeecord")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -113,7 +113,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bukkit/target/mcnative-bukkit-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$buildNumber/publish?edition=bukkit")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$OLD_BUILD_NUMBER/publish?edition=bukkit")
                     }
                 }
             }
@@ -133,12 +133,12 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
-                    echo BRANCH
+
                     if (BRANCH == BRANCH_DEVELOPMENT) {
-                        echo "dev"
+
                         patchVersion++
 
-                        String version = major + "." + minorVersion + "." + patchVersion + "-SNAPSHOT"
+                        String version = major + "." + minorVersion + "." + patchVersion+ "." + BUILD_NUMBER + "-SNAPSHOT"
                         String commitMessage = COMMIT_MESSAGE.replace("%version%", version)
                         sh """
                         mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version
@@ -150,18 +150,18 @@ pipeline {
                             sh "git push origin HEAD:development -v"
                         }
                     } else if (BRANCH == BRANCH_MASTER) {
-                        echo "master"
                         minorVersion++
                         patchVersion = 0
-                        String version = major + "." + minorVersion + "." + patchVersion
 
+                        String version = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER
                         String commitMessage = COMMIT_MESSAGE.replace("%version%", VERSION)
+
                         sshagent(['1c1bd183-26c9-48aa-94ab-3fe4f0bb39ae']) {
 
                             sh """
                             mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$VERSION
                             git add . -v
-                            git commit -m 'Jenkins version change $VERSION' -v
+                            git commit -m '$commitMessage' -v
                             git push origin HEAD:master -v
                             """
                             commitMessage = COMMIT_MESSAGE.replace("%version%", version)
@@ -180,8 +180,6 @@ pipeline {
                             cd ..
                             cd ..
                             if [ -d "tempDevelopment" ]; then rm -Rf tempDevelopment; fi
-
-
                             """
                         }
                     }
