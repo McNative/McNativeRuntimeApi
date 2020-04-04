@@ -11,7 +11,7 @@ String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
 boolean SKIP = false
-String BUILD_NUMBER = -1;
+int BUILD_NUMBER = -1;
 
 pipeline {
     agent any
@@ -40,7 +40,7 @@ pipeline {
                 script {
                     VERSION = readMavenPom().getVersion()
                     BRANCH = env.GIT_BRANCH
-                    BUILD_NUMBER = env.BUILD_NUMBER
+                    BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
                 }
             }
         }
@@ -116,6 +116,8 @@ pipeline {
         success {
             script {
                 if(!SKIP) {
+                    BUILD_NUMBER++
+
                     sh """
                     git config --global user.name '$CI_NAME' -v
                     git config --global user.email '$CI_EMAIL' -v
@@ -126,6 +128,8 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
+
+
 
                     if (BRANCH == BRANCH_DEVELOPMENT) {
 
