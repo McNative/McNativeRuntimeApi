@@ -122,7 +122,7 @@
         ],
         "defaultFlags": [
             "VIEW",
-            "ALLOW_Drag",
+            "ALLOW_DRAG",
             "ALLOW_DROP",
             "ALLOW_MOVE"
         ],
