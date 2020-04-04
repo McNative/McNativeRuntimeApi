@@ -19,9 +19,12 @@
 
 package org.mcnative.loader;
 
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.VersionInfo;
+import net.pretronic.libraries.utility.map.Pair;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -31,17 +34,13 @@ import java.util.logging.Logger;
 
 public class McNativeLoader extends ResourceLoader {
 
-    private static final String VERSION_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true";
+    private static final String VERSION_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true&qualifier={qualifier}";
     private static final String DOWNLOAD_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={edition}";
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 
     private final Logger logger;
     private final String platform;
-
-    static {
-        MCNATIVE.setVersionUrl(VERSION_URL);
-    }
 
     public McNativeLoader(Logger logger, String platform) {
         super(MCNATIVE);
@@ -62,6 +61,13 @@ public class McNativeLoader extends ResourceLoader {
         VersionInfo current = getCurrentVersion();
         VersionInfo latest = null;
 
+        Document configuration = readPluginConfiguration();
+        boolean enabled =  configuration.contains("autoUpdate.enabled") && configuration.getBoolean("autoUpdate.enabled");
+        String qualifier = configuration.getString("autoUpdate.qualifier");
+        if(qualifier == null) qualifier = "RELEASE";
+
+        MCNATIVE.setVersionUrl(VERSION_URL.replace("{qualifier}",qualifier));
+
         try{
             latest = getLatestVersion();
         }catch (Exception exception){
@@ -71,31 +77,45 @@ public class McNativeLoader extends ResourceLoader {
                 return false;
             }
         }
+
         if(latest != null){
             if(isLatestVersion()){
                 logger.info("(McNative-Loader) McNative "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
             }else{
-                MCNATIVE.setDownloadUrl(DOWNLOAD_URL
-                        .replace("{build}",String.valueOf(latest.getBuild()))
-                        .replace("{edition}",platform));
-                
-                logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
-                try{
-                    download(latest);
-                    logger.info("(McNative-Loader) Successfully downloaded McNative");
-                }catch (Exception exception){
-                    exception.printStackTrace();
-                    if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                if(enabled){
+                    MCNATIVE.setDownloadUrl(DOWNLOAD_URL
+                            .replace("{build}",String.valueOf(latest.getBuild()))
+                            .replace("{edition}",platform));
+
+                    logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
+                    try{
+                        download(latest);
+                        logger.info("(McNative-Loader) Successfully downloaded McNative");
+                    }catch (Exception exception){
                         exception.printStackTrace();
-                        logger.log(Level.SEVERE,"(McNative-Loader) download failed, shutting down",exception);
-                        return false;
-                    }else{
-                        logger.info("(McNative-Loader) download failed, trying to start an older version");
+                        if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                            exception.printStackTrace();
+                            logger.log(Level.SEVERE,"(McNative-Loader) download failed, shutting down",exception);
+                            return false;
+                        }else{
+                            logger.info("(McNative-Loader) download failed, trying to start an older version");
+                        }
                     }
+                }else{
+                    logger.info("(McNative-Loader) automatically updating is disabled");
+                    logger.info("(McNative-Loader) Latest Version: "+latest.getName());
                 }
             }
         }
         return launch();
+    }
+
+    private Document readPluginConfiguration(){
+        Pair<File, DocumentFileType> result = Document.findExistingType(new File("plugins/McNative"),"config");
+        if(result != null){
+            return result.getValue().getReader().read(result.getKey());
+        }
+        return Document.newEmptyDocument();
     }
 
     public boolean launch(){

@@ -51,6 +51,10 @@ public class McNativeChannelInitializer extends ChannelInitializer<SocketChannel
         this.method = method;
     }
 
+    public ChannelInitializer<SocketChannel> getOriginal() {
+        return original;
+    }
+
     @Override
     protected void initChannel(SocketChannel channel) throws Exception {
         this.method.invoke(this.original, channel);

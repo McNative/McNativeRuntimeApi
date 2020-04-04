@@ -36,6 +36,10 @@ public class McNativePluginWrapperList implements List<Plugin> {
         this.pluginManager = pluginManager;
     }
 
+    public List<Plugin> getOriginal() {
+        return original;
+    }
+
     @Override
     public int size() {
         return original.size();

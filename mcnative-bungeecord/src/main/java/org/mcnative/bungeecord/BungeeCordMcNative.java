@@ -30,6 +30,7 @@ import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
@@ -62,6 +63,7 @@ import java.util.concurrent.ExecutorService;
 
 public class BungeeCordMcNative implements McNative {
 
+    private final PluginVersion version;
     private final MinecraftPlatform platform;
     private final PretronicLogger logger;
     private final TaskScheduler scheduler;
@@ -74,8 +76,10 @@ public class BungeeCordMcNative implements McNative {
     private final LocalService local;
 
     private Network network;
+    private boolean ready;
 
-    public BungeeCordMcNative(PluginManager pluginManager, PlayerManager playerManager, Network network, LocalService local) {
+    public BungeeCordMcNative(PluginVersion version,PluginManager pluginManager, PlayerManager playerManager, Network network, LocalService local) {
+        this.version = version;
         this.platform = new BungeeCordPlatform();
         this.logger = new JdkPretronicLogger(ProxyServer.getInstance().getLogger());
         this.scheduler = new SimpleTaskScheduler();
@@ -94,6 +98,11 @@ public class BungeeCordMcNative implements McNative {
     @Override
     public String getServiceName() {
         return ProxyServer.getInstance().getName();
+    }
+
+    @Override
+    public PluginVersion getVersion() {
+        return version;
     }
 
     @Override
@@ -170,6 +179,14 @@ public class BungeeCordMcNative implements McNative {
     @Override
     public void shutdown() {
         ProxyServer.getInstance().stop();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+    protected void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     protected void registerDefaultProviders(BungeeCordServerMap serverMap){

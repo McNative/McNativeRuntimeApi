@@ -32,4 +32,14 @@ public class BukkitMcNativeBootstrap extends JavaPlugin {
             getLogger().info("Could not bootstrap McNative ("+exception.getMessage()+")");
         }
     }
+
+    @Override
+    public void onDisable() {
+        try{
+            McNativeLauncher.shutdown();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            getLogger().info("Could not shutdown McNative ("+exception.getMessage()+")");
+        }
+    }
 }

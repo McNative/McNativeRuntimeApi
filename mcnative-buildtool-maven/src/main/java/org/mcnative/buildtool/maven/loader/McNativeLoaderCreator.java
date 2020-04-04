@@ -115,13 +115,13 @@ public class McNativeLoaderCreator {
         String loaderVersion;
 
         if(loaderConfiguration != null && loaderConfiguration.getVersion() != null) loaderVersion = "Loader "+loaderConfiguration.getVersion();
-        else loaderVersion = "Loader "+manifest.getVersion().getName()+"-"+manifest.getVersion().getBuild();
+        else loaderVersion = "L#"+manifest.getVersion();
 
         createBungeeCordManifest(document.copy(null),loaderVersion);
         createBukkitManifest(document.copy(null),loaderVersion);
 
         if(loaderConfiguration != null){
-            if(loaderConfiguration.getVersion() == null) loaderConfiguration.setVersion(manifest.getVersion().getName());
+            if(loaderConfiguration.getVersion() == null) loaderConfiguration.setVersion(manifest.getVersion());
             loaderConfiguration.setPlugin(manifest);
             createLoaderInfo(loaderConfiguration);
         }

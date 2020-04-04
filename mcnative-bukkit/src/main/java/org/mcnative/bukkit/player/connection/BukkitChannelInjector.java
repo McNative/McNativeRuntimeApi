@@ -31,7 +31,6 @@ import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
@@ -55,6 +54,9 @@ public class BukkitChannelInjector {
     }
 
     private final Collection<ChannelConnection> handshakingConnections;
+
+    private Field channelFutureListField;
+    private ChannelFutureWrapperList channelFutureWrapperList;
 
     public BukkitChannelInjector() {
         this.handshakingConnections = new ArrayList<>();
@@ -98,14 +100,16 @@ public class BukkitChannelInjector {
     @SuppressWarnings("unchecked")
     public void injectChannelInitializer(){
         try{
-            Object connection = getServerConnection();
+            Object connection = BukkitReflectionUtil.getServerConnection();
             for (Field field : connection.getClass().getDeclaredFields()) {
                 if(field.getType().equals(List.class)){
                     if(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].equals(ChannelFuture.class)){
                         field.setAccessible(true);
                         Object list = field.get(connection);
-                        Object wrapper = new ChannelFutureWrapperList(this,(List<ChannelFuture>) list);
+                        ChannelFutureWrapperList wrapper = new ChannelFutureWrapperList(this,(List<ChannelFuture>) list);
                         field.set(connection,wrapper);
+                        this.channelFutureWrapperList = wrapper;
+                        this.channelFutureListField = field;
                         return;
                     }
                 }
@@ -147,25 +151,42 @@ public class BukkitChannelInjector {
         }
     }
 
-    //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
-    private Object getServerConnection()  {
-        try{
-            Class<?> serverClazz = BukkitReflectionUtil.getMNSClass("MinecraftServer");
-            Object server = serverClazz.getDeclaredMethod("getServer").invoke(null);
-            for (Method method : serverClazz.getDeclaredMethods() ) {
-                if (method.getReturnType() != null
-                        && method.getReturnType().getSimpleName().equals("ServerConnection")
-                        && method.getParameterTypes().length == 0) {
-                    return method.invoke(server);
+    public void reset(){
+        if(channelFutureWrapperList != null && channelFutureListField != null){
+            Object connection = BukkitReflectionUtil.getServerConnection();
+            try {
+                channelFutureListField.set(connection,channelFutureWrapperList.getOriginal());
+                for (ChannelFuture future : channelFutureWrapperList) {
+                    List<String> names = future.channel().pipeline().names();
+                    ChannelHandler oldHandler = null;
+                    McNativeChannelInitializer wrappedHandler = null;
+                    for (String name : names) {
+                        ChannelHandler handler = future.channel().pipeline().get(name);
+                        if(handler != null){
+                            Field field = ReflectionUtil.getField(handler.getClass(), "childHandler");
+                            if(field != null && field.getType().equals(McNativeChannelInitializer.class)){
+                                field.setAccessible(true);
+                                oldHandler = handler;
+                                wrappedHandler = (McNativeChannelInitializer) field.get(handler);
+                            }
+                        }
+                    }
+
+                    if(wrappedHandler == null){
+                        oldHandler = future.channel().pipeline().first();
+                        Field field = ReflectionUtil.getField(oldHandler.getClass(), "childHandler");
+                        field.setAccessible(true);
+                        wrappedHandler = (McNativeChannelInitializer) field.get(oldHandler);
+                    }
+                    ReflectionUtil.changeFieldValue(oldHandler,"childHandler", wrappedHandler.getOriginal());
                 }
-            }
-            throw new IllegalArgumentException("No ServerConnection found.");
-        }catch (Exception exception){
-            throw new ReflectException(exception);
+            } catch (IllegalAccessException ignored) {}
         }
     }
 
-    private GameProfile extractGameProfile(Object profile) throws Exception{//@Todo extract properties
+    //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
+
+    public static GameProfile extractGameProfile(Object profile) throws Exception{//@Todo extract properties
         UUID uniqueId = (UUID) UUID_GAME_PROFILE_FIELD.get(profile);
         String name = (String) NAME_GAME_PROFILE_FIELD.get(profile);
         return new GameProfile(uniqueId,name,new GameProfile.Property[]{});

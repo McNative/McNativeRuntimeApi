@@ -20,8 +20,8 @@
 package org.mcnative.bukkit.player.permission;
 
 import net.pretronic.libraries.utility.Iterators;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
@@ -33,13 +33,13 @@ import java.util.Collections;
 //@Todo implement design workaround and crate vault integration
 public class BukkitPermissionHandler implements PermissionHandler {
 
-    private final Player player;
+    private final BukkitPlayer player;
 
     private final PlayerDesign design;
 
-    public BukkitPermissionHandler(Player player) {
+    public BukkitPermissionHandler(BukkitPlayer player) {
         this.player = player;
-        this.design = new BukkitPlayerDesign(player);
+        this.design = new BukkitPlayerDesign(player.getOriginal());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public Collection<String> getPermissions() {
-        return Iterators.map(player.getEffectivePermissions(), PermissionAttachmentInfo::getPermission);
+        return Iterators.map(player.getOriginal().getEffectivePermissions(), PermissionAttachmentInfo::getPermission);
     }
 
     @Override
@@ -69,22 +69,22 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return player.isPermissionSet(permission);
+        return player.getOriginal().isPermissionSet(permission);
     }
 
     @Override
     public boolean isPermissionAssigned(String permission) {
-        return player.isPermissionSet(permission);
+        return player.getOriginal().isPermissionSet(permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return player.hasPermission(permission);
+        return player.getOriginal().hasPermission(permission);
     }
 
     @Override
     public PermissionResult hasPermissionExact(String permission) {
-        return player.hasPermission(permission) ? PermissionResult.ALLOWED : PermissionResult.DENIED;
+        return player.getOriginal().hasPermission(permission) ? PermissionResult.ALLOWED : PermissionResult.DENIED;
     }
 
     @Override
@@ -109,12 +109,12 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public boolean isOperator() {
-        return player.isOp();
+        return player.getOriginal().isOp();
     }
 
     @Override
     public void setOperator(boolean operator) {
-        player.setOp(operator);
+        player.getOriginal().setOp(operator);
     }
 
     @Override
@@ -130,5 +130,10 @@ public class BukkitPermissionHandler implements PermissionHandler {
     @Override
     public PermissionHandler reload() {
         return this;
+    }
+
+    @Override
+    public void onPlayerLogout() {
+        player.setDesign(design);
     }
 }

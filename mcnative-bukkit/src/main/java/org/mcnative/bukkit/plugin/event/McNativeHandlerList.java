@@ -80,7 +80,12 @@ public class McNativeHandlerList extends HandlerList implements org.bukkit.plugi
 
     @Override
     public void unregister(Plugin plugin) {
-        Iterators.removeSilent(executors, executor -> executor.getOwner().equals(plugin));
+        Iterators.removeSilent(executors, executor -> {
+            if(executor instanceof BukkitEventExecutor){
+                return ((BukkitEventExecutor) executor).getRegistration().getPlugin().equals(plugin);
+            }
+            return false;
+        });
     }
 
     @Override

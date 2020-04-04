@@ -20,6 +20,7 @@
 package org.mcnative.bukkit;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.utility.map.Pair;
@@ -28,14 +29,21 @@ import org.mcnative.common.plugin.configuration.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class McNativeBukkitConfiguration {
 
+    @DocumentKey("autoUpdate.enabled")
+    public static boolean AUTO_UPDATE_ENABLED = true;
+
+    @DocumentKey("autoUpdate.qualifier")
+    public static String AUTO_UPDATE_QUALIFIER = "BETA";
+
+    @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
 
-    public static Map<String,String> PLAYER_COLORS_COLORS = new HashMap<>();
+    public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
     public static String PLAYER_COLORS_DEFAULT = "&7";
 
     static{

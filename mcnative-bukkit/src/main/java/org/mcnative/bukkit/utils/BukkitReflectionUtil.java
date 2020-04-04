@@ -19,8 +19,13 @@
 
 package org.mcnative.bukkit.utils;
 
+import io.netty.channel.Channel;
 import net.pretronic.libraries.utility.reflect.ReflectException;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.Method;
 
 public class BukkitReflectionUtil {
 
@@ -49,6 +54,35 @@ public class BukkitReflectionUtil {
         } catch (ClassNotFoundException e) {
             throw new ReflectException(e);
         }
+    }
+
+    public static Object getServerConnection()  {
+        try{
+            Class<?> serverClazz = BukkitReflectionUtil.getMNSClass("MinecraftServer");
+            Object server = serverClazz.getDeclaredMethod("getServer").invoke(null);
+            for (Method method : serverClazz.getDeclaredMethods() ) {
+                if (method.getReturnType() != null
+                        && method.getReturnType().getSimpleName().equals("ServerConnection")
+                        && method.getParameterTypes().length == 0) {
+                    return method.invoke(server);
+                }
+            }
+            throw new IllegalArgumentException("No ServerConnection found.");
+        }catch (Exception exception){
+            throw new ReflectException(exception);
+        }
+    }
+
+    public static Channel getPlayerChannel(Player player){
+        Object entityPlayer = ReflectionUtil.invokeMethod(player,"getHandle");
+        Object connection = ReflectionUtil.getFieldValue(entityPlayer,"playerConnection");
+        Object networkManager = ReflectionUtil.getFieldValue(connection,"networkManager");
+        return ReflectionUtil.getFieldValue(networkManager,"channel", Channel.class);
+    }
+
+    public static Object getGameProfile(Player player){
+        Object entityPlayer = ReflectionUtil.invokeMethod(player,"getHandle");
+        return ReflectionUtil.invokeMethod(getMNSClass("EntityHuman") ,entityPlayer,"getProfile",new Object[]{});
     }
 
 }

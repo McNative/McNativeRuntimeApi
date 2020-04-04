@@ -37,6 +37,10 @@ public class ChannelFutureWrapperList implements List<ChannelFuture> {
         future.forEach(channelInitializer::injectChannelFuture);
     }
 
+    public List<ChannelFuture> getOriginal() {
+        return future;
+    }
+
     @Override
     public int size() {
         synchronized (this) {

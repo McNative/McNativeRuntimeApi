@@ -41,9 +41,9 @@ public class BungeeCordPermissionProvider implements PermissionProvider {
     @Override
     public PermissionHandler getPlayerHandler(MinecraftPlayer player) {
         if(player instanceof BungeeProxiedPlayer){
-            return new BungeeCordPermissionHandler(((BungeeProxiedPlayer) player).getOriginal());
+            return new BungeeCordPermissionHandler((BungeeProxiedPlayer) player);
         }
-        throw new UnsupportedOperationException("BungeeCord does not support offline permissions");
+        return null;
     }
 
     @Override

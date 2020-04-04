@@ -113,7 +113,7 @@ public class MappedPlugin extends MinecraftPlugin {
 
         @Override
         public PluginVersion getVersion() {
-            return new PluginVersion(original.getVersion(),1);
+            return PluginVersion.parse(original.getVersion());
         }
 
         @Override

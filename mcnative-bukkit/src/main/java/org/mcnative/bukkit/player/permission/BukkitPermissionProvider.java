@@ -45,7 +45,7 @@ public class BukkitPermissionProvider implements PermissionProvider {
     @Override
     public PermissionHandler getPlayerHandler(MinecraftPlayer player) {
         if(player instanceof BukkitPlayer){
-            return new BukkitPermissionHandler(((BukkitPlayer) player).getOriginal());
+            return new BukkitPermissionHandler(((BukkitPlayer) player));
         }
         return null;
     }

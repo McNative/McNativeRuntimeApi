@@ -29,6 +29,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
+import org.mcnative.common.McNative;
 
 import java.io.File;
 import java.io.InputStream;
@@ -103,7 +104,7 @@ public class McNativeDummyPlugin implements Plugin {
 
     @Override
     public void onDisable() {
-        //Unused
+        McNative.getInstance().shutdown();
     }
 
     @Override

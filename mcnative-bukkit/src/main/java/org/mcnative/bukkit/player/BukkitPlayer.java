@@ -105,6 +105,11 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Override
+    public PendingConnection getConnection() {
+        return connection;
+    }
+
+    @Override
     public InetSocketAddress getVirtualHost() {
         return connection.getVirtualHost();
     }
@@ -641,8 +646,12 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Internal
-    public BukkitPlayer setJoining(boolean joining) {
+    public void setJoining(boolean joining) {
         this.joining = joining;
-        return this;
+    }
+
+    @Internal
+    public void handleLogout(){
+        if(this.permissionHandler != null)this.permissionHandler.onPlayerLogout();
     }
 }

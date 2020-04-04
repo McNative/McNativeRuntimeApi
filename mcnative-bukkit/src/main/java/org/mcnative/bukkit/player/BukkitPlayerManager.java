@@ -19,14 +19,23 @@
 
 package org.mcnative.bukkit.player;
 
+import io.netty.channel.Channel;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.bukkit.Bukkit;
+import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
+import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.service.entity.living.Player;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.function.Function;
 
@@ -112,5 +121,49 @@ public class BukkitPlayerManager implements PlayerManager {
     @Internal
     public OnlineMinecraftPlayer unregisterPlayer(UUID uniqueId){
         return Iterators.removeOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
+    }
+
+    @Internal
+    public void loadConnectedPlayers(){
+        PlayerDataProvider dataProvider = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
+        for (org.bukkit.entity.Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            MinecraftPlayerData data = dataProvider.getPlayerData(onlinePlayer.getUniqueId());
+            if(data == null){
+                onlinePlayer.kickPlayer("Unrecognised login");
+                return;
+            }
+
+            Channel channel = BukkitReflectionUtil.getPlayerChannel(onlinePlayer);
+
+            GameProfile profile;
+            try {
+                profile = BukkitChannelInjector.extractGameProfile(BukkitReflectionUtil.getGameProfile(onlinePlayer));
+            } catch (Exception ignored) {
+               onlinePlayer.kickPlayer("Unrecognised login");
+               return;
+            }
+
+            Object protocolEncoder = channel.pipeline().get("mcnative-packet-encoder");
+            if(protocolEncoder == null){
+                onlinePlayer.kickPlayer("Unrecognised login");
+                return;
+            }
+
+            int protocolVersion = (int) ReflectionUtil.invokeMethod(protocolEncoder,"getProtocolNumber");
+            channel.pipeline().remove("mcnative-packet-encoder");
+            channel.pipeline().remove("mcnative-packet-rewrite-encoder");
+            channel.pipeline().remove("mcnative-packet-rewrite-decoder");
+
+            BukkitPendingConnection connection = null;
+            try {
+                connection = new BukkitPendingConnection(channel,profile,onlinePlayer.getAddress()
+                        , new InetSocketAddress(InetAddress.getLocalHost(),25565),protocolVersion);
+            } catch (UnknownHostException ignored) {
+                onlinePlayer.kickPlayer("Unrecognised login");
+            }
+            BukkitPlayer player = new BukkitPlayer(onlinePlayer,connection,data);
+            player.setJoining(false);
+            registerPlayer(player);
+        }
     }
 }

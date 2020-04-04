@@ -25,6 +25,7 @@ import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
@@ -55,9 +56,11 @@ public class McNativeLauncher {
 
     public static void launchMcNativeInternal(Plugin plugin){
         if(McNative.isAvailable()) return;
+        PluginVersion version = PluginVersion.ofImplementation(McNativeLauncher.class);
         PLUGIN = plugin;
         Logger logger = ProxyServer.getInstance().getLogger();
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
+        logger.info(McNative.CONSOLE_PREFIX+"Version: "+version.getName());
         ProxyServer proxy = ProxyServer.getInstance();
 
         if(!McNativeProxyConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
@@ -75,7 +78,7 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected command manager.");
 
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
-        BungeeCordMcNative instance = new BungeeCordMcNative(pluginManager,playerManager,new BungeecordProxyNetwork(localService), localService);
+        BungeeCordMcNative instance = new BungeeCordMcNative(version,pluginManager,playerManager,new BungeecordProxyNetwork(localService), localService);
         McNative.setInstance(instance);
         instance.registerDefaultProviders(serverMap);
         instance.registerDefaultCommands();
@@ -90,6 +93,7 @@ public class McNativeLauncher {
         new McNativeBridgeEventHandler(eventBus,localService.getEventBus(),playerManager,serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bungeecord events.");
 
+        instance.setReady(true);
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 

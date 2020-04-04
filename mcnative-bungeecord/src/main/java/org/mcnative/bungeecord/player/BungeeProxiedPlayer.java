@@ -29,6 +29,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
@@ -367,6 +368,11 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Override
+    public PendingConnection getConnection() {
+        return connection;
+    }
+
+    @Override
     public InetSocketAddress getVirtualHost() {
         return original.getPendingConnection().getVirtualHost();
     }
@@ -448,6 +454,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
         this.server = server;
     }
 
+    @Internal
     public void injectDownstreamProtocolHandlersToPipeline(){
         if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED) return;
         Object connection = ReflectionUtil.getFieldValue(original,"server");
@@ -463,6 +470,11 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
          channel.pipeline().addBefore("packet-decoder","mcnative-packet-rewrite-decoder"
                 ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.DOWNSTREAM, PacketDirection.INCOMING,this));
+    }
+
+    @Internal
+    public void handleLogout(){
+        if(this.permissionHandler != null)this.permissionHandler.onPlayerLogout();
     }
 }
 

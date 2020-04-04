@@ -20,9 +20,9 @@
 package org.mcnative.common.network.messaging;
 
 import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.utility.reflect.TypeReference;
 import net.pretronic.libraries.synchronisation.SynchronisationCaller;
 import net.pretronic.libraries.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.McNative;
 
 import java.util.UUID;
@@ -70,6 +70,11 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
             document.set(IDENTIFIER_KEY,identifier);
             document.set(ACTION_KEY,0);
             McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
+        }
+
+        @Override
+        public boolean isConnected() {
+            return false;
         }
 
         @Override

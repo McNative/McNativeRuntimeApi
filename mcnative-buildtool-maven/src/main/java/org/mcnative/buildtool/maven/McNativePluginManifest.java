@@ -38,7 +38,7 @@ public class McNativePluginManifest {
     private String id;
 
     @Parameter(required = true)
-    private PluginVersion version;
+    private String version;
 
     @Parameter(required = true)
     private String main;
@@ -62,7 +62,7 @@ public class McNativePluginManifest {
         return category;
     }
 
-    public PluginVersion getVersion() {
+    public String getVersion() {
         return version;
     }
 
