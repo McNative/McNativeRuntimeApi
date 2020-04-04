@@ -13,8 +13,6 @@ String BRANCH = "UNDEFINED"
 boolean SKIP = false
 String BUILD_NUMBER = -1;
 
-
-
 pipeline {
     agent any
     tools {
@@ -55,7 +53,6 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
-
 
                     VERSION = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER
 
@@ -185,4 +182,3 @@ pipeline {
         }
     }
 }
-
