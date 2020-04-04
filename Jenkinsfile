@@ -11,7 +11,6 @@ String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
 boolean SKIP = false
-String OLD_BUILD_NUMBER = -1;
 String BUILD_NUMBER = -1;
 
 
@@ -56,11 +55,9 @@ pipeline {
                     String major = versionSplit[0]
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
-                    String buildNumber = versionSplit[3]
 
-                    OLD_BUILD_NUMBER = buildNumber
 
-                    VERSION = major + "." + minorVersion + "." + patchVersion + "." + buildNumber
+                    VERSION = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER
 
                     if (BRANCH.equalsIgnoreCase(BRANCH_DEVELOPMENT)) {
                         if (!VERSION.endsWith("-SNAPSHOT")) {
@@ -97,7 +94,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
                                 url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/create" +
-                                        "?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$OLD_BUILD_NUMBER")
+                                        "?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$BUILD_NUMBER")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -105,7 +102,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bungeecord/target/mcnative-bungeecord-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$OLD_BUILD_NUMBER/publish?edition=bungeecord")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$BUILD_NUMBER/publish?edition=bungeecord")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
@@ -113,7 +110,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 uploadFile: "mcnative-bukkit/target/mcnative-bukkit-${VERSION}.jar",
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
-                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$OLD_BUILD_NUMBER/publish?edition=bukkit")
+                                url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/$BUILD_NUMBER/publish?edition=bukkit")
                     }
                 }
             }
