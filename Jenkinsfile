@@ -10,8 +10,10 @@ final String PROJECT_SSH = "git@github.com:DevKrieger/McNative.git"
 String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
+
 boolean SKIP = false
 int BUILD_NUMBER = -1;
+String QUALIFIER = "undefinded"
 
 pipeline {
     agent any
@@ -41,6 +43,8 @@ pipeline {
                     VERSION = readMavenPom().getVersion()
                     BRANCH = env.GIT_BRANCH
                     BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+                    if(BRANCH == BRANCH_MASTER) QUALIFIER = "RELEASE"
+                    else if(BRANCH == BRANCH_DEVELOPMENT) QUALIFIER = "SNAPSHOT"
                 }
             }
         }
@@ -90,7 +94,7 @@ pipeline {
                                 responseHandle: 'NONE',
                                 customHeaders:[[name:'token', value:"${SECRET}", maskValue:true]],
                                 url: "https://mirror.pretronic.net/v1/$RESOURCE_ID/versions/create" +
-                                        "?name=$VERSION&qualifier=SNAPSHOT&buildNumber=$BUILD_NUMBER")
+                                        "?name=$VERSION&qualifier=$QUALIFIER&buildNumber=$BUILD_NUMBER")
 
                         httpRequest(acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_OCTETSTREAM',
                                 httpMode: 'POST', ignoreSslErrors: true, timeout: 3000,
