@@ -25,6 +25,7 @@ import net.pretronic.libraries.document.entry.ArrayEntry;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.text.Text;
 
 import java.util.Collection;
@@ -72,7 +73,7 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
     }
 
     @Override
-    public Document compile(String key, VariableSet variablesUnused, Language language) {
+    public Document compile(String key, MinecraftConnection connection, VariableSet variablesUnused, Language language) {
         ArrayEntry result = DocumentRegistry.getFactory().newArrayEntry(key);
         boolean first = true;
         for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {

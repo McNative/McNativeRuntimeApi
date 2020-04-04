@@ -182,7 +182,6 @@ public class BungeeCordMcNative implements McNative {
     }
 
     protected void registerDefaultCommands() {
-        System.out.println("register commands");
         getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
     }
 

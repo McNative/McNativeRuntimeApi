@@ -26,7 +26,6 @@ import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionResult;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
 
 public class BungeeCordPermissionHandler implements PermissionHandler {
 
@@ -126,8 +125,4 @@ public class BungeeCordPermissionHandler implements PermissionHandler {
         throw new UnsupportedOperationException("BungeeCord does not support operators");
     }
 
-    @Override
-    public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
-    }
 }

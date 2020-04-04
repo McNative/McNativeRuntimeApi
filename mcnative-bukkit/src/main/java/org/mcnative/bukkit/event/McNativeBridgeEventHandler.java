@@ -20,12 +20,18 @@
 
 package org.mcnative.bukkit.event;
 
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.mcnative.bukkit.event.player.*;
-import org.mcnative.bukkit.event.player.inventory.*;
+import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryClickEvent;
+import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryCloseEvent;
+import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryDragEvent;
+import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryOpenEvent;
 import org.mcnative.bukkit.player.BukkitPendingConnection;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
@@ -45,7 +51,10 @@ import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.event.player.MinecraftPlayerJoinEvent;
 import org.mcnative.service.event.player.MinecraftPlayerWorldChangedEvent;
-import org.mcnative.service.event.player.inventory.*;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
+import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryOpenEvent;
 
 import java.net.InetSocketAddress;
 import java.util.Map;

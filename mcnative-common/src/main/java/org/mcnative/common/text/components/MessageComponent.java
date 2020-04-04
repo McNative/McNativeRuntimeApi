@@ -24,9 +24,11 @@ import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.Textable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
+import org.mcnative.common.connection.MinecraftConnection;
 
 import java.util.Collection;
 
+//@Todo add legacy builder
 public interface MessageComponent<T extends MessageComponent<?>> extends Textable {
 
     Collection<MessageComponent<?>> getExtras();
@@ -81,10 +83,18 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
     }
 
     default Document compile(VariableSet variables,Language language){
-        return compile(null,variables,language);
+        return compile(null,null,variables,language);
     }
 
-    Document compile(String key, VariableSet variables,Language language);
+    default Document compile(MinecraftConnection connection,VariableSet variables,Language language){
+        return compile(null,connection,variables,language);
+    }
+
+    default Document compile(String key, VariableSet variables,Language language){
+        return compile(key,null,variables,language);
+    }
+
+    Document compile(String key, MinecraftConnection connection, VariableSet variables,Language language);
 
 
     default String compileToString(){
@@ -101,6 +111,10 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     default String compileToString(VariableSet variables,Language language){
         return DocumentFileType.JSON.getWriter().write(compile(variables,language),false);
+    }
+
+    default String compileToString(MinecraftConnection connection,VariableSet variables,Language language){
+        return DocumentFileType.JSON.getWriter().write(compile(connection,variables,language),false);
     }
 
     void decompile(Document data);

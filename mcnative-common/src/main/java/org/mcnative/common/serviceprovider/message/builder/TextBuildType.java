@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.12.19, 19:45
+ * @since 22.03.20, 13:22
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +18,12 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.serviceprovider.message.builder;
 
-import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.document.type.DocumentFileType;
+public enum  TextBuildType {
 
-public interface PlayerDesign {
-
-    String getColor();
-
-    String getPrefix();
-
-    String getSuffix();
-
-    String getChat();
-
-    String getDisplayName();
-
-    int getPriority();
-
-    default String toJson(){
-        return DocumentFileType.JSON.getWriter().write(Document.newDocument(this),false);
-    }
+    PLAIN(),
+    LEGACY(),
+    COMPILE();
 
 }

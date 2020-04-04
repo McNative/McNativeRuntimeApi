@@ -24,6 +24,15 @@ import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.MessagePack;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.DefaultMessageProcessor;
+import net.pretronic.libraries.message.bml.Message;
+import net.pretronic.libraries.message.bml.MessageProcessor;
+import net.pretronic.libraries.message.bml.function.defaults.math.RandomNumberFunction;
+import net.pretronic.libraries.message.bml.function.defaults.math.SumFunction;
+import net.pretronic.libraries.message.bml.function.defaults.operation.LoopFunction;
+import net.pretronic.libraries.message.bml.function.defaults.text.RandomTextFunction;
+import net.pretronic.libraries.message.bml.indicate.IndicateBuilder;
+import net.pretronic.libraries.message.bml.parser.MessageParser;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
@@ -31,10 +40,12 @@ import net.pretronic.libraries.message.repository.MessageRepository;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
+import net.pretronic.libraries.utility.parser.ParserException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.MinecraftPlugin;
-import org.mcnative.common.text.Text;
+import org.mcnative.common.serviceprovider.message.builder.*;
 
 import java.io.File;
 import java.util.*;
@@ -43,8 +54,9 @@ public class DefaultMessageProvider implements MessageProvider {
 
     private static final String MESSAGE_NOT_FOUND = "The message %key% was not found.";
 
+    private final MessageProcessor processor;
     private final List<MessagePack> packs;
-    private final Map<String,Map<Language,String>> messages;
+    private final Map<String,Map<Language, Message>> messages;
 
     private Language defaultLanguage;
 
@@ -54,9 +66,18 @@ public class DefaultMessageProvider implements MessageProvider {
 
     public DefaultMessageProvider(Language defaultLanguage) {
         Validate.notNull(defaultLanguage);
+        this.processor = new DefaultMessageProcessor();
         this.packs = new ArrayList<>();
         this.messages = new CaseIntensiveHashMap<>();
         this.defaultLanguage = defaultLanguage;
+
+        registerDefaultIndicates();
+        registerDefaultFunctions();
+    }
+
+    @Override
+    public MessageProcessor getProcessor() {
+        return processor;
     }
 
     @Override
@@ -125,6 +146,7 @@ public class DefaultMessageProvider implements MessageProvider {
     @Override
     public void addPack(MessagePack pack) {
         if(getPack(pack.getMeta().getName()) != null) throw new IllegalArgumentException("A pack with the name "+pack.getMeta().getName()+" is already available");
+
         this.packs.add(pack);
     }
 
@@ -155,6 +177,7 @@ public class DefaultMessageProvider implements MessageProvider {
                                     MessagePack pack = addPack(type.getReader().read(file));
                                     result.add(pack);
                                     plugin.getLogger().info("(Message-Provider) Loaded message pack {}",pack.getMeta().getName());
+                                    plugin.getLogger().info("(Message-Provider) Loaded {} messages",pack.getMessages().size());
                                 }catch (Exception exception){
                                     plugin.getLogger().info("(Message-Provider) Could not load message pack {}",file.getName());
                                     plugin.getLogger().error(exception);
@@ -181,26 +204,26 @@ public class DefaultMessageProvider implements MessageProvider {
     }
 
     @Override
-    public String getMessage(String key) {
+    public Message getMessage(String key) {
         return getMessage(key, (Language) null);
     }
 
     @Override
-    public String getMessage(String key, Language language) {
+    public Message getMessage(String key, Language language) {
         if(language == null) language = defaultLanguage;
-        Map<Language,String> node = this.messages.get(key);
+        Map<Language,Message> node = this.messages.get(key);
         if(node != null && !node.isEmpty()){
-            String result = node.get(language);
+            Message result = node.get(language);
             if(result != null) return result;
             result = node.get(defaultLanguage);
             if(result != null) return result;
             return node.entrySet().iterator().next().getValue();
         }
-        return MESSAGE_NOT_FOUND.replace("%key%",key);
+        return Message.ofStaticText(MESSAGE_NOT_FOUND.replace("%key%",key));
     }
 
     @Override
-    public String getMessage(String key, LanguageAble obj) {
+    public Message getMessage(String key, LanguageAble obj) {
         return getMessage(key,obj != null ? obj.getLanguage() : null);
     }
 
@@ -216,7 +239,9 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public String buildMessage(String key, VariableSet variables, Language language) {
-        return variables.replace(getMessage(key,language));
+        return getMessage(key,language)
+                .build(new MinecraftBuildContext(language,variables,null, TextBuildType.PLAIN))
+                .toString();
     }
 
     @Override
@@ -224,32 +249,77 @@ public class DefaultMessageProvider implements MessageProvider {
         this.messages.clear();
         for (MessagePack pack : this.packs) {
             pack.getMessages().forEach((key, message) -> {
-                Map<Language,String> node = messages.computeIfAbsent(key, key1 -> new HashMap<>());
-                node.put(pack.getMeta().getLanguage(),replaceInternalVariables(pack,message));
+                Map<Language,Message> node = messages.computeIfAbsent(key, key1 -> new HashMap<>());
+
+                try{
+                    MessageParser parser = new MessageParser(processor,message);
+                    Message result = parser.parse();
+                    node.put(pack.getMeta().getLanguage(),result);
+                }catch (ParserException exception){
+                    McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed parsing message "+key);
+                    McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+exception.getMessage());
+                    String[] result = exception.getParser().buildExceptionContent(exception.getLine(),exception.getIndex(),"[McNative] (Message-Provider) ");
+                    McNative.getInstance().getLogger().error(result[0]);
+                    McNative.getInstance().getLogger().error(result[1]);
+                }catch (Exception exception){
+                    McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed parsing message "+key);
+                    McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+exception.getMessage());
+                }
             });
         }
     }
 
-    private static String replaceInternalVariables(MessagePack pack,String message){
-        char[] content = message.toCharArray();
-        StringBuilder builder = new StringBuilder(content.length);
-        int start = -1;
-        for (int i = 0; i < content.length; i++) {
-            if(content[i] == '$'){
-                start = i;
-            }else if(content[i] == '{' && i != 0 && content[i-1] == '$'){
-                start = i;
-            }else if(content[i] == '}' && start != -1){
-                String key = message.substring(start+1,i);
+    public void registerDefaultIndicates(){
+        processor.addIgnoredChar(' ');
+        processor.addIgnoredChar('\t');
+        processor.addIgnoredChar('\r');
 
-                String subMessage = pack.getMessage(key);
 
-                builder.append(subMessage == null ? "{NOT FOUND}" : replaceInternalVariables(pack,subMessage));
-                start = -1;
-            }else if(start == -1){
-                builder.append(content[i]);
-            }
-        }
-        return Text.translateAlternateColorCodes('&',builder.toString());
+        processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
+                .define('{','}')
+                .builder(new VariableBuilder())
+                .create());
+
+        processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
+                .prefix('$')
+                .define('{','}')
+                .factory(name -> new IncludeMessageBuilder(DefaultMessageProvider.this))
+                .create());
+
+        processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
+                .prefix('%')
+                .define('{','}')
+                .builder(new PlaceholderVariableBuilder())
+                .create());
+
+        processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
+                .prefix('@')
+                .define('(',')')
+                .parameter(',')
+                .hasName()
+                .hasOperation()
+                .isSubIndicateAble()
+                .factory(new FunctionFactory(processor))
+                .create());
+
+        processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
+                .prefix('!')
+                .define('[',']')
+                .parameter(';')
+                .extension('(',')')
+                .isSubIndicateAble()
+                .isExtensionSubIndicateAble()
+                .builder(new ActionTextBuilder())
+                .create());
+        processor.setTextBuilderFactory(new TextBuilder.Factory());
+    }
+    public void registerDefaultFunctions(){
+        processor.registerFunction(ObjectOwner.SYSTEM,"for",new LoopFunction());
+        processor.registerFunction(ObjectOwner.SYSTEM,"foreach",new LoopFunction());
+
+        processor.registerFunction(ObjectOwner.SYSTEM,"random",new RandomNumberFunction());
+        processor.registerFunction(ObjectOwner.SYSTEM,"randomText",new RandomTextFunction());
+
+        processor.registerFunction(ObjectOwner.SYSTEM,"sum",new SumFunction());
     }
 }

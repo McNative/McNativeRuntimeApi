@@ -21,6 +21,7 @@ package org.mcnative.common.player.data;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
@@ -28,14 +29,18 @@ import java.util.UUID;
 public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     private transient final DefaultPlayerDataProvider provider;
-    private final String name;
     private final UUID uniqueId;
-    private final long xBoxId, firstPlayed, lastPlayed;
-    private final GameProfile gameProfile;
+    private final long xBoxId;
+    private final long firstPlayed;
     private final Document properties;
 
+    private String name;
+    private GameProfile gameProfile;
+    private PlayerDesign design;
+    private long lastPlayed;
+
     public DefaultMinecraftPlayerData(DefaultPlayerDataProvider provider, String name, UUID uniqueId, long xBoxId
-            , long firstPlayed, long lastPlayed, GameProfile gameProfile, Document properties) {
+            , long firstPlayed, long lastPlayed, GameProfile gameProfile,PlayerDesign design, Document properties) {
         this.provider = provider;
         this.name = name;
         this.uniqueId = uniqueId;
@@ -43,6 +48,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
         this.firstPlayed = firstPlayed;
         this.lastPlayed = lastPlayed;
         this.gameProfile = gameProfile;
+        this.design = design;
         this.properties = properties;
     }
 
@@ -77,6 +83,11 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     }
 
     @Override
+    public PlayerDesign getDesign() {
+        return design;
+    }
+
+    @Override
     public Document getProperties() {
         return this.properties;
     }
@@ -95,6 +106,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
                 .set("Name", name)
                 .where("UniqueId", uniqueId)
                 .execute();
+        this.name = name;
     }
 
     @Override
@@ -103,6 +115,16 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
                 .set("GameProfile",profile.toJsonPart())
                 .where("UniqueId", uniqueId)
                 .execute();
+        this.gameProfile = profile;
+    }
+
+    @Override
+    public void updateDesign(PlayerDesign design) {
+        this.provider.getPlayerDataStorage().update()
+                .set("Design", design.toJson())
+                .where("UniqueId", uniqueId)
+                .execute();
+        this.design = design;
     }
 
     @Override
@@ -121,6 +143,9 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
                 .set("LastPlayed", timeStamp)
                 .where("UniqueId",this.uniqueId)
                 .execute();
+        this.name = name;
+        this.gameProfile = profile;
+        this.lastPlayed = timeStamp;
     }
 
     @Override

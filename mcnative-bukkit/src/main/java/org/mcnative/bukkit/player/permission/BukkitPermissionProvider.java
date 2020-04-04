@@ -19,26 +19,34 @@
 
 package org.mcnative.bukkit.player.permission;
 
+import net.pretronic.libraries.utility.Iterators;
+import org.bukkit.Bukkit;
+import org.mcnative.bukkit.player.BukkitPlayer;
+import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class BukkitPermissionProvider implements PermissionProvider {
 
     @Override
     public Collection<MinecraftPlayer> getOperators() {
-        return null;
+        return Iterators.map(Bukkit.getOperators(), player -> McNative.getInstance().getPlayerManager().getPlayer(player.getUniqueId()));
     }
 
     @Override
     public Collection<String> getGroups() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public PermissionHandler getPlayerHandler(MinecraftPlayer player) {
+        if(player instanceof BukkitPlayer){
+            return new BukkitPermissionHandler(((BukkitPlayer) player).getOriginal());
+        }
         return null;
     }
 

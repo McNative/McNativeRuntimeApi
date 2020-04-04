@@ -21,6 +21,7 @@ package org.mcnative.common.player.data;
 
 import net.pretronic.libraries.caching.CacheStateAble;
 import net.pretronic.libraries.document.Document;
+import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.util.UUID;
@@ -39,12 +40,16 @@ public interface MinecraftPlayerData extends CacheStateAble<MinecraftPlayerData>
 
     GameProfile getGameProfile();
 
+    PlayerDesign getDesign();
+
     Document getProperties();
 
 
     void updateName(String name);
 
     void updateGameProfile(GameProfile profile);
+
+    void updateDesign(PlayerDesign design);
 
     void updateProperties();
 

@@ -84,6 +84,15 @@ public class McNativePlaceholderProvider implements PlaceholderProvider{
     }
 
     @Override
+    public String translate(MinecraftPlayer player, String placeholder) {
+        int splitIndex = placeholder.indexOf('_');
+        String identifier = splitIndex != -1 ? placeholder.substring(0,splitIndex) : placeholder;
+        String parameter = "";
+        if(splitIndex != -1) parameter = placeholder.substring(splitIndex+1);
+        return translate(player,identifier,parameter);
+    }
+
+    @Override
     public String translate(MinecraftPlayer player, String identifier, String parameter) {
         Entry entry = Iterators.findOne(this.entries, entry1 -> entry1.identifier.equalsIgnoreCase(identifier));
         if(entry != null){

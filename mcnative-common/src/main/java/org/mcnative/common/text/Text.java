@@ -108,15 +108,7 @@ public class Text {
 
 
     public static MessageKeyComponent ofMessageKey(String key){
-        return ofMessageKey(key,TextColor.WHITE);
-    }
-
-    public static MessageKeyComponent ofMessageKey(String key, TextColor color){
-        return ofMessageKey(key,color,new HashSet<>());
-    }
-
-    public static MessageKeyComponent ofMessageKey(String key, TextColor color, Set<TextStyle> styling){
-        return new MessageKeyComponent(key,color,styling);
+        return new MessageKeyComponent(key);
     }
 
 

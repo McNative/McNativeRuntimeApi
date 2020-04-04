@@ -104,7 +104,7 @@ public class MinecraftChatPacket implements MinecraftPacket {
         
         if(direction == PacketDirection.OUTGOING){
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
-                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(variables!=null?variables:VariableSet.newEmptySet(),language));
+                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
                 buffer.writeByte(position.getId());
             }else{
                 MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));

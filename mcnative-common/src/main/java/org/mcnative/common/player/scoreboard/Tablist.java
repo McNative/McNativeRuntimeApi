@@ -22,38 +22,46 @@ package org.mcnative.common.player.scoreboard;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.text.components.ChatComponent;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface Tablist {
 
     Collection<MinecraftPlayer> getPlayers();
 
+    List<ScoreboardEntry> getEntries();
 
-    void setHeader(String message);
 
-    default void setHeader(ChatComponent<?> component){
+    default void setHeader(String message){
+        setHeader(Text.of(message));
+    }
+
+    default void setHeader(MessageComponent<?> component){
         setHeader(component,VariableSet.newEmptySet());
     }
 
-    void setHeader(ChatComponent<?> component, VariableSet variables);
+    void setHeader(MessageComponent<?> component, VariableSet variables);
 
 
-    void setFooter(String message);
+    default void setFooter(String message){
+        setFooter(Text.of(message));
+    }
 
-    default void setFooter(ChatComponent<?> component){
+    default void setFooter(MessageComponent<?> component){
         setFooter(component,VariableSet.newEmptySet());
     }
 
-    void setFooter(ChatComponent<?> component, VariableSet variables);
+    void setFooter(MessageComponent<?> component, VariableSet variables);
 
 
-    default void setHeaderAndFooter(ChatComponent<?> header, ChatComponent<?> footer){
+    default void setHeaderAndFooter(MessageComponent<?> header, MessageComponent<?> footer){
         setHeaderAndFooter(header, footer,VariableSet.newEmptySet());
     }
 
-    void setHeaderAndFooter(ChatComponent<?> header, ChatComponent<?> footer, VariableSet variables);
+    void setHeaderAndFooter(MessageComponent<?> header, MessageComponent<?> footer, VariableSet variables);
 
     void clearHeaderAndFooter();
 
@@ -66,10 +74,18 @@ public interface Tablist {
 
     void addEntry(String entry,String prefix, String suffix, int priority);
 
+    void addEntry(ScoreboardEntry entry);
+
     void removeEntry(MinecraftPlayer player);
+
+    void removeEntry(ScoreboardEntry entry);
 
     void removeEntry(String entry);
 
+
+    void updateEntries();
+
+    void updateMeta();
 
     void update();
 

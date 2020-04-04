@@ -113,5 +113,4 @@ public class BukkitPlayerManager implements PlayerManager {
     public OnlineMinecraftPlayer unregisterPlayer(UUID uniqueId){
         return Iterators.removeOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
     }
-
 }

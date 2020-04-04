@@ -220,7 +220,7 @@ public class BukkitPluginManager implements PluginManager {
         if(owner instanceof Plugin<?>) mappedOwner = getMappedPlugin((Plugin<?>) owner);
         else mappedOwner = McNativeLauncher.getPlugin();
 
-        serviceManager.register(serviceClass,service,mappedOwner, ServicePriority.Normal);
+        serviceManager.register(serviceClass,service,mappedOwner,mapServicePriorityToBukkit(priority));
         McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(service, owner, priority));
     }
 
@@ -315,5 +315,13 @@ public class BukkitPluginManager implements PluginManager {
             case Lowest: return net.pretronic.libraries.plugin.service.ServicePriority.LOWEST;
             default: return net.pretronic.libraries.plugin.service.ServicePriority.NORMAL;
         }
+    }
+
+    private ServicePriority mapServicePriorityToBukkit(byte priority) {
+        if(priority >= net.pretronic.libraries.plugin.service.ServicePriority.HIGHEST) return ServicePriority.Highest;
+        if(priority >= net.pretronic.libraries.plugin.service.ServicePriority.HIGH) return ServicePriority.High;
+        if(priority == net.pretronic.libraries.plugin.service.ServicePriority.NORMAL) return ServicePriority.Normal;
+        if(priority <= net.pretronic.libraries.plugin.service.ServicePriority.LOW) return ServicePriority.Low;
+        return ServicePriority.Lowest;
     }
 }

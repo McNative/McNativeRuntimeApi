@@ -23,7 +23,6 @@ import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
 
 public interface Permissable {
 
@@ -63,8 +62,4 @@ public interface Permissable {
     boolean isOperator();
 
     void setOperator(boolean operator);
-
-
-    void setPlayerDesignGetter(BiFunction<MinecraftPlayer,PlayerDesign,PlayerDesign> designGetter);
-
 }

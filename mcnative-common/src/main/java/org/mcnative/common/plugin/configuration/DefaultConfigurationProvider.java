@@ -76,7 +76,6 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
         if(configCreate) {
             this.storageConfig.addDatabaseEntry(new StorageConfig.DatabaseEntry(owner.getName(),
                     "default", owner.getName(), "default"));
-            System.out.println("CREATE...");
             this.storageConfig.save();
             return getDatabase(owner, name);
         }

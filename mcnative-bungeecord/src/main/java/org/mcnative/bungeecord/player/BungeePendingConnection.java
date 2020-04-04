@@ -165,7 +165,9 @@ public class BungeePendingConnection implements PendingConnection {
 
     @Override
     public void sendPacket(MinecraftPacket packet) {
-        if(channel.isOpen() && channel.isActive() && channel.isRegistered()) channel.writeAndFlush(packet);
+        if(channel.isOpen() && channel.isActive() && channel.isRegistered()){
+            channel.writeAndFlush(packet);
+        }
     }
 
     @Override

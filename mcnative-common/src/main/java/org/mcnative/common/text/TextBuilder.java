@@ -90,7 +90,7 @@ public class TextBuilder {
     }
 
     public TextBuilder messageKey(String key){
-        return createComponent(new MessageKeyComponent(key));
+        throw new IllegalArgumentException(); //return createComponent(new MessageKeyComponent(key));
     }
 
     public TextBuilder onClick(Runnable runnable){

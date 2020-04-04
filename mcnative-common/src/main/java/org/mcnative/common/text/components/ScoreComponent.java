@@ -22,6 +22,7 @@ package org.mcnative.common.text.components;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -86,12 +87,12 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
     }
 
     @Override
-    public Document compile(String key, VariableSet variables, Language language) {
+    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
         Document score = Document.newDocument();
         score.add("name",entityName);
         score.add("objective", objective);
         score.add("value",value);
-        return super.compile(key,variables,language).add("score",score);
+        return super.compile(key,connection,variables,language).add("score",score);
     }
 
     @Override

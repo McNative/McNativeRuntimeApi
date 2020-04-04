@@ -20,32 +20,28 @@
 package org.mcnative.common.text.components;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.McNative;
+import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.serviceprovider.message.builder.MinecraftBuildContext;
+import org.mcnative.common.serviceprovider.message.builder.TextBuildType;
 import org.mcnative.common.text.format.TextColor;
-import org.mcnative.common.text.format.TextStyle;
 
-import java.util.Set;
+import java.util.Collection;
 
-public class MessageKeyComponent extends AbstractChatComponent<MessageKeyComponent>{
+public class MessageKeyComponent implements MessageComponent<MessageKeyComponent>{
 
     private String key;
+    private Message message;
 
     public MessageKeyComponent() {}
 
     public MessageKeyComponent(String key) {
-        this.key = key;
-    }
-
-    public MessageKeyComponent(String key, TextColor color) {
-        super(color);
-        this.key = key;
-    }
-
-    public MessageKeyComponent(String key, TextColor color, Set<TextStyle> styling) {
-        super(color, styling);
         this.key = key;
     }
 
@@ -55,17 +51,60 @@ public class MessageKeyComponent extends AbstractChatComponent<MessageKeyCompone
 
     public void setKey(String key) {
         this.key = key;
+        this.message = null;
+    }
+
+    @Override
+    public Collection<MessageComponent<?>> getExtras() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public MessageKeyComponent addExtra(MessageComponent<?> component) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public MessageKeyComponent removeExtra(MessageComponent<?> component) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         builder.append(replaceVariablesAndTranslate(variables,language));
-        super.toPlainText(builder, variables,language);
     }
 
     @Override
-    public Document compile(String key, VariableSet variables, Language language) {
-        return super.compile(key,variables,language).add("text",replaceVariablesAndTranslate(variables,language));
+    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
+        try{
+            if(message == null){
+                message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
+            }
+            OnlineMinecraftPlayer player = null;
+            if(connection instanceof OnlineMinecraftPlayer) player = (OnlineMinecraftPlayer) connection;
+            Object result = message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.COMPILE));
+            if(result instanceof Document){
+                System.out.println(DocumentFileType.JSON.getWriter().write((Document) result,true));
+                return (Document) result;
+            }
+            else{
+                Document wrapper = Document.newDocument();
+                wrapper.set("text","");
+                wrapper.set("extra",new Object[]{result});
+                System.out.println(DocumentFileType.JSON.getWriter().write(wrapper,true));
+                return wrapper;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed building BML message");
+            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+e.getMessage());
+        }
+        return Document.newDocument().set("color",TextColor.DARK_RED.getName()).set("text","Internal Server Error");
+    }
+
+    @Override
+    public void decompile(Document data) {
+        this.key = data.getString("key");
     }
 
     private String replaceVariablesAndTranslate(VariableSet variables, Language language){

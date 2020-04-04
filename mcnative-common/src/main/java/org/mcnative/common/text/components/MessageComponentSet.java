@@ -24,6 +24,7 @@ import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.entry.ArrayEntry;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.text.Text;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     }
 
     @Override
-    public Document compile(String key, VariableSet variables, Language language) {
+    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
         ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);
         components.forEach(component -> entry.entries().add(component.compile(variables,language)));
         return entry;

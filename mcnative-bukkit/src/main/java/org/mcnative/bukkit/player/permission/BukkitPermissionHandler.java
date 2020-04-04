@@ -29,30 +29,17 @@ import org.mcnative.common.serviceprovider.permission.PermissionResult;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.function.BiFunction;
 
 //@Todo implement design workaround and crate vault integration
 public class BukkitPermissionHandler implements PermissionHandler {
 
     private final Player player;
 
+    private final PlayerDesign design;
+
     public BukkitPermissionHandler(Player player) {
         this.player = player;
-    }
-
-    @Override
-    public boolean isCached() {
-        return true;
-    }
-
-    @Override
-    public boolean setCached(boolean b) {
-        return false;
-    }
-
-    @Override
-    public PermissionHandler reload() {
-        return this;
+        this.design = new BukkitPlayerDesign(player);
     }
 
     @Override
@@ -72,12 +59,12 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public PlayerDesign getDesign() {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+        return getDesign(null);
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer forPlayer) {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+        return design;
     }
 
     @Override
@@ -102,22 +89,22 @@ public class BukkitPermissionHandler implements PermissionHandler {
 
     @Override
     public void setPermission(String permission, boolean allowed) {
-        throw new UnsupportedOperationException("Not supported");
+        throw new UnsupportedOperationException("Bukkit permissions does not support modifying permission, try to use another permission provider.");
     }
 
     @Override
     public void unsetPermission(String permission) {
-        throw new UnsupportedOperationException("Not supported");
+        throw new UnsupportedOperationException("Bukkit permissions does not support modifying permission, try to use another permission provider.");
     }
 
     @Override
     public void addGroup(String name) {
-        throw new UnsupportedOperationException("Not supported");
+        throw new UnsupportedOperationException("Bukkit permissions does not support modifying groups, try to use another permission provider.");
     }
 
     @Override
     public void removeGroup(String name) {
-        throw new UnsupportedOperationException("Not supported");
+        throw new UnsupportedOperationException("Bukkit permissions does not support modifying groups, try to use another permission provider.");
     }
 
     @Override
@@ -131,7 +118,17 @@ public class BukkitPermissionHandler implements PermissionHandler {
     }
 
     @Override
-    public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        throw new UnsupportedOperationException("Bukkit permissions do not support permission design (@Todo implement)");
+    public boolean isCached() {
+        return true;//Unused without exception
+    }
+
+    @Override
+    public boolean setCached(boolean b) {
+        return false;//Unused without exception
+    }
+
+    @Override
+    public PermissionHandler reload() {
+        return this;
     }
 }

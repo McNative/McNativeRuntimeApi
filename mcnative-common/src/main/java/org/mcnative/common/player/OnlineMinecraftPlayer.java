@@ -167,7 +167,12 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
 
     void check(Consumer<ProtocolCheck> checker);
 
+    default void sendMessage(Textable textable) {
+        sendMessage(textable,VariableSet.newEmptySet());
+    }
+
     default void sendMessage(Textable textable,VariableSet variables) {
+        System.out.println("SEND TEXTABLE");
         if(textable instanceof MessageComponent){
             sendMessage((MessageComponent<?>)textable,variables);
         }else{

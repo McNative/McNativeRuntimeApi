@@ -20,7 +20,10 @@
 package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
+import org.mcnative.common.event.player.design.MinecraftPlayerDesignRequestEvent;
+import org.mcnative.common.event.player.design.MinecraftPlayerDesignSetEvent;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
@@ -32,7 +35,6 @@ import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
 
 public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
@@ -90,21 +92,43 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     @Override
     public String getDisplayName(MinecraftPlayer player) {
-        return null;//@Todo format display name
+        String result = getDesign(player).getDisplayName();
+        if(result != null) result = result.replace("{name}",getName());
+        return result;
     }
 
     @Override
     public PlayerDesign getDesign() {
-        return getPermissionHandler().getDesign();
+        PermissionHandler handler = getPermissionHandler();
+        PlayerDesign design = handler != null ?  handler.getDesign(): null;
+        if(design == null) design = getData().getDesign();
+        MinecraftPlayerDesignRequestEvent event = new MinecraftPlayerDesignRequestEvent(this,design);
+        McNative.getInstance().getLocal().getEventBus().callEvent(event);
+        return event.getDesign();
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer player) {
-        return getPermissionHandler().getDesign(player);
+        Validate.notNull(player);
+        PermissionHandler handler = getPermissionHandler();
+        PlayerDesign design = handler != null ?  handler.getDesign(player): null;
+        if(design == null) design = getData().getDesign();
+        MinecraftPlayerDesignRequestEvent event = new MinecraftPlayerDesignRequestEvent(this,design);
+        McNative.getInstance().getLocal().getEventBus().callEvent(event);
+        return event.getDesign();
+    }
+
+    @Override
+    public void setDesign(PlayerDesign design) {
+        Validate.notNull(design);
+        MinecraftPlayerDesignSetEvent event = new MinecraftPlayerDesignSetEvent(this,design);
+        McNative.getInstance().getLocal().getEventBus().callEventAsync(event)
+                .thenAccept(event1 -> getData().updateDesign(event1.getDesign()));
     }
 
     @Override
     public <T> T getAs(Class<T> otherPlayerClass) {
+        Validate.notNull(otherPlayerClass);
         return McNative.getInstance().getPlayerManager().translate(otherPlayerClass,this);
     }
 
@@ -148,75 +172,75 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         return permissionHandler;
     }
 
-    @Override
-    public void setPlayerDesignGetter(BiFunction<MinecraftPlayer, PlayerDesign, PlayerDesign> designGetter) {
-        getPermissionHandler().setPlayerDesignGetter(designGetter);
+    private PermissionHandler getPermissionHandlerExcepted() {
+        PermissionHandler handler = getPermissionHandler();
+        if(handler == null) throw new UnsupportedOperationException("No permission handler available");
+        return handler;
     }
 
     @Override
     public boolean isOperator() {
-        return getPermissionHandler().isOperator();
+        return getPermissionHandlerExcepted().isOperator();
     }
 
     @Override
     public void setOperator(boolean operator) {
-        getPermissionHandler().setOperator(operator);
+        getPermissionHandlerExcepted().setOperator(operator);
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return getPermissionHandler().getPermissions();
+        return getPermissionHandlerExcepted().getPermissions();
     }
 
     @Override
     public Collection<String> getEffectivePermissions() {
-        return getPermissionHandler().getEffectivePermissions();
+        return getPermissionHandlerExcepted().getEffectivePermissions();
     }
-
 
     @Override
     public Collection<String> getGroups() {
-        return getPermissionHandler().getGroups();
+        return getPermissionHandlerExcepted().getGroups();
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return getPermissionHandler().isPermissionSet(permission);
+        return getPermissionHandlerExcepted().isPermissionSet(permission);
     }
 
     @Override
     public boolean isPermissionAssigned(String permission) {
-        return getPermissionHandler().isPermissionAssigned(permission);
+        return getPermissionHandlerExcepted().isPermissionAssigned(permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return getPermissionHandler().hasPermission(permission);
+        return getPermissionHandlerExcepted().hasPermission(permission);
     }
 
     @Override
     public PermissionResult hasPermissionExact(String permission) {
-        return getPermissionHandler().hasPermissionExact(permission);
+        return getPermissionHandlerExcepted().hasPermissionExact(permission);
     }
 
     @Override
     public void setPermission(String permission, boolean allowed) {
-        getPermissionHandler().setPermission(permission, allowed);
+        getPermissionHandlerExcepted().setPermission(permission, allowed);
     }
 
     @Override
     public void unsetPermission(String permission) {
-        getPermissionHandler().unsetPermission(permission);
+        getPermissionHandlerExcepted().unsetPermission(permission);
     }
 
     @Override
     public void addGroup(String name) {
-        getPermissionHandler().addGroup(name);
+        getPermissionHandlerExcepted().addGroup(name);
     }
 
     @Override
     public void removeGroup(String name) {
-        getPermissionHandler().removeGroup(name);
+        getPermissionHandlerExcepted().removeGroup(name);
     }
 
     @Override
@@ -285,6 +309,5 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
                 ",xBoxId=" + getXBoxId() +
                 '}';
     }
-
 
 }

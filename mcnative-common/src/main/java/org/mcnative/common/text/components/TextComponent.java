@@ -22,6 +22,7 @@ package org.mcnative.common.text.components;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -62,7 +63,7 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
     }
 
     @Override
-    public Document compile(String key, VariableSet variables, Language language) {
+    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
         return super.compile(key,variables,language).add("text",variables.replace(text));
     }
 

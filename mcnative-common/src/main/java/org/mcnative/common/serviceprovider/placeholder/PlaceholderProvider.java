@@ -44,6 +44,7 @@ public interface PlaceholderProvider {
 
     void unregisterPlaceHolders(ObjectOwner owner);
 
+    String translate(MinecraftPlayer player, String identifier);
 
     String translate(MinecraftPlayer player, String identifier, String parameter);
 
