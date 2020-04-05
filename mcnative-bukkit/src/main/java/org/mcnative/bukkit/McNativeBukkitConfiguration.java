@@ -41,7 +41,7 @@ public class McNativeBukkitConfiguration {
     public static boolean AUTO_UPDATE_ENABLED = true;
 
     @DocumentKey("autoUpdate.qualifier")
-    public static String AUTO_UPDATE_QUALIFIER = "SNAPSHOT";//@Todo change to beta
+    public static String AUTO_UPDATE_QUALIFIER = "RELEASE";
 
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
