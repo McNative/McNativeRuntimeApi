@@ -101,17 +101,28 @@ public class McNativeLauncher {
     private static Plugin setupDummyPlugin(){
         PluginDescription description = new PluginDescription();
         description.setName("McNative");
-        description.setVersion("1.0.0");//@Todo update
+        description.setVersion(McNativeLauncher.class.getPackage().getImplementationVersion());//@Todo update
         description.setAuthor("Pretronic and McNative contributors");
         description.setMain("reflected");
 
-        Plugin plugin = new Plugin();
+        System.out.println(McNativeLauncher.class.getClassLoader().getClass().getName());
 
+        Plugin plugin = new DummyPlugin(description);
+
+        /*
         ReflectionUtil.invokeMethod(plugin,"init",new Class[]{ProxyServer.class,PluginDescription.class}
                 ,new Object[]{ProxyServer.getInstance(),description});
+         */
         Map<String, Plugin> plugins = ReflectionUtil.getFieldValue(PluginManager.class,ProxyServer.getInstance().getPluginManager(),"plugins", Map.class);
         plugins.put(description.getName(),plugin);
         return plugin;
+    }
+
+    private static class DummyPlugin extends Plugin{
+
+        public DummyPlugin(PluginDescription description) {
+            super(ProxyServer.getInstance(), description);
+        }
     }
 
 }

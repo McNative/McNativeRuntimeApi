@@ -144,8 +144,7 @@ public class McNativeLauncher {
 
     @SuppressWarnings("unchecked")
     private static Plugin createDummyPlugin(){
-        //@Todo add version
-        McNativeDummyPlugin plugin = new McNativeDummyPlugin("@Todo - Init version info");
+        McNativeDummyPlugin plugin = new McNativeDummyPlugin(McNativeLauncher.class.getPackage().getImplementationVersion());
         List<Plugin> plugins = (List<Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         plugins.add(plugin);
         return plugin;
