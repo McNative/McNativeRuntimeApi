@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 22.03.20, 20:22
+ * @since 22.03.20, 20:25
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -20,34 +20,23 @@
 
 package org.mcnative.common.commands;
 
-import net.pretronic.libraries.command.NotFindable;
 import net.pretronic.libraries.command.command.BasicCommand;
-import net.pretronic.libraries.command.command.MainCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.command.sender.ConsoleCommandSender;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.McNative;
 import org.mcnative.common.Messages;
 
-public class McNativeCommand extends MainCommand implements NotFindable {
+public class McNativeVersionCommand extends BasicCommand {
 
-    private final BasicCommand infoCommand;
-
-    public McNativeCommand(ObjectOwner owner) {
-        super(owner, CommandConfiguration.name("mcnative"));
-        this.infoCommand = new McNativeInfoCommand(owner);
-        registerCommand(infoCommand);
-        registerCommand(new McNativePluginsCommand(owner));
-        registerCommand(new McNativePasteLogCommand(owner));
-        registerCommand(new McNativeVersionCommand(owner));
+    public McNativeVersionCommand(ObjectOwner owner) {
+        super(owner, CommandConfiguration.newBuilder().name("version").aliases("v", "ver").create());
     }
 
     @Override
-    public void commandNotFound(CommandSender sender, String command, String[] args) {
-        if(sender.hasPermission("mcnative.admin")) {
-            infoCommand.execute(sender, args);
-        } else {
-            sender.sendMessage(sender instanceof ConsoleCommandSender ? Messages.PREFIX_CONSOLE : Messages.PREFIX_USER + "See https://mcnative.org");
-        }
+    public void execute(CommandSender sender, String[] args) {
+        sender.sendMessage(Messages.COMMAND_VERSION, VariableSet.create()
+                .add("version", McNative.getInstance().getVersion().getName()));
     }
 }

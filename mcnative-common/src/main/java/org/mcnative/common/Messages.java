@@ -23,15 +23,16 @@ package org.mcnative.common;
 import net.pretronic.libraries.document.annotations.DocumentIgnored;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageKeyComponent;
-import org.mcnative.common.text.components.TextComponent;
 
 public final class Messages {
 
-    public static final MessageKeyComponent PREFIX_USER = Text.ofMessageKey("&8» &cMcNative &8|&f");
+    public static final MessageKeyComponent PREFIX_USER = Text.ofMessageKey("mcnative.prefix");
     @DocumentIgnored
     public static final String PREFIX_CONSOLE = "[McNative]";
 
-    public static MessageKeyComponent COMMAND_PASTE_SUCCESSFUL = Text.ofMessageKey("command.mcNative.paste.successful");
-    public static MessageKeyComponent COMMAND_INFO_ADMIN = Text.ofMessageKey("command.mcNative.info.admin");
-    public static MessageKeyComponent COMMAND_INFO_USER = Text.ofMessageKey("command.mcNative.info.user");
+    public static MessageKeyComponent COMMAND_PASTE_SUCCESSFUL = Text.ofMessageKey("mcnative.command.mcnative.paste.successful");
+    public static MessageKeyComponent COMMAND_INFO_ADMIN = Text.ofMessageKey("mcnative.command.mcnative.info.admin");
+    public static MessageKeyComponent COMMAND_INFO_USER = Text.ofMessageKey("mcnative.command.mcnative.info.user");
+
+    public static MessageKeyComponent COMMAND_VERSION = Text.ofMessageKey("mcnative.command.mcnative.version");
 }
