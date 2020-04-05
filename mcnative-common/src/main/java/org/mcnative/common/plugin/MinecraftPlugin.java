@@ -22,11 +22,15 @@ package org.mcnative.common.plugin;
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.configuration.Configuration;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class MinecraftPlugin extends Plugin<McNative> {
 
@@ -56,6 +60,17 @@ public class MinecraftPlugin extends Plugin<McNative> {
 
     private ConfigurationProvider getConfigurationProvider(){
         return getRuntime().getRegistry().getService(ConfigurationProvider.class);
+    }
+
+    public void setUpdateConfiguration(boolean enabled, String qualifier){
+        File location = new File("plugins/McNative/lib/resources/"+getName().toLowerCase()+"/update.dat");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
+            writer.write(enabled+";"+qualifier);
+            writer.close();
+        } catch (IOException exception) {
+            throw new OperationFailedException("Could not set update configuration");
+        }
     }
 }
 

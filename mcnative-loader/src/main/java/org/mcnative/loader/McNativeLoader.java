@@ -23,6 +23,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
+import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
 import net.pretronic.libraries.utility.map.Pair;
 
@@ -35,12 +36,16 @@ import java.util.logging.Logger;
 public class McNativeLoader extends ResourceLoader {
 
     private static final String VERSION_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true&qualifier={qualifier}";
-    private static final String DOWNLOAD_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{build}/download?edition={edition}";
+    private static final String DOWNLOAD_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{version.build}/download?edition={edition}";
 
     private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
 
     private final Logger logger;
     private final String platform;
+
+    static {
+        MCNATIVE.setVersionUrl(VERSION_URL);
+    }
 
     public McNativeLoader(Logger logger, String platform) {
         super(MCNATIVE);
@@ -56,17 +61,12 @@ public class McNativeLoader extends ResourceLoader {
         return false;
     }
 
-    public boolean install(){//@Todo add update configuration options (In mcnative config / disable auto update)
+    public boolean install(){
         if(isAvailable()) return true;
         VersionInfo current = getCurrentVersion();
         VersionInfo latest = null;
 
-        Document configuration = readPluginConfiguration();
-        boolean enabled =  configuration.contains("autoUpdate.enabled") && configuration.getBoolean("autoUpdate.enabled");
-        String qualifier = configuration.getString("autoUpdate.qualifier");
-        if(qualifier == null) qualifier = "RELEASE";
-
-        MCNATIVE.setVersionUrl(VERSION_URL.replace("{qualifier}",qualifier));
+        UpdateConfiguration configuration = getUpdateConfiguration();
 
         try{
             latest = getLatestVersion();
@@ -82,11 +82,8 @@ public class McNativeLoader extends ResourceLoader {
             if(isLatestVersion()){
                 logger.info("(McNative-Loader) McNative "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
             }else{
-                if(enabled){
-                    MCNATIVE.setDownloadUrl(DOWNLOAD_URL
-                            .replace("{build}",String.valueOf(latest.getBuild()))
-                            .replace("{edition}",platform));
-
+                if(current == null || configuration.isEnabled()){
+                    MCNATIVE.setDownloadUrl(DOWNLOAD_URL.replace("{edition}",platform));
                     logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
                     try{
                         download(latest);

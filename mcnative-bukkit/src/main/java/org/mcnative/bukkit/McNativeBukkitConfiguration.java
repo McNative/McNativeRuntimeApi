@@ -23,11 +23,14 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,7 +41,7 @@ public class McNativeBukkitConfiguration {
     public static boolean AUTO_UPDATE_ENABLED = true;
 
     @DocumentKey("autoUpdate.qualifier")
-    public static String AUTO_UPDATE_QUALIFIER = "BETA";
+    public static String AUTO_UPDATE_QUALIFIER = "SNAPSHOT";//@Todo change to beta
 
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
@@ -85,6 +88,18 @@ public class McNativeBukkitConfiguration {
             exception.printStackTrace();
             return false;
         }
+        setAutoUpdateConfiguration();
         return true;
+    }
+
+    private static void setAutoUpdateConfiguration(){
+        File location = new File("plugins/McNative/lib/resources/mcnative/update.dat");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
+            writer.write(AUTO_UPDATE_ENABLED+";"+AUTO_UPDATE_QUALIFIER);
+            writer.close();
+        } catch (IOException exception) {
+            throw new OperationFailedException("Could not set update configuration");
+        }
     }
 }
