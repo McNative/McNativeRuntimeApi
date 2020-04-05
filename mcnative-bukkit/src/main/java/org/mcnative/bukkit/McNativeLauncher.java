@@ -83,9 +83,7 @@ public class McNativeLauncher {
         McNative.setInstance(instance);
 
         BukkitChannelInjector injector = new BukkitChannelInjector();
-
         commandManager.inject();
-        injector.injectChannelInitializer();
 
         instance.registerDefaultProviders();
         instance.registerDefaultCommands();
@@ -93,9 +91,10 @@ public class McNativeLauncher {
 
         new McNativeBridgeEventHandler(injector,eventBus,playerManager);
 
-        playerManager.loadConnectedPlayers();
-
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bukkit events.");
+
+        injector.injectChannelInitializer();
+        playerManager.loadConnectedPlayers();
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
