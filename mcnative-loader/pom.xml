@@ -24,7 +24,7 @@
     <parent>
         <artifactId>McNative</artifactId>
         <groupId>org.mcnative</groupId>
-        <version>1.0.97.28-SNAPSHOT</version>
+        <version>1.0.106.38-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -112,6 +112,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.pretronic.libraries</groupId>
+            <artifactId>pretroniclibraries-document</artifactId>
+            <version>${dependency.pretronic.libraries.document}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- External dependencies -->
 
         <dependency>
@@ -126,6 +133,13 @@
             <artifactId>bungeecord-api</artifactId>
             <version>${dependency.bungeecord.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency><!-- @Todo remove -->
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.37.Final</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -33,6 +33,7 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ShutdownAble;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.*;
@@ -57,6 +58,8 @@ public class BukkitPluginManager implements PluginManager {
     private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
     private final Collection<PluginLoader> loaders;
     private final Collection<Plugin> plugins;
+
+    private McNativePluginWrapperList pluginWrapperList;
 
     public BukkitPluginManager() {
         this.serviceManager = Bukkit.getServicesManager();
@@ -237,6 +240,7 @@ public class BukkitPluginManager implements PluginManager {
         for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(o.getClass())) {
             if(registration.getProvider().equals(o)) {
                 serviceManager.unregister(registration.getProvider());
+                if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
                 McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
                         getMappedPlugin(registration.getPlugin())));
             }
@@ -248,6 +252,7 @@ public class BukkitPluginManager implements PluginManager {
         Validate.notNull(aClass);
         for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(aClass)) {
             serviceManager.unregister(registration.getProvider());
+            if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
             McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
                     getMappedPlugin(registration.getPlugin())));
         }
@@ -258,16 +263,23 @@ public class BukkitPluginManager implements PluginManager {
         if(owner instanceof Plugin<?>){
             for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(getMappedPlugin((Plugin<?>) owner))) {
                 serviceManager.unregister(registration.getProvider());
+                if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
                 McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider()
                         ,getMappedPlugin(registration.getPlugin())));
             }
-            //serviceManager.unregister(getMappedPlugin((Plugin<?>) owner));
         }else throw new IllegalArgumentException("It is not possible to unsubscribe services, if the owner is not a plugin");
     }
 
     @Override
     public void shutdown() {
-        //Unused and ignored
+        for (Class<?> knownService : serviceManager.getKnownServices()) {
+            for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(knownService)) {
+                if(registration.getProvider() instanceof ShutdownAble){
+                    ((ShutdownAble) registration.getProvider()).shutdown();
+                    serviceManager.unregister(registration.getProvider());
+                }
+            }
+        }
     }
 
     protected void registerBukkitPlugin(org.bukkit.plugin.Plugin plugin){
@@ -304,7 +316,17 @@ public class BukkitPluginManager implements PluginManager {
             McNativePluginWrapperList override = new McNativePluginWrapperList(original,this);
             ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",override);
             for (org.bukkit.plugin.Plugin plugin : original) registerBukkitPlugin(plugin);
+            pluginWrapperList = override;
         }
+    }
+
+    @Internal
+    public void reset(){
+       if(pluginWrapperList != null){
+           synchronized (this){
+               ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",pluginWrapperList.getOriginal());
+           }
+       }
     }
 
     private byte mapServicePriority(ServicePriority priority) {

@@ -61,44 +61,40 @@ public class McNativeBuildMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
-        try{
-            File output = new File(project.getBuild().getOutputDirectory());
-            File sourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
-            File resourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
-            File manifestFile = new File(output.getParent(),MCNATIVE_MANIFEST_FILE_PATH);
+        File output = new File(project.getBuild().getOutputDirectory());
+        File sourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_SOURCE_DIRECTORY_PATH);
+        File resourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
+        File manifestFile = new File(output.getParent(),MCNATIVE_MANIFEST_FILE_PATH);
 
-            sourceDirectory.mkdirs();
-            resourceDirectory.mkdirs();
+        sourceDirectory.mkdirs();
+        resourceDirectory.mkdirs();
 
-            project.addCompileSourceRoot(sourceDirectory.getPath());
+        project.addCompileSourceRoot(sourceDirectory.getPath());
 
-            this.manifest.createManifestFile(manifestFile);
+        this.manifest.createManifestFile(manifestFile);
 
-            String basePackage = project.getGroupId()+".loader";
-            ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
-                    ,new File(mcnativeLoaderLocation),sourceDirectory);
+        String basePackage = project.getGroupId()+".loader";
+        ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
+                ,new File(mcnativeLoaderLocation),sourceDirectory);
 
-            McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
-                    ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
+        McNativeLoaderCreator creator = new McNativeLoaderCreator(getLog(),mcnativeLoaderVersion,basePackage
+                ,new File(mcnativeLoaderLocation),sourceDirectory,resourceDirectory);
 
-            installer.downloadSource();
-            creator.downloadSource();
+        installer.downloadSource();
+        creator.downloadSource();
 
-            installer.unpackLoader();
-            creator.unpackLoader();
+        installer.unpackLoader();
+        creator.unpackLoader();
 
-            creator.renamePackages();
+        creator.renamePackages();
 
-            creator.createManifests(loader,manifest);
+        creator.createManifests(loader,manifest);
 
-            try {
-                FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new MojoFailureException(e.getMessage());
-            }
-        }catch (Exception exception){
-            exception.printStackTrace();
+        try {
+            FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new MojoFailureException(e.getMessage());
         }
     }
 }

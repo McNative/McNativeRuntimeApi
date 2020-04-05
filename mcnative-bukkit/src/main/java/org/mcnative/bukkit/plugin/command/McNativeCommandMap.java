@@ -48,6 +48,19 @@ public class McNativeCommandMap extends SimpleCommandMap {
         this.commandManager = commandManager;
         this.original = original;
         this.commands = (Map<String, Command>) ReflectionUtil.getFieldValue(SimpleCommandMap.class,original, "knownCommands");
+
+        for (Map.Entry<String, Command> entry : this.commands.entrySet()) {
+            if(!(entry.getValue() instanceof McNativeCommand)){
+                String[] parts = entry.getKey().split(":");
+                if(parts.length == 2){
+                    commandManager.provideCommand(new BukkitCommand(entry.getValue(),getOwner(parts[0])));
+                }
+            }
+        }
+    }
+
+    public SimpleCommandMap getOriginal() {
+        return original;
     }
 
     @Override
@@ -123,7 +136,6 @@ public class McNativeCommandMap extends SimpleCommandMap {
     public void registerServerAliases() {
         original.registerServerAliases();
     }
-
 
 
     public void unregister(Object command){

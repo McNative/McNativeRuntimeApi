@@ -25,14 +25,16 @@ import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.ShutdownAble;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveMap;
 import org.mcnative.common.McNative;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Objects;
 
-public class DefaultConfigurationProvider implements ConfigurationProvider {
+public class DefaultConfigurationProvider implements ConfigurationProvider, ShutdownAble {
 
     private final CaseIntensiveMap<DatabaseDriver> databaseDrivers;
     private StorageConfig storageConfig;
@@ -91,5 +93,12 @@ public class DefaultConfigurationProvider implements ConfigurationProvider {
             this.databaseDrivers.put(name, driver);
         }
         return this.databaseDrivers.get(name);
+    }
+
+    @Override
+    public void shutdown() {
+        for (Map.Entry<String, DatabaseDriver> drivers : this.databaseDrivers.entrySet()) {
+            drivers.getValue().disconnect();
+        }
     }
 }

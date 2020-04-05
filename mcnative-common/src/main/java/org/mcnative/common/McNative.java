@@ -23,6 +23,7 @@ import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.concurrent.TaskScheduler;
 import net.pretronic.libraries.dependency.DependencyManager;
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.annonations.Nullable;
@@ -40,6 +41,10 @@ public interface McNative extends ObjectOwner {
 
 
     String getServiceName();
+
+    PluginVersion getVersion();
+
+    boolean isReady();
 
     MinecraftPlatform getPlatform();
 
@@ -107,7 +112,7 @@ public interface McNative extends ObjectOwner {
     }
 
     static void setInstance(McNative instance) {
-        if(InstanceHolder.INSTANCE != null) throw new IllegalArgumentException("Instance is already set.");
+        if(InstanceHolder.INSTANCE != null && instance != null) throw new IllegalArgumentException("Instance is already set.");
         InstanceHolder.INSTANCE = instance;
     }
 

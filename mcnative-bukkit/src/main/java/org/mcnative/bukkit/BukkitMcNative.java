@@ -30,11 +30,16 @@ import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriber;
+import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriberRegistry;
+import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.mcnative.bukkit.network.PluginMessageGateway;
+import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
 import org.mcnative.common.LocalService;
@@ -43,6 +48,7 @@ import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -58,6 +64,7 @@ import java.util.concurrent.ExecutorService;
 
 public class BukkitMcNative implements McNative {
 
+    private final PluginVersion version;
     private final MinecraftPlatform platform;
     private final PretronicLogger logger;
     private final TaskScheduler scheduler;
@@ -70,8 +77,10 @@ public class BukkitMcNative implements McNative {
 
     private Network network;
     private final Document serverProperties;
+    private boolean ready;
 
-    protected BukkitMcNative(PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
+    protected BukkitMcNative(PluginVersion version, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
+        this.version = version;
         this.platform = new BukkitPlatform();
         this.logger = new JdkPretronicLogger(Bukkit.getLogger());
         this.scheduler = new SimpleTaskScheduler();
@@ -91,6 +100,20 @@ public class BukkitMcNative implements McNative {
     @Override
     public String getServiceName() {
         return Bukkit.getName();
+    }
+
+    @Override
+    public PluginVersion getVersion() {
+        return version;
+    }
+
+    protected void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
     }
 
     @Override
@@ -150,6 +173,7 @@ public class BukkitMcNative implements McNative {
 
     @Override
     public Network getNetwork() {
+        if(network == null) throw new IllegalArgumentException("Network is not available");
         return network;
     }
 
@@ -183,5 +207,11 @@ public class BukkitMcNative implements McNative {
 
     protected void registerDefaultCommands() {
         getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
+    }
+
+    protected void registerDescribers(){
+        ReflectVariableDescriberRegistry.registerDescriber(BukkitPlayer.class, ReflectVariableDescriber.of(BukkitPlayer.class));
+        ReflectVariableDescriberRegistry.registerDescriber(OfflinePlayer.class, ReflectVariableDescriber.of(OfflinePlayer.class));
+        ReflectVariableDescriberRegistry.registerDescriber(PlayerDesign.class, ReflectVariableDescriber.of(PlayerDesign.class));
     }
 }

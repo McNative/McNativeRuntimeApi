@@ -23,6 +23,7 @@ import net.pretronic.libraries.dependency.DependencyGroup;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
@@ -31,6 +32,7 @@ import net.pretronic.libraries.plugin.loader.PluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
+import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
 import org.mcnative.common.McNative;
 
@@ -107,45 +109,49 @@ public class GuestPluginExecutor {
     private boolean downloadResource(Document loader){
         String name = loader.getString("plugin.name");
 
-        ResourceInfo info = new ResourceInfo(name,new File("plugins/McNative/lib/resources/"+name));
-        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl"),null));
-
+        ResourceInfo info = new ResourceInfo(name,new File("plugins/McNative/lib/resources/"+name.toLowerCase()));
+        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl")));
         ResourceLoader resourceLoader = new ResourceLoader(info);
+
+        UpdateConfiguration updateConfiguration = resourceLoader.getUpdateConfiguration();
 
         VersionInfo current = resourceLoader.getCurrentVersion();
         VersionInfo latest = null;
 
-        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl"),current));
-
-        try{
-            latest = resourceLoader.getLatestVersion();
-        }catch (Exception exception){
-            logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest version ("+exception.getMessage()+")");
-            if(current == null || current.equals(VersionInfo.UNKNOWN)){
-                logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
-                return false;
+        if(updateConfiguration.isEnabled() || current == null){
+            try{
+                latest = resourceLoader.getLatestVersion();
+            }catch (Exception exception){
+                logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest "+updateConfiguration.getQualifier()+" version ("+exception.getMessage()+")");
+                if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                    logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
+                    return false;
+                }
             }
-        }
 
-        if(latest != null){
-            if(resourceLoader.isLatestVersion()){
-                logger.info("(Resource-Loader) "+name+" "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
-            }else{
-                info.setDownloadUrl(replaceLoaderVariables(loader,loader.getString("downloadUrl"),latest));
+            if(latest != null){
+                if(resourceLoader.isLatestVersion()){
+                    logger.info("(Resource-Loader) "+name+" "+latest.getName()+" (Up to date)");
+                }else{
+                    info.setDownloadUrl(replaceLoaderVariables(loader,loader.getString("downloadUrl")));
 
-                logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName()+" - "+latest.getBuild());
-                try{
-                    resourceLoader.download(latest);
-                    logger.info("(McNative-Loader) Successfully downloaded ");
-                }catch (Exception exception){
-                    if(current == null || current.equals(VersionInfo.UNKNOWN)){
-                        logger.info("(McNative-Loader) download failed, shutting down");
-                        return false;
-                    }else{
-                        logger.info("(McNative-Loader) download failed, trying to start an older version");
+                    logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName());
+                    try{
+                        resourceLoader.download(latest);
+                        logger.info("(McNative-Loader) Successfully downloaded ");
+                    }catch (Exception exception){
+                        if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                            logger.info("(McNative-Loader) download failed, shutting down");
+                            return false;
+                        }else{
+                            logger.info("(McNative-Loader) download failed, trying to start an older version");
+                        }
                     }
                 }
             }
+        }else{
+            logger.info("(Resource-Loader) automatically updating is disabled");
+            logger.info("(Resource-Loader) Latest Version: "+latest.getName());
         }
 
         try{
@@ -159,18 +165,11 @@ public class GuestPluginExecutor {
         return true;
     }
 
-    private String replaceLoaderVariables(Document loaderConfig,String input,VersionInfo versionInfo){
-        String output = input
+    private String replaceLoaderVariables(Document loaderConfig,String input){
+        return input
                 .replace("{plugin.name}",loaderConfig.getString("plugin.name"))
                 .replace("{plugin.id}",loaderConfig.getString("plugin.id"))
                 .replace("{plugin.name}",loaderConfig.getString("plugin.name"));
-        if(versionInfo != null){
-            output = output
-                    .replace("{version.name}",versionInfo.getName())
-                    .replace("{version.qualifier}",versionInfo.getQualifier())
-                    .replace("{version.build}",String.valueOf(versionInfo.getBuild()));
-        }
-        return output;
     }
 
     public PluginLoader getLoader() {
@@ -189,7 +188,14 @@ public class GuestPluginExecutor {
     }
 
     public void disableGuestPlugin(){
+        Plugin<?> owner = loader.getInstance();
         loader.disable();
+        McNative instance = McNative.getInstance();
+        instance.getRegistry().unregisterService(owner);
+        instance.getScheduler().unregister(owner);
+        instance.getLocal().getEventBus().unsubscribe(owner);
+        instance.getLocal().getCommandManager().unregisterCommand(owner);
+        instance.getLocal().unregisterChannels(owner);
     }
 
 }

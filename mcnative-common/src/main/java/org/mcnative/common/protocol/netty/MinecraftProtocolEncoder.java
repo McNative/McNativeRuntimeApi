@@ -47,6 +47,14 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
         this.version = connection.getProtocolVersion();
     }
 
+    public MinecraftProtocolVersion getVersion() {
+        return version;
+    }
+
+    public int getProtocolNumber(){
+        return getVersion().getNumber();
+    }
+
     @Override
     protected void encode(ChannelHandlerContext context, MinecraftPacket packet0, ByteBuf buffer){
         MinecraftPacket packet = packet0;

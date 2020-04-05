@@ -59,7 +59,7 @@ public class TextBuilder implements BasicMessageBuilder {
         }
     }
 
-    private static Document buildText(String input,Object nextComp){
+    protected static Document buildText(String input,Object nextComp){
         Document root = Document.newDocument();
         Document current = root;
 
@@ -86,7 +86,6 @@ public class TextBuilder implements BasicMessageBuilder {
             current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
         }
         if(nextComp != null){
-            System.out.println("COMP "+nextComp.getClass()+" | "+nextComp);
             current.set("extra",nextComp.getClass().isArray() ? nextComp : nextComp.toString());
         }
         return root;

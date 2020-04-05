@@ -20,7 +20,6 @@
 package org.mcnative.proxy;
 
 import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.document.annotations.DocumentIgnored;
 import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.annotations.DocumentRequired;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -34,14 +33,26 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class McNativeProxyConfiguration {
 
     public static transient DocumentFileType FORMAT = DocumentFileType.YAML;
 
-    @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
+
+    @DocumentKey("player.displayName.format")
+    public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
+
+    public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
+    public static String PLAYER_COLORS_DEFAULT = "&7";
+
+    static{
+        PLAYER_COLORS_COLORS.put("mcnative.player.color.administrator","&4");
+        PLAYER_COLORS_COLORS.put("mcnative.player.color.moderator","&c");
+        PLAYER_COLORS_COLORS.put("mcnative.player.color.premium","&6");
+    }
 
     /*
     //@Todo currently unused and not implemented

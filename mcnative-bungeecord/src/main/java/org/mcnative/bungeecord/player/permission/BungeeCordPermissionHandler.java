@@ -19,7 +19,7 @@
 
 package org.mcnative.bungeecord.player.permission;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
@@ -29,15 +29,17 @@ import java.util.Collection;
 
 public class BungeeCordPermissionHandler implements PermissionHandler {
 
-    private final ProxiedPlayer player;
+    private final BungeeProxiedPlayer player;
+    private final PlayerDesign design;
 
-    public BungeeCordPermissionHandler(ProxiedPlayer player) {
+    public BungeeCordPermissionHandler(BungeeProxiedPlayer player) {
         this.player = player;
+        this.design = new BungeeCordPlayerDesign(player.getOriginal());
     }
 
     @Override
     public boolean isCached() {
-        return true;
+        return true;//Unused
     }
 
     @Override
@@ -52,67 +54,67 @@ public class BungeeCordPermissionHandler implements PermissionHandler {
 
     @Override
     public Collection<String> getGroups() {
-        return player.getGroups();
+        return player.getOriginal().getGroups();
     }
 
     @Override
     public Collection<String> getPermissions() {
-        return player.getPermissions();
+        return player.getOriginal().getPermissions();
     }
 
     @Override
     public Collection<String> getEffectivePermissions() {
-        return player.getPermissions();
+        return player.getOriginal().getPermissions();
     }
 
     @Override
     public PlayerDesign getDesign() {
-        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
+        return design;
     }
 
     @Override
     public PlayerDesign getDesign(MinecraftPlayer forPlayer) {
-        throw new UnsupportedOperationException("BungeeCord permissions do not support permission design (@Todo implement)");
+        return design;
     }
 
     @Override
     public boolean isPermissionSet(String permission) {
-        return player.getPermissions().contains(permission);
+        return player.getOriginal().getPermissions().contains(permission);
     }
 
     @Override
     public boolean isPermissionAssigned(String permission) {
-        return player.getPermissions().contains(permission);
+        return player.getOriginal().getPermissions().contains(permission);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return player.hasPermission(permission);
+        return player.getOriginal().hasPermission(permission);
     }
 
     @Override
     public PermissionResult hasPermissionExact(String permission) {
-        return player.hasPermission(permission) ? PermissionResult.ALLOWED : PermissionResult.DENIED;
+        return player.getOriginal().hasPermission(permission) ? PermissionResult.ALLOWED : PermissionResult.DENIED;
     }
 
     @Override
     public void setPermission(String permission, boolean allowed) {
-        player.setPermission(permission,allowed);
+        player.getOriginal().setPermission(permission,allowed);
     }
 
     @Override
     public void unsetPermission(String permission) {
-        player.getPermissions().remove(permission);
+        player.getOriginal().getPermissions().remove(permission);
     }
 
     @Override
     public void addGroup(String name) {
-        player.addGroups(name);
+        player.getOriginal().addGroups(name);
     }
 
     @Override
     public void removeGroup(String name) {
-        player.removeGroups(name);
+        player.getOriginal().removeGroups(name);
     }
 
     @Override

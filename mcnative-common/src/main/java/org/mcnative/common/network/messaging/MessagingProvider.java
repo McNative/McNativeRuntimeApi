@@ -48,4 +48,6 @@ public interface MessagingProvider {
 
     CompletableFuture<Document> sendQueryMessageAsync(MessageReceiver receiver, String channel, Document request);
 
+    //void registerNetworkCallback(NetworkSynchronisationCallback synchronisationCallback);
+
 }

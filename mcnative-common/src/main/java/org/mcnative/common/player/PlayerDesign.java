@@ -21,8 +21,10 @@ package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableObjectToString;
+import org.mcnative.common.text.format.TextColor;
 
-public interface PlayerDesign {
+public interface PlayerDesign extends ReflectVariableObjectToString {
 
     String getColor();
 
@@ -36,8 +38,18 @@ public interface PlayerDesign {
 
     int getPriority();
 
+    default TextColor getTextColor(){
+        if(getColor().length() == 1) return TextColor.of(getColor().charAt(0));
+        else if(getColor().length() == 2) return TextColor.of(getColor().charAt(1));
+        else return TextColor.WHITE;
+    }
+
     default String toJson(){
         return DocumentFileType.JSON.getWriter().write(Document.newDocument(this),false);
     }
 
+    @Override
+    default String toStringVariable() {
+        return getDisplayName();
+    }
 }

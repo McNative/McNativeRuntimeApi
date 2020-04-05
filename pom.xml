@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.97.28-SNAPSHOT</version>
+    <version>1.0.106.38-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -34,6 +34,11 @@
             <url>https://repository.pretronic.net/repository/pretronic/</url>
         </repository>
     </distributionManagement>
+
+    <organization>
+        <name>McNative</name>
+        <url>https://mcnative.org</url>
+    </organization>
 
     <properties>
         <!-- Project settings -->
@@ -45,18 +50,19 @@
         <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
         <dependency.mvdwplaceholderapi.version>3.0.2-SNAPSHOT</dependency.mvdwplaceholderapi.version>
 
-        <dependency.pretronic.libraries.utility>1.0.58-SNAPSHOT</dependency.pretronic.libraries.utility>
-        <dependency.pretronic.libraries.document>1.0.58-SNAPSHOT</dependency.pretronic.libraries.document>
-        <dependency.pretronic.libraries.concurrent>1.0.58-SNAPSHOT</dependency.pretronic.libraries.concurrent>
-        <dependency.pretronic.libraries.command>1.0.58-SNAPSHOT</dependency.pretronic.libraries.command>
-        <dependency.pretronic.libraries.event>1.0.58-SNAPSHOT</dependency.pretronic.libraries.event>
-        <dependency.pretronic.libraries.plugin>1.0.58-SNAPSHOT</dependency.pretronic.libraries.plugin>
-        <dependency.pretronic.libraries.dependency>1.0.58-SNAPSHOT</dependency.pretronic.libraries.dependency>
-        <dependency.pretronic.libraries.caching>1.0.58-SNAPSHOT</dependency.pretronic.libraries.caching>
-        <dependency.pretronic.libraries.resourceloader>1.0.58-SNAPSHOT</dependency.pretronic.libraries.resourceloader>
-        <dependency.pretronic.libraries.synchronisation>1.0.58-SNAPSHOT</dependency.pretronic.libraries.synchronisation>
-        <dependency.pretronic.libraries.logging>1.0.58-SNAPSHOT</dependency.pretronic.libraries.logging>
-        <dependency.pretronic.libraries.message>1.0.58-SNAPSHOT</dependency.pretronic.libraries.message>
+        <dependency.pretronic.libraries.utility>${dependency.pretronic.libraries}</dependency.pretronic.libraries.utility>
+        <dependency.pretronic.libraries.document>${dependency.pretronic.libraries}</dependency.pretronic.libraries.document>
+        <dependency.pretronic.libraries.concurrent>${dependency.pretronic.libraries}</dependency.pretronic.libraries.concurrent>
+        <dependency.pretronic.libraries.command>${dependency.pretronic.libraries}</dependency.pretronic.libraries.command>
+        <dependency.pretronic.libraries.event>${dependency.pretronic.libraries}</dependency.pretronic.libraries.event>
+        <dependency.pretronic.libraries.plugin>${dependency.pretronic.libraries}</dependency.pretronic.libraries.plugin>
+        <dependency.pretronic.libraries.dependency>${dependency.pretronic.libraries}</dependency.pretronic.libraries.dependency>
+        <dependency.pretronic.libraries.caching>${dependency.pretronic.libraries}</dependency.pretronic.libraries.caching>
+        <dependency.pretronic.libraries.resourceloader>${dependency.pretronic.libraries}</dependency.pretronic.libraries.resourceloader>
+        <dependency.pretronic.libraries.synchronisation>${dependency.pretronic.libraries}</dependency.pretronic.libraries.synchronisation>
+        <dependency.pretronic.libraries.logging>${dependency.pretronic.libraries}</dependency.pretronic.libraries.logging>
+        <dependency.pretronic.libraries.message>${dependency.pretronic.libraries}</dependency.pretronic.libraries.message>
+        <dependency.pretronic.libraries>1.0.68.41-SNAPSHOT</dependency.pretronic.libraries>
 
         <dependency.pretronic.databasequery>1.1.6-SNAPSHOT</dependency.pretronic.databasequery>
 

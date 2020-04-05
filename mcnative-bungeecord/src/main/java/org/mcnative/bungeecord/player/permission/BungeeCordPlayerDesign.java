@@ -17,33 +17,33 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.permission;
+package org.mcnative.bungeecord.player.permission;
 
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.bukkit.entity.Player;
-import org.mcnative.bukkit.McNativeBukkitConfiguration;
 import org.mcnative.common.player.PlayerDesign;
+import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.util.Map;
 
-public class BukkitPlayerDesign implements PlayerDesign {
+public class BungeeCordPlayerDesign implements PlayerDesign {
 
-    private final Player player;
+    private final ProxiedPlayer player;
 
-    public BukkitPlayerDesign(Player player) {
+    public BungeeCordPlayerDesign(ProxiedPlayer player) {
         this.player = player;
     }
 
     @Override
     public String getColor() {
-        for (Map.Entry<String, String> entry : McNativeBukkitConfiguration.PLAYER_COLORS_COLORS.entrySet()) {
+        for (Map.Entry<String, String> entry : McNativeProxyConfiguration.PLAYER_COLORS_COLORS.entrySet()) {
             if(player.hasPermission(entry.getKey())){
                 return entry.getValue();
             }
         }
-        return McNativeBukkitConfiguration.PLAYER_COLORS_DEFAULT;
+        return McNativeProxyConfiguration.PLAYER_COLORS_DEFAULT;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BukkitPlayerDesign implements PlayerDesign {
     @Override
     public String getDisplayName() {
         VariableSet variables = VariableSet.create().add("color",getColor());
-        return VariableSet.replace(McNativeBukkitConfiguration.PLAYER_DISPLAY_NAME_FORMAT,variables);
+        return VariableSet.replace(McNativeProxyConfiguration.PLAYER_DISPLAY_NAME_FORMAT,variables);
     }
 
     @Override

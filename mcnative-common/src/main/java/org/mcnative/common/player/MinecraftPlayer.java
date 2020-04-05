@@ -20,6 +20,7 @@
 package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableObjectToString;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
@@ -28,7 +29,7 @@ import org.mcnative.common.serviceprovider.permission.Permissable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo {
+public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo, ReflectVariableObjectToString {
 
     UUID getUniqueId();
 
@@ -97,4 +98,9 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
     void mute(String reason, long time, TimeUnit unit);
 
     void unmute();
+
+    @Override
+    default String toStringVariable() {
+        return getDisplayName();
+    }
 }

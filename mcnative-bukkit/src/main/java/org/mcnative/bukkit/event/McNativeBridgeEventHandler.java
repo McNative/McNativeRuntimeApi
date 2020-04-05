@@ -48,7 +48,6 @@ import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
-import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.event.player.MinecraftPlayerJoinEvent;
 import org.mcnative.service.event.player.MinecraftPlayerWorldChangedEvent;
 import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
@@ -73,7 +72,7 @@ public class McNativeBridgeEventHandler {
         this.injector = injector;
         this.eventBus = eventBus;
         this.playerManager = playerManager;
-        commandManager = null;
+        this.commandManager = null;
 
         this.pendingConnections = new ConcurrentHashMap<>();
 
@@ -124,6 +123,10 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handlePreLoginEvent(McNativeHandlerList handler, AsyncPlayerPreLoginEvent event) {
+        if(!McNative.getInstance().isReady()){
+            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            return;
+        }
         ChannelConnection connection0 = injector.findConnection(event.getUniqueId());
         if(connection0 == null){
             event.setKickMessage("§cAn error occurred.");//@Todo configurable error message
@@ -148,6 +151,10 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleLoginEvent(McNativeHandlerList handler, PlayerLoginEvent event) {
+        if(!McNative.getInstance().isReady()){
+            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            return;
+        }
         BukkitPendingConnection connection = this.pendingConnections.remove(event.getPlayer().getUniqueId());
         if(connection == null){
             event.setKickMessage("§cAn error occurred.");//@Todo configurable error message
@@ -184,6 +191,10 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleJoinEvent(McNativeHandlerList handler, PlayerJoinEvent event){
+        if(!McNative.getInstance().isReady()){
+            event.getPlayer().kickPlayer("");
+            return;
+        }
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         BukkitJoinEvent mcnativeEvent = new BukkitJoinEvent(event,player);
 
@@ -203,8 +214,9 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleLogoutEvent(McNativeHandlerList handler, PlayerQuitEvent event){
-        Player player = playerManager.getMappedPlayer(event.getPlayer());
+        BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
+        player.handleLogout();
 
         BukkitQuitEvent mcnativeEvent = new BukkitQuitEvent(event,player);
         handler.callEvents(mcnativeEvent,event);
@@ -214,7 +226,6 @@ public class McNativeBridgeEventHandler {
             McNative.getInstance().getLocal().broadcast(mcnativeEvent.getQuietMessage(),mcnativeEvent.getQuietMessageVariables());
             //@Todo implement chat channel
         }
-
         MinecraftPlayerLogoutEvent logoutEvent = new BukkitPlayerLogoutEvent(player);
         McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerLogoutEvent.class,logoutEvent);
     }
@@ -239,8 +250,6 @@ public class McNativeBridgeEventHandler {
         }else{
 
         }
-
-        //commandManager.getNotFoundHandler().handle();
         //@Todo implement paper spigot command
 
 
