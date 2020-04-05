@@ -64,12 +64,13 @@ public class MinecraftPlugin extends Plugin<McNative> {
 
     public void setUpdateConfiguration(boolean enabled, String qualifier){
         File location = new File("plugins/McNative/lib/resources/"+getName().toLowerCase()+"/update.dat");
+        location.getParentFile().mkdirs();
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(location));
             writer.write(enabled+";"+qualifier);
             writer.close();
         } catch (IOException exception) {
-            throw new OperationFailedException("Could not set update configuration");
+            throw new OperationFailedException("Could not set update configuration",exception);
         }
     }
 }
