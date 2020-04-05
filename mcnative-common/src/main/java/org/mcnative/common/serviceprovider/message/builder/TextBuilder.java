@@ -21,6 +21,7 @@
 package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.entry.DocumentEntry;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
@@ -86,6 +87,7 @@ public class TextBuilder implements BasicMessageBuilder {
             current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
         }
         if(nextComp != null){
+            if(nextComp instanceof DocumentEntry) nextComp = new Object[]{nextComp};
             current.set("extra",nextComp.getClass().isArray() ? nextComp : nextComp.toString());
         }
         return root;
