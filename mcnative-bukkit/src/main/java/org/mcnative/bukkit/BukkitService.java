@@ -24,13 +24,10 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.service.ServicePriority;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import net.pretronic.libraries.synchronisation.SynchronisationHandler;
-import net.pretronic.libraries.utility.io.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
@@ -42,7 +39,6 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.SynchronisationMessagingAdapter;
 import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -183,57 +179,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     public void setStatusResponse(ServerStatusResponse status) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
-
-    @Override
-    public Collection<String> getMessageChannels() {
-        return Iterators.map(this.messageListeners, entry -> entry.name);
-    }
-
-    @Override
-    public Collection<String> getMessageChannels(Plugin<?> owner) {
-        Validate.notNull(owner);
-        return Iterators.map(this.messageListeners
-                , entry -> entry.name
-                , entry -> entry.owner.equals(owner));
-    }
-
-    @Override
-    public MessagingChannelListener getMessageMessageChannelListener(String name) {
-        Validate.notNull(name);
-        MessageEntry result = Iterators.findOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
-        return result != null ? result.listener : null;
-    }
-
-    @Override
-    public void registerMessagingChannel(String name, Plugin<?> owner, MessagingChannelListener listener) {
-        Validate.notNull(name,listener);//@Todo validate owner
-        if(getMessageMessageChannelListener(name) != null) throw new IllegalArgumentException("Message channel "+name+" already in use");
-        this.messageListeners.add(new MessageEntry(name,owner,listener));
-    }
-
-    @Override
-    public <I> void registerSynchronizingChannel(String channel, Plugin<?> owner, Class<I> identifier, SynchronisationHandler<?, I> handler) {
-        registerMessagingChannel(channel,owner,new SynchronisationMessagingAdapter(channel,identifier,handler));
-    }
-
-    @Override
-    public void unregisterChannel(String name) {
-        Validate.notNull(name);
-        Iterators.removeOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
-    }
-
-    @Override
-    public void unregisterChannel(MessagingChannelListener listener) {
-        Validate.notNull(listener);
-        Iterators.removeSilent(this.messageListeners, entry -> entry.listener.equals(listener));
-    }
-
-    @Override
-    public void unregisterChannels(Plugin<?> owner) {
-        Validate.notNull(owner);
-        Iterators.removeSilent(this.messageListeners, entry -> entry.owner.equals(owner));
-    }
-
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
