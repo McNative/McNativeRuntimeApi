@@ -19,13 +19,10 @@
 
 package org.mcnative.loader;
 
-import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
-import net.pretronic.libraries.utility.map.Pair;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -105,14 +102,6 @@ public class McNativeLoader extends ResourceLoader {
             }
         }
         return launch();
-    }
-
-    private Document readPluginConfiguration(){
-        Pair<File, DocumentFileType> result = Document.findExistingType(new File("plugins/McNative"),"config");
-        if(result != null){
-            return result.getValue().getReader().read(result.getKey());
-        }
-        return Document.newEmptyDocument();
     }
 
     public boolean launch(){
