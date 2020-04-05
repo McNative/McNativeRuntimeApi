@@ -19,9 +19,9 @@
 
 package org.mcnative.loader.bootstrap;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 
@@ -46,8 +46,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
             this.executor.loadGuestPlugin();
 
             PluginVersion version = this.executor.getLoader().getDescription().getVersion();
-            ProxyServer.getInstance().getPluginManager().getPlugin(getDescription().getName()).getDescription()
-                    .setVersion(version.getName()+"-"+version.getBuild());
+            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not bootstrap plugin (%s)",exception.getMessage()));

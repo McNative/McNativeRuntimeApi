@@ -46,7 +46,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
             this.executor.loadGuestPlugin();
 
             PluginVersion version = this.executor.getLoader().getDescription().getVersion();
-            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName()+"-"+version.getBuild());
+            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not load plugin (%s)",exception.getMessage()));
