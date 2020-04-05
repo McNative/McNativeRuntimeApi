@@ -4,14 +4,15 @@ final String COMMIT_MESSAGE = "Version change %version%"
 final String RESOURCE_ID = "e5b65750-4dcc-4631-b275-06113b31a416"
 
 final String BRANCH_DEVELOPMENT = "origin/development"
+final String BRANCH_BETA = "origin/beta"
 final String BRANCH_MASTER = "origin/master"
 final String PROJECT_SSH = "git@github.com:DevKrieger/McNative.git"
 
 String PROJECT_NAME = "McNative"
 String VERSION = "UNDEFINED"
 String BRANCH = "UNDEFINED"
-
 boolean SKIP = false
+
 int BUILD_NUMBER = -1;
 String QUALIFIER = "undefinded"
 
@@ -19,7 +20,7 @@ pipeline {
     agent any
     tools {
         maven 'Maven3'
-        jdk 'Java8'
+        jdk 'Java9'
     }
     options {
         buildDiscarder logRotator(numToKeepStr: '10')
@@ -44,6 +45,7 @@ pipeline {
                     BRANCH = env.GIT_BRANCH
                     BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
                     if(BRANCH == BRANCH_MASTER) QUALIFIER = "RELEASE"
+                    else if(BRANCH == BRANCH_BETA) QUALIFIER = "BETA"
                     else if(BRANCH == BRANCH_DEVELOPMENT) QUALIFIER = "SNAPSHOT"
                 }
             }
@@ -63,6 +65,10 @@ pipeline {
                     if (BRANCH.equalsIgnoreCase(BRANCH_DEVELOPMENT)) {
                         if (!VERSION.endsWith("-SNAPSHOT")) {
                             VERSION = VERSION + '-SNAPSHOT'
+                        }
+                    } else if(BRANCH.equalsIgnoreCase(BRANCH_BETA)) {
+                        if (!VERSION.endsWith("-BETA")) {
+                            VERSION = VERSION + '-BETA'
                         }
                     }
                     sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$VERSION"
@@ -133,13 +139,11 @@ pipeline {
                     int minorVersion = versionSplit[1].toInteger()
                     int patchVersion = versionSplit[2].toInteger()
 
-
-
                     if (BRANCH == BRANCH_DEVELOPMENT) {
 
                         patchVersion++
 
-                        String version = major + "." + minorVersion + "." + patchVersion+ "." + BUILD_NUMBER + "-SNAPSHOT"
+                        String version = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER + "-SNAPSHOT"
                         String commitMessage = COMMIT_MESSAGE.replace("%version%", version)
                         sh """
                         mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version
@@ -150,11 +154,9 @@ pipeline {
                         sshagent(['1c1bd183-26c9-48aa-94ab-3fe4f0bb39ae']) {
                             sh "git push origin HEAD:development -v"
                         }
-                    } else if (BRANCH == BRANCH_MASTER) {
-                        minorVersion++
-                        patchVersion = 0
+                    } else if(BRANCH == BRANCH_BETA) {
+                        String version = major + "." + minorVersion + "." + patchVersion+ "." + BUILD_NUMBER + "-BETA"
 
-                        String version = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER
                         String commitMessage = COMMIT_MESSAGE.replace("%version%", version)
 
                         sshagent(['1c1bd183-26c9-48aa-94ab-3fe4f0bb39ae']) {
@@ -163,11 +165,15 @@ pipeline {
                             mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version
                             git add . -v
                             git commit -m '$commitMessage' -v
-                            git push origin HEAD:master -v
+                            git push origin HEAD:beta -v
                             """
+                            minorVersion++
+                            patchVersion = 0
 
-                            version = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER + "-SNAPSHOT"
+                            version = major + "." + minorVersion + "." + patchVersion+ "." + BUILD_NUMBER + "-SNAPSHOT"
+
                             commitMessage = COMMIT_MESSAGE.replace("%version%", version)
+
                             sh """
                             if [ -d "tempDevelopment" ]; then rm -Rf tempDevelopment; fi
                             mkdir tempDevelopment
@@ -183,6 +189,20 @@ pipeline {
                             cd ..
                             cd ..
                             if [ -d "tempDevelopment" ]; then rm -Rf tempDevelopment; fi
+
+                            """
+                        }
+                    } else if (BRANCH == BRANCH_MASTER) {
+                        String version = major + "." + minorVersion + "." + patchVersion + "." + BUILD_NUMBER
+
+                        String commitMessage = COMMIT_MESSAGE.replace("%version%", version)
+
+                        sshagent(['1c1bd183-26c9-48aa-94ab-3fe4f0bb39ae']) {
+                            sh """
+                            mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version
+                            git add . -v
+                            git commit -m '$commitMessage' -v
+                            git push origin HEAD:master -v
                             """
                         }
                     }
