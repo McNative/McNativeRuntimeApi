@@ -30,23 +30,26 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.bungeecord.BungeeCordService;
 import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.messaging.AbstractMessenger;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 
-public class PluginMessageGateway implements MessagingProvider,Listener {
+public class PluginMessageMessenger extends AbstractMessenger implements Listener {
 
     private final String CHANNEL_NAME_REQUEST = "mcnative:request";
 
@@ -56,7 +59,8 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
     private final BungeeCordServerMap serverMap;
     private final Map<UUID,CompletableFuture<Document>> resultListeners;
 
-    public PluginMessageGateway(Executor executor, BungeeCordServerMap serverMap) {
+    public PluginMessageMessenger(Executor executor, BungeeCordServerMap serverMap) {
+        super();
         this.executor = executor;
         this.serverMap = serverMap;
 
@@ -69,12 +73,12 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
 
     @Override
     public String getTechnology() {
-        return "Plugin Messages";
+        return "Minecraft Plugin Message Channels";
     }
 
     @Override
     public boolean isAvailable() {
-        return true;
+        return true;//Always available
     }
 
     @Override
@@ -175,7 +179,7 @@ public class PluginMessageGateway implements MessagingProvider,Listener {
 
         if(broadcast || local){
             String channel = MinecraftProtocolUtil.readString(buffer);
-            MessagingChannelListener listener = McNative.getInstance().getLocal().getMessageMessageChannelListener(channel);
+            MessagingChannelListener listener = getChannelListener(channel);
             if(listener != null){
                 Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
                 Document result = listener.onMessageReceive(sender,identifier,data);

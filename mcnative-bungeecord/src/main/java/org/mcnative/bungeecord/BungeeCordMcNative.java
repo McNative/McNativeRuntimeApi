@@ -35,7 +35,7 @@ import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Validate;
-import org.mcnative.bungeecord.network.PluginMessageGateway;
+import org.mcnative.bungeecord.network.PluginMessageMessenger;
 import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
@@ -46,7 +46,7 @@ import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -189,12 +189,11 @@ public class BungeeCordMcNative implements McNative {
         this.ready = ready;
     }
 
-    protected void registerDefaultProviders(BungeeCordServerMap serverMap){
+    protected void registerDefaultProviders(){
         pluginManager.registerService(this, ConfigurationProvider.class,new DefaultConfigurationProvider());
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BungeeCordPermissionProvider());
-        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService(),serverMap));
         pluginManager.registerService(this, PlaceholderProvider.class,new McNativePlaceholderProvider(), EventPriority.LOW);
     }
 

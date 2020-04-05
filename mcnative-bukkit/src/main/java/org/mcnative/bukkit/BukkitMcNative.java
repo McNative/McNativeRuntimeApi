@@ -38,7 +38,7 @@ import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.mcnative.bukkit.network.PluginMessageGateway;
+import org.mcnative.bukkit.network.PluginMessageMessenger;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
@@ -47,7 +47,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
@@ -201,7 +201,6 @@ public class BukkitMcNative implements McNative {
         pluginManager.registerService(this, PlayerDataProvider.class,new DefaultPlayerDataProvider());
         pluginManager.registerService(this, MessageProvider.class,new DefaultMessageProvider());
         pluginManager.registerService(this, PermissionProvider.class,new BukkitPermissionProvider());
-        pluginManager.registerService(this, MessagingProvider.class,new PluginMessageGateway(getExecutorService()));
         pluginManager.registerService(this, PlaceholderProvider.class,new McNativePlaceholderProvider(), EventPriority.LOW);
     }
 

@@ -63,23 +63,4 @@ public interface LocalService extends ConnectableNetworkComponent {
     void setStatusResponse(ServerStatusResponse status);
 
 
-    Collection<String> getMessageChannels();
-
-    Collection<String> getMessageChannels(Plugin<?> owner);
-
-    MessagingChannelListener getMessageMessageChannelListener(String name);
-
-
-    void registerMessagingChannel(String channel, Plugin<?> owner, MessagingChannelListener listener);
-
-    <I> void registerSynchronizingChannel(String channel, Plugin<?> owner,Class<I> identifier, SynchronisationHandler<?,I> handler);
-
-
-    void unregisterChannel(String channel);
-
-    void unregisterChannel(MessagingChannelListener listener);
-
-    void unregisterChannels(Plugin<?> owner);
-
-
 }

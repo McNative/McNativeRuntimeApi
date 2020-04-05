@@ -25,16 +25,24 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
+import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.messaging.AbstractMessenger;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -44,16 +52,20 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-public class PluginMessageGateway implements PluginMessageListener,MessagingProvider {
+public class PluginMessageMessenger extends AbstractMessenger implements PluginMessageListener, Listener {
 
     private final String CHANNEL_NAME_REQUEST = "mcnative:request";
 
     private final String CHANNEL_NAME_RESPONSE = "mcnative:response";
 
+    private final Network network;
     private final Executor executor;
     private final Map<UUID,CompletableFuture<Document>> resultListeners;
 
-    public PluginMessageGateway(Executor executor) {
+    private Player transport;
+
+    public PluginMessageMessenger(Network network,Executor executor) {
+        this.network = network;
         this.executor = executor;
 
         this.resultListeners = new HashMap<>();
@@ -62,6 +74,10 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
         Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE,this);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE);
+        Bukkit.getPluginManager().registerEvents(this,McNativeLauncher.getPlugin());
+
+        Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
+        if(iterator.hasNext()) transport = iterator.next();
     }
 
     @Override
@@ -71,7 +87,7 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
 
     @Override
     public boolean isAvailable() {
-        return !Bukkit.getOnlinePlayers().isEmpty();
+        return transport != null;
     }
 
     @Override
@@ -128,7 +144,7 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             String channel = MinecraftProtocolUtil.readString(buffer);
 
-            MessagingChannelListener listener = McNative.getInstance().getLocal().getMessageMessageChannelListener(channel);
+            MessagingChannelListener listener = getChannelListener(channel);
             if(listener != null){
                 MinecraftServer sender = McNative.getInstance().getNetwork().getServer(senderId);
                 Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
@@ -150,35 +166,32 @@ public class PluginMessageGateway implements PluginMessageListener,MessagingProv
     }
 
     public void sendData(String channel, byte[] data){
-        Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
-
-        if(iterator.hasNext()){
-            iterator.next().sendPluginMessage(McNativeLauncher.getPlugin(),channel,data);
+        if(transport != null){
+            transport.sendPluginMessage(McNativeLauncher.getPlugin(),channel,data);
         }else{
             throw new UnsupportedOperationException("The McNative plugin messaging gateway needs at least one player to communicate with the proxy server");
         }
     }
 
+    @EventHandler
+    public void handlePlayerConnect(PlayerJoinEvent event){
+        if(transport == null){
+            transport = event.getPlayer();
+            McNative.getInstance().getLogger().info("[McNative] (Plugin-Message-Gateway) connected to proxy");
+            for (NetworkSynchronisationCallback statusCallback : network.getStatusCallbacks()) {
+                statusCallback.onConnect();
+            }
+        }
+    }
 
-   /*
-    ToProxy - Request
-        UUID | Destination
-        UUID | Id
-        String | Channel
-        Document | Request
-     ToServer - Request
-        UUID sender
-        UUID | Id
-        String | Channel
-        Document | Request
-
-
-     ToProxy - Response
-        UUID | Destination
-        UUID | Id
-        Document | Request
-     ToServer - Response
-        UUID | Id
-        Document | Request
-    */
+    @EventHandler
+    public void handlePlayerDisconnect(PlayerQuitEvent event){
+        if(Bukkit.getOnlinePlayers().size() == 1){
+            transport = null;
+            McNative.getInstance().getLogger().info("[McNative] (Plugin-Message-Gateway) disconnected from proxy");
+            for (NetworkSynchronisationCallback statusCallback : network.getStatusCallbacks()) {
+                statusCallback.onDisconnect();
+            }
+        }
+    }
 }

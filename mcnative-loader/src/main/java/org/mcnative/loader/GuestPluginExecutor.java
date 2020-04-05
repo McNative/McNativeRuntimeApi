@@ -21,6 +21,7 @@ package org.mcnative.loader;
 
 import net.pretronic.libraries.dependency.DependencyGroup;
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.Plugin;
@@ -195,7 +196,9 @@ public class GuestPluginExecutor {
         instance.getScheduler().unregister(owner);
         instance.getLocal().getEventBus().unsubscribe(owner);
         instance.getLocal().getCommandManager().unregisterCommand(owner);
-        instance.getLocal().unregisterChannels(owner);
+        if(instance.isNetworkAvailable()){
+            instance.getNetwork().getMessenger().unregisterChannels(owner);
+        }
     }
 
 }

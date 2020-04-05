@@ -23,12 +23,15 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
@@ -39,13 +42,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 public class BungeecordProxyNetwork implements Network {
 
     private final ProxyService service;
+    private final Messenger messenger;
 
-    public BungeecordProxyNetwork(ProxyService service) {
+    public BungeecordProxyNetwork(ProxyService service, ExecutorService executor, BungeeCordServerMap serverMap) {
         this.service = service;
+        this.messenger = new PluginMessageMessenger(executor,serverMap);
     }
 
     @Override
@@ -54,8 +60,13 @@ public class BungeecordProxyNetwork implements Network {
     }
 
     @Override
+    public Messenger getMessenger() {
+        return messenger;
+    }
+
+    @Override
     public boolean isConnected() {
-        return true;
+        return true;//Always connected
     }
 
     @Override
@@ -81,6 +92,26 @@ public class BungeecordProxyNetwork implements Network {
     @Override
     public boolean isOnline() {
         return true;
+    }
+
+    @Override
+    public Collection<NetworkSynchronisationCallback> getStatusCallbacks() {
+        return Collections.emptyList(); //Unused always online
+    }
+
+    @Override
+    public void registerStatusCallback(Plugin<?> owner, NetworkSynchronisationCallback synchronisationCallback) {
+        //Unused always online
+    }
+
+    @Override
+    public void unregisterStatusCallback(NetworkSynchronisationCallback synchronisationCallback) {
+        //Unused always online
+    }
+
+    @Override
+    public void unregisterStatusCallbacks(Plugin<?> owner) {
+        //Unused always online
     }
 
     @Override
@@ -125,19 +156,19 @@ public class BungeecordProxyNetwork implements Network {
 
     @Override
     public void sendBroadcastMessage(String channel,Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST,channel,request);
     }
 
     @Override
     public void sendProxyMessage(String channel,Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST_PROXY,channel,request);
     }
 
     @Override
     public void sendServerMessage(String channel,Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST_SERVER,channel,request);
     }
 
@@ -196,19 +227,4 @@ public class BungeecordProxyNetwork implements Network {
         service.kickAll(component, variables);
     }
 
-    @Override
-    public void sendMessage(String channel, Document request) {
-
-    }
-
-    @Override
-    public Document sendQueryMessage(String channel, Document request) {
-
-        return null;
-    }
-
-    @Override
-    public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        return null;
-    }
 }

@@ -30,7 +30,7 @@ import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -200,12 +200,12 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
 
     @Override
     public void sendMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendMessage(this,channel,request);
+        McNative.getInstance().getRegistry().getService(Messenger.class).sendMessage(this,channel,request);
     }
 
     @Override
     public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        return McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendQueryMessageAsync(this,channel,request);
+        return McNative.getInstance().getRegistry().getService(Messenger.class).sendQueryMessageAsync(this,channel,request);
     }
 
     @Override

@@ -21,9 +21,14 @@ package org.mcnative.common.network;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.messaging.MessagingChannelListener;
+import org.mcnative.common.network.messaging.Messenger;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -34,9 +39,13 @@ public interface Network extends ConnectableNetworkComponent {
 
     String getTechnology();
 
+    Messenger getMessenger();
+
+
     boolean isConnected();
 
     EventBus getEventBus();
+
 
 
     NetworkIdentifier getLocalIdentifier();
@@ -88,4 +97,14 @@ public interface Network extends ConnectableNetworkComponent {
     default CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
         throw new UnsupportedOperationException("It is not possible to broadcast a query message");
     }
+
+
+    Collection<NetworkSynchronisationCallback> getStatusCallbacks();
+
+    void registerStatusCallback(Plugin<?> owner, NetworkSynchronisationCallback synchronisationCallback);
+
+    void unregisterStatusCallback(NetworkSynchronisationCallback synchronisationCallback);
+
+    void unregisterStatusCallbacks(Plugin<?> owner);
+
 }

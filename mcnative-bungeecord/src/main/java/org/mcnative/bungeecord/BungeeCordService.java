@@ -40,7 +40,7 @@ import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.network.messaging.SynchronisationMessagingAdapter;
 import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
@@ -68,8 +68,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     private final EventBus eventBus;
     private final BungeeCordServerMap serverMap;
 
-    private Collection<MessageEntry> messageListeners;
-
     private ChatChannel serverChat;
     private Tablist defaultTablist;
     private ServerStatusResponse statusResponse;
@@ -81,8 +79,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
         this.playerManager = playerManager;
         this.eventBus = eventBus;
         this.serverMap = serverMap;
-
-        this.messageListeners = new ArrayList<>();
     }
 
     @Override
@@ -190,56 +186,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     }
 
     @Override
-    public Collection<String> getMessageChannels() {
-        return Iterators.map(this.messageListeners, entry -> entry.name);
-    }
-
-    @Override
-    public Collection<String> getMessageChannels(Plugin<?> owner) {
-        Validate.notNull(owner);
-        return Iterators.map(this.messageListeners
-                , entry -> entry.name
-                , entry -> entry.owner.equals(owner));
-    }
-
-    @Override
-    public MessagingChannelListener getMessageMessageChannelListener(String name) {
-        Validate.notNull(name);
-        MessageEntry result = Iterators.findOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
-        return result != null ? result.listener : null;
-    }
-
-    @Override
-    public void registerMessagingChannel(String channel, Plugin<?> owner, MessagingChannelListener listener) {
-        Validate.notNull(channel,listener);//@Todo validate owner
-        if(getMessageMessageChannelListener(channel) != null) throw new IllegalArgumentException("Message channel "+channel+" already in use");
-        this.messageListeners.add(new MessageEntry(channel,owner,listener));
-    }
-
-    @Override
-    public <I> void registerSynchronizingChannel(String channel, Plugin<?> owner, Class<I> identifier, SynchronisationHandler<?, I> handler) {
-        registerMessagingChannel(channel,owner,new SynchronisationMessagingAdapter(channel,identifier,handler));
-    }
-
-    @Override
-    public void unregisterChannel(String name) {
-        Validate.notNull(name);
-        Iterators.removeOne(this.messageListeners, entry -> entry.name.equalsIgnoreCase(name));
-    }
-
-    @Override
-    public void unregisterChannel(MessagingChannelListener listener) {
-        Validate.notNull(listener);
-        Iterators.removeSilent(this.messageListeners, entry -> entry.listener.equals(listener));
-    }
-
-    @Override
-    public void unregisterChannels(Plugin<?> owner) {
-        Validate.notNull(owner);
-        Iterators.removeSilent(this.messageListeners, entry -> entry.owner.equals(owner));
-    }
-
-    @Override
     public InetSocketAddress getAddress() {
         for (ListenerInfo listener : net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners()) return listener.getHost();
         return null;
@@ -341,24 +287,11 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public void sendMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendMessage(this,channel,request);
+        McNative.getInstance().getRegistry().getService(Messenger.class).sendMessage(this,channel,request);
     }
 
     @Override
     public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        return McNative.getInstance().getRegistry().getService(MessagingProvider.class).sendQueryMessageAsync(this,channel,request);
-    }
-
-    private static class MessageEntry {
-
-        private final String name;
-        private final ObjectOwner owner;
-        private final MessagingChannelListener listener;
-
-        public MessageEntry(String name, ObjectOwner owner, MessagingChannelListener listener) {
-            this.name = name;
-            this.owner = owner;
-            this.listener = listener;
-        }
+        return McNative.getInstance().getRegistry().getService(Messenger.class).sendQueryMessageAsync(this,channel,request);
     }
 }

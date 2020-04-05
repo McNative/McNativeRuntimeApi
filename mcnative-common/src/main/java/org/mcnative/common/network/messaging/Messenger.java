@@ -20,16 +20,20 @@
 package org.mcnative.common.network.messaging;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.NetworkIdentifier;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public interface MessagingProvider {
+public interface Messenger {
 
     String getTechnology();
 
     boolean isAvailable();
+
 
     default void sendMessage(NetworkIdentifier identifier, String channel, Document request){
         sendMessage(identifier, channel, request,UUID.randomUUID());
@@ -41,13 +45,30 @@ public interface MessagingProvider {
         sendMessage(receiver, channel, request,UUID.randomUUID());
     }
 
-
     void sendMessage(MessageReceiver receiver, String channel, Document request, UUID requestId);
 
     Document sendQueryMessage(MessageReceiver receiver, String channel, Document request);
 
     CompletableFuture<Document> sendQueryMessageAsync(MessageReceiver receiver, String channel, Document request);
 
-    //void registerNetworkCallback(NetworkSynchronisationCallback synchronisationCallback);
+
+
+    Collection<String> getChannels();
+
+    Collection<String> getChannels(Plugin<?> owner);
+
+    MessagingChannelListener getChannelListener(String name);
+
+
+    void registerChannel(String channel, Plugin<?> owner, MessagingChannelListener listener);
+
+    <I> void registerSynchronizingChannel(String channel, Plugin<?> owner,Class<I> identifier, SynchronisationHandler<?,I> handler);
+
+
+    void unregisterChannel(String channel);
+
+    void unregisterChannel(MessagingChannelListener listener);
+
+    void unregisterChannels(Plugin<?> owner);
 
 }

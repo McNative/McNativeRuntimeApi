@@ -74,7 +74,7 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
 
         @Override
         public boolean isConnected() {
-            return false;
+            return McNative.getInstance().isNetworkAvailable() && McNative.getInstance().getNetwork().isConnected();
         }
 
         @Override

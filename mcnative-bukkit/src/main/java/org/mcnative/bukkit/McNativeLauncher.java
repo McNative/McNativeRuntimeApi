@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
+import org.mcnative.bukkit.network.PluginMessageMessenger;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
@@ -40,6 +41,7 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -78,9 +80,10 @@ public class McNativeLauncher {
         BukkitPlayerManager playerManager = new BukkitPlayerManager();
 
         BukkitService localService = new BukkitService(commandManager,playerManager,eventBus);
-        Network network = loadNetwork();
-        BukkitMcNative instance = new BukkitMcNative(version,pluginManager,playerManager,localService,network);
+        BukkitMcNative instance = new BukkitMcNative(version,pluginManager,playerManager,localService,null);
+
         McNative.setInstance(instance);
+        instance.setNetwork(setupNetwork(instance.getExecutorService()));
 
         BukkitChannelInjector injector = new BukkitChannelInjector();
         commandManager.inject();
@@ -128,10 +131,8 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully stopped.");
     }
 
-    private static Network loadNetwork(){
-        if(!Bukkit.getOnlineMode()){//@Todo add configuration
-            return new BungeeCordProxyNetwork();
-        }
+    private static Network setupNetwork(ExecutorService executor){
+        if(!Bukkit.getOnlineMode()) return new BungeeCordProxyNetwork(executor);
         return null;
     }
 

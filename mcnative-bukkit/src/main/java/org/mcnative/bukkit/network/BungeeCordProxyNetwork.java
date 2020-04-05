@@ -23,28 +23,41 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.OwnedObject;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
-import org.mcnative.common.network.messaging.MessagingProvider;
+import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BungeeCordProxyNetwork implements Network {
+
+    private final Messenger messenger;
+    private final Collection<OwnedObject<NetworkSynchronisationCallback>> statusCallbacks;
 
     private NetworkIdentifier localIdentifier;
     private ProxyServer proxy;
     private Collection<MinecraftServer> servers;
+
+    public BungeeCordProxyNetwork(ExecutorService executor) {
+        this.messenger = new PluginMessageMessenger(this,executor);
+        this.statusCallbacks = new ArrayList<>();
+    }
 
     @Override
     public String getTechnology() {
@@ -52,8 +65,13 @@ public class BungeeCordProxyNetwork implements Network {
     }
 
     @Override
+    public Messenger getMessenger() {
+        return messenger;
+    }
+
+    @Override
     public boolean isConnected() {
-        return Bukkit.getOnlinePlayers().size() > 0;
+        return messenger.isAvailable();
     }
 
     @Override
@@ -122,20 +140,43 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public void sendBroadcastMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST,channel,request);
     }
 
     @Override
     public void sendProxyMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST_PROXY,channel,request);
     }
 
     @Override
     public void sendServerMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(MessagingProvider.class)
+        McNative.getInstance().getRegistry().getService(Messenger.class)
                 .sendMessage(NetworkIdentifier.BROADCAST_SERVER,channel,request);
+    }
+
+    @Override
+    public Collection<NetworkSynchronisationCallback> getStatusCallbacks() {
+        return Iterators.map(statusCallbacks, OwnedObject::getObject);
+    }
+
+    @Override
+    public void registerStatusCallback(Plugin<?> owner, NetworkSynchronisationCallback synchronisationCallback) {
+        Validate.notNull(owner,synchronisationCallback);
+        this.statusCallbacks.add(new OwnedObject<>(owner,synchronisationCallback));
+    }
+
+    @Override
+    public void unregisterStatusCallback(NetworkSynchronisationCallback synchronisationCallback) {
+        Validate.notNull(synchronisationCallback);
+        Iterators.removeOne(this.statusCallbacks, entry -> entry.getObject().equals(synchronisationCallback));
+    }
+
+    @Override
+    public void unregisterStatusCallbacks(Plugin<?> owner) {
+        Validate.notNull(owner);
+        Iterators.removeOne(this.statusCallbacks, entry -> entry.getOwner().equals(owner));
     }
 
     @Override
