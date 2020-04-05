@@ -25,25 +25,30 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.mcnative.common.McNative;
+import org.bukkit.plugin.*;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class McNativeDummyPlugin implements Plugin {
 
     private final PluginLoader pluginLoader;
     private final PluginDescriptionFile description;
+    private boolean enabled;
 
     protected McNativeDummyPlugin(String version) {
-        this.pluginLoader = (PluginLoader) getClass().getClassLoader();
+        this.pluginLoader = new DummyClassLoader();
         this.description = new PluginDescriptionFile("McNative",version,getClass().getName());
+        this.enabled = true;
     }
 
     @Override
@@ -59,7 +64,6 @@ public class McNativeDummyPlugin implements Plugin {
     @Override
     public FileConfiguration getConfig() {
         throw new UnsupportedOperationException("McNative dummy plugin is not able to provide a configuration");
-        //return new YamlConfiguration();
     }
 
     @Override
@@ -99,17 +103,17 @@ public class McNativeDummyPlugin implements Plugin {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override
     public void onDisable() {
-        McNative.getInstance().shutdown();
+        McNativeLauncher.shutdown();
     }
 
     @Override
     public void onLoad() {
-        //Unused
+        McNativeLauncher.launchMcNativeInternal(this);
     }
 
     @Override
@@ -150,5 +154,45 @@ public class McNativeDummyPlugin implements Plugin {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return null;      //Unused
+    }
+
+    public class DummyClassLoader implements PluginLoader {
+
+        @Override
+        public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException {
+            throw new IllegalArgumentException("This class loader is only a dummy class loader and can not be used");
+        }
+
+        @Override
+        public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
+            throw new IllegalArgumentException("This class loader is only a dummy class loader and can not be used");
+        }
+
+        @Override
+        public Pattern[] getPluginFileFilters() {
+            throw new IllegalArgumentException("This class loader is only a dummy class loader and can not be used");
+        }
+
+        @Override
+        public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin) {
+            return null;
+        }
+
+        @Override
+        public void enablePlugin(Plugin plugin) {
+            if(plugin.equals(McNativeDummyPlugin.this)){
+                McNativeLauncher.launchMcNativeInternal(plugin);
+                McNativeDummyPlugin.this.enabled = false;
+            }else throw new IllegalArgumentException("This is not a McNative dummy plugin");
+        }
+
+        @Override
+        public void disablePlugin(Plugin plugin) {
+            if(plugin.equals(McNativeDummyPlugin.this)){
+                Bukkit.getServer().getPluginManager().callEvent(new PluginDisableEvent(plugin));
+                McNativeLauncher.shutdown();
+                McNativeDummyPlugin.this.enabled = false;
+            }else throw new IllegalArgumentException("This is not a McNative dummy plugin");
+        }
     }
 }
