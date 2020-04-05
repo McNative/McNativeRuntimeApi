@@ -26,8 +26,8 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
-import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
@@ -40,9 +40,6 @@ import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -109,32 +106,14 @@ public class McNativeLauncher {
         description.setAuthor("Pretronic and McNative contributors");
         description.setMain("reflected");
 
-        System.out.println("CHECK 1"+McNativeLauncher.class.getClassLoader().getClass().getName());
-
-        ClassLoader loader = new URLClassLoader(new URL[]{},McNativeLauncher.class.getClassLoader());
-
-        Plugin plugin; //new DummyPlugin(description);
-        try {
-            plugin = (Plugin) loader.loadClass(DummyPlugin.class.getName()).getConstructor(PluginDescription.class).newInstance(description);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            throw new ReflectException(e);
-        }
-        /*
-        ReflectionUtil.invokeMethod(plugin,"init",new Class[]{ProxyServer.class,PluginDescription.class}
+        Plugin plugin = UnsafeInstanceCreator.newInstance(Plugin.class);
+        ReflectionUtil.invokeMethod(plugin,"init"
+                ,new Class[]{ProxyServer.class,PluginDescription.class}
                 ,new Object[]{ProxyServer.getInstance(),description});
-         */
 
         Map<String, Plugin> plugins = ReflectionUtil.getFieldValue(PluginManager.class,ProxyServer.getInstance().getPluginManager(),"plugins", Map.class);
         plugins.put(description.getName(),plugin);
         return plugin;
-    }
-
-    private static class DummyPlugin extends Plugin{
-
-        public DummyPlugin(PluginDescription description) {
-            super(ProxyServer.getInstance(),description);
-            System.out.println("CHECK 2"+McNativeLauncher.class.getClassLoader().getClass().getName());
-        }
     }
 
 }
