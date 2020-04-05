@@ -77,11 +77,11 @@ public class McNativeLoader extends ResourceLoader {
 
         if(latest != null){
             if(isLatestVersion()){
-                logger.info("(McNative-Loader) McNative "+latest.getName()+" - "+latest.getBuild()+" (Up to date)");
+                logger.info("(McNative-Loader) McNative "+latest.getName()+" (Up to date)");
             }else{
                 if(current == null || configuration.isEnabled()){
                     MCNATIVE.setDownloadUrl(DOWNLOAD_URL.replace("{edition}",platform));
-                    logger.info("(McNative-Loader) Downloading McNative "+latest.getName()+" - "+latest.getBuild());
+                    logger.info("(McNative-Loader) Downloading McNative "+latest.getName());
                     try{
                         download(latest);
                         logger.info("(McNative-Loader) Successfully downloaded McNative");

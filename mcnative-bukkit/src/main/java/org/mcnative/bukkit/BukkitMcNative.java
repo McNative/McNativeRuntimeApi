@@ -173,6 +173,7 @@ public class BukkitMcNative implements McNative {
 
     @Override
     public Network getNetwork() {
+        if(network == null) throw new IllegalArgumentException("Network is not available");
         return network;
     }
 
