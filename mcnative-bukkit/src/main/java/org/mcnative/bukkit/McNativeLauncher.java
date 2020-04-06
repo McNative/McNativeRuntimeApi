@@ -26,6 +26,7 @@ import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -45,6 +46,7 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -111,7 +113,8 @@ public class McNativeLauncher {
         PLUGIN_MANAGER = pluginManager;
         COMMAND_MANAGER = commandManager;
         CHANNEL_INJECTOR = injector;
-        instance.setReady(true);
+
+        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(1, TimeUnit.SECONDS).execute(() -> instance.setReady(true));
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
