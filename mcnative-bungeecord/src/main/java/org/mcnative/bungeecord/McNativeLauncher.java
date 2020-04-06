@@ -39,7 +39,6 @@ import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
-import org.mcnative.proxy.McNativeProxyConfiguration;
 import org.mcnative.proxy.ProxyService;
 
 import java.io.File;
@@ -68,7 +67,7 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"Version: "+version.getName());
         ProxyServer proxy = ProxyServer.getInstance();
 
-        if(!McNativeProxyConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
+        if(!McNativeBungeeCordConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
 
         BungeeCordServerMap serverMap = new BungeeCordServerMap();
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected server map.");

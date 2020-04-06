@@ -26,6 +26,7 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -56,7 +57,6 @@ import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -456,7 +456,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
 
     @Internal
     public void injectDownstreamProtocolHandlersToPipeline(){
-        if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED) return;
+        if(!McNativeBungeeCordConfiguration.NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED) return;
         Object connection = ReflectionUtil.getFieldValue(original,"server");
         if(connection == null) return;
 

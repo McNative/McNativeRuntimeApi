@@ -19,11 +19,8 @@
 
 package org.mcnative.common;
 
-import net.pretronic.libraries.plugin.Plugin;
-import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.scoreboard.Tablist;

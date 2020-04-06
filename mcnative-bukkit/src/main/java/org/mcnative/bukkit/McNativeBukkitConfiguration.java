@@ -94,6 +94,7 @@ public class McNativeBukkitConfiguration {
 
     private static void setAutoUpdateConfiguration(){
         File location = new File("plugins/McNative/lib/resources/mcnative/update.dat");
+        location.getParentFile().mkdirs();
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(location));
             writer.write(AUTO_UPDATE_ENABLED+";"+AUTO_UPDATE_QUALIFIER);

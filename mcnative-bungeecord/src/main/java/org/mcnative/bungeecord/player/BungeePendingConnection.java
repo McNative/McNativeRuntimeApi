@@ -23,6 +23,7 @@ import io.netty.channel.Channel;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
@@ -37,7 +38,6 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftDisconnectPacket;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.proxy.McNativeProxyConfiguration;
 
 import java.lang.reflect.Array;
 import java.net.InetSocketAddress;
@@ -191,7 +191,7 @@ public class BungeePendingConnection implements PendingConnection {
                 ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
 
-        if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;
+        if(!McNativeBungeeCordConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;
 
         this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
                 ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
