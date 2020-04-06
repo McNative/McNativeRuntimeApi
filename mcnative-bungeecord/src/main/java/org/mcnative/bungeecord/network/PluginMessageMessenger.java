@@ -174,6 +174,8 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         boolean broadcast = NetworkIdentifier.BROADCAST.getUniqueId().equals(destinationId) || NetworkIdentifier.BROADCAST_PROXY.getUniqueId().equals(destinationId);
         boolean local = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId().equals(destinationId);
 
+        System.out.println("Received BC: "+broadcast);
+
         if(broadcast || local){
             String channel = MinecraftProtocolUtil.readString(buffer);
             MessagingChannelListener listener = getChannelListener(channel);
@@ -190,7 +192,10 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
             if(broadcast){
                 byte[] forward = writeForward(buffer,sender.getIdentifier().getUniqueId());
                 for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
-                    if(!server.equals(sender)) server.sendData(CHANNEL_NAME_REQUEST,forward);
+                    if(!server.equals(sender)){
+                        System.out.println("Forwarding data to "+sender.getName());
+                        server.sendData(CHANNEL_NAME_REQUEST,forward);
+                    }
                 }
             }
         }else{

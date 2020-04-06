@@ -30,7 +30,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -42,7 +41,6 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.messaging.AbstractMessenger;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -92,6 +90,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
     @Override
     public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
+        System.out.println("send message (by identifier) to "+receiver.getUniqueId()+" | "+receiver.getName());
         byte[] data = writeData(receiver.getUniqueId(),requestId,channel,request,true);
         sendData(CHANNEL_NAME_REQUEST,data);
     }
@@ -139,10 +138,14 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
     public void onPluginMessageReceived(String tag, Player unused0, byte[] data) {
         ByteBuf buffer = Unpooled.copiedBuffer(data);
 
+        System.out.println("Received data");
+
         if(tag.equals(CHANNEL_NAME_REQUEST)){
             UUID senderId = MinecraftProtocolUtil.readUUID(buffer);
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             String channel = MinecraftProtocolUtil.readString(buffer);
+
+            System.out.println("Received from "+senderId+" | "+channel);
 
             MessagingChannelListener listener = getChannelListener(channel);
             if(listener != null){
@@ -174,7 +177,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
     }
 
     @EventHandler
-    public void handlePlayerConnect(PlayerJoinEvent event){
+    public void handlePlayerConnect(PlayerLoginEvent event){
         if(transport == null){
             transport = event.getPlayer();
             McNative.getInstance().getLogger().info("[McNative] (Plugin-Message-Gateway) connected to proxy");
