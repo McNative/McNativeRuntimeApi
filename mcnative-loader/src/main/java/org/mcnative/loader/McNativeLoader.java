@@ -64,6 +64,7 @@ public class McNativeLoader extends ResourceLoader {
         VersionInfo latest = null;
 
         UpdateConfiguration configuration = getUpdateConfiguration();
+        System.out.println(configuration.getQualifier());
 
         try{
             latest = getLatestVersion();
