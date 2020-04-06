@@ -57,6 +57,7 @@ public class BungeeCordProxyNetwork implements Network {
     public BungeeCordProxyNetwork(ExecutorService executor) {
         this.messenger = new PluginMessageMessenger(this,executor);
         this.statusCallbacks = new ArrayList<>();
+        this.servers = Collections.emptyList();
     }
 
     @Override
