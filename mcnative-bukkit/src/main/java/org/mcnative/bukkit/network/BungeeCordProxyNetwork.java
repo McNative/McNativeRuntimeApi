@@ -28,7 +28,6 @@ import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.OwnedObject;
 import net.pretronic.libraries.utility.Validate;
-import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
@@ -40,10 +39,11 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class BungeeCordProxyNetwork implements Network {
 
@@ -140,20 +140,17 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public void sendBroadcastMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(Messenger.class)
-                .sendMessage(NetworkIdentifier.BROADCAST,channel,request);
+        messenger.sendMessage(NetworkIdentifier.BROADCAST,channel,request);
     }
 
     @Override
     public void sendProxyMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(Messenger.class)
-                .sendMessage(NetworkIdentifier.BROADCAST_PROXY,channel,request);
+        messenger.sendMessage(NetworkIdentifier.BROADCAST_PROXY,channel,request);
     }
 
     @Override
     public void sendServerMessage(String channel, Document request) {
-        McNative.getInstance().getRegistry().getService(Messenger.class)
-                .sendMessage(NetworkIdentifier.BROADCAST_SERVER,channel,request);
+        messenger.sendMessage(NetworkIdentifier.BROADCAST_SERVER,channel,request);
     }
 
     @Override

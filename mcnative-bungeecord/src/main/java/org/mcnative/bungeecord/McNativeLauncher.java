@@ -23,6 +23,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
+import net.pretronic.libraries.command.command.configuration.DefaultCommandConfiguration;
+import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
@@ -66,6 +69,8 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
         logger.info(McNative.CONSOLE_PREFIX+"Version: "+version.getName());
         ProxyServer proxy = ProxyServer.getInstance();
+
+        DocumentRegistry.getDefaultContext().registerMappingAdapter(CommandConfiguration.class, DefaultCommandConfiguration.class);
 
         if(!McNativeBungeeCordConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
 
