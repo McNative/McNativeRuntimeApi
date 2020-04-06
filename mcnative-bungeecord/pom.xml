@@ -102,9 +102,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- External dependencies -->
-
-
+        <!-- Runtime Platform dependencies -->
 
         <dependency>
             <groupId>net.md-5</groupId>
@@ -122,10 +120,26 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Optional Networking dependencies -->
+
         <dependency>
             <groupId>de.dytanic.cloudnet</groupId>
             <artifactId>cloudnet-api-bridge</artifactId>
             <version>${dependency.cloudnet.v2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-wrapper-jvm</artifactId>
+            <version>3.2.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-bridge</artifactId>
+            <version>3.2.0-RELEASE</version>
             <scope>provided</scope>
         </dependency>
 

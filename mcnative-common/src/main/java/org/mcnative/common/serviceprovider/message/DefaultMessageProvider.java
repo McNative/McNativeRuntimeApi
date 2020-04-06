@@ -122,23 +122,6 @@ public class DefaultMessageProvider implements MessageProvider {
     }
 
     @Override
-    public MessagePack importPack(Document document) {
-        MessagePack pack = MessagePack.fromDocument(document);
-        MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
-        if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
-
-        addPack(pack);
-
-        File folder = new File(owner.getDataFolder(),"messages/");
-        folder.mkdirs();
-        String name = pack.getMeta().getName()+"-"+pack.getMeta().getLanguage().getCode()+".yml";
-        name = name.toLowerCase().replace(" ","-");
-        File location = new File(folder,name);
-        DocumentFileType.YAML.getWriter().write(location,document);
-        return pack;
-    }
-
-    @Override
     public MessagePack getPack(String name) {
         return Iterators.findOne(this.packs, pack -> pack.getMeta().getName().equals(name));
     }
@@ -148,13 +131,6 @@ public class DefaultMessageProvider implements MessageProvider {
         if(getPack(pack.getMeta().getName()) != null) throw new IllegalArgumentException("A pack with the name "+pack.getMeta().getName()+" is already available");
 
         this.packs.add(pack);
-    }
-
-    @Override
-    public MessagePack addPack(Document document) {
-        MessagePack pack = MessagePack.fromDocument(document);
-        addPack(pack);
-        return pack;
     }
 
     //@Todo update from repository
@@ -174,7 +150,9 @@ public class DefaultMessageProvider implements MessageProvider {
                             DocumentFileType type = DocumentRegistry.findType(file);
                             if(type != null){
                                 try{
-                                    MessagePack pack = addPack(type.getReader().read(file));
+                                    FileMessagePack pack = type.getReader().read(file).getAsObject(FileMessagePack.class);
+                                    pack.setFile(file);
+                                    addPack(pack);
                                     result.add(pack);
                                     plugin.getLogger().info("(Message-Provider) Loaded message pack {}",pack.getMeta().getName());
                                     plugin.getLogger().info("(Message-Provider) Loaded {} messages",pack.getMessages().size());
@@ -192,6 +170,47 @@ public class DefaultMessageProvider implements MessageProvider {
         return Collections.emptyList();
     }
 
+    @Override
+    public MessagePack importPack(MessagePack pack) {
+        MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
+        if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
+
+        addPack(pack);
+
+        File location = getFile(pack, owner);
+        DocumentFileType.YAML.getWriter().write(location,Document.newDocument(pack));
+        owner.getLogger().info("(Message-Provider) Imported message pack {}",pack.getMeta().getName());
+        owner.getLogger().info("(Message-Provider) Loaded {} messages",pack.getMessages().size());
+        return pack;
+    }
+
+    @Override
+    public MessagePack addPack(Document document) {
+        MessagePack pack = MessagePack.fromDocument(document);
+        addPack(pack);
+        return pack;
+    }
+
+    @Override
+    public void updatePack(MessagePack pack, int updateCount) {
+        MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
+        if(pack instanceof FileMessagePack){
+            DocumentFileType.YAML.getWriter().write(((FileMessagePack) pack).getFile(),Document.newDocument(pack));
+        }else{
+            if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
+            File location = getFile(pack, owner);
+            DocumentFileType.YAML.getWriter().write(location,Document.newDocument(pack));
+        }
+
+        if(owner != null){
+            owner.getLogger().info("(Message-Provider) Updated message pack {}",pack.getMeta().getName());
+            owner.getLogger().info("(Message-Provider) Updated {} messages",updateCount);
+        }else{
+            McNative.getInstance().getLogger().info("["+pack.getMeta().getModule()+"] (Message-Provider) Updated message pack {}",pack.getMeta().getName());
+            McNative.getInstance().getLogger().info("["+pack.getMeta().getModule()+"] (Message-Provider) Updated {} messages",updateCount);
+        }
+    }
+
     private MinecraftPlugin findModuleOwner(String module){
         for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
             if (plugin instanceof MinecraftPlugin
@@ -201,6 +220,14 @@ public class DefaultMessageProvider implements MessageProvider {
             }
         }
         return null;
+    }
+
+    private File getFile(MessagePack pack, MinecraftPlugin owner) {
+        File folder = new File(owner.getDataFolder(), "messages/");
+        folder.mkdirs();
+        String name = pack.getMeta().getName() + "-" + pack.getMeta().getLanguage().getCode() + ".yml";
+        name = name.toLowerCase().replace(" ", "-");
+        return new File(folder, name);
     }
 
     @Override
@@ -313,6 +340,7 @@ public class DefaultMessageProvider implements MessageProvider {
                 .create());
         processor.setTextBuilderFactory(new TextBuilder.Factory());
     }
+
     public void registerDefaultFunctions(){
         processor.registerFunction(ObjectOwner.SYSTEM,"for",new LoopFunction());
         processor.registerFunction(ObjectOwner.SYSTEM,"foreach",new LoopFunction());
