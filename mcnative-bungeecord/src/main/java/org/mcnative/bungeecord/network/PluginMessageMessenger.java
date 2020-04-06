@@ -187,10 +187,12 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         if(broadcast || local){
             String channel = MinecraftProtocolUtil.readString(buffer);
             MessagingChannelListener listener = getChannelListener(channel);
+
+            System.out.println("Received data");
+            Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+            System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
+
             if(listener != null){
-                Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
-                System.out.println("Received data");
-                System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
                 Document result = listener.onMessageReceive(sender,identifier,data);
                 if(!broadcast && result != null){
                     byte[] response = writeResponse(identifier,result);
