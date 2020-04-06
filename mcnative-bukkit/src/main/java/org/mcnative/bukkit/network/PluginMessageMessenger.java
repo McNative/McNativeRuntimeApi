@@ -21,7 +21,6 @@ package org.mcnative.bukkit.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -43,7 +42,6 @@ import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -127,7 +125,12 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
         if(request) MinecraftProtocolUtil.writeString(buffer,channel);//Channel
 
-        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,data,false);//Data
+       // DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,data,false);//Data
+        String requestData = DocumentFileType.JSON.getWriter().write(data,false);
+        MinecraftProtocolUtil.writeString(buffer,requestData);
+
+
+
         byte[] data0 = new byte[buffer.readableBytes()];
         buffer.readBytes(data0);
         buffer.release();
