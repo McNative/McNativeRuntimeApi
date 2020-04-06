@@ -141,6 +141,12 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
     }
 
     private byte[] writeForward(ByteBuf buffer,UUID sender){
+        System.out.println("BUFFER IN "+buffer.readableBytes());
+
+        byte[] debug = new byte[buffer.readableBytes()];
+        buffer.readBytes(debug);
+        System.out.println(new String(debug));
+
         buffer.markWriterIndex();
         buffer.setIndex(0,0);
         MinecraftProtocolUtil.writeUUID(buffer,sender);
@@ -148,6 +154,8 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
 
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
+        System.out.println("BUFFER OUT "+data.length);
+        System.out.println(new String(data));
         return data;
     }
 
@@ -181,6 +189,8 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
             MessagingChannelListener listener = getChannelListener(channel);
             if(listener != null){
                 Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                System.out.println("Received data");
+                System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
                 Document result = listener.onMessageReceive(sender,identifier,data);
                 if(!broadcast && result != null){
                     byte[] response = writeResponse(identifier,result);
