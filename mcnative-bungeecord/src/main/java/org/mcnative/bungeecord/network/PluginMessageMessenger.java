@@ -20,8 +20,6 @@
 package org.mcnative.bungeecord.network;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.Server;
@@ -41,7 +39,6 @@ import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -123,7 +120,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         MinecraftProtocolUtil.writeUUID(buffer,sender);//Sender
         MinecraftProtocolUtil.writeUUID(buffer,requestId);//RequestId
         MinecraftProtocolUtil.writeString(buffer,channel);//Channel
-        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,request,false);//Request
+        MinecraftProtocolUtil.writeString(buffer,DocumentFileType.BINARY.getWriter().write(request,false));//Request
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
         buffer.release();
@@ -133,7 +130,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
     private byte[] writeResponse(UUID identifier,Document response) {
         ByteBuf buffer = Unpooled.directBuffer();
         MinecraftProtocolUtil.writeUUID(buffer,identifier);//Sender
-        DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,response,false);//Response
+        MinecraftProtocolUtil.writeString(buffer,DocumentFileType.BINARY.getWriter().write(response,false));//Response
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
         buffer.release();
@@ -141,8 +138,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
     }
 
     private byte[] writeForward(ByteBuf buffer,UUID sender){
-        System.out.println("BUFFER IN "+buffer.readableBytes());
-
         byte[] debug = new byte[buffer.readableBytes()];
         buffer.readBytes(debug);
         System.out.println(new String(debug));
@@ -154,8 +149,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
 
         byte[] data = new byte[buffer.readableBytes()];
         buffer.readBytes(data);
-        System.out.println("BUFFER OUT "+data.length);
-        System.out.println(new String(data));
         return data;
     }
 
@@ -164,8 +157,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         if(event.getSender() instanceof Server){
             if(event.getTag().equals(CHANNEL_NAME_REQUEST)){
                 MinecraftServer sender = serverMap.getMappedServer(((Server) event.getSender()).getInfo());
-                System.out.println("DATA "+new String(event.getData()));
-                System.out.println("DATA LENGTH "+event.getData().length);
                 ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
                 handleDataRequest(sender,buffer);
                 buffer.release();
@@ -184,22 +175,12 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         boolean broadcast = NetworkIdentifier.BROADCAST.getUniqueId().equals(destinationId) || NetworkIdentifier.BROADCAST_PROXY.getUniqueId().equals(destinationId);
         boolean local = McNative.getInstance().getNetwork().getLocalIdentifier().getUniqueId().equals(destinationId);
 
-        System.out.println("Received BC: "+broadcast);
-
         if(broadcast || local){
             String channel = MinecraftProtocolUtil.readString(buffer);
             MessagingChannelListener listener = getChannelListener(channel);
 
-            System.out.println("Received data "+channel);
-            System.out.println("pos "+buffer.readerIndex()+" | "+buffer.readableBytes());
-
-            String requestData = MinecraftProtocolUtil.readString(buffer);
-            System.out.println("R: "+requestData);
-
-            Document data = DocumentFileType.JSON.getReader().read(requestData);//DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer),StandardCharsets.UTF_8);
-            System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
-
             if(listener != null){
+                Document data = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
                 Document result = listener.onMessageReceive(sender,identifier,data);
                 if(!broadcast && result != null){
                     byte[] response = writeResponse(identifier,result);
@@ -212,7 +193,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
                 byte[] forward = writeForward(buffer,sender.getIdentifier().getUniqueId());
                 for (MinecraftServer server : McNative.getInstance().getNetwork().getServers()) {
                     if(!server.equals(sender)){
-                        System.out.println("Forwarding data to "+sender.getName());
                         server.sendData(CHANNEL_NAME_REQUEST,forward);
                     }
                 }
@@ -233,7 +213,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             CompletableFuture<Document> listener = resultListeners.remove(identifier);
             if(listener != null){
-                Document data = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                Document data = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
                 listener.complete(data);
             }
         }else{

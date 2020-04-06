@@ -20,7 +20,6 @@
 package org.mcnative.bukkit.network;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -125,18 +124,13 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
         if(request) MinecraftProtocolUtil.writeString(buffer,channel);//Channel
 
-       // DocumentFileType.BINARY.getWriter().write(new ByteBufOutputStream(buffer),StandardCharsets.UTF_8,data,false);//Data
         String requestData = DocumentFileType.JSON.getWriter().write(data,false);
         MinecraftProtocolUtil.writeString(buffer,requestData);
-
 
 
         byte[] data0 = new byte[buffer.readableBytes()];
         buffer.readBytes(data0);
         buffer.release();
-        System.out.println("WRITE "+new String(data0));
-        System.out.println("WRITE LENGTH"+data0.length);
-        System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
         return data0;
     }
 
@@ -144,19 +138,15 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
     public void onPluginMessageReceived(String tag, Player unused0, byte[] data) {
         ByteBuf buffer = Unpooled.copiedBuffer(data);
 
-        System.out.println("Received data");
-
         if(tag.equals(CHANNEL_NAME_REQUEST)){
             UUID senderId = MinecraftProtocolUtil.readUUID(buffer);
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             String channel = MinecraftProtocolUtil.readString(buffer);
 
-            System.out.println("Received from "+senderId+" | "+channel);
-
             MessagingChannelListener listener = getChannelListener(channel);
             if(listener != null){
                 MinecraftServer sender = McNative.getInstance().getNetwork().getServer(senderId);
-                Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+                Document document = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
                 Document result = listener.onMessageReceive(sender,identifier,document);
                 if(result != null){
                     byte[] response = writeData(senderId,identifier,channel,result,false);
@@ -167,7 +157,8 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             CompletableFuture<Document> resultListener = resultListeners.remove(identifier);
             if(resultListener != null){
-                Document document = DocumentFileType.BINARY.getReader().read(new ByteBufInputStream(buffer));
+
+                Document document = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
                 resultListener.complete(document);
             }
         }
