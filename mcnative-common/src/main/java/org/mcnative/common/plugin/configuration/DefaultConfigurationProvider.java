@@ -97,9 +97,10 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
 
     @Override
     public void shutdown() {
-        System.out.println("Shutting down drivers ---- TEST REMOVE");
         for (Map.Entry<String, DatabaseDriver> drivers : this.databaseDrivers.entrySet()) {
-            drivers.getValue().disconnect();
+            if(drivers.getValue().isConnected()){
+                drivers.getValue().disconnect();
+            }
         }
     }
 }
