@@ -47,11 +47,15 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
     public Document onMessageReceive(MessageReceiver receiver, UUID requestId, Document request) {
         byte action = request.getByte(ACTION_KEY);
         Object identifier = request.getObject(IDENTIFIER_KEY,identifierReference);
-        if(action == 0){
+        System.out.println("RECEIVED "+action);
+        if(action == 1){
+            System.out.println("RECEIVED CREATE");
             handler.onCreate(identifier,request);
-        }else if(action == 1){
-            handler.onUpdate(identifier,request);
         }else if(action == 2){
+            System.out.println("RECEIVED UPDATE");
+            handler.onUpdate(identifier,request);
+        }else if(action == 3){
+            System.out.println("RECEIVED DELETE");
             handler.onDelete(identifier,request);
         }else throw new IllegalArgumentException("Received invalid synchronisation action");
         return null;
@@ -68,7 +72,8 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
         @Override
         public void create(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
-            document.set(ACTION_KEY,0);
+            document.set(ACTION_KEY,1);
+            System.out.println("SEND CREATE");
             McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
 
@@ -80,14 +85,16 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
         @Override
         public void update(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
-            document.set(ACTION_KEY,1);
+            document.set(ACTION_KEY,2);
+            System.out.println("SEND UPDATE");
             McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
 
         @Override
         public void delete(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
-            document.set(ACTION_KEY,2);
+            document.set(ACTION_KEY,3);
+            System.out.println("SEND DELETE");
             McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
         }
     }
