@@ -20,12 +20,15 @@
 
 package org.mcnative.bukkit;
 
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.generator.ChunkGenerator;
@@ -33,9 +36,9 @@ import org.bukkit.plugin.*;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -173,9 +176,59 @@ public class McNativeDummyPlugin implements Plugin {
             throw new IllegalArgumentException("This class loader is only a dummy class loader and can not be used");
         }
 
+        /*
+         * Method copied and optimized from Bukkit JavaPluginLoader
+         * https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
+         */
         @Override
         public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin) {
-            return null;
+            Validate.notNull(plugin, "Plugin can not be null");
+            Validate.notNull(listener, "Listener can not be null");
+
+            boolean useTimings = Bukkit.getServer().getPluginManager().useTimings();
+            Map<Class<? extends Event>, Set<RegisteredListener>> ret = new HashMap<>();
+            Set<Method> methods;
+            try {
+                Method[] publicMethods = listener.getClass().getMethods();
+                Method[] privateMethods = listener.getClass().getDeclaredMethods();
+                methods = new HashSet<>(publicMethods.length + privateMethods.length, 1.0f);
+                Collections.addAll(methods, publicMethods);
+                Collections.addAll(methods, privateMethods);
+            } catch (NoClassDefFoundError e) {
+                plugin.getLogger().severe("Plugin " + plugin.getDescription().getFullName() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
+                return ret;
+            }
+
+            for (final Method method : methods) {
+                final EventHandler eh = method.getAnnotation(EventHandler.class);
+                if (eh == null) continue;
+                if (method.isBridge() || method.isSynthetic())  continue;
+                final Class<?> checkClass;
+                if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
+                    plugin.getLogger().severe(plugin.getDescription().getFullName() + " attempted to register an invalid EventHandler method signature \"" + method.toGenericString() + "\" in " + listener.getClass());
+                    continue;
+                }
+                final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
+                method.setAccessible(true);
+                Set<RegisteredListener> eventSet = ret.computeIfAbsent(eventClass, k -> new HashSet<>());
+
+                EventExecutor executor = (listener1, event) -> {
+                    try {
+                        if (!eventClass.isAssignableFrom(event.getClass())) return;
+                        method.invoke(listener1, event);
+                    } catch (InvocationTargetException ex) {
+                        throw new EventException(ex.getCause());
+                    } catch (Throwable t) {
+                        throw new EventException(t);
+                    }
+                };
+                if (useTimings) {
+                    eventSet.add(new TimedRegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
+                } else {
+                    eventSet.add(new RegisteredListener(listener, executor, eh.priority(), plugin, eh.ignoreCancelled()));
+                }
+            }
+            return ret;
         }
 
         @Override
