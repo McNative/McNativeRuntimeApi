@@ -123,13 +123,13 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public MinecraftServer getServer(String name) {
-        if(localIdentifier.getName().equalsIgnoreCase(name)) return (MinecraftServer) McNative.getInstance().getLocal();
+        if(localIdentifier != null && localIdentifier.getName().equalsIgnoreCase(name)) return (MinecraftServer) McNative.getInstance().getLocal();
         else return Iterators.findOne(this.servers, server -> server.getName().equalsIgnoreCase(name));
     }
 
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
-        if(localIdentifier.getUniqueId().equals(uniqueId)) return (MinecraftServer) McNative.getInstance().getLocal();
+        if(localIdentifier != null && localIdentifier.getUniqueId().equals(uniqueId)) return (MinecraftServer) McNative.getInstance().getLocal();
         else return Iterators.findOne(this.servers, server -> server.getIdentifier().getUniqueId().equals(uniqueId));
     }
 
