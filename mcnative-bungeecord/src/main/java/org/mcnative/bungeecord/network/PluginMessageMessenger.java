@@ -30,10 +30,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
-import net.pretronic.libraries.plugin.Plugin;
-import net.pretronic.libraries.synchronisation.SynchronisationHandler;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.bungeecord.BungeeCordService;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
@@ -42,11 +39,11 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.messaging.AbstractMessenger;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 public class PluginMessageMessenger extends AbstractMessenger implements Listener {
@@ -64,7 +61,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         this.executor = executor;
         this.serverMap = serverMap;
 
-        this.resultListeners = new HashMap<>();
+        this.resultListeners = new ConcurrentHashMap<>();
 
         ProxyServer.getInstance().registerChannel(CHANNEL_NAME_REQUEST);
         ProxyServer.getInstance().registerChannel(CHANNEL_NAME_RESPONSE);
@@ -108,7 +105,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         try {
             return sendQueryMessageAsync(receiver,channel,request).get(3, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new IllegalArgumentException("");
+            throw new OperationFailedException(e);
         }
     }
 

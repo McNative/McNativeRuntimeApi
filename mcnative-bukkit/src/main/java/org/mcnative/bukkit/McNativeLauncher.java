@@ -28,7 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
-import org.mcnative.bukkit.network.PluginMessageMessenger;
+import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
@@ -83,7 +83,7 @@ public class McNativeLauncher {
         BukkitMcNative instance = new BukkitMcNative(version,pluginManager,playerManager,localService,null);
 
         McNative.setInstance(instance);
-        instance.setNetwork(setupNetwork(instance.getExecutorService()));
+        instance.setNetwork(setupNetwork(logger,instance.getExecutorService()));
 
         BukkitChannelInjector injector = new BukkitChannelInjector();
         commandManager.inject();
@@ -131,8 +131,14 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully stopped.");
     }
 
-    private static Network setupNetwork(ExecutorService executor){
-        if(!Bukkit.getOnlineMode()) return new BungeeCordProxyNetwork(executor);
+    private static Network setupNetwork(Logger logger,ExecutorService executor){
+        if(Bukkit.getPluginManager().getPlugin("CloudNetAPI") != null){
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
+            return new CloudNetV2Network(executor);
+        }else if(!Bukkit.getOnlineMode()){
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
+            return new BungeeCordProxyNetwork(executor);
+        }
         return null;
     }
 

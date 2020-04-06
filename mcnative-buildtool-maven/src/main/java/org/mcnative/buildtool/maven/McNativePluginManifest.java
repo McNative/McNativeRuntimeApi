@@ -98,7 +98,7 @@ public class McNativePluginManifest {
 
     public void createManifestFile(File location){
         if(depends == null) this.depends = new HashSet<>();
-        getSoftdepends().addAll(Arrays.asList("McNative","PlaceHolderApi","Vault"));
+        getSoftdepends().addAll(Arrays.asList("McNative","PlaceHolderApi","Vault","CloudNetAPI","CloudNet-Bridge"));
         if(messageModule == null) messageModule = getName().replace(" ","_").toLowerCase();
         location.getParentFile().mkdirs();
         try {

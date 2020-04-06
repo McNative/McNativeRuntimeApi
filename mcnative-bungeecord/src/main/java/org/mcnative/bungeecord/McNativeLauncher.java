@@ -30,7 +30,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
-import org.mcnative.bungeecord.network.PluginMessageMessenger;
+import org.mcnative.bungeecord.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeEventBus;
@@ -85,7 +85,7 @@ public class McNativeLauncher {
         BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
         BungeeCordMcNative instance = new BungeeCordMcNative(version,pluginManager,playerManager,null, localService);
         McNative.setInstance(instance);
-        instance.setNetwork(setupNetwork(localService,instance.getExecutorService(),serverMap));
+        instance.setNetwork(setupNetwork(logger,localService,instance.getExecutorService(),serverMap));
 
         instance.registerDefaultProviders();
         instance.registerDefaultCommands();
@@ -104,8 +104,14 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
-    private static Network setupNetwork(ProxyService proxy,ExecutorService executor, BungeeCordServerMap serverMap){
-        return new BungeecordProxyNetwork(proxy,executor,serverMap);
+    private static Network setupNetwork(Logger logger,ProxyService proxy,ExecutorService executor, BungeeCordServerMap serverMap){
+        if(ProxyServer.getInstance().getPluginManager().getPlugin("CloudNetAPI") != null){
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
+            return new CloudNetV2Network(executor);
+        }else{
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
+            return new BungeecordProxyNetwork(proxy,executor,serverMap);
+        }
     }
 
     @SuppressWarnings("unchecked")
