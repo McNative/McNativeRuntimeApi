@@ -132,6 +132,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
         buffer.readBytes(data0);
         buffer.release();
         System.out.println("WRITE "+new String(data0));
+        System.out.println("WRITE LENGTH"+data0.length);
         System.out.println(DocumentFileType.JSON.getWriter().write(data,true));
         return data0;
     }

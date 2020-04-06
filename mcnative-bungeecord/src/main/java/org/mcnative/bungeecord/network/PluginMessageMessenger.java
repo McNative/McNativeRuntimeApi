@@ -164,6 +164,8 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         if(event.getSender() instanceof Server){
             if(event.getTag().equals(CHANNEL_NAME_REQUEST)){
                 MinecraftServer sender = serverMap.getMappedServer(((Server) event.getSender()).getInfo());
+                System.out.println("DATA "+new String(event.getData()));
+                System.out.println("DATA LENGTH "+event.getData().length);
                 ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
                 handleDataRequest(sender,buffer);
                 buffer.release();
