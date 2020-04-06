@@ -140,7 +140,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
     private byte[] writeForward(ByteBuf buffer,UUID sender){
         byte[] debug = new byte[buffer.readableBytes()];
         buffer.readBytes(debug);
-        System.out.println(new String(debug));
 
         buffer.markWriterIndex();
         buffer.setIndex(0,0);

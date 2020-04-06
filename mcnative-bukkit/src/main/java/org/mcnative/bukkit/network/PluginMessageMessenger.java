@@ -87,7 +87,6 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
     @Override
     public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
-        System.out.println("send message (by identifier) to "+receiver.getUniqueId()+" | "+receiver.getName());
         byte[] data = writeData(receiver.getUniqueId(),requestId,channel,request,true);
         sendData(CHANNEL_NAME_REQUEST,data);
     }

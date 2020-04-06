@@ -86,7 +86,7 @@ public class McNativeCommand extends Command {
         if(original instanceof Completable){
             Collection<String> result = ((Completable) original).complete(getMappedSender(sender),args);
             if(result != null){
-                if(result instanceof List) return (List<String>) original;
+                if(result instanceof List) return (List<String>) result;
                 else return new ArrayList<>(result);
             }
         }
