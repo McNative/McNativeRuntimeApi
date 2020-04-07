@@ -21,11 +21,9 @@
 package org.mcnative.common.serviceprovider.message;
 
 import net.pretronic.libraries.message.bml.MessageProcessor;
-import net.pretronic.libraries.message.bml.Module;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
-import net.pretronic.libraries.message.bml.builder.StaticTextMessageBuilder;
 import net.pretronic.libraries.message.bml.function.Function;
 
 public class FunctionFactory implements MessageBuilderFactory {
@@ -39,7 +37,7 @@ public class FunctionFactory implements MessageBuilderFactory {
     @Override
     public MessageBuilder create(String name) {
         Function function = processor.getFunction(name);
-        if(function == null) return new StaticTextMessageBuilder("{FUNCTION NOT FOUND;"+name+"}");
+        if(function == null) throw new IllegalArgumentException("Function "+name+" not found");
         return new Builder(function);
     }
 
