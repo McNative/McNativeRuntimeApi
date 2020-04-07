@@ -20,6 +20,7 @@
 package org.mcnative.bukkit;
 
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
@@ -27,10 +28,12 @@ import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class BukkitPlatform implements MinecraftPlatform {
 
+    private final MinecraftProtocolVersion protocolVersion = BukkitReflectionUtil.getProtocolVersionByServerVersion();
     private final File latestLogLocation;
 
     public BukkitPlatform() {
@@ -49,12 +52,12 @@ public class BukkitPlatform implements MinecraftPlatform {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return MinecraftProtocolVersion.JE_1_15_2;
+        return protocolVersion;
     }
 
     @Override
     public Collection<MinecraftProtocolVersion> getJoinableProtocolVersions() {
-        return null;
+        return Collections.singleton(protocolVersion);//@Todo Check plugins like via version
     }
 
     @Override

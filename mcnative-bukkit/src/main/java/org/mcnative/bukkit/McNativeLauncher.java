@@ -120,6 +120,10 @@ public class McNativeLauncher {
         instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(1, TimeUnit.SECONDS).execute(() -> instance.setReady(true));
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+
+
+        System.out.println(Bukkit.getVersion());
+        System.out.println(Bukkit.getBukkitVersion());
     }
 
     public static void shutdown(){

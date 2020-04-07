@@ -24,13 +24,32 @@ import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BukkitReflectionUtil {
 
     private static final String BUKKIT_BASE = Bukkit.getServer().getClass().getPackage().getName();
     private static final String NMS_BASE = BUKKIT_BASE.replace("org.bukkit.craftbukkit", "net.minecraft.server");
+    private static final Map<String,MinecraftProtocolVersion> protocolVersionsByServerVersion = new HashMap<>();
+
+    static {
+        protocolVersionsByServerVersion.put("1_7_R4",MinecraftProtocolVersion.JE_1_7_10);
+        protocolVersionsByServerVersion.put("1_8_R1",MinecraftProtocolVersion.JE_1_8);
+        protocolVersionsByServerVersion.put("1_8_R2",MinecraftProtocolVersion.JE_1_8);
+        protocolVersionsByServerVersion.put("1_8_R3",MinecraftProtocolVersion.JE_1_8);
+        protocolVersionsByServerVersion.put("1_9_R1",MinecraftProtocolVersion.JE_1_9);
+        protocolVersionsByServerVersion.put("1_9_R2",MinecraftProtocolVersion.JE_1_9_4);
+        protocolVersionsByServerVersion.put("1_10_R1",MinecraftProtocolVersion.JE_1_10);
+        protocolVersionsByServerVersion.put("1_11_R1",MinecraftProtocolVersion.JE_1_11);
+        protocolVersionsByServerVersion.put("1_12_R1",MinecraftProtocolVersion.JE_1_12);
+        protocolVersionsByServerVersion.put("1_13_R1",MinecraftProtocolVersion.JE_1_13);
+        protocolVersionsByServerVersion.put("1_14_R1",MinecraftProtocolVersion.JE_1_14);
+        protocolVersionsByServerVersion.put("1_15_R1",MinecraftProtocolVersion.JE_1_15);
+    }
 
     public static Class<?> getClass(String className){
         try {
@@ -83,6 +102,15 @@ public class BukkitReflectionUtil {
     public static Object getGameProfile(Player player){
         Object entityPlayer = ReflectionUtil.invokeMethod(player,"getHandle");
         return ReflectionUtil.invokeMethod(getMNSClass("EntityHuman") ,entityPlayer,"getProfile",new Object[]{});
+    }
+
+    public static String getServerVersion(){
+        return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
+    }
+
+    public static MinecraftProtocolVersion getProtocolVersionByServerVersion(){
+        MinecraftProtocolVersion result = protocolVersionsByServerVersion.get(getServerVersion());
+        return result != null ? result : MinecraftProtocolVersion.UNKNOWN;
     }
 
 }

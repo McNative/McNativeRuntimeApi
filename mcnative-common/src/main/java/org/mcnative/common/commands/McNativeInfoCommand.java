@@ -28,7 +28,6 @@ import net.pretronic.libraries.utility.SystemInfo;
 import net.pretronic.libraries.utility.SystemUtil;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
-import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.Messages;
 
 public class McNativeInfoCommand extends BasicCommand {
@@ -40,17 +39,17 @@ public class McNativeInfoCommand extends BasicCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("mcnative.admin")) {
-            String version = "";
-            MinecraftProtocolVersion protocolVersion = McNative.getInstance().getPlatform().getProtocolVersion();
             String javaVersion = SystemUtil.getJavaVersion();
 
             sender.sendMessage(Messages.COMMAND_INFO_ADMIN, VariableSet.create()
-                    .add("version", version)
-                    .add("protocolVersion", protocolVersion)
-                    .add("javaVersion", javaVersion)
-                    .add("osName", SystemInfo.getOsName())
-                    .add("osVersion", SystemInfo.getOsVersion())
-                    .add("osArch", SystemInfo.getOsArch())
+                    .add("platform.name", McNative.getInstance().getPlatform().getName())
+                    .add("platform.version", McNative.getInstance().getPlatform().getVersion())
+                    .add("platform.protocolVersion", McNative.getInstance().getPlatform().getProtocolVersion())
+                    .add("version", McNative.getInstance().getVersion().getName())
+                    .add("java.version", javaVersion)
+                    .add("os.name", SystemInfo.getOsName())
+                    .add("os.version", SystemInfo.getOsVersion())
+                    .add("os.arch", SystemInfo.getOsArch())
                     .add("maxMemory", SystemInfo.getMaxMemory())
                     .add("allocatedMemory", SystemInfo.getAllocatedMemory())
                     .add("freeMemory", SystemInfo.getFreeMemory())

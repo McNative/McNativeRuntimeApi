@@ -21,6 +21,8 @@ package org.mcnative.common.protocol;
 
 public enum MinecraftProtocolVersion {
 
+    UNKNOWN(-1,"Unknown (Maybe not supported)",MinecraftEdition.UNKNOWN),
+
     BE_1_12(361,"1.12",MinecraftEdition.BEDROCK),
     BE_1_10(-1,"1.10",MinecraftEdition.BEDROCK),
     BE_1_9(-1,"1.9",MinecraftEdition.BEDROCK),

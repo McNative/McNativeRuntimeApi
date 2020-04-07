@@ -37,7 +37,6 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.Messages;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class McNativePasteLogCommand extends BasicCommand {
@@ -50,24 +49,25 @@ public class McNativePasteLogCommand extends BasicCommand {
     public void execute(CommandSender sender, String[] args) {
         PretronicLogger logger = McNative.getInstance().getLogger();
 
-        String version = "";
+        String version = McNative.getInstance().getVersion().getName();
         MinecraftProtocolVersion protocolVersion = McNative.getInstance().getPlatform().getProtocolVersion();
         String javaVersion = SystemUtil.getJavaVersion();
 
         logger.info("----------------------------------------");
         logger.info("Pretronic Paste");
         logger.info(" ");
-        logger.info("McNative version: " + version);
-        logger.info("Protocol version: " + protocolVersion.getName() + " | " + protocolVersion.getEdition().getName());
-        logger.info("Java version: " + javaVersion);
+        logger.info("McNative Version: " + version);
+        logger.info("Protocol Version: " + protocolVersion.getName() + " | " + protocolVersion.getEdition().getName());
+        logger.info("Platform Version: " + McNative.getInstance().getPlatform().getName()+ " - " + McNative.getInstance().getPlatform().getVersion());
+        logger.info("Java Version: " + javaVersion);
         logger.info(" ");
         logger.info("Operation system: " + SystemInfo.getOsName() + " version " + SystemInfo.getOsVersion());
         logger.info("OS architecture: " + SystemInfo.getOsArch());
         logger.info(" ");
-        logger.info("Max memory: " + SystemInfo.getMaxMemory());
-        logger.info("Free memory: " + SystemInfo.getFreeMemory());
-        logger.info("Allocated memory: " + SystemInfo.getAllocatedMemory());
-        logger.info("Total free memory: " + SystemInfo.getTotalFreeMemory());
+        logger.info("Max memory: " + ((double)SystemInfo.getMaxMemory()/(double) (1024 * 1024)));
+        logger.info("Free memory: " + ((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024)));
+        logger.info("Allocated memory: " + ((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024)));
+        logger.info("Total free memory: " + ((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024)));
         logger.info("----------------------------------------");
 
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {

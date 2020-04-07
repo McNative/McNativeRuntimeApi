@@ -20,14 +20,16 @@
 package org.mcnative.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.protocol.ProtocolConstants;
 import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.Consumer;
 
 /*
@@ -37,9 +39,13 @@ import java.util.function.Consumer;
 public class BungeeCordPlatform implements MinecraftPlatform {
 
     private final File latestLogLocation;
+    private final MinecraftProtocolVersion newest;
+    private final Collection<MinecraftProtocolVersion> versions;
 
     public BungeeCordPlatform() {
         this.latestLogLocation = new File("proxy.log.0");
+        this.versions = new ArrayList<>();
+        this.newest = extractVersions(this.versions);
     }
 
     @Override
@@ -54,12 +60,12 @@ public class BungeeCordPlatform implements MinecraftPlatform {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return MinecraftProtocolVersion.JE_1_8;
+        return newest;
     }
 
     @Override
     public Collection<MinecraftProtocolVersion> getJoinableProtocolVersions() {
-        return Collections.singleton(MinecraftProtocolVersion.JE_1_8);
+        return versions;
     }
 
     @Override
@@ -82,5 +88,17 @@ public class BungeeCordPlatform implements MinecraftPlatform {
         ProtocolCheck check = new DefaultProtocolChecker();
         checker.accept(check);
         check.process(getProtocolVersion());
+    }
+
+    private static MinecraftProtocolVersion extractVersions(Collection<MinecraftProtocolVersion> versions){
+        MinecraftProtocolVersion newest = MinecraftProtocolVersion.UNKNOWN;
+        for (Integer supportedVersionId : ProtocolConstants.SUPPORTED_VERSION_IDS) {
+            try{
+                MinecraftProtocolVersion version = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,supportedVersionId);
+                versions.add(version);
+                if(version.isNewer(newest)) newest = version;
+            }catch (Exception ignored){}
+        }
+        return newest;
     }
 }

@@ -21,6 +21,7 @@ package org.mcnative.common.protocol;
 
 public enum MinecraftEdition {
 
+    UNKNOWN("Unknown (Maybe not supported)"),
     JAVA("Java"),
     BEDROCK("Bedrock");
 
