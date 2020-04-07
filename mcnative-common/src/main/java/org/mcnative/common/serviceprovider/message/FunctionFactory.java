@@ -21,6 +21,7 @@
 package org.mcnative.common.serviceprovider.message;
 
 import net.pretronic.libraries.message.bml.MessageProcessor;
+import net.pretronic.libraries.message.bml.Module;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
