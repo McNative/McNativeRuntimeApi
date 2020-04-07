@@ -24,6 +24,7 @@ import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,11 +66,22 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
         this.resultListeners = new HashMap<>();
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST,this);
-        Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE,this);
+        if(McNativeLauncher.getPlugin().isEnabled()){
+            register();
+        }else{
+            McNative.getInstance().getScheduler()
+                    .createTask(ObjectOwner.SYSTEM)
+                    .delay(1,TimeUnit.SECONDS)
+                    .execute(this::register);
+        }
+    }
+
+    private void register(){
+        Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST,PluginMessageMessenger.this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE,PluginMessageMessenger.this);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE);
-        Bukkit.getPluginManager().registerEvents(this,McNativeLauncher.getPlugin());
+        Bukkit.getPluginManager().registerEvents(PluginMessageMessenger.this,McNativeLauncher.getPlugin());
 
         Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
         if(iterator.hasNext()) transport = iterator.next();

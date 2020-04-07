@@ -235,7 +235,7 @@ public class McNativeDummyPlugin implements Plugin {
         public void enablePlugin(Plugin plugin) {
             if(plugin.equals(McNativeDummyPlugin.this)){
                 McNativeLauncher.launchMcNativeInternal(plugin);
-                McNativeDummyPlugin.this.enabled = false;
+                McNativeDummyPlugin.this.enabled = true;
             }else throw new IllegalArgumentException("This is not a McNative dummy plugin");
         }
 

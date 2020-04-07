@@ -22,7 +22,9 @@ package org.mcnative.bukkit;
 
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.command.configuration.DefaultCommandConfiguration;
+import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.DocumentRegistry;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
@@ -126,14 +128,16 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative is stopping, please wait...");
         McNative instance = McNative.getInstance();
 
-        instance.getLogger().shutdown();
-        instance.getScheduler().shutdown();
-        instance.getExecutorService().shutdown();
-        instance.getPluginManager().shutdown();
+        if(instance != null){
+            instance.getLogger().shutdown();
+            instance.getScheduler().shutdown();
+            instance.getExecutorService().shutdown();
+            instance.getPluginManager().shutdown();
+        }
 
-        PLUGIN_MANAGER.reset();
-        COMMAND_MANAGER.reset();
-        CHANNEL_INJECTOR.reset();
+        if(PLUGIN_MANAGER != null) PLUGIN_MANAGER.reset();
+        if(COMMAND_MANAGER != null) COMMAND_MANAGER.reset();
+        if(CHANNEL_INJECTOR != null) CHANNEL_INJECTOR.reset();
 
         McNative.setInstance(null);
 
@@ -148,6 +152,15 @@ public class McNativeLauncher {
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V3 networking technology");
             return new CloudNetV3Network(executor);
         }else if(!Bukkit.getOnlineMode()){
+            File spigotConfigFile = new File("spigot.yml");
+            if(spigotConfigFile.exists()){
+                Document spigotConfig = DocumentFileType.YAML.getReader().read(spigotConfigFile);
+                if(!spigotConfig.getBoolean("settings.bungeecord")){
+                    logger.warning(McNative.CONSOLE_PREFIX+"(Network) Online mode is enabled, but BungeeCord is disabled in spigot.yml");
+                    logger.warning(McNative.CONSOLE_PREFIX+"(Network) If you are using BungeeCord, make sure to set bungeecord to 'true' in your spigt.yml config");
+                    return null;
+                }
+            }
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
             return new BungeeCordProxyNetwork(executor);
         }
