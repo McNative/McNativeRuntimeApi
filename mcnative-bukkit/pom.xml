@@ -24,7 +24,7 @@
     <parent>
         <artifactId>McNative</artifactId>
         <groupId>org.mcnative</groupId>
-        <version>1.0.150.85-SNAPSHOT</version>
+        <version>1.0.151.87-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
