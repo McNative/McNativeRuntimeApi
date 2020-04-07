@@ -115,7 +115,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- External project dependencies -->
+        <!-- Runtime platform dependencies -->
 
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -124,12 +124,30 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Networking dependencies -->
+
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.29.Final</version>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-api-bridge</artifactId>
+            <version>${dependency.cloudnet.v2.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-wrapper-jvm</artifactId>
+            <version>3.2.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-bridge</artifactId>
+            <version>3.2.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Additional dependencies-->
 
         <dependency>
             <groupId>me.clip</groupId>
@@ -141,13 +159,6 @@
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.dytanic.cloudnet</groupId>
-            <artifactId>cloudnet-api-bridge</artifactId>
-            <version>${dependency.cloudnet.v2.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

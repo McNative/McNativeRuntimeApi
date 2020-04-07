@@ -33,6 +33,7 @@ import org.bukkit.plugin.Plugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
+import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
@@ -143,6 +144,9 @@ public class McNativeLauncher {
         if(Bukkit.getPluginManager().getPlugin("CloudNetAPI") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
             return new CloudNetV2Network(executor);
+        }else if(Bukkit.getPluginManager().getPlugin("CloudNet-Bridge") != null){
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V3 networking technology");
+            return new CloudNetV3Network(executor);
         }else if(!Bukkit.getOnlineMode()){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
             return new BungeeCordProxyNetwork(executor);

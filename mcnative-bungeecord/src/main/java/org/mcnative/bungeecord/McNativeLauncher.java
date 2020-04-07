@@ -34,6 +34,7 @@ import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.network.cloudnet.v2.CloudNetV2Network;
+import org.mcnative.bungeecord.network.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeEventBus;
@@ -112,6 +113,9 @@ public class McNativeLauncher {
         if(ProxyServer.getInstance().getPluginManager().getPlugin("CloudNetAPI") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
             return new CloudNetV2Network(executor);
+        }else if(ProxyServer.getInstance().getPluginManager().getPlugin("CloudNet-Bridge") != null){
+            logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V3 networking technology");
+            return new CloudNetV3Network(executor);
         }else{
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
             return new BungeecordProxyNetwork(proxy,executor,serverMap);
