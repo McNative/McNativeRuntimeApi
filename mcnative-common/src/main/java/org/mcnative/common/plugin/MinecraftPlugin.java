@@ -50,8 +50,16 @@ public class MinecraftPlugin extends Plugin<McNative> {
         return getConfigurationProvider().getDatabase(this);
     }
 
+    public Database getDatabaseOrCreate(){
+        return getConfigurationProvider().getDatabase(this,true);
+    }
+
     public Database getDatabase(String name){
         return getConfigurationProvider().getDatabase(this,name);
+    }
+
+    public Database getDatabaseOrCreate(String name){
+        return getConfigurationProvider().getDatabase(this,name,true);
     }
 
     public DatabaseDriver getDatabaseDriver(String name){
