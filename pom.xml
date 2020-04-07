@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.142.75-SNAPSHOT</version>
+    <version>1.0.146.79-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -48,7 +48,6 @@
         <dependency.bungeecord.version>1.15-SNAPSHOT</dependency.bungeecord.version>
         <dependency.bukkit.version>1.14.2-R0.1-SNAPSHOT</dependency.bukkit.version>
         <dependency.placeholderapi.version>2.10.4</dependency.placeholderapi.version>
-        <dependency.mvdwplaceholderapi.version>3.0.2-SNAPSHOT</dependency.mvdwplaceholderapi.version>
         <dependency.cloudnet.v2.version>2.1.17</dependency.cloudnet.v2.version>
 
         <dependency.pretronic.libraries.utility>${dependency.pretronic.libraries}</dependency.pretronic.libraries.utility>
@@ -63,9 +62,9 @@
         <dependency.pretronic.libraries.synchronisation>${dependency.pretronic.libraries}</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>${dependency.pretronic.libraries}</dependency.pretronic.libraries.logging>
         <dependency.pretronic.libraries.message>${dependency.pretronic.libraries}</dependency.pretronic.libraries.message>
-        <dependency.pretronic.libraries>1.0.88.61-SNAPSHOT</dependency.pretronic.libraries>
+        <dependency.pretronic.libraries>1.0.89.62-SNAPSHOT</dependency.pretronic.libraries>
 
-        <dependency.pretronic.databasequery>1.1.9.7-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.databasequery>1.1.11.9-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
 

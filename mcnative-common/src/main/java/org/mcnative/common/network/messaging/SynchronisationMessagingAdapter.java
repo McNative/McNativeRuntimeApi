@@ -73,6 +73,13 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
         }
 
         @Override
+        public void createAndIgnore(Object identifier, Document document) {
+            if(isConnected()) {
+                create(identifier, document);
+            }
+        }
+
+        @Override
         public boolean isConnected() {
             return McNative.getInstance().isNetworkAvailable() && McNative.getInstance().getNetwork().isConnected();
         }
@@ -85,10 +92,24 @@ public class SynchronisationMessagingAdapter implements MessagingChannelListener
         }
 
         @Override
+        public void updateAndIgnore(Object identifier, Document document) {
+            if(isConnected()) {
+                update(identifier, document);
+            }
+        }
+
+        @Override
         public void delete(Object identifier, Document document) {
             document.set(IDENTIFIER_KEY,identifier);
             document.set(ACTION_KEY,3);
             McNative.getInstance().getNetwork().sendBroadcastMessage(channel,document);
+        }
+
+        @Override
+        public void deleteAndIgnore(Object identifier, Document document) {
+            if(isConnected()) {
+                delete(identifier, document);
+            }
         }
     }
 }
