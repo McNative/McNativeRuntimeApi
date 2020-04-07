@@ -20,6 +20,7 @@
 package org.mcnative.common.text.components;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
@@ -83,12 +84,14 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
             if(connection instanceof OnlineMinecraftPlayer) player = (OnlineMinecraftPlayer) connection;
             Object result = message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.COMPILE));
             if(result instanceof Document){
+                System.out.println(DocumentFileType.JSON.getWriter().write((Document) result,true));
                 return (Document) result;
             }
             else{
                 Document wrapper = Document.newDocument();
                 wrapper.set("text","");
                 wrapper.set("extra",new Object[]{result});
+                System.out.println(DocumentFileType.JSON.getWriter().write(wrapper,true));
                 return wrapper;
             }
         }catch (Exception e){
