@@ -171,7 +171,7 @@ public class BukkitPendingConnection implements PendingConnection {
             channel.pipeline().replace("encoder","encoder"
                     ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
                             , Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
-            
+
             channel.pipeline().addAfter("encoder","via-encoder",new ViaVersionEncoderWrapper(original));
 
             //if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;//@Todo add configuration
