@@ -121,10 +121,6 @@ public class McNativeLauncher {
         });
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
-
-        System.out.println(Bukkit.getVersion());
-        System.out.println(Bukkit.getBukkitVersion());
     }
 
     public static void shutdown(){
