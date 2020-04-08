@@ -30,7 +30,9 @@ import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TextBuilder implements BasicMessageBuilder {
 
@@ -75,7 +77,13 @@ public class TextBuilder implements BasicMessageBuilder {
                 TextColor color = TextColor.of(chars[i]);
                 if(color != null){
                     Document next = Document.newDocument();
-                    current.set("extra",new Document[]{next});
+                    System.out.println("extra");
+                    System.out.println(DocumentFileType.JSON.getWriter().write(Document.newDocument().add("test", new Document[]{next}), true));
+                    System.out.println("---");
+                    Document[] extra = buildExtra(new Document[]{next});
+                    if(extra.length > 0) {
+                        current.set("extra",new Document[]{next});
+                    }
                     next.set("color",color.getName());
                     next.set("text","");
                     if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)));
@@ -92,5 +100,14 @@ public class TextBuilder implements BasicMessageBuilder {
             current.set("extra",nextComp.getClass().isArray() ? nextComp : nextComp.toString());
         }
         return root;
+    }
+
+    private static Document[] buildExtra(Document[] extra0) {
+        List<Document> extra = new ArrayList<>();
+        for (Document document : extra0) {
+            if(document.isEmpty()) continue;
+            extra.add(document);
+        }
+        return extra.toArray(new Document[0]);
     }
 }
