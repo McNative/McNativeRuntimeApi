@@ -66,10 +66,12 @@ public class McNativeBuildMojo extends AbstractMojo {
         File resourceDirectory = new File(output.getParent(),MCNATIVE_LOADER_RESOURCE_DIRECTORY_PATH);
         File manifestFile = new File(output.getParent(),MCNATIVE_MANIFEST_FILE_PATH);
 
+        project.addCompileSourceRoot(sourceDirectory.getPath());
+
+        if(manifestFile.exists()) return;
+
         sourceDirectory.mkdirs();
         resourceDirectory.mkdirs();
-
-        project.addCompileSourceRoot(sourceDirectory.getPath());
 
         this.manifest.createManifestFile(manifestFile);
 
