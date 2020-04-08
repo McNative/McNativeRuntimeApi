@@ -31,6 +31,7 @@ import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class TextBuilder implements BasicMessageBuilder {
 
