@@ -75,9 +75,7 @@ public class TextBuilder implements BasicMessageBuilder {
                 TextColor color = TextColor.of(chars[i]);
                 if(color != null){
                     Document next = Document.newDocument();
-                    if(!next.isEmpty()) {
-                        current.set("extra",new Document[]{next});
-                    }
+                    current.set("extra",new Document[]{next});
                     next.set("color",color.getName());
                     next.set("text","");
                     if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)));
