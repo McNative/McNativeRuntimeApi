@@ -106,9 +106,6 @@ public class McNativeLauncher {
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bukkit events.");
 
-        injector.injectChannelInitializer();
-        playerManager.loadConnectedPlayers();
-
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the channel initializer.");
 
         registerDependencyHooks(pluginManager,playerManager);
@@ -117,7 +114,11 @@ public class McNativeLauncher {
         COMMAND_MANAGER = commandManager;
         CHANNEL_INJECTOR = injector;
 
-        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(1, TimeUnit.SECONDS).execute(() -> instance.setReady(true));
+        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(800, TimeUnit.MILLISECONDS).execute(() ->{
+            injector.injectChannelInitializer();
+            playerManager.loadConnectedPlayers();
+            instance.setReady(true);
+        });
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
