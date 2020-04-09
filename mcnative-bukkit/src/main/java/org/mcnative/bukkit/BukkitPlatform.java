@@ -21,6 +21,7 @@ package org.mcnative.bukkit;
 
 import org.bukkit.Bukkit;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
+import org.mcnative.bukkit.utils.ViaVersionExtensionUtil;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.support.DefaultProtocolChecker;
@@ -34,10 +35,16 @@ import java.util.function.Consumer;
 public class BukkitPlatform implements MinecraftPlatform {
 
     private final MinecraftProtocolVersion protocolVersion = BukkitReflectionUtil.getProtocolVersionByServerVersion();
+    private final Collection<MinecraftProtocolVersion> versions;
     private final File latestLogLocation;
 
     public BukkitPlatform() {
         this.latestLogLocation = new File("logs/latest.log");
+        if (Bukkit.getPluginManager().getPlugin("ViaVersion") == null) {
+            versions = Collections.singletonList(protocolVersion);
+        }else{
+            versions = ViaVersionExtensionUtil.getVersions();
+        }
     }
 
     @Override
@@ -57,7 +64,7 @@ public class BukkitPlatform implements MinecraftPlatform {
 
     @Override
     public Collection<MinecraftProtocolVersion> getJoinableProtocolVersions() {
-        return Collections.singleton(protocolVersion);//@Todo Check plugins like via version
+        return versions;
     }
 
     @Override

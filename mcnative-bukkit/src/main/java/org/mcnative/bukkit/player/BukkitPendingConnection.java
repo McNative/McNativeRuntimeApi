@@ -20,9 +20,11 @@
 package org.mcnative.bukkit.player;
 
 import io.netty.channel.Channel;
+import io.netty.handler.codec.MessageToByteEncoder;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.player.connection.ViaVersionEncoderWrapper;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
@@ -43,6 +45,8 @@ import java.util.UUID;
 
 public class BukkitPendingConnection implements PendingConnection {
 
+    private static boolean VIA_VERSION = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
+
     private final Channel channel;
     private final MinecraftProtocolVersion version;
     private final GameProfile gameProfile;
@@ -60,6 +64,10 @@ public class BukkitPendingConnection implements PendingConnection {
         this.state = ConnectionState.LOGIN;
 
         injectPacketCoders();
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     @Override
@@ -156,16 +164,31 @@ public class BukkitPendingConnection implements PendingConnection {
         this.state = state;
     }
 
+    @SuppressWarnings("unchecked")
     private void injectPacketCoders(){
-        channel.pipeline().addAfter("encoder","mcnative-packet-encoder"
-                ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
-                        , Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+        if(VIA_VERSION){
+            MessageToByteEncoder<Object> original = (MessageToByteEncoder<Object>) channel.pipeline().get("encoder");
+            channel.pipeline().replace("encoder","encoder"
+                    ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
+                            , Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
 
-        //if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;//@Todo add configuration
+            channel.pipeline().addAfter("encoder","via-encoder",new ViaVersionEncoderWrapper(original));
 
-        this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
-                ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
-                        ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+            //if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;//@Todo add configuration
+
+            this.channel.pipeline().addBefore("encoder","mcnative-packet-rewrite-encoder"
+                    ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
+                            ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+        }else{
+            this.channel.pipeline().addAfter("encoder","mcnative-packet-encoder"
+                    ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
+                            , Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+            this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
+                    ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
+                            ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+        }
 
         this.channel.pipeline().addBefore("decoder","mcnative-packet-rewrite-decoder"
                 ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
