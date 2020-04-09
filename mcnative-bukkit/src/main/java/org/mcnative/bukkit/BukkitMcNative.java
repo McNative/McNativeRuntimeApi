@@ -77,7 +77,6 @@ public class BukkitMcNative implements McNative {
     private Network network;
     private final Document serverProperties;
     private boolean ready;
-    private long startTime;
 
     protected BukkitMcNative(PluginVersion version, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.version = version;
@@ -96,7 +95,6 @@ public class BukkitMcNative implements McNative {
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 
         SLF4JStaticBridge.trySetLogger(logger);
-        startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -115,7 +113,7 @@ public class BukkitMcNative implements McNative {
 
     @Override
     public boolean isReady() {
-        return ready || startTime+2000 < System.currentTimeMillis();
+        return ready;
     }
 
     @Override

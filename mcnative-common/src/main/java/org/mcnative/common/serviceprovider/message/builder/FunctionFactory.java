@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.common.serviceprovider.message;
+package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.message.bml.MessageProcessor;
 import net.pretronic.libraries.message.bml.Module;
@@ -62,8 +62,11 @@ public class FunctionFactory implements MessageBuilderFactory {
                 if(next != null) return ""+result+next;
                 else return result;
             }else{
+                return TextBuilder.buildTextData(result,next);
+               /*
                 if(next != null) return new Object[]{result,next};
                 else return new Object[]{result};
+                */
             }
         }
     }

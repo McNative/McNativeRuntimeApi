@@ -24,7 +24,7 @@ import net.pretronic.libraries.message.MessagePack;
 import net.pretronic.libraries.message.MessagePackMeta;
 
 import java.io.File;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class FileMessagePack extends MessagePack {
 
@@ -35,7 +35,7 @@ public class FileMessagePack extends MessagePack {
         this.file = file;
     }
 
-    public FileMessagePack(MessagePackMeta meta, Map<String, String> messages, File file) {
+    public FileMessagePack(MessagePackMeta meta, LinkedHashMap<String, String> messages, File file) {
         super(meta, messages);
         this.file = file;
     }

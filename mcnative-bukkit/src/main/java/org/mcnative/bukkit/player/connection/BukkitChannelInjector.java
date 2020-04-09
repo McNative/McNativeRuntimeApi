@@ -28,6 +28,7 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
+import org.mcnative.common.McNative;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.lang.reflect.Field;
@@ -96,11 +97,14 @@ public class BukkitChannelInjector {
         Iterators.removeOne(this.handshakingConnections, channelConnection -> channelConnection.getChannel().equals(channel));
     }
 
-    //@Todo uninject ?
     @SuppressWarnings("unchecked")
     public void injectChannelInitializer(){
         try{
             Object connection = BukkitReflectionUtil.getServerConnection();
+            if(connection == null){
+                McNative.getInstance().getLogger().error("[McNative] Could not get server connection, please report this issue to the McNative developer team.");
+                return;
+            }
             for (Field field : connection.getClass().getDeclaredFields()) {
                 if(field.getType().equals(List.class)){
                     if(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].equals(ChannelFuture.class)){
