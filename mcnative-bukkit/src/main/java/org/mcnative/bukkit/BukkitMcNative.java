@@ -38,7 +38,6 @@ import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.mcnative.bukkit.network.PluginMessageMessenger;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
@@ -47,7 +46,6 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
-import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
@@ -79,6 +77,7 @@ public class BukkitMcNative implements McNative {
     private Network network;
     private final Document serverProperties;
     private boolean ready;
+    private long startTime;
 
     protected BukkitMcNative(PluginVersion version, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.version = version;
@@ -98,6 +97,7 @@ public class BukkitMcNative implements McNative {
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 
         SLF4JStaticBridge.trySetLogger(logger);
+        startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BukkitMcNative implements McNative {
 
     @Override
     public boolean isReady() {
-        return ready;
+        return ready || startTime+2000 < System.currentTimeMillis();
     }
 
     @Override
