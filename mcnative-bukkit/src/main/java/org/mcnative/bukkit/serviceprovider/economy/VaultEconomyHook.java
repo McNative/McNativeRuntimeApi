@@ -38,6 +38,10 @@ public class VaultEconomyHook implements Economy {
         this.economyProvider = economyProvider;
     }
 
+    public EconomyProvider getOriginal() {
+        return this.economyProvider;
+    }
+
     @Override
     public boolean isEnabled() {
         return this.economyProvider != null;

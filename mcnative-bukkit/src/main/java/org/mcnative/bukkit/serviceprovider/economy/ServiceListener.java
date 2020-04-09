@@ -27,8 +27,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
+import org.mcnative.common.McNative;
 import org.mcnative.common.event.service.ServiceRegisterEvent;
 import org.mcnative.common.event.service.ServiceUnregisterEvent;
+import org.mcnative.common.serviceprovider.economy.EconomyProvider;
 
 public class ServiceListener {
 
@@ -41,17 +43,28 @@ public class ServiceListener {
 
     @Listener
     public void onServiceRegister(ServiceRegisterEvent event) {
+        System.out.println(event.getServiceClass());
         if(event.isService(VaultEconomyHook.class)) {
             VaultEconomyHook hook = (VaultEconomyHook) event.getService();
             Bukkit.getServer().getServicesManager().register(Economy.class, hook, findPlugin(event.getOwner()),
                     mapPriority(event.getServicePriority()));
+        } else if(event.isService(EconomyProvider.class)) {
+            Bukkit.getServer().getServicesManager().register(Economy.class, new VaultEconomyHook((EconomyProvider) event.getService()),
+                    findPlugin(event.getOwner()),
+                    mapPriority(event.getServicePriority()));
+            McNative.getInstance().getLogger().info("Economy provider [{}] was hooked to vault",
+                    event.getService().getClass().getSimpleName());
         }
     }
 
     @Listener
     public void onServiceUnregister(ServiceUnregisterEvent event) {
-        if(event.isService(VaultEconomyHook.class)) {
-            Bukkit.getServer().getServicesManager().unregister(event.getService());
+        if(event.isService(EconomyProvider.class)) {
+            if(event.getService() instanceof VaultEconomyHook) {
+                McNative.getInstance().getLogger().info("Economy provider [{}] was unhooked from vault",
+                        event.getService().getClass().getSimpleName());
+                Bukkit.getServer().getServicesManager().unregister(event.getService());
+            }
         }
     }
 
