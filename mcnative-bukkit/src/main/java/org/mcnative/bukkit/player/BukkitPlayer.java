@@ -91,6 +91,11 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Override
+    public OnlineMinecraftPlayer getAsOnlinePlayer() {
+        return this;
+    }
+
+    @Override
     public PermissionHandler getPermissionHandler() {
         if(permissionHandler == null){
             permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);

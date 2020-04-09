@@ -26,6 +26,7 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.serviceprovider.message.builder.MinecraftBuildContext;
 import org.mcnative.common.serviceprovider.message.builder.TextBuildType;
@@ -80,7 +81,12 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
                 message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
             }
             OnlineMinecraftPlayer player = null;
-            if(connection instanceof OnlineMinecraftPlayer) player = (OnlineMinecraftPlayer) connection;
+            if(connection instanceof OnlineMinecraftPlayer){
+                player = (OnlineMinecraftPlayer) connection;
+            }else if(connection instanceof PendingConnection && ((PendingConnection) connection).isPlayerAvailable()){
+                player = ((PendingConnection) connection).getPlayer();
+            }
+
             Object result = message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.COMPILE));
             if(result instanceof Document){
                 return (Document) result;

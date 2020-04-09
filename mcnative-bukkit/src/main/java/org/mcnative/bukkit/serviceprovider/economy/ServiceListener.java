@@ -43,7 +43,6 @@ public class ServiceListener {
 
     @Listener
     public void onServiceRegister(ServiceRegisterEvent event) {
-        System.out.println(event.getServiceClass());
         if(event.isService(VaultEconomyHook.class)) {
             VaultEconomyHook hook = (VaultEconomyHook) event.getService();
             Bukkit.getServer().getServicesManager().register(Economy.class, hook, findPlugin(event.getOwner()),

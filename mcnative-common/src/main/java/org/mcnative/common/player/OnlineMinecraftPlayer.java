@@ -181,4 +181,9 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
             this.sendMessage(textable.toText(variables));
         }
     }
+
+    @Override
+    default OnlineMinecraftPlayer getAsOnlinePlayer() {
+        return this;
+    }
 }

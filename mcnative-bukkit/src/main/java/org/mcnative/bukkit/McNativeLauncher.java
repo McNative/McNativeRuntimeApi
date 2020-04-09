@@ -125,9 +125,6 @@ public class McNativeLauncher {
         registerDefaultListener(eventBus, pluginManager);
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
-
-
-
     }
 
     private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {

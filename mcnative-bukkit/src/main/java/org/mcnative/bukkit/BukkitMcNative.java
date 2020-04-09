@@ -92,7 +92,6 @@ public class BukkitMcNative implements McNative {
         this.local = local;
         this.network = network;
         Bukkit.getLogger().setLevel(Level.ALL);
-        System.out.println(Bukkit.getLogger().getLevel());
 
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 

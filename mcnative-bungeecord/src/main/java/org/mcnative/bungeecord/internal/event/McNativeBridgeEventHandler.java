@@ -192,8 +192,11 @@ public final class McNativeBridgeEventHandler {
                 connection.disconnect(loginEvent.getCancelReason(),loginEvent.getCancelReasonVariables());
                 event.setCancelled(false);
             }
-        }else pendingPlayers.put(player.getUniqueId(),player);
-
+        }else{
+            connection.setState(ConnectionState.GAME);
+            connection.setPlayer(player);
+            pendingPlayers.put(player.getUniqueId(),player);
+        }
     }
 
     private void handlePostLogin(PostLoginEvent event){

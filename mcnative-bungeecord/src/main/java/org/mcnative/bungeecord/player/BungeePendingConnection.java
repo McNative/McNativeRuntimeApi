@@ -27,6 +27,7 @@ import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftEdition;
@@ -59,9 +60,10 @@ public class BungeePendingConnection implements PendingConnection {
     private final Channel channel;
     private final Object channelWrapper;
     private final GameProfile gameProfile;
+    private final MinecraftProtocolVersion version;
 
     private ConnectionState state;
-    private MinecraftProtocolVersion version;
+    private OnlineMinecraftPlayer player;
 
     public BungeePendingConnection(net.md_5.bungee.api.connection.PendingConnection original) {
         this.original = original;
@@ -112,6 +114,16 @@ public class BungeePendingConnection implements PendingConnection {
     @Override
     public InetSocketAddress getVirtualHost() {
         return original.getVirtualHost();
+    }
+
+    @Override
+    public boolean isPlayerAvailable() {
+        return player != null;
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getPlayer() {
+        return player;
     }
 
     @Override
@@ -183,6 +195,11 @@ public class BungeePendingConnection implements PendingConnection {
     @Internal
     public void setState(ConnectionState state){
         this.state = state;
+    }
+
+    @Internal
+    public void setPlayer(OnlineMinecraftPlayer player){
+        this.player = player;
     }
 
     @Internal

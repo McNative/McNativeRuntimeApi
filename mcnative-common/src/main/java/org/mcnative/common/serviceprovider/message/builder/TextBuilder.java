@@ -22,7 +22,6 @@ package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.entry.DocumentEntry;
-import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
@@ -30,8 +29,8 @@ import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.List;
 
 public class TextBuilder implements BasicMessageBuilder {
 
@@ -79,19 +78,61 @@ public class TextBuilder implements BasicMessageBuilder {
                     current.set("extra",new Document[]{next});
                     next.set("color",color.getName());
                     next.set("text","");
-                    if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                    if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)).replace("\n","\\n"));
                     current = next;
                     textIndex = i+1;
                 }
             }
         }
         if(textIndex < chars.length){
-            current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
+            current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)).replace("\n","\\n"));
         }
         if(nextComp != null){
-            if(nextComp instanceof DocumentEntry) nextComp = new Object[]{nextComp};
-            current.set("extra",nextComp.getClass().isArray() ? nextComp : nextComp.toString());
+            if(nextComp instanceof DocumentEntry){
+                current.set("extra",new Object[]{nextComp});
+            }else if(nextComp.getClass().isArray()){
+                int length = Array.getLength(nextComp);
+                if(length >= 0){
+                    current.set("extra",nextComp);
+                }
+            }else{
+                current.set("extra",new Object[]{nextComp.toString()});
+            }
         }
         return root;
+    }
+
+    protected static Object buildTextData(Object input, Object input2){
+        if(input2 == null && input == null){
+            return null;
+        }else if(input == null){
+            if(input2.getClass().isArray()) return Array.getLength(input2) > 0 ? input2 : null;
+            else return new Object[]{input2};
+        }else if(input2 == null){
+            if(input.getClass().isArray()) return Array.getLength(input) > 0 ? input : null;
+            else return new Object[]{input};
+        }
+        if(input.getClass().isArray() && input2.getClass().isArray() ){
+            int input2Length = Array.getLength(input);
+            int input3Length = Array.getLength(input2);
+            Object[] result = Arrays.copyOf((Object[])input,input2Length+input3Length);
+            int index = input2Length+1;
+            for (int i = 0; i < input3Length; i++) {
+                result[index] = Array.get(input2,i);
+            }
+            return result;
+        }else if(input.getClass().isArray()){
+            Object[] result = Arrays.copyOf((Object[])input,Array.getLength(input)+1);
+            result[result.length-1] = input2;
+            return result;
+        }else if(input2.getClass().isArray()){
+            Object[] result = Arrays.copyOf((Object[])input2,Array.getLength(input2)+1);
+            result[result.length-1] = input;
+            return result;
+        }else{
+            return new Object[]{
+                    input instanceof DocumentEntry ? input : input.toString()
+                    ,input2 instanceof DocumentEntry ? input2 : input2.toString()};
+        }
     }
 }

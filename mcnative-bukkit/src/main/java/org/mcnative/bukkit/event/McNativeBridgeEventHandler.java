@@ -125,6 +125,7 @@ public class McNativeBridgeEventHandler {
     private void handlePreLoginEvent(McNativeHandlerList handler, AsyncPlayerPreLoginEvent event) {
         if(!McNative.getInstance().isReady()){
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage("Server is still starting");
             return;
         }
         ChannelConnection connection0 = injector.findConnection(event.getUniqueId());
@@ -153,6 +154,7 @@ public class McNativeBridgeEventHandler {
     private void handleLoginEvent(McNativeHandlerList handler, PlayerLoginEvent event) {
         if(!McNative.getInstance().isReady()){
             event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage("Server is still starting");
             return;
         }
         BukkitPendingConnection connection = this.pendingConnections.remove(event.getPlayer().getUniqueId());
@@ -182,6 +184,7 @@ public class McNativeBridgeEventHandler {
             }
         }else{
             connection.setState(ConnectionState.GAME);
+            connection.setPlayer(player);
 
             MinecraftPlayerPostLoginEvent postLoginEvent = new BukkitPostLoginEvent(player);
             McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerPostLoginEvent.class,postLoginEvent);
@@ -192,7 +195,7 @@ public class McNativeBridgeEventHandler {
 
     private void handleJoinEvent(McNativeHandlerList handler, PlayerJoinEvent event){
         if(!McNative.getInstance().isReady()){
-            event.getPlayer().kickPlayer("");
+            event.getPlayer().kickPlayer("Server is still starting");
             return;
         }
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());

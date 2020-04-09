@@ -28,6 +28,7 @@ import org.mcnative.bukkit.player.connection.ViaVersionEncoderWrapper;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftEdition;
@@ -52,7 +53,9 @@ public class BukkitPendingConnection implements PendingConnection {
     private final GameProfile gameProfile;
     private final InetSocketAddress address;
     private final InetSocketAddress virtualHost;
+
     private ConnectionState state;
+    private OnlineMinecraftPlayer player;
 
     public BukkitPendingConnection(Channel channel,GameProfile gameProfile,InetSocketAddress address
             ,InetSocketAddress virtualHost, int protocolVersion) {
@@ -111,6 +114,16 @@ public class BukkitPendingConnection implements PendingConnection {
     }
 
     @Override
+    public boolean isPlayerAvailable() {
+        return player != null;
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getPlayer() {
+        return player;
+    }
+
+    @Override
     public String getName() {
         return gameProfile.getName();
     }
@@ -151,17 +164,22 @@ public class BukkitPendingConnection implements PendingConnection {
 
     @Override
     public void sendLocalLoopPacket(MinecraftPacket packet) {
-
+        throw new UnsupportedOperationException("Currently not supported on bukkit servers");
     }
 
     @Override
     public void sendData(String channel, byte[] output) {
-
+        throw new UnsupportedOperationException("Currently not supported on bukkit servers");
     }
 
     @Internal
     public void setState(ConnectionState state){
         this.state = state;
+    }
+
+    @Internal
+    public void setPlayer(OnlineMinecraftPlayer player){
+        this.player = player;
     }
 
     @SuppressWarnings("unchecked")

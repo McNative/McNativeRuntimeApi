@@ -19,6 +19,7 @@
 
 package org.mcnative.common.connection;
 
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.profile.GameProfile;
 
 import java.net.InetSocketAddress;
@@ -43,4 +44,9 @@ public interface PendingConnection extends MinecraftConnection {
     void setOnlineMode(boolean online);
 
     InetSocketAddress getVirtualHost();
+
+
+    boolean isPlayerAvailable();
+
+    OnlineMinecraftPlayer getPlayer();
 }

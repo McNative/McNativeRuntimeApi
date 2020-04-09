@@ -40,7 +40,7 @@ public class IncludeMessageBuilder implements BasicMessageBuilder {
             message = provider.getMessage((String)parameters[0],context.getLanguage());
             if(message == null) message = Message.ofStaticText("{MESSAGE NOT FOUND}");
         }
-        Object result =  message.build(context);
+        Object result = message.build(context);
         if(requiresString){
             if(next != null) return result.toString()+next.toString();
             else return result.toString();
