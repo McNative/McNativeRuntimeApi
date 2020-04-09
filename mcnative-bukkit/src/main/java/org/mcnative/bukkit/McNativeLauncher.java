@@ -25,6 +25,7 @@ import net.pretronic.libraries.command.command.configuration.DefaultCommandConfi
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
@@ -41,6 +42,7 @@ import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
+import org.mcnative.bukkit.serviceprovider.economy.ServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
@@ -120,11 +122,16 @@ public class McNativeLauncher {
             instance.setReady(true);
         });
 
+        registerDefaultListener(eventBus, pluginManager);
+
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
 
 
-        System.out.println(Bukkit.getVersion());
-        System.out.println(Bukkit.getBukkitVersion());
+
+    }
+
+    private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
+        eventBus.subscribe(McNative.getInstance(), new ServiceListener(pluginManager));
     }
 
     public static void shutdown(){

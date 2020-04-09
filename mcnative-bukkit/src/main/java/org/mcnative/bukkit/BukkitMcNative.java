@@ -61,6 +61,7 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
 
 public class BukkitMcNative implements McNative {
 
@@ -91,6 +92,8 @@ public class BukkitMcNative implements McNative {
         this.playerManager = playerManager;
         this.local = local;
         this.network = network;
+        Bukkit.getLogger().setLevel(Level.ALL);
+        System.out.println(Bukkit.getLogger().getLevel());
 
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 
