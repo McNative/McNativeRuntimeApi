@@ -26,6 +26,7 @@ import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.SystemInfo;
 import net.pretronic.libraries.utility.SystemUtil;
 import net.pretronic.libraries.utility.http.HttpClient;
@@ -68,6 +69,11 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("Free memory: " + ((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024)));
         logger.info("Allocated memory: " + ((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024)));
         logger.info("Total free memory: " + ((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024)));
+        logger.info("");
+        logger.info("Plugins:");
+        for (Plugin plugin : McNative.getInstance().getPluginManager().getPlugins()) {
+            logger.info("- {} v{}", plugin.getName(), plugin.getDescription().getVersion().getName());
+        }
         logger.info("----------------------------------------");
 
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {
