@@ -194,6 +194,7 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public void updatePack(MessagePack pack, int updateCount) {
+        System.out.println("UPDATE "+pack.getMeta().getModule());
         MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
         if(pack instanceof FileMessagePack){
             DocumentFileType.YAML.getWriter().write(((FileMessagePack) pack).getFile(),Document.newDocument(pack));
