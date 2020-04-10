@@ -41,7 +41,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
     public DefaultPlayerDataProvider() {
         this.playerDataStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
-                .getDatabase(McNative.getInstance()).createCollection("PlayerData")
+                .getDatabase(McNative.getInstance()).createCollection("mcnative_playerdata")
                 .field("UniqueId", DataType.UUID, FieldOption.NOT_NULL,FieldOption.UNIQUE, FieldOption.INDEX)
                 .field("XBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.INDEX)
                 .field("Name", DataType.STRING, 32, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
