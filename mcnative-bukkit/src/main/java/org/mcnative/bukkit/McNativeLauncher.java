@@ -31,6 +31,9 @@ import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
@@ -130,6 +133,8 @@ public class McNativeLauncher {
 
         playerManager.loadConnectedPlayers();
         //instance.setReady(true);
+
+        Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
