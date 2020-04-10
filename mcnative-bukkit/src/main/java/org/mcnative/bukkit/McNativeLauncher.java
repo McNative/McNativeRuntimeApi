@@ -42,7 +42,7 @@ import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
-import org.mcnative.bukkit.serviceprovider.economy.ServiceListener;
+import org.mcnative.bukkit.serviceprovider.economy.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
@@ -132,7 +132,9 @@ public class McNativeLauncher {
     }
 
     private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
-        eventBus.subscribe(McNative.getInstance(), new ServiceListener(pluginManager));
+        if(Bukkit.getPluginManager().getPlugin("Vault") != null){
+            eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
+        }
     }
 
     public static void shutdown(){

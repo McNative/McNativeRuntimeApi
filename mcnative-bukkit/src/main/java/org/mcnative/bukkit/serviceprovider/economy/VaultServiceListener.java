@@ -35,13 +35,13 @@ import org.mcnative.common.serviceprovider.economy.EconomyProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServiceListener {
+public class VaultServiceListener {
 
     private final BukkitPluginManager pluginManager;
 
     private Map<EconomyProvider,VaultEconomyHook> vaultEconomyProviders;
 
-    public ServiceListener(BukkitPluginManager pluginManager) {
+    public VaultServiceListener(BukkitPluginManager pluginManager) {
         this.pluginManager = pluginManager;
         this.vaultEconomyProviders= new HashMap<>();
     }
