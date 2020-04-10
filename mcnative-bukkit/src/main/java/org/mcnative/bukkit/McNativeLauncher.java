@@ -134,7 +134,7 @@ public class McNativeLauncher {
         playerManager.loadConnectedPlayers();
         //instance.setReady(true);
 
-        Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
+        //Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
