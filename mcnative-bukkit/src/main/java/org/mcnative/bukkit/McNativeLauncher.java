@@ -117,7 +117,7 @@ public class McNativeLauncher {
         CHANNEL_INJECTOR = injector;
 
 
-        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(800, TimeUnit.MILLISECONDS).execute(() ->{
+        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(1800, TimeUnit.MILLISECONDS).execute(() ->{
             injector.injectChannelInitializer();
             playerManager.loadConnectedPlayers();
             instance.setReady(true);
@@ -125,7 +125,6 @@ public class McNativeLauncher {
             if(future.isFailed())future.getThrowable().printStackTrace();
               instance.setReady(true);
         });
-
 
         registerDefaultListener(eventBus, pluginManager);
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
