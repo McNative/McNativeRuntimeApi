@@ -172,6 +172,7 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public MessagePack importPack(MessagePack pack) {
+        System.out.println("PACK: "+pack.getMeta().getModule());
         MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
         if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
 
