@@ -55,12 +55,14 @@ public class BukkitChannelInjector {
     }
 
     private final Collection<ChannelConnection> handshakingConnections;
+    private final Map<ChannelHandler,ChannelInitializer<?>> injectedHandlers;
 
     private Field channelFutureListField;
     private ChannelFutureWrapperList channelFutureWrapperList;
 
     public BukkitChannelInjector() {
         this.handshakingConnections = new ArrayList<>();
+        this.injectedHandlers = new HashMap<>();
     }
 
     public ChannelConnection findConnection(UUID uniqueId){
@@ -97,6 +99,8 @@ public class BukkitChannelInjector {
         Iterators.removeOne(this.handshakingConnections, channelConnection -> channelConnection.getChannel().equals(channel));
     }
 
+    //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
+
     @SuppressWarnings("unchecked")
     public void injectChannelInitializer(){
         try{
@@ -122,6 +126,8 @@ public class BukkitChannelInjector {
             throw new ReflectException(e);
         }
     }
+
+    //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
 
     @SuppressWarnings("unchecked")
     protected void injectChannelFuture(ChannelFuture future){
@@ -150,6 +156,7 @@ public class BukkitChannelInjector {
 
             ChannelInitializer<?> newInit = new McNativeChannelInitializer(this,oldInitializer);
             ReflectionUtil.changeFieldValue(oldHandler,"childHandler", newInit);
+            this.injectedHandlers.put(oldHandler,oldInitializer);
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to initialize channel future",e);
         }
@@ -160,35 +167,12 @@ public class BukkitChannelInjector {
             Object connection = BukkitReflectionUtil.getServerConnection();
             try {
                 channelFutureListField.set(connection,channelFutureWrapperList.getOriginal());
-                for (ChannelFuture future : channelFutureWrapperList) {
-                    List<String> names = future.channel().pipeline().names();
-                    ChannelHandler oldHandler = null;
-                    McNativeChannelInitializer wrappedHandler = null;
-                    for (String name : names) {
-                        ChannelHandler handler = future.channel().pipeline().get(name);
-                        if(handler != null){
-                            Field field = ReflectionUtil.getField(handler.getClass(), "childHandler");
-                            if(field != null && field.getType().equals(McNativeChannelInitializer.class)){
-                                field.setAccessible(true);
-                                oldHandler = handler;
-                                wrappedHandler = (McNativeChannelInitializer) field.get(handler);
-                            }
-                        }
-                    }
-
-                    if(wrappedHandler == null){
-                        oldHandler = future.channel().pipeline().first();
-                        Field field = ReflectionUtil.getField(oldHandler.getClass(), "childHandler");
-                        field.setAccessible(true);
-                        wrappedHandler = (McNativeChannelInitializer) field.get(oldHandler);
-                    }
-                    ReflectionUtil.changeFieldValue(oldHandler,"childHandler", wrappedHandler.getOriginal());
+                for (Map.Entry<ChannelHandler, ChannelInitializer<?>> injectedHandlers : this.injectedHandlers.entrySet()) {
+                    ReflectionUtil.changeFieldValue( injectedHandlers.getKey(),"childHandler", injectedHandlers.getValue());
                 }
             } catch (IllegalAccessException ignored) {}
         }
     }
-
-    //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
 
     public static GameProfile extractGameProfile(Object profile) throws Exception{//@Todo extract properties
         UUID uniqueId = (UUID) UUID_GAME_PROFILE_FIELD.get(profile);

@@ -20,17 +20,22 @@
 package org.mcnative.bukkit.player;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.MessageToByteEncoder;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.McNative;
+import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.profile.GameProfile;
+import org.mcnative.common.protocol.netty.McNativeMessageEncoderIgnoreWrapper;
 import org.mcnative.service.entity.living.Player;
 
 import java.net.InetAddress;
@@ -129,41 +134,82 @@ public class BukkitPlayerManager implements PlayerManager {
         for (org.bukkit.entity.Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             MinecraftPlayerData data = dataProvider.getPlayerData(onlinePlayer.getUniqueId());
             if(data == null){
-                onlinePlayer.kickPlayer("Unrecognised login");
+                Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> onlinePlayer.kickPlayer("Unrecognised login"));
                 return;
             }
 
             Channel channel = BukkitReflectionUtil.getPlayerChannel(onlinePlayer);
 
+            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
+                System.out.println(entries.getKey()+" | "+entries.getValue());
+            }
+
+            System.out.println("----------------------");
+
             GameProfile profile;
             try {
                 profile = BukkitChannelInjector.extractGameProfile(BukkitReflectionUtil.getGameProfile(onlinePlayer));
             } catch (Exception ignored) {
-               onlinePlayer.kickPlayer("Unrecognised login");
+                Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> onlinePlayer.kickPlayer("Unrecognised login"));
                return;
             }
 
-            Object protocolEncoder = channel.pipeline().get("mcnative-packet-encoder");
+            Object protocolEncoder = BukkitPendingConnection.VIA_VERSION ?
+                    channel.pipeline().get("encoder") :
+                    channel.pipeline().get("mcnative-packet-encoder");
             if(protocolEncoder == null){
-                onlinePlayer.kickPlayer("Unrecognised login");
+                Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> onlinePlayer.kickPlayer("Unrecognised login"));
                 return;
             }
 
             int protocolVersion = (int) ReflectionUtil.invokeMethod(protocolEncoder,"getProtocolNumber");
-            channel.pipeline().remove("mcnative-packet-encoder");
-            channel.pipeline().remove("mcnative-packet-rewrite-encoder");
-            channel.pipeline().remove("mcnative-packet-rewrite-decoder");
 
-            BukkitPendingConnection connection = null;
+            resetChannelPipeline(channel);
+
+            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
+                System.out.println(entries.getKey()+" | "+entries.getValue());
+            }
+            System.out.println("----------------------");
+
+            BukkitPendingConnection connection;
             try {
                 connection = new BukkitPendingConnection(channel,profile,onlinePlayer.getAddress()
                         , new InetSocketAddress(InetAddress.getLocalHost(),25565),protocolVersion);
+                connection.setState(ConnectionState.GAME);
             } catch (UnknownHostException ignored) {
-                onlinePlayer.kickPlayer("Unrecognised login");
+                Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> onlinePlayer.kickPlayer("Unrecognised login"));
+                return;
             }
+
+            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
+                System.out.println(entries.getKey()+" | "+entries.getValue());
+            }
+
             BukkitPlayer player = new BukkitPlayer(onlinePlayer,connection,data);
+            connection.setPlayer(player);
             player.setJoining(false);
             registerPlayer(player);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void resetChannelPipeline(Channel channel){
+        if(BukkitPendingConnection.VIA_VERSION && !BukkitPendingConnection.PROTOCOL_LIB){
+            ChannelHandler viaEncoder = channel.pipeline().get("via-encoder");
+            if(viaEncoder != null && viaEncoder.getClass().getName().equals(McNativeMessageEncoderIgnoreWrapper.class.getName())){
+                MessageToByteEncoder<Object> object = (MessageToByteEncoder<Object>) ReflectionUtil.invokeMethod(viaEncoder,"getOriginal");
+                channel.pipeline().replace("encoder","encoder",new McNativeMessageEncoderIgnoreWrapper(object));
+                channel.pipeline().remove("via-encoder");
+            }
+        }
+        if(channel.pipeline().get("mcnative-packet-encoder") != null){
+            channel.pipeline().remove("mcnative-packet-encoder");
+        }
+        if(channel.pipeline().get("mcnative-packet-rewrite-encoder") != null){
+            channel.pipeline().remove("mcnative-packet-rewrite-encoder");
+        }
+        if(channel.pipeline().get("mcnative-packet-rewrite-decoder") != null){
+            channel.pipeline().remove("mcnative-packet-rewrite-decoder");
         }
     }
 }

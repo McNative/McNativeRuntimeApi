@@ -46,6 +46,10 @@ public class McNativeMessageEncoderIgnoreWrapper extends ChannelOutboundHandlerA
         this.original = original;
     }
 
+    public MessageToByteEncoder<Object> getOriginal() {
+        return original;
+    }
+
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if(msg instanceof MinecraftPacket){

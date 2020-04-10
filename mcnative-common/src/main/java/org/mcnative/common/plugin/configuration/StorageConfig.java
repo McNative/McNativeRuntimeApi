@@ -19,18 +19,17 @@
 
 package org.mcnative.common.plugin.configuration;
 
+import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
-import net.pretronic.databasequery.sql.dialect.Dialect;
-import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
+import net.pretronic.databasequery.driverloader.PretronicDependencyDriverLoader;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.McNative;
 
-import java.io.File;
 import java.lang.reflect.Type;
-import java.net.InetSocketAddress;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -42,6 +41,10 @@ public class StorageConfig {
 
     static {
         DatabaseDriverConfig.registerDocumentAdapter();
+        DatabaseDriverFactory.setDriverLoader(new PretronicDependencyDriverLoader());
+        PretronicDependencyDriverLoader.setDependencyManager(McNative.getInstance().getDependencyManager());
+        PretronicDependencyDriverLoader.setClassLoader(dependencyGroup -> dependencyGroup.loadReflected((URLClassLoader) StorageConfig.class.getClassLoader()));
+        PretronicDependencyDriverLoader.registerDefaults();
     }
 
     private final Map<String, DatabaseDriverConfig<?>> databaseDrivers;
@@ -84,12 +87,7 @@ public class StorageConfig {
         this.databaseDrivers.clear();
         this.databaseEntries.clear();
 
-        try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        /*
         this.databaseDrivers.put("default", new SQLDatabaseDriverConfigBuilder()
                 .setName("Default")
                 .setDialect(Dialect.H2_PORTABLE)
@@ -103,6 +101,7 @@ public class StorageConfig {
                 .setUsername("McNative")
                 .setPassword("masked")
                 .build());
+         */
 
         this.databaseEntries.add(new DatabaseEntry("McNative", "default", "McNative", "default"));
         save();

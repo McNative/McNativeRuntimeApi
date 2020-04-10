@@ -125,41 +125,27 @@
 
         <dependency>
             <groupId>net.pretronic.databasequery</groupId>
-            <artifactId>pretronicdatabasequery-api</artifactId>
+            <artifactId>pretronicdatabasequery-common</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>
-
-
-        <!-- @Todo remove (dynamic load) -->
 
         <dependency>
             <groupId>net.pretronic.databasequery</groupId>
-            <artifactId>pretronicdatabasequery-sql</artifactId>
+            <artifactId>pretronicdatabasequery-driverloader</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>
 
+        <!-- Additional external dependencies -->
+
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${dependency.hikaricp}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${dependency.slf4j}</version>
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.19</version>
-            <scope>compile</scope>
-        </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
@@ -167,6 +153,8 @@
             <version>4.1.29.Final</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Test dependencies -->
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

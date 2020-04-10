@@ -46,8 +46,8 @@ import java.util.UUID;
 
 public class BukkitPendingConnection implements PendingConnection {
 
-    private static boolean VIA_VERSION = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
-    private static boolean PROTOCOL_LIB = Bukkit.getPluginManager().getPlugin("ProtocolLib") != null;
+    public static boolean VIA_VERSION = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
+    public static boolean PROTOCOL_LIB = Bukkit.getPluginManager().getPlugin("ProtocolLib") != null;
 
     private final Channel channel;
     private final MinecraftProtocolVersion version;
@@ -198,7 +198,13 @@ public class BukkitPendingConnection implements PendingConnection {
                     ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
                             ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
         }else if(VIA_VERSION){
-            MessageToByteEncoder<Object> original = (MessageToByteEncoder<Object>) channel.pipeline().get("encoder");
+            Object encoder = channel.pipeline().get("encoder");;
+            MessageToByteEncoder<Object> original;
+            if(encoder instanceof McNativeMessageEncoderIgnoreWrapper){
+                original = ((McNativeMessageEncoderIgnoreWrapper) encoder).getOriginal();
+            }else if(encoder instanceof MessageToByteEncoder){
+                original = (MessageToByteEncoder<Object>) encoder;
+            }else throw new IllegalArgumentException("Invalid handler,contact the McNative developer team");
 
             channel.pipeline().replace("encoder","encoder"
                     ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
@@ -206,7 +212,6 @@ public class BukkitPendingConnection implements PendingConnection {
 
             channel.pipeline().addAfter("encoder","via-encoder",new McNativeMessageEncoderIgnoreWrapper(original));
 
-            //if(!McNativeProxyConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;//@Todo add configuration
 
             this.channel.pipeline().addAfter("via-encoder","mcnative-packet-rewrite-encoder"
                     ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
@@ -222,6 +227,7 @@ public class BukkitPendingConnection implements PendingConnection {
 
         }
 
+        //Check with decompress on reload
         this.channel.pipeline().addBefore("decoder","mcnative-packet-rewrite-decoder"
                 ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));

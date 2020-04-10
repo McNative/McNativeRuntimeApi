@@ -83,7 +83,7 @@ public class BukkitMcNative implements McNative {
         this.platform = new BukkitPlatform();
         this.logger = new JdkPretronicLogger(Bukkit.getLogger());
         this.scheduler = new SimpleTaskScheduler();
-        this.dependencyManager = new DependencyManager(this.logger,new File("McNative/lib/dependencies/"));
+        this.dependencyManager = new DependencyManager(this.logger,new File("plugins/McNative/lib/dependencies/"));
 
         this.consoleSender = new McNativeCommand.MappedCommandSender(Bukkit.getConsoleSender());
         this.pluginManager = pluginManager;
