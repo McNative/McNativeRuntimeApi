@@ -214,7 +214,7 @@ public class DefaultMessageProvider implements MessageProvider {
 
     private MinecraftPlugin findModuleOwner(String module){
         for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            System.out.println("OWNER "+plugin);
+            System.out.println("OWNER "+plugin+" | "+(plugin instanceof MinecraftPlugin)+" | "+plugin.getDescription().getMessageModule());
             if (plugin instanceof MinecraftPlugin
                     && plugin.getDescription().getMessageModule() != null
                     && plugin.getDescription().getMessageModule().equalsIgnoreCase(module)) {

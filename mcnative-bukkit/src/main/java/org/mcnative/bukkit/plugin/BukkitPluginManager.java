@@ -121,9 +121,7 @@ public class BukkitPluginManager implements PluginManager {
 
     @Override
     public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
-        System.out.println("LIFECYCLE "+state);
         if(state.equals(LifecycleState.CONSTRUCTION)){
-            System.out.println("plugin construct "+plugin);
             this.plugins.add(plugin);
         }
         else if(state.equals(LifecycleState.INITIALISATION)) ResourceMessageExtractor.extractMessages(plugin);
@@ -152,7 +150,7 @@ public class BukkitPluginManager implements PluginManager {
     @Override
     public void provideLoader(PluginLoader pluginLoader) {
         this.loaders.add(pluginLoader);
-        if(pluginLoader.isInstanceAvailable()) this.plugins.add(pluginLoader.getInstance());
+        //if(pluginLoader.isInstanceAvailable()) this.plugins.add(pluginLoader.getInstance());
     }
 
     @Override
