@@ -140,12 +140,6 @@ public class BukkitPlayerManager implements PlayerManager {
 
             Channel channel = BukkitReflectionUtil.getPlayerChannel(onlinePlayer);
 
-            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
-                System.out.println(entries.getKey()+" | "+entries.getValue());
-            }
-
-            System.out.println("----------------------");
-
             GameProfile profile;
             try {
                 profile = BukkitChannelInjector.extractGameProfile(BukkitReflectionUtil.getGameProfile(onlinePlayer));
@@ -166,11 +160,6 @@ public class BukkitPlayerManager implements PlayerManager {
 
             resetChannelPipeline(channel);
 
-            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
-                System.out.println(entries.getKey()+" | "+entries.getValue());
-            }
-            System.out.println("----------------------");
-
             BukkitPendingConnection connection;
             try {
                 connection = new BukkitPendingConnection(channel,profile,onlinePlayer.getAddress()
@@ -179,10 +168,6 @@ public class BukkitPlayerManager implements PlayerManager {
             } catch (UnknownHostException ignored) {
                 Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> onlinePlayer.kickPlayer("Unrecognised login"));
                 return;
-            }
-
-            for (Map.Entry<String, ChannelHandler> entries : channel.pipeline()) {
-                System.out.println(entries.getKey()+" | "+entries.getValue());
             }
 
             BukkitPlayer player = new BukkitPlayer(onlinePlayer,connection,data);

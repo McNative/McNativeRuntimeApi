@@ -123,12 +123,9 @@ public class BukkitPluginManager implements PluginManager {
     public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
         if(state.equals(LifecycleState.CONSTRUCTION)){
             this.plugins.add(plugin);
-        }
-        else if(state.equals(LifecycleState.INITIALISATION)){
-            System.out.println("INIT FOR "+plugin.getName()+" | "+plugin.getDescription().getMessageModule());
+        }else if(state.equals(LifecycleState.INITIALISATION)){
             ResourceMessageExtractor.extractMessages(plugin);
-        }
-        else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
+        }else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
 
         BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);

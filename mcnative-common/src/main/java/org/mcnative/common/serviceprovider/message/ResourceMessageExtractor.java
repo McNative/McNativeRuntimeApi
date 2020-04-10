@@ -40,14 +40,14 @@ public class ResourceMessageExtractor {
             String module = plugin.getDescription().getMessageModule();
             if(module != null){
                 List<MessagePack> result = messageProvider.loadPacks(module);
-                MessagePack defaultPack = readPack(plugin,"messages/default.yml");
+                MessagePack defaultPack = readPack(plugin, "system-messages/default.yml");
                 if(defaultPack != null){
                     if(result.isEmpty()){
                         String languageTag = Locale.getDefault().toLanguageTag().replace("-","_");
                         String language = Locale.getDefault().getLanguage();
 
-                        MessagePack pack = readPack(plugin,"messages/"+languageTag+".yml");
-                        if(pack == null) pack = readPack(plugin,"messages/"+language+".yml");
+                        MessagePack pack = readPack(plugin, "system-messages/" +languageTag+".yml");
+                        if(pack == null) pack = readPack(plugin, "system-messages/" +language+".yml");
 
                         if(pack == null){
                             messageProvider.importPack(defaultPack);
@@ -57,8 +57,8 @@ public class ResourceMessageExtractor {
                         }
                     }else{
                         for (MessagePack original : result) {
-                            MessagePack pack = readPack(plugin,"messages/"+original.getMeta().getLanguage().getCode()+".yml");
-                            if(pack == null) pack = readPack(plugin,"messages/"+original.getMeta().getLanguage().getName()+".yml");
+                            MessagePack pack = readPack(plugin, "system-messages/" +original.getMeta().getLanguage().getCode()+".yml");
+                            if(pack == null) pack = readPack(plugin, "system-messages/" +original.getMeta().getLanguage().getName()+".yml");
 
                             int updated = 0;
                             if(pack != null) updated += updateMessages(original,pack);

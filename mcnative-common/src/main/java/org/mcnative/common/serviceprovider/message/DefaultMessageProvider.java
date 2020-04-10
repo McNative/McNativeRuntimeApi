@@ -141,7 +141,7 @@ public class DefaultMessageProvider implements MessageProvider {
         if(plugin != null){
             File folder = plugin.getDataFolder();
             if(folder != null){
-                File messageFolder = new File(folder,"messages/");
+                File messageFolder = new File(folder, "system-messages/");
                 if(messageFolder.exists()){
                     File[] content = messageFolder.listFiles();
                     if(content != null){
@@ -172,7 +172,6 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public MessagePack importPack(MessagePack pack) {
-        System.out.println("PACK: "+pack.getMeta().getModule());
         MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
         if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
 
@@ -194,7 +193,6 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public void updatePack(MessagePack pack, int updateCount) {
-        System.out.println("UPDATE "+pack.getMeta().getModule());
         MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
         if(pack instanceof FileMessagePack){
             DocumentFileType.YAML.getWriter().write(((FileMessagePack) pack).getFile(),Document.newDocument(pack));
@@ -215,7 +213,6 @@ public class DefaultMessageProvider implements MessageProvider {
 
     private MinecraftPlugin findModuleOwner(String module){
         for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            System.out.println("OWNER "+plugin+" | "+(plugin instanceof MinecraftPlugin)+" | "+plugin.getDescription().getMessageModule());
             if (plugin instanceof MinecraftPlugin
                     && plugin.getDescription().getMessageModule() != null
                     && plugin.getDescription().getMessageModule().equalsIgnoreCase(module)) {
@@ -226,7 +223,7 @@ public class DefaultMessageProvider implements MessageProvider {
     }
 
     private File getFile(MessagePack pack, MinecraftPlugin owner) {
-        File folder = new File(owner.getDataFolder(), "messages/");
+        File folder = new File(owner.getDataFolder(), "system-messages/");
         folder.mkdirs();
         String name = pack.getMeta().getName() + "-" + pack.getMeta().getLanguage().getCode() + ".yml";
         name = name.toLowerCase().replace(" ", "-");
