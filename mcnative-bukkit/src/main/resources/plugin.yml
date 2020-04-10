@@ -5,3 +5,4 @@ description: 'McNative is a framework for creating cross platform Minecraft appl
 website: 'https://mcnative.org'
 authors: ['Davide Wietlisbach','Philipp Elvin Friedhoff']
 softdepend: ['PlaceHolderApi','Vault','CloudNetAPI','CloudNet-Bridge','ViaVersion']
+loadbefore: ['ProtocolLib']

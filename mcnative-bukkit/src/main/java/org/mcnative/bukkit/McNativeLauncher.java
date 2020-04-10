@@ -122,9 +122,14 @@ public class McNativeLauncher {
             instance.setReady(true);
         }).addListener(future -> {
             if(future.isFailed())future.getThrowable().printStackTrace();
+              instance.setReady(true);
         });
 
         registerDefaultListener(eventBus, pluginManager);
+
+
+        playerManager.loadConnectedPlayers();
+        //instance.setReady(true);
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }

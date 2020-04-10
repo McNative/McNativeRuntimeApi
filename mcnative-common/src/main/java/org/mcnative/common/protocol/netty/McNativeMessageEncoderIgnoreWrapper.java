@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 08.04.20, 23:21
+ * @since 10.04.20, 11:31
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.connection;
+package org.mcnative.common.protocol.netty;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -31,7 +31,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 
 import java.lang.reflect.Method;
 
-public class ViaVersionEncoderWrapper extends ChannelOutboundHandlerAdapter {
+public class McNativeMessageEncoderIgnoreWrapper extends ChannelOutboundHandlerAdapter {
 
     private final static Method ENCODE_METHOD = ReflectionUtil.getMethod(MessageToByteEncoder.class,"encode"
             ,new Class[]{ChannelHandlerContext.class,Object.class, ByteBuf.class});
@@ -42,7 +42,7 @@ public class ViaVersionEncoderWrapper extends ChannelOutboundHandlerAdapter {
 
     private final MessageToByteEncoder<Object> original;
 
-    public ViaVersionEncoderWrapper(MessageToByteEncoder<Object> original) {
+    public McNativeMessageEncoderIgnoreWrapper(MessageToByteEncoder<Object> original) {
         this.original = original;
     }
 
