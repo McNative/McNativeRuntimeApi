@@ -114,6 +114,7 @@ public class BukkitChannelInjector {
                     if(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].equals(ChannelFuture.class)){
                         field.setAccessible(true);
                         Object list = field.get(connection);
+                        McNative.getInstance().getLogger().info("[McNative] Overriding channel future list "+list);
                         ChannelFutureWrapperList wrapper = new ChannelFutureWrapperList(this,(List<ChannelFuture>) list);
                         field.set(connection,wrapper);
                         this.channelFutureWrapperList = wrapper;
