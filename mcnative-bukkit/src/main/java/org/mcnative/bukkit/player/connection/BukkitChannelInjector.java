@@ -138,7 +138,7 @@ public class BukkitChannelInjector {
             ChannelInitializer<SocketChannel> oldInitializer = null;
             for (String name : names) {
                 ChannelHandler handler = future.channel().pipeline().get(name);
-                System.out.println("HANDLER "+name+" | "+handler.getClass());
+                System.out.println("HANDLER "+name+" | "+(handler == null ? "null" : handler.getClass()));
                 if(handler != null){
                     Field field = ReflectionUtil.getField(handler.getClass(), "childHandler");
                     if(field != null && field.getType().equals(ChannelInitializer.class)){
