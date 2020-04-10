@@ -22,13 +22,17 @@ package org.mcnative.common.plugin.configuration;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.databasequery.driverloader.PretronicDependencyDriverLoader;
+import net.pretronic.databasequery.sql.dialect.Dialect;
+import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.common.McNative;
 
+import java.io.File;
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,7 +91,6 @@ public class StorageConfig {
         this.databaseDrivers.clear();
         this.databaseEntries.clear();
 
-        /*
         this.databaseDrivers.put("default", new SQLDatabaseDriverConfigBuilder()
                 .setName("Default")
                 .setDialect(Dialect.H2_PORTABLE)
@@ -101,7 +104,6 @@ public class StorageConfig {
                 .setUsername("McNative")
                 .setPassword("masked")
                 .build());
-         */
 
         this.databaseEntries.add(new DatabaseEntry("McNative", "default", "McNative", "default"));
         save();
@@ -114,6 +116,14 @@ public class StorageConfig {
         }else{
             this.databaseDrivers.putAll(configuration.getObject("drivers",DRIVER_MAP_TYPE));
             this.databaseEntries.addAll(configuration.getObject("databases",DATABASE_COLLECTION_TYPE));
+
+            if(!databaseDrivers.containsKey("default")){
+                this.databaseDrivers.put("default", new SQLDatabaseDriverConfigBuilder()
+                        .setName("Default")
+                        .setDialect(Dialect.H2_PORTABLE)
+                        .setLocation(new File("plugins/McNative/databases/"))
+                        .build());
+            }
         }
         return this;
     }

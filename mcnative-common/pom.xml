@@ -125,7 +125,7 @@
 
         <dependency>
             <groupId>net.pretronic.databasequery</groupId>
-            <artifactId>pretronicdatabasequery-common</artifactId>
+            <artifactId>pretronicdatabasequery-sql</artifactId>
             <version>${dependency.pretronic.databasequery}</version>
             <scope>compile</scope>
         </dependency>
