@@ -141,7 +141,7 @@ public class DefaultMessageProvider implements MessageProvider {
         if(plugin != null){
             File folder = plugin.getDataFolder();
             if(folder != null){
-                File messageFolder = new File(folder, "system-messages/");
+                File messageFolder = new File(folder, "messages/");
                 if(messageFolder.exists()){
                     File[] content = messageFolder.listFiles();
                     if(content != null){
@@ -223,7 +223,7 @@ public class DefaultMessageProvider implements MessageProvider {
     }
 
     private File getFile(MessagePack pack, MinecraftPlugin owner) {
-        File folder = new File(owner.getDataFolder(), "system-messages/");
+        File folder = new File(owner.getDataFolder(), "messages/");
         folder.mkdirs();
         String name = pack.getMeta().getName() + "-" + pack.getMeta().getLanguage().getCode() + ".yml";
         name = name.toLowerCase().replace(" ", "-");
