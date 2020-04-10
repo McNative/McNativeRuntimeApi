@@ -121,6 +121,7 @@ public class BukkitPluginManager implements PluginManager {
 
     @Override
     public void executeLifecycleStateListener(String state, LifecycleState stateEvent, Plugin plugin) {
+        System.out.println("LIFECYCLE "+state);
         if(state.equals(LifecycleState.CONSTRUCTION)){
             System.out.println("plugin construct "+plugin);
             this.plugins.add(plugin);

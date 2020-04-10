@@ -97,8 +97,7 @@ public class McNativeLauncher {
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
-
-
+        
         McNativeEventBus eventBus = new McNativeEventBus(localService.getEventBus());
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected event bus.");
 
