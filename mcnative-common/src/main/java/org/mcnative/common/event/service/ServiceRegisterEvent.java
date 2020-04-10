@@ -25,8 +25,8 @@ public class ServiceRegisterEvent extends ServiceEvent {
 
     private final byte servicePriority;
 
-    public ServiceRegisterEvent(Object service, ObjectOwner owner, byte servicePriority) {
-        super(service, owner);
+    public ServiceRegisterEvent(Class<?> serviceTypeClass, Object service, ObjectOwner owner, byte servicePriority) {
+        super(serviceTypeClass,service, owner);
         this.servicePriority = servicePriority;
     }
 

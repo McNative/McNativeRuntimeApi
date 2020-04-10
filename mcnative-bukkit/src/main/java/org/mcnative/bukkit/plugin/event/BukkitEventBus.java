@@ -68,7 +68,6 @@ public class BukkitEventBus implements EventBus {
                     Class<?> eventClass = method.getParameterTypes()[0];
                     Class<?> mappedClass = this.mappedClasses.get(eventClass);
                     if(mappedClass == null) mappedClass = eventClass;
-
                     addExecutor(mappedClass,new MethodEventExecutor(owner,info.priority(),listener,eventClass,method));
                 }
             }catch (Exception exception){
@@ -160,7 +159,7 @@ public class BukkitEventBus implements EventBus {
             handlerList.callEvents(objects);
         }else{
             List<EventExecutor> executors = this.executors.get(event);
-            if(executors != null) executors.forEach(executor -> executor.execute(event));
+            if(executors != null) executors.forEach(executor ->executor.execute(objects));
         }
     }
 

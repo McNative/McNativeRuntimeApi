@@ -186,7 +186,7 @@ public class BungeeCordPluginManager implements PluginManager {
     @Override
     public <T> void registerService(ObjectOwner owner, Class<T> serviceClass, T service, byte priority) {
         this.services.add(new ServiceEntry(owner,serviceClass,service,priority));
-        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(service, owner, priority));
+        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(serviceClass,service, owner, priority));
     }
 
     @Override
@@ -199,7 +199,8 @@ public class BungeeCordPluginManager implements PluginManager {
     public void unregisterService(Object service) {
         ServiceEntry result = Iterators.removeOne(this.services, entry -> entry.service.equals(service));
         if(result != null) {
-            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+            McNative.getInstance().getLocal().getEventBus()
+                    .callEvent(new ServiceUnregisterEvent(result.serviceClass,result.service, result.owner));
         }
     }
 
@@ -207,7 +208,8 @@ public class BungeeCordPluginManager implements PluginManager {
     public void unregisterServices(Class<?> serviceClass) {
         ServiceEntry result = Iterators.removeOne(this.services, entry -> entry.serviceClass.equals(serviceClass));
         if(result != null) {
-            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+            McNative.getInstance().getLocal().getEventBus()
+                    .callEvent(new ServiceUnregisterEvent(result.serviceClass,result.service, result.owner));
         }
     }
 
@@ -215,7 +217,8 @@ public class BungeeCordPluginManager implements PluginManager {
     public void unregisterServices(ObjectOwner owner) {
         List<ServiceEntry> results = Iterators.remove(this.services, entry -> entry.owner.equals(owner));
         for (ServiceEntry result : results) {
-            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(result.service, result.owner));
+            McNative.getInstance().getLocal().getEventBus()
+                    .callEvent(new ServiceUnregisterEvent(result.serviceClass,result.service, result.owner));
         }
     }
 

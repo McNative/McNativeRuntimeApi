@@ -192,7 +192,7 @@ public class BukkitPluginManager implements PluginManager {
         else mappedOwner = McNativeLauncher.getPlugin();
 
         serviceManager.register(serviceClass,service,mappedOwner,mapServicePriorityToBukkit(priority));
-        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(service, owner, priority));
+        McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceRegisterEvent(serviceClass,service, owner, priority));
     }
 
     @Override
@@ -209,8 +209,9 @@ public class BukkitPluginManager implements PluginManager {
             if(registration.getProvider().equals(o)) {
                 serviceManager.unregister(registration.getProvider());
                 if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
-                McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
-                        getMappedPlugin(registration.getPlugin())));
+                McNative.getInstance().getLocal().getEventBus()
+                        .callEvent(new ServiceUnregisterEvent(registration.getService()
+                                ,registration.getProvider(), getMappedPlugin(registration.getPlugin())));
             }
         }
     }
@@ -221,8 +222,8 @@ public class BukkitPluginManager implements PluginManager {
         for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(aClass)) {
             serviceManager.unregister(registration.getProvider());
             if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
-            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider(),
-                    getMappedPlugin(registration.getPlugin())));
+            McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(
+                    registration.getService(),registration.getProvider(), getMappedPlugin(registration.getPlugin())));
         }
     }
 
@@ -232,8 +233,8 @@ public class BukkitPluginManager implements PluginManager {
             for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(getMappedPlugin((Plugin<?>) owner))) {
                 serviceManager.unregister(registration.getProvider());
                 if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
-                McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(registration.getProvider()
-                        ,getMappedPlugin(registration.getPlugin())));
+                McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(
+                        registration.getService(),registration.getProvider(),getMappedPlugin(registration.getPlugin())));
             }
         }else throw new IllegalArgumentException("It is not possible to unsubscribe services, if the owner is not a plugin");
     }

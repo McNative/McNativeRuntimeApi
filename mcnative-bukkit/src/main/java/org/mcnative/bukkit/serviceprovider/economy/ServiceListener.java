@@ -32,37 +32,46 @@ import org.mcnative.common.event.service.ServiceRegisterEvent;
 import org.mcnative.common.event.service.ServiceUnregisterEvent;
 import org.mcnative.common.serviceprovider.economy.EconomyProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ServiceListener {
 
     private final BukkitPluginManager pluginManager;
 
+    private Map<EconomyProvider,VaultEconomyHook> vaultEconomyProviders;
+
     public ServiceListener(BukkitPluginManager pluginManager) {
         this.pluginManager = pluginManager;
-
+        this.vaultEconomyProviders= new HashMap<>();
     }
 
     @Listener
     public void onServiceRegister(ServiceRegisterEvent event) {
-        if(event.isService(VaultEconomyHook.class)) {
-            VaultEconomyHook hook = (VaultEconomyHook) event.getService();
-            Bukkit.getServer().getServicesManager().register(Economy.class, hook, findPlugin(event.getOwner()),
-                    mapPriority(event.getServicePriority()));
-        } else if(event.isService(EconomyProvider.class)) {
-            Bukkit.getServer().getServicesManager().register(Economy.class, new VaultEconomyHook((EconomyProvider) event.getService()),
-                    findPlugin(event.getOwner()),
-                    mapPriority(event.getServicePriority()));
-            McNative.getInstance().getLogger().info("Economy provider [{}] was hooked to vault",
-                    event.getService().getClass().getSimpleName());
+        if(event.isServiceType(EconomyProvider.class)){
+            if(!event.isService(VaultEconomyProvider.class)){
+                VaultEconomyHook hook = new VaultEconomyHook((EconomyProvider) event.getService());
+                Bukkit.getServer().getServicesManager().register(Economy.class
+                        ,hook
+                        ,findPlugin(event.getOwner())
+                        ,mapPriority(event.getServicePriority()));
+                McNative.getInstance().getLogger().info("[McNative] Economy provider [{}] was hooked to vault",
+                        event.getService().getClass().getSimpleName());
+                this.vaultEconomyProviders.put(event.getService(EconomyProvider.class),hook);
+            }
         }
     }
 
     @Listener
     public void onServiceUnregister(ServiceUnregisterEvent event) {
-        if(event.isService(EconomyProvider.class)) {
+        if(event.isServiceType(EconomyProvider.class)) {
             if(event.getService() instanceof VaultEconomyHook) {
-                McNative.getInstance().getLogger().info("Economy provider [{}] was unhooked from vault",
-                        event.getService().getClass().getSimpleName());
-                Bukkit.getServer().getServicesManager().unregister(event.getService());
+                VaultEconomyHook hook = this.vaultEconomyProviders.get(event.getService(EconomyProvider.class));
+                if(hook != null){
+                    Bukkit.getServer().getServicesManager().unregister(hook);
+                    McNative.getInstance().getLogger().info("Economy provider [{}] was unhooked from vault",
+                            event.getService().getClass().getSimpleName());
+                }
             }
         }
     }

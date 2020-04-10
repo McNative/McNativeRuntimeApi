@@ -23,7 +23,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
 public class ServiceUnregisterEvent extends ServiceEvent {
 
-    public ServiceUnregisterEvent(Object service, ObjectOwner owner) {
-        super(service, owner);
+    public ServiceUnregisterEvent(Class<?> serviceTypeClass,Object service, ObjectOwner owner) {
+        super(serviceTypeClass,service, owner);
     }
 }

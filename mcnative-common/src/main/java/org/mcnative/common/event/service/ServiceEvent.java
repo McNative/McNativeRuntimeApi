@@ -24,10 +24,12 @@ import org.mcnative.common.event.MinecraftEvent;
 
 public class ServiceEvent implements MinecraftEvent {
 
+    private final Class<?> serviceTypeClass;
     private final Object service;
     private final ObjectOwner owner;
 
-    protected ServiceEvent(Object service, ObjectOwner owner) {
+    protected ServiceEvent(Class<?> serviceTypeClass, Object service, ObjectOwner owner) {
+        this.serviceTypeClass = serviceTypeClass;
         this.service = service;
         this.owner = owner;
     }
@@ -36,8 +38,9 @@ public class ServiceEvent implements MinecraftEvent {
         return service;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getService(Class<T> serviceClass) {
-        if(service.getClass() == serviceClass) {
+        if(serviceClass.isAssignableFrom(service.getClass())) {
             return (T) getService();
         }
         throw new IllegalArgumentException("Service is not an instance of " + serviceClass.getName());
@@ -47,8 +50,16 @@ public class ServiceEvent implements MinecraftEvent {
         return getService().getClass();
     }
 
+    public Class<?> getServiceTypeClass() {
+        return serviceTypeClass;
+    }
+
     public boolean isService(Class<?> serviceClass) {
         return getService().getClass() == serviceClass;
+    }
+
+    public boolean isServiceType(Class<?> serviceClass) {
+        return serviceTypeClass == serviceClass;
     }
 
     public ObjectOwner getOwner() {
