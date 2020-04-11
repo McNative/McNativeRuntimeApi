@@ -26,19 +26,20 @@ import net.pretronic.libraries.concurrent.TaskScheduler;
 import net.pretronic.libraries.concurrent.simple.SimpleTaskScheduler;
 import net.pretronic.libraries.dependency.DependencyManager;
 import net.pretronic.libraries.event.EventPriority;
+import net.pretronic.libraries.logging.Debug;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
+import net.pretronic.libraries.logging.level.DebugLevel;
+import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Validate;
-import org.mcnative.bungeecord.network.PluginMessageMessenger;
 import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
-import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
@@ -46,7 +47,6 @@ import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -60,6 +60,7 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
 
 public class BungeeCordMcNative implements McNative {
 
@@ -81,7 +82,18 @@ public class BungeeCordMcNative implements McNative {
     public BungeeCordMcNative(PluginVersion version,PluginManager pluginManager, PlayerManager playerManager, Network network, LocalService local) {
         this.version = version;
         this.platform = new BungeeCordPlatform();
-        this.logger = new JdkPretronicLogger(ProxyServer.getInstance().getLogger());
+
+        JdkPretronicLogger logger0 = new JdkPretronicLogger(ProxyServer.getInstance().getLogger());
+        if(McNativeBungeeCordConfiguration.DEBUG){
+            logger0.getLogLevelTranslation().replace(LogLevel.DEBUG, Level.INFO);
+            logger0.setPrefixProcessor(level -> level == LogLevel.DEBUG ? "(Debug) " : null);
+        }
+        Debug.setLogger(logger0);
+        Debug.setDebugLevel(DebugLevel.NORMAL);
+        Debug.setLogLevel(LogLevel.DEBUG);
+        this.logger = logger0;
+
+
         this.scheduler = new SimpleTaskScheduler();
         this.consoleSender = new McNativeCommand.MappedCommandSender(ProxyServer.getInstance().getConsole());
         this.dependencyManager = new DependencyManager(logger,new File("plugins/McNative/lib/dependencies"));

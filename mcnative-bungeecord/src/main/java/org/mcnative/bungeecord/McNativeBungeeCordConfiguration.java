@@ -21,6 +21,7 @@
 package org.mcnative.bungeecord;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.annotations.DocumentIgnored;
 import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.annotations.DocumentRequired;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -50,7 +51,10 @@ public class McNativeBungeeCordConfiguration {
     @DocumentKey("autoUpdate.qualifier")
     public static String AUTO_UPDATE_QUALIFIER = "RELEASE";
 
+    @DocumentKey("debug")
+    public static boolean DEBUG = false;
 
+    @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 
     @DocumentKey("player.displayName.format")
