@@ -29,6 +29,7 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -50,6 +51,7 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -126,12 +128,23 @@ public class McNativeLauncher {
 
         registerDependencyHooks(pluginManager,playerManager);
 
-        injector.injectChannelInitializer();
-        playerManager.loadConnectedPlayers();
-        instance.setReady(true);
+        McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                .delay(500, TimeUnit.MILLISECONDS)
+                .execute(() -> {
+                    injector.injectChannelInitializer();
+                    playerManager.loadConnectedPlayers();
+                    instance.setReady(true);
+                    logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+                }).addListener(future -> {
+                    if(future.isFailed()){
+                        future.getThrowable().printStackTrace();
+                        instance.setReady(true);
+                        logger.info(McNative.CONSOLE_PREFIX+"McNative failed injecting the channel initializer, shutting down");
+                        Bukkit.getPluginManager().disablePlugin(plugin);
+                    }
+                });
 
         registerDefaultListener(eventBus, pluginManager);
-        logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
     private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
