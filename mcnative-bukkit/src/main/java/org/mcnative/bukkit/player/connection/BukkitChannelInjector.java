@@ -35,6 +35,7 @@ import org.mcnative.common.player.profile.GameProfile;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BukkitChannelInjector {
 
@@ -62,7 +63,7 @@ public class BukkitChannelInjector {
     private ChannelFutureWrapperList channelFutureWrapperList;
 
     public BukkitChannelInjector() {
-        this.handshakingConnections = new ArrayList<>();
+        this.handshakingConnections = ConcurrentHashMap.newKeySet();
         this.injectedHandlers = new HashMap<>();
     }
 
