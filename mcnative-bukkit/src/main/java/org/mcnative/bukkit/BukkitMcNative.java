@@ -26,9 +26,12 @@ import net.pretronic.libraries.dependency.DependencyManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.event.EventPriority;
+import net.pretronic.libraries.logging.Debug;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
+import net.pretronic.libraries.logging.level.DebugLevel;
+import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriber;
 import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriberRegistry;
@@ -81,7 +84,17 @@ public class BukkitMcNative implements McNative {
     protected BukkitMcNative(PluginVersion version, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.version = version;
         this.platform = new BukkitPlatform();
-        this.logger = new JdkPretronicLogger(Bukkit.getLogger());
+
+        JdkPretronicLogger logger0 = new JdkPretronicLogger(Bukkit.getLogger());
+        if(McNativeBukkitConfiguration.DEBUG){
+            logger0.getLogLevelTranslation().replace(LogLevel.DEBUG,Level.INFO);
+            logger0.setPrefixProcessor(level -> level == LogLevel.DEBUG ? "(Debug) " : null);
+        }
+        Debug.setLogger(logger0);
+        Debug.setDebugLevel(DebugLevel.NORMAL);
+        Debug.setLogLevel(LogLevel.DEBUG);
+        this.logger = logger0;
+
         this.scheduler = new SimpleTaskScheduler();
         this.dependencyManager = new DependencyManager(this.logger,new File("plugins/McNative/lib/dependencies/"));
         this.dependencyManager.setLoggerPrefix("[McNative] (Dependency-Manager) ");
@@ -91,9 +104,9 @@ public class BukkitMcNative implements McNative {
         this.playerManager = playerManager;
         this.local = local;
         this.network = network;
-        Bukkit.getLogger().setLevel(Level.ALL);
 
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
+        System.out.println(Bukkit.getLogger().getClass());
 
         SLF4JStaticBridge.trySetLogger(logger);
     }

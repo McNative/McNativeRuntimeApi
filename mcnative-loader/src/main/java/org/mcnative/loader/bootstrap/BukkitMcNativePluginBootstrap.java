@@ -21,13 +21,17 @@ package org.mcnative.loader.bootstrap;
 
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 
 import java.util.logging.Level;
 
-public class BukkitMcNativePluginBootstrap extends JavaPlugin {
+public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener {
 
     private static final String ENVIRONMENT_NAME = "Bukkit";
     private GuestPluginExecutor executor;
@@ -57,7 +61,10 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
     @Override
     public void onEnable() {
         try{
-            if(this.executor != null) this.executor.enableGuestPlugin();
+            if(this.executor != null){
+                this.executor.enableGuestPlugin();
+                Bukkit.getPluginManager().registerEvents(this,this);
+            }
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not enable plugin (%s)",exception.getMessage()));
@@ -72,6 +79,14 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin {
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not disable plugin (%s)",exception.getMessage()));
+        }
+    }
+
+    @EventHandler
+    public void handleMcNativeShutdown(PluginDisableEvent event){
+        if(event.getPlugin().getName().equalsIgnoreCase("McNative")){
+            getLogger().info("(McNative-Loader) McNative is shutting down, thus plugins depends on McNative and is now also shutting down.");
+            Bukkit.getPluginManager().disablePlugin(this);
         }
     }
 }

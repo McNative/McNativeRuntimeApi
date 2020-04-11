@@ -29,7 +29,6 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -51,7 +50,6 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -61,6 +59,7 @@ public class McNativeLauncher {
     private static BukkitPluginManager PLUGIN_MANAGER;
     private static BukkitCommandManager COMMAND_MANAGER;
     private static BukkitChannelInjector CHANNEL_INJECTOR;
+    private static BukkitEventBus EVENT_BUS;
 
     public static Plugin getPlugin() {
         return PLUGIN;
@@ -72,6 +71,16 @@ public class McNativeLauncher {
 
     public static void launchMcNativeInternal(Plugin plugin){
         if(McNative.isAvailable()) return;
+        try {
+            bootstrapMCNative(plugin);
+        }catch (Exception exception){
+            exception.printStackTrace();
+            Bukkit.getLogger().info(McNative.CONSOLE_PREFIX+"McNative failed to started, shutting down");
+            Bukkit.getPluginManager().disablePlugin(plugin);
+        }
+    }
+
+    private static void bootstrapMCNative(Plugin plugin){
         PluginVersion version = PluginVersion.ofImplementation(McNativeLauncher.class);
 
         PLUGIN = plugin;
@@ -91,6 +100,10 @@ public class McNativeLauncher {
         BukkitCommandManager commandManager = new BukkitCommandManager(pluginManager);
         BukkitPlayerManager playerManager = new BukkitPlayerManager();
 
+        PLUGIN_MANAGER = pluginManager;
+        COMMAND_MANAGER = commandManager;
+        EVENT_BUS = eventBus;
+
         BukkitService localService = new BukkitService(commandManager,playerManager,eventBus);
         BukkitMcNative instance = new BukkitMcNative(version,pluginManager,playerManager,localService,null);
 
@@ -98,6 +111,7 @@ public class McNativeLauncher {
         instance.setNetwork(setupNetwork(logger,instance.getExecutorService()));
 
         BukkitChannelInjector injector = new BukkitChannelInjector();
+        CHANNEL_INJECTOR = injector;
         commandManager.inject();
 
         instance.registerDefaultProviders();
@@ -112,19 +126,9 @@ public class McNativeLauncher {
 
         registerDependencyHooks(pluginManager,playerManager);
 
-        PLUGIN_MANAGER = pluginManager;
-        COMMAND_MANAGER = commandManager;
-        CHANNEL_INJECTOR = injector;
-
-
-        instance.getScheduler().createTask(ObjectOwner.SYSTEM).delay(1800, TimeUnit.MILLISECONDS).execute(() ->{
-            injector.injectChannelInitializer();
-            playerManager.loadConnectedPlayers();
-            instance.setReady(true);
-        }).addListener(future -> {
-            if(future.isFailed())future.getThrowable().printStackTrace();
-              instance.setReady(true);
-        });
+        injector.injectChannelInitializer();
+        playerManager.loadConnectedPlayers();
+        instance.setReady(true);
 
         registerDefaultListener(eventBus, pluginManager);
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
@@ -153,6 +157,7 @@ public class McNativeLauncher {
         if(PLUGIN_MANAGER != null) PLUGIN_MANAGER.reset();
         if(COMMAND_MANAGER != null) COMMAND_MANAGER.reset();
         if(CHANNEL_INJECTOR != null) CHANNEL_INJECTOR.reset();
+        if(EVENT_BUS != null) EVENT_BUS.reset();
 
         McNative.setInstance(null);
 

@@ -27,6 +27,7 @@ import net.pretronic.libraries.event.executor.EventExecutor;
 import net.pretronic.libraries.event.executor.MethodEventExecutor;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -215,5 +216,14 @@ public class BukkitEventBus implements EventBus {
             McNativeHandlerList.inject(event,handlerList);
         }
         return handlerList;
+    }
+
+    @Internal
+    public void reset(){
+        for (HandlerList handlerList : HandlerList.getHandlerLists()) {
+            if (handlerList instanceof McNativeHandlerList) {
+                ((McNativeHandlerList) handlerList).registerManagedEvent(null);
+            }
+        }
     }
 }

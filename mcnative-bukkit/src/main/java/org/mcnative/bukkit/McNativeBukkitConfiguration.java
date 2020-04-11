@@ -43,6 +43,9 @@ public class McNativeBukkitConfiguration {
     @DocumentKey("autoUpdate.qualifier")
     public static String AUTO_UPDATE_QUALIFIER = "RELEASE";
 
+    @DocumentKey("debug")
+    public static boolean DEBUG = false;
+
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
 

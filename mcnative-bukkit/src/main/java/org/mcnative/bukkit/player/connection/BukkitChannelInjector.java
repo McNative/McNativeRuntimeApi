@@ -24,6 +24,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import net.pretronic.libraries.logging.Debug;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
@@ -136,29 +137,40 @@ public class BukkitChannelInjector {
             List<String> names = future.channel().pipeline().names();
             ChannelHandler oldHandler = null;
             ChannelInitializer<SocketChannel> oldInitializer = null;
+
+            //Search the best handler
             for (String name : names) {
                 ChannelHandler handler = future.channel().pipeline().get(name);
-                System.out.println("HANDLER "+name+" | "+(handler == null ? "null" : handler.getClass()));
+                Debug.print("[McNative] (Channel-Injector) Found handler "+name+": "+(handler == null ? "null" : handler.getClass()));
                 if(handler != null){
-                    Field field = ReflectionUtil.getField(handler.getClass(), "childHandler");
-                    if(field != null && field.getType().equals(ChannelInitializer.class)){
-                        field.setAccessible(true);
-                        oldHandler = handler;
-                        oldInitializer = (ChannelInitializer<SocketChannel>) field.get(handler);
-                    }
+                    try{
+                        Field field = ReflectionUtil.getField(handler.getClass(), "childHandler");
+                        if(field != null && field.getType().equals(ChannelHandler.class)){
+                            field.setAccessible(true);
+                            oldHandler = handler;
+                            oldInitializer = (ChannelInitializer<SocketChannel>) field.get(handler);
+                        }
+                    }catch (ReflectException ignored){}
                 }
             }
 
             if(oldInitializer == null){
-                oldHandler = future.channel().pipeline().first();
-                Field field = ReflectionUtil.getField(oldHandler.getClass(), "childHandler");
-                field.setAccessible(true);
-                oldInitializer = (ChannelInitializer<SocketChannel>) field.get(oldHandler);
+                try{
+                    oldHandler = future.channel().pipeline().first();
+                    Field field = ReflectionUtil.getField(oldHandler.getClass(), "childHandler");
+                    field.setAccessible(true);
+                    oldInitializer = (ChannelInitializer<SocketChannel>) field.get(oldHandler);
+                }catch (ReflectException exception){
+                    exception.printStackTrace();
+                    throw new UnsupportedOperationException("Could not override channel adapter. It seams like Mcnative " +
+                            "is not compatible with one of your plugins. Please contact the McNative developer team for more information");
+                }
             }
 
             ChannelInitializer<?> newInit = new McNativeChannelInitializer(this,oldInitializer);
             ReflectionUtil.changeFieldValue(oldHandler,"childHandler", newInit);
             this.injectedHandlers.put(oldHandler,oldInitializer);
+            Debug.print("[McNative] (Channel-Injector) Overwritten handler "+oldHandler.getClass());
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to initialize channel future",e);
         }
