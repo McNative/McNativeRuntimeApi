@@ -34,13 +34,22 @@ import net.pretronic.libraries.utility.http.HttpMethod;
 import net.pretronic.libraries.utility.http.HttpResult;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.io.FileUtil;
+import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.Messages;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class McNativePasteLogCommand extends BasicCommand {
+
+    private static final Pattern IPV4_PATTERN = Pattern.compile("((\\\\)|(/))(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])?(:[0-9][0-9]?[0-9]?[0-9]?[0-9]?)?");
 
     public McNativePasteLogCommand(ObjectOwner owner) {
         super(owner, CommandConfiguration.newBuilder().name("pasteLog").aliases("paste", "log").permission("mcnative.admin").create());
@@ -60,6 +69,7 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("McNative Version: " + version);
         logger.info("Protocol Version: " + protocolVersion.getName() + " | " + protocolVersion.getEdition().getName());
         logger.info("Platform Version: " + McNative.getInstance().getPlatform().getName()+ " - " + McNative.getInstance().getPlatform().getVersion());
+        logger.info("Network: " + (McNative.getInstance().isNetworkAvailable() ? McNative.getInstance().getNetwork().getTechnology() : "none"));
         logger.info("Java Version: " + javaVersion);
         logger.info(" ");
         logger.info("Operation system: " + SystemInfo.getOsName() + " version " + SystemInfo.getOsVersion());
@@ -69,19 +79,52 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("Free memory: " + ((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024)));
         logger.info("Allocated memory: " + ((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024)));
         logger.info("Total free memory: " + ((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024)));
-        logger.info("");
+        logger.info(" ");
         logger.info("Plugins:");
         for (Plugin plugin : McNative.getInstance().getPluginManager().getPlugins()) {
             logger.info("- {} v{}", plugin.getName(), plugin.getDescription().getVersion().getName());
         }
+        /*logger.info(" ");
+        logger.info("Storage:");
+        McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).g*/
+        //@Todo storage config getting (Storage config as interface for default implementation)
         logger.info("----------------------------------------");
 
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {
-            String content = FileUtil.readContent(McNative.getInstance().getPlatform().getLatestLogLocation());
+            String content = readFileReversed(McNative.getInstance().getPlatform().getLatestLogLocation());
+            if(content == null) return;
             String url = publishLogAndGetUrl(content);
+            if(url == null) return;
             logger.info("See your log on " + url);
             sender.sendMessage(Messages.COMMAND_PASTE_SUCCESSFUL, VariableSet.create().add("url", url));
         });
+    }
+
+    private static String readFileReversed(File file) {
+        int lines = 5000;
+        int readLines = 0;
+        StringBuilder builder = new StringBuilder();
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r")) {
+            long fileLength = file.length() - 1;
+            randomAccessFile.seek(fileLength);
+
+            for (long pointer = fileLength; pointer >= 0; pointer--) {
+                randomAccessFile.seek(pointer);
+                char c = (char) randomAccessFile.read();
+                if (c == '\n') {
+                    readLines++;
+                    if (readLines == lines) break;
+                }
+                builder.append(c);
+                fileLength = fileLength - pointer;
+            }
+            builder.reverse();
+        } catch (IOException exception) {
+            McNative.getInstance().getLogger().error("Failed to read log");
+            McNative.getInstance().getLogger().error("Error: "+ exception.getMessage());
+            return null;
+        }
+        return IPV4_PATTERN.matcher(builder).replaceAll("masked-ipv4");
     }
 
     private String publishLogAndGetUrl(String content) {
@@ -90,8 +133,13 @@ public class McNativePasteLogCommand extends BasicCommand {
         client.setRequestMethod(HttpMethod.POST);
         client.setContent(content);
         client.setTLSVersion("TLSv1.2");
-        HttpResult result = client.connect();
-        //@Todo check success
-        return "https://paste.pretronic.net/" + DocumentFileType.JSON.getReader().read(result.getContent()).getString("key");
+        try {
+            HttpResult result = client.connect();
+            return "https://paste.pretronic.net/" + DocumentFileType.JSON.getReader().read(result.getContent()).getString("key");
+        } catch (Exception exception) {
+            McNative.getInstance().getLogger().error("Failed to paste log");
+            McNative.getInstance().getLogger().error("Error: "+ exception.getMessage());
+            return null;
+        }
     }
 }
