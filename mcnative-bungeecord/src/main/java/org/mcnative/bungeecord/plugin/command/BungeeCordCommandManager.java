@@ -96,6 +96,11 @@ public class BungeeCordCommandManager implements CommandManager {
         Plugin plugin = getOriginalPlugin(command.getOwner());
 
         //if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
+
+        if(command instanceof CommandManager && ((CommandManager)command).getNoPermissionHandler() == null) {
+            ((CommandManager)command).setNoPermissionHandler(DefaultNoPermissionHandler.DEFAULT);
+        }
+
         this.original.registerCommand(plugin,new McNativeCommand(this, command));
         this.commands.add(command);
     }
