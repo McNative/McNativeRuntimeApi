@@ -35,4 +35,6 @@ public final class Messages {
     public static MessageKeyComponent COMMAND_INFO_USER = Text.ofMessageKey("mcnative.command.mcnative.info.user");
 
     public static MessageKeyComponent COMMAND_VERSION = Text.ofMessageKey("mcnative.command.mcnative.version");
+
+    public static MessageKeyComponent NO_PERMISSIONS = Text.ofMessageKey("mcnative.noPermissions");
 }

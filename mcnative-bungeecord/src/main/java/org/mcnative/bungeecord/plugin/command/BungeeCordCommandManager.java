@@ -34,6 +34,8 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.MappedPlugin;
+import org.mcnative.common.Messages;
+import org.mcnative.common.commands.DefaultNoPermissionHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,6 +73,7 @@ public class BungeeCordCommandManager implements CommandManager {
 
     @Override
     public NoPermissionHandler getNoPermissionHandler() {
+        if(this.noPermissionHandler == null) return DefaultNoPermissionHandler.DEFAULT;
         return this.noPermissionHandler;
     }
 

@@ -34,6 +34,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.common.McNative;
+import org.mcnative.common.commands.DefaultNoPermissionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class BukkitCommandManager implements CommandManager {
 
     @Override
     public NoPermissionHandler getNoPermissionHandler() {
+        if(this.noPermissionHandler == null) return DefaultNoPermissionHandler.DEFAULT;
         return this.noPermissionHandler;
     }
 

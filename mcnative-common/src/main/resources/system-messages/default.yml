@@ -23,3 +23,4 @@ messages:
    &8» &7Free memory: &e{freeMemory}
    &8» &7Total free memory: &e{totalFreeMemory}"
   command.info.user: "${prefix.user} See https://mcnative.org"
+  mcnative.noPermissions: '${prefix.user} &cYou don''t have enough permissions.'
