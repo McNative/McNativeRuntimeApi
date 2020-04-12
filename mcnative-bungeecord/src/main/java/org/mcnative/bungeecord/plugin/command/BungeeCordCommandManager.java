@@ -22,6 +22,7 @@ package org.mcnative.bungeecord.plugin.command;
 import com.google.common.collect.Multimap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
+import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.NotFoundHandler;
 import net.pretronic.libraries.command.command.Command;
 import net.pretronic.libraries.command.manager.CommandManager;
@@ -44,6 +45,7 @@ public class BungeeCordCommandManager implements CommandManager {
     private final BungeeCordPluginManager pluginManager;
     private final PluginManager original;
     private final List<Command> commands;
+    private NoPermissionHandler noPermissionHandler;
 
     public BungeeCordCommandManager(BungeeCordPluginManager pluginManager, PluginManager original) {
         this.pluginManager = pluginManager;
@@ -68,6 +70,16 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     @Override
+    public NoPermissionHandler getNoPermissionHandler() {
+        return this.noPermissionHandler;
+    }
+
+    @Override
+    public void setNoPermissionHandler(NoPermissionHandler noPermissionHandler) {
+        this.noPermissionHandler = noPermissionHandler;
+    }
+
+    @Override
     public void dispatchCommand(CommandSender sender, String command) {//@Todo map sender
         original.dispatchCommand(null,command);
     }
@@ -81,7 +93,7 @@ public class BungeeCordCommandManager implements CommandManager {
         Plugin plugin = getOriginalPlugin(command.getOwner());
 
         //if(plugin == null) throw new IllegalArgumentException("Plugin is not enabled");
-        this.original.registerCommand(plugin,new McNativeCommand(command));
+        this.original.registerCommand(plugin,new McNativeCommand(this, command));
         this.commands.add(command);
     }
 

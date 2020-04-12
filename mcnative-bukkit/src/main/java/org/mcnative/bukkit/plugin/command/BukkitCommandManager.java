@@ -19,6 +19,7 @@
 
 package org.mcnative.bukkit.plugin.command;
 
+import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.NotFoundHandler;
 import net.pretronic.libraries.command.command.Command;
 import net.pretronic.libraries.command.manager.CommandManager;
@@ -43,7 +44,8 @@ public class BukkitCommandManager implements CommandManager {
     private final List<Command> commands;
     private McNativeCommandMap commandMap;
 
-    private NotFoundHandler handler;
+    private NotFoundHandler notFoundHandler;
+    private NoPermissionHandler noPermissionHandler;
 
     public BukkitCommandManager(BukkitPluginManager pluginManager) {
         this.pluginManager = pluginManager;
@@ -51,7 +53,7 @@ public class BukkitCommandManager implements CommandManager {
     }
 
     public NotFoundHandler getNotFoundHandler() {
-        return handler;
+        return notFoundHandler;
     }
 
     @Override
@@ -67,7 +69,17 @@ public class BukkitCommandManager implements CommandManager {
     @Override
     public void setNotFoundHandler(NotFoundHandler notFoundHandler) {
         Validate.notNull(notFoundHandler);
-        this.handler = notFoundHandler;
+        this.notFoundHandler = notFoundHandler;
+    }
+
+    @Override
+    public NoPermissionHandler getNoPermissionHandler() {
+        return this.noPermissionHandler;
+    }
+
+    @Override
+    public void setNoPermissionHandler(NoPermissionHandler noPermissionHandler) {
+        this.noPermissionHandler = noPermissionHandler;
     }
 
     @Override
@@ -87,7 +99,7 @@ public class BukkitCommandManager implements CommandManager {
         if(!(command.getOwner() instanceof net.pretronic.libraries.plugin.Plugin) && !command.getOwner().equals(McNative.getInstance())){
             throw new IllegalArgumentException("Owner is not a plugin.");
         }
-        this.commandMap.register(command.getOwner().getName().toLowerCase(),new McNativeCommand(command));
+        this.commandMap.register(command.getOwner().getName().toLowerCase(),new McNativeCommand(this, command));
         this.commands.add(command);
     }
 

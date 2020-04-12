@@ -25,6 +25,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.pretronic.libraries.command.Completable;
+import net.pretronic.libraries.command.NoPermissionAble;
+import net.pretronic.libraries.command.manager.CommandManager;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
@@ -36,12 +39,15 @@ import java.util.List;
 
 public class McNativeCommand extends Command implements TabExecutor {
 
+    private final CommandManager commandManager;
     private final net.pretronic.libraries.command.command.Command original;
 
-    public McNativeCommand(net.pretronic.libraries.command.command.Command original) {
+    public McNativeCommand(CommandManager commandManager, net.pretronic.libraries.command.command.Command original) {
         super(original.getConfiguration().getName()
                 ,original.getConfiguration().getPermission()
                 ,original.getConfiguration().getAliases());
+        Validate.notNull(commandManager, original);
+        this.commandManager = commandManager;
         this.original = original;
     }
 
@@ -50,9 +56,20 @@ public class McNativeCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] strings) {
-        net.pretronic.libraries.command.sender.CommandSender mapped = getMappedSender(sender);
-        original.execute(mapped,strings);
+    public void execute(CommandSender sender, String[] args) {
+        net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
+        if(CommandManager.hasPermission(mappedSender, ((CommandManager)original).getNoPermissionHandler(),
+                null, original.getConfiguration().getPermission(), this.original.getConfiguration().getName(), args)) {
+            original.execute(mappedSender,args);
+        } else {
+            if(original instanceof NoPermissionAble) {
+                ((NoPermissionAble)original).noPermission(mappedSender, original.getConfiguration().getPermission(),
+                        original.getConfiguration().getName(), args);
+            } else {
+                this.commandManager.getNoPermissionHandler().handle(mappedSender, original.getConfiguration().getPermission(),
+                        original.getConfiguration().getName(), args);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

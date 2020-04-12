@@ -20,7 +20,12 @@
 package org.mcnative.bukkit.plugin.command;
 
 import net.pretronic.libraries.command.Completable;
+import net.pretronic.libraries.command.NoPermissionAble;
+import net.pretronic.libraries.command.command.MainCommand;
+import net.pretronic.libraries.command.command.object.MainObjectCommand;
+import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,17 +44,17 @@ import java.util.List;
 //@Todo create message fallback component
 public class McNativeCommand extends Command {
 
+    private final CommandManager commandManager;
     private final net.pretronic.libraries.command.command.Command original;
-    private final MessageComponent<?> noPermissionMessage;
 
-    public McNativeCommand(net.pretronic.libraries.command.command.Command original) {
+    public McNativeCommand(CommandManager commandManager, net.pretronic.libraries.command.command.Command original) {
         super(original.getConfiguration().getName()
                 , original.getConfiguration().getDescription()
                 , ""
                 , Arrays.asList(original.getConfiguration().getAliases()));
+        Validate.notNull(commandManager, original);
+        this.commandManager = commandManager;
         this.original = original;
-
-        this.noPermissionMessage = Text.ofMessageKey("mcnative.command.nopermission");
     }
 
     public net.pretronic.libraries.command.command.Command getOriginal() {
@@ -72,7 +77,19 @@ public class McNativeCommand extends Command {
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).async()
                 .execute(() -> {
                     try {
-                        original.execute(getMappedSender(sender),arguments);
+                        net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
+                        if(CommandManager.hasPermission(mappedSender, ((CommandManager)original).getNoPermissionHandler(),
+                                null, original.getConfiguration().getPermission(), label, arguments)) {
+                            original.execute(mappedSender,arguments);
+                        } else {
+                            if(original instanceof NoPermissionAble) {
+                                ((NoPermissionAble)original).noPermission(mappedSender, original.getConfiguration().getPermission(),
+                                        label, arguments);
+                            } else {
+                                this.commandManager.getNoPermissionHandler().handle(mappedSender, original.getConfiguration().getPermission()
+                                        , label, arguments);
+                            }
+                        }
                     }catch (Exception exception){//@Todo optimize error message
                         exception.printStackTrace();
                     }
