@@ -21,6 +21,7 @@ package org.mcnative.bukkit.plugin.command;
 
 import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.NoPermissionAble;
+import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.command.MainCommand;
 import net.pretronic.libraries.command.command.object.MainObjectCommand;
 import net.pretronic.libraries.command.manager.CommandManager;
@@ -78,17 +79,17 @@ public class McNativeCommand extends Command {
                 .execute(() -> {
                     try {
                         net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
-                        if(CommandManager.hasPermission(mappedSender, ((CommandManager)original).getNoPermissionHandler(),
-                                null, original.getConfiguration().getPermission(), label, arguments)) {
-                            original.execute(mappedSender,arguments);
+
+                        NoPermissionHandler noPermissionHandler;
+                        if(original instanceof NoPermissionAble) {
+                            noPermissionHandler = ((NoPermissionAble)original);
                         } else {
-                            if(original instanceof NoPermissionAble) {
-                                ((NoPermissionAble)original).noPermission(mappedSender, original.getConfiguration().getPermission(),
-                                        label, arguments);
-                            } else {
-                                this.commandManager.getNoPermissionHandler().handle(mappedSender, original.getConfiguration().getPermission()
-                                        , label, arguments);
-                            }
+                            noPermissionHandler = this.commandManager.getNoPermissionHandler();
+                        }
+
+                        if(CommandManager.hasPermission(mappedSender, noPermissionHandler, null,
+                                original.getConfiguration().getPermission(), label, arguments)) {
+                            original.execute(mappedSender,arguments);
                         }
                     }catch (Exception exception){//@Todo optimize error message
                         exception.printStackTrace();

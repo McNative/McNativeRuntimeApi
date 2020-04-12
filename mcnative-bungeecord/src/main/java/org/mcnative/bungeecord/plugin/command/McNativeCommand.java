@@ -26,6 +26,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.NoPermissionAble;
+import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
@@ -58,17 +59,17 @@ public class McNativeCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
-        if(CommandManager.hasPermission(mappedSender, ((CommandManager)original).getNoPermissionHandler(),
-                null, original.getConfiguration().getPermission(), this.original.getConfiguration().getName(), args)) {
-            original.execute(mappedSender,args);
+
+        NoPermissionHandler noPermissionHandler;
+        if(original instanceof NoPermissionAble) {
+            noPermissionHandler = ((NoPermissionAble)original);
         } else {
-            if(original instanceof NoPermissionAble) {
-                ((NoPermissionAble)original).noPermission(mappedSender, original.getConfiguration().getPermission(),
-                        original.getConfiguration().getName(), args);
-            } else {
-                this.commandManager.getNoPermissionHandler().handle(mappedSender, original.getConfiguration().getPermission(),
-                        original.getConfiguration().getName(), args);
-            }
+            noPermissionHandler = this.commandManager.getNoPermissionHandler();
+        }
+
+        if(CommandManager.hasPermission(mappedSender, noPermissionHandler, null, original.getConfiguration().getPermission(),
+                this.original.getConfiguration().getName(), args)) {
+            original.execute(mappedSender,args);
         }
     }
 
