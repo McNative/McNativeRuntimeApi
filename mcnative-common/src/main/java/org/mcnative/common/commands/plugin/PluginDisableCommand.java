@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 22.03.20, 20:25
+ * @author Davide Wietlisbach
+ * @since 13.04.20, 20:37
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,29 +18,37 @@
  * under the License.
  */
 
-package org.mcnative.common.commands;
+package org.mcnative.common.commands.plugin;
 
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.McNative;
 import org.mcnative.common.utils.Messages;
 
-public class McNativeVersionCommand extends BasicCommand {
+public class PluginDisableCommand extends BasicCommand {
 
-    public McNativeVersionCommand(ObjectOwner owner) {
+    private static final String USAGE = "/mcnative plugin disable <plugin>";
+
+    public PluginDisableCommand(ObjectOwner owner) {
         super(owner, CommandConfiguration.newBuilder()
-                .name("version")
-                .aliases("v", "ver")
-                .permission("mcnative.manage.version")
-                .create());
+                .name("disable").aliases("d","shutdown")
+                .permission("mcnative.manage.plugin.disable").create());
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_VERSION, VariableSet.create()
-                .add("version", McNative.getInstance().getVersion().getName()));
+    public void execute(CommandSender sender, String[] arguments) {
+        Plugin<?> plugin = PluginCommandUtil.getPlugin(sender, arguments,getConfiguration().getName(),USAGE);
+        if (plugin == null) return;
+
+        if(!plugin.getLoader().isEnabled()){
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ALREADY_DISABLED, new DescribedHashVariableSet()
+                    .add("plugin",plugin));
+            return;
+        }
+
+        PluginCommandUtil.disablePlugin(sender, plugin);
     }
 }

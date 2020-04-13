@@ -95,6 +95,11 @@ public class BungeeCordPluginManager implements PluginManager {
     }
 
     @Override
+    public PluginLoader createPluginLoader(String s) {
+        throw new UnsupportedOperationException("BungeeCord bridge is not able to create plugin loaders");
+    }
+
+    @Override
     public PluginLoader createPluginLoader(File file) {
         return createPluginLoader(file,null);
     }

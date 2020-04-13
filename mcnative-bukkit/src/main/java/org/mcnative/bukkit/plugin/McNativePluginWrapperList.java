@@ -20,7 +20,6 @@
 package org.mcnative.bukkit.plugin;
 
 import org.bukkit.plugin.Plugin;
-import org.mcnative.bukkit.McNativeDummyPlugin;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -128,9 +127,7 @@ public class McNativePluginWrapperList implements List<Plugin> {
     @Override
     public void add(int index, Plugin element) {
         pluginManager.registerBukkitPlugin(element);
-        if(!(element instanceof McNativeDummyPlugin)){
-            original.add(index,element);
-        }
+        original.add(index,element);
     }
 
     @Override

@@ -45,7 +45,14 @@ public class TextBuilder implements BasicMessageBuilder {
         if(requiresString){
             if(next == null) return input;
             else return input+next;
-        }else return buildText(input,next);
+        }else{
+            if(context instanceof MinecraftBuildContext){
+                if(((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE){
+                    return buildCompileText(input,next);
+                }
+            }
+            return buildPlainText(input,next);
+        }
     }
 
     @Override
@@ -61,7 +68,26 @@ public class TextBuilder implements BasicMessageBuilder {
         }
     }
 
-    protected static Document buildText(String input,Object nextComp){
+    protected static String buildPlainText(String input,Object nextComp){
+        StringBuilder builder = new StringBuilder(input);
+
+
+        for (int i = 0; i < builder.length(); i++) {
+            char char0 = builder.charAt(i);
+            if((char0 == Text.FORMAT_CHAR || char0 == Text.DEFAULT_ALTERNATE_COLOR_CHAR) && builder.length() > ++i){
+                builder.delete(i-1,i+1);
+                 i -= 1;
+            }
+        }
+
+        if(nextComp != null){
+            builder.append(nextComp instanceof String ? nextComp : nextComp.toString());
+        }
+
+        return builder.toString();
+    }
+
+    protected static Document buildCompileText(String input,Object nextComp){
         Document root = Document.newDocument();
         Document current = root;
 

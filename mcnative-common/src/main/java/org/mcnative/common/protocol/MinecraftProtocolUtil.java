@@ -158,8 +158,18 @@ public class MinecraftProtocolUtil {
     }
 
     public static void writeStringArray(ByteBuf buffer,List<String> data) {
-        writeVarInt(buffer,data.size());
-        for ( String message : data) writeString(buffer,message);
+        if(data == null) writeVarInt(buffer,0);
+        else{
+            writeVarInt(buffer,data.size());
+            for ( String message : data) writeString(buffer,message);
+        }
     }
 
+    public static void writeStringArray(ByteBuf buffer,String[] data) {
+        if(data == null) writeVarInt(buffer,0);
+        else{
+            writeVarInt(buffer,data.length);
+            for (String message : data) writeString(buffer,message);
+        }
+    }
 }

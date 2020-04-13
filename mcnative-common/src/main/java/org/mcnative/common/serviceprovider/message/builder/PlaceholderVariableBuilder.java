@@ -33,6 +33,7 @@ public class PlaceholderVariableBuilder implements BasicMessageBuilder {
     public Object build(BuildContext context,boolean requiresString, Object[] parameters, Object next) {
         PlaceholderProvider provider = McNative.getInstance().getRegistry().getServiceOrDefault(PlaceholderProvider.class);
         String result = VARIABLE_NOT_FOUND;
+
         if(provider != null && parameters.length == 1){
             if(context instanceof MinecraftBuildContext){
                 MinecraftBuildContext minecraftContext = (MinecraftBuildContext) context;
@@ -42,8 +43,9 @@ public class PlaceholderVariableBuilder implements BasicMessageBuilder {
                 }
             }
         }
+
         if(next != null) return new Object[]{result,next};
-        else return  new Object[]{result};
+        else return new Object[]{result};
     }
 
     @Override

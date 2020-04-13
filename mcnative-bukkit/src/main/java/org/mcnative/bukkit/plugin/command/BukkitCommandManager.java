@@ -34,7 +34,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.common.McNative;
-import org.mcnative.common.commands.DefaultNoPermissionHandler;
+import org.mcnative.common.plugin.DefaultNoPermissionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +134,13 @@ public class BukkitCommandManager implements CommandManager {
                 commandMap.unregister(command);
             }
         }
+    }
+
+    public void unregisterCommand(Object command0) {
+        if(command0 instanceof  McNativeCommand){
+            Iterators.removeSilent(this.commands, command -> command.equals(((McNativeCommand) command0).getOriginal()));
+        }
+        Iterators.removeSilent(this.commands, command -> command.equals(command0));
     }
 
     @Override

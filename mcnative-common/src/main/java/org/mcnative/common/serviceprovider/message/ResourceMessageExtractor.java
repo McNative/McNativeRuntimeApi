@@ -35,48 +35,51 @@ import java.util.Map;
 public class ResourceMessageExtractor {
 
     public static void extractMessages(Plugin<?> plugin){
+        extractMessages(plugin.getLoader().getClassLoader().asJVMLoader()
+                ,"messages/"
+                ,plugin.getDescription().getMessageModule());
+    }
+
+    public static void extractMessages(ClassLoader loader,String location,String module){
         MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
-        if(messageProvider != null){
-            String module = plugin.getDescription().getMessageModule();
-            if(module != null){
-                List<MessagePack> result = messageProvider.loadPacks(module);
-                MessagePack defaultPack = readPack(plugin, "messages/default.yml");
-                if(defaultPack != null){
-                    if(result.isEmpty()){
-                        String languageTag = Locale.getDefault().toLanguageTag().replace("-","_");
-                        String language = Locale.getDefault().getLanguage();
+        if(messageProvider != null && module != null){
+            List<MessagePack> result = messageProvider.loadPacks(module);
+            MessagePack defaultPack = readPack(loader, location+"default.yml");
+            if(defaultPack != null){
+                if(result.isEmpty()){
+                    String languageTag = Locale.getDefault().toLanguageTag().replace("-","_");
+                    String language = Locale.getDefault().getLanguage();
 
-                        MessagePack pack = readPack(plugin, "messages/" +languageTag+".yml");
-                        if(pack == null) pack = readPack(plugin, "messages/" +language+".yml");
+                    MessagePack pack = readPack(loader, location+languageTag+".yml");
+                    if(pack == null) pack = readPack(loader, location +language+".yml");
 
-                        if(pack == null){
-                            messageProvider.importPack(defaultPack);
-                        }else{
-                            updateMessages(pack,defaultPack);
-                            messageProvider.importPack(pack);
-                        }
+                    if(pack == null){
+                        messageProvider.importPack(defaultPack);
                     }else{
-                        for (MessagePack original : result) {
-                            MessagePack pack = readPack(plugin, "messages/" +original.getMeta().getLanguage().getCode()+".yml");
-                            if(pack == null) pack = readPack(plugin, "messages/" +original.getMeta().getLanguage().getName()+".yml");
+                        updateMessages(pack,defaultPack);
+                        messageProvider.importPack(pack);
+                    }
+                }else{
+                    for (MessagePack original : result) {
+                        MessagePack pack = readPack(loader, location +original.getMeta().getLanguage().getCode()+".yml");
+                        if(pack == null) pack = readPack(loader, location+original.getMeta().getLanguage().getName()+".yml");
 
-                            int updated = 0;
-                            if(pack != null) updated += updateMessages(original,pack);
-                            updated += updateMessages(original,defaultPack);
+                        int updated = 0;
+                        if(pack != null) updated += updateMessages(original,pack);
+                        updated += updateMessages(original,defaultPack);
 
-                            if(updated > 0){
-                                messageProvider.updatePack(original,updated);
-                            }
+                        if(updated > 0){
+                            messageProvider.updatePack(original,updated);
                         }
                     }
                 }
-                messageProvider.calculateMessages();
             }
+            messageProvider.calculateMessages();
         }
     }
 
-    private static MessagePack readPack(Plugin<?> plugin, String location){
-        InputStream stream = plugin.getLoader().getClassLoader().getResourceAsStream(location);
+    private static MessagePack readPack(ClassLoader loader, String location){
+        InputStream stream = loader.getResourceAsStream(location);
         if(stream != null){
             return MessagePack.fromDocument(DocumentFileType.YAML.getReader().read(stream, StandardCharsets.UTF_8));
         }

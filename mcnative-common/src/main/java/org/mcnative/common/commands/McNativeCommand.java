@@ -20,34 +20,51 @@
 
 package org.mcnative.common.commands;
 
+import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.NotFindable;
-import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.MainCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.command.sender.ConsoleCommandSender;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.Messages;
+import org.mcnative.common.McNative;
+import org.mcnative.common.commands.plugin.McNativePluginCommand;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.event.ClickAction;
+import org.mcnative.common.text.event.HoverAction;
+import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.utils.Messages;
 
-public class McNativeCommand extends MainCommand implements NotFindable {
-
-    private final BasicCommand infoCommand;
+public class McNativeCommand extends MainCommand implements NotFindable, NoPermissionHandler {
 
     public McNativeCommand(ObjectOwner owner) {
-        super(owner, CommandConfiguration.name("mcnative"));
-        this.infoCommand = new McNativeInfoCommand(owner);
-        registerCommand(infoCommand);
-        registerCommand(new McNativePluginsCommand(owner));
+        super(owner, CommandConfiguration.newBuilder()
+                .name("mcnative")
+                .aliases("mcn")
+                .permission("mcnative.manage.manage")
+                .create());
+        registerCommand(new McNativeInfoCommand(owner));
+
+        registerCommand(new McNativePluginCommand(owner));
         registerCommand(new McNativePasteLogCommand(owner));
         registerCommand(new McNativeVersionCommand(owner));
     }
 
     @Override
     public void commandNotFound(CommandSender sender, String command, String[] args) {
-        if(sender.hasPermission("mcnative.admin")) {
-            infoCommand.execute(sender, args);
-        } else {
-            sender.sendMessage(sender instanceof ConsoleCommandSender ? Messages.PREFIX_CONSOLE : Messages.PREFIX_USER + "See https://mcnative.org");
-        }
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_HELP);
+    }
+
+    @Override
+    public void handle(CommandSender sender, String permission, String command, String[] strings) {
+        sender.sendMessage(Text.newBuilder().text("")
+                .onClick(ClickAction.OPEN_URL,"https://mcnative.org")
+                .onHover(HoverAction.SHOW_TEXT,"Checkout McNative and build your own plugins")
+                .include(builder
+                        -> builder.color(TextColor.GOLD).text("McNative")
+                        .color(TextColor.DARK_GRAY).text(" | ")
+                        .color(TextColor.GOLD).text("Minecraft application framework ")
+                        .color(TextColor.RED).text("v"+McNative.getInstance().getVersion().getName())
+                        .color(TextColor.GOLD).text("by ")
+                        .color(TextColor.RED).text("Pretronic (Davide Wietlisbach & Philipp Friedhoff)")).build());
     }
 }

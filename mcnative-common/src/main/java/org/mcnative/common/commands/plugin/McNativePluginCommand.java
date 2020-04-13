@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 22.03.20, 20:25
+ * @author Davide Wietlisbach
+ * @since 13.04.20, 20:37
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,29 +18,25 @@
  * under the License.
  */
 
-package org.mcnative.common.commands;
+package org.mcnative.common.commands.plugin;
 
-import net.pretronic.libraries.command.command.BasicCommand;
+import net.pretronic.libraries.command.command.MainCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
-import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.McNative;
-import org.mcnative.common.utils.Messages;
 
-public class McNativeVersionCommand extends BasicCommand {
+public class McNativePluginCommand extends MainCommand {
 
-    public McNativeVersionCommand(ObjectOwner owner) {
+    public McNativePluginCommand(ObjectOwner owner) {
         super(owner, CommandConfiguration.newBuilder()
-                .name("version")
-                .aliases("v", "ver")
-                .permission("mcnative.manage.version")
-                .create());
-    }
+                .name("plugin").aliases("pl","p")
+                .permission("mcnative.manage.plugin").create());
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_VERSION, VariableSet.create()
-                .add("version", McNative.getInstance().getVersion().getName()));
+        registerCommand(new PluginListCommand(owner));
+        registerCommand(new PluginEnableCommand(owner));
+        registerCommand(new PluginDisableCommand(owner));
+        registerCommand(new PluginRestartCommand(owner));
+        registerCommand(new PluginLoadCommand(owner));
+        registerCommand(new PluginUnloadCommand(owner));
+        registerCommand(new PluginReloadCommand(owner));
     }
 }

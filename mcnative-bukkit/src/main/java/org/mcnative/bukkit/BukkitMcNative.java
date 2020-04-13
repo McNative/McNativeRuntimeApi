@@ -33,9 +33,11 @@ import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.logging.level.DebugLevel;
 import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
-import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriber;
-import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableDescriberRegistry;
+import net.pretronic.libraries.message.bml.variable.describer.VariableDescriberRegistry;
+import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
+import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
@@ -44,6 +46,8 @@ import org.bukkit.OfflinePlayer;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
+import org.mcnative.bukkit.plugin.mapped.BukkitPluginDescription;
+import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
@@ -53,6 +57,7 @@ import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
@@ -106,7 +111,6 @@ public class BukkitMcNative implements McNative {
         this.network = network;
 
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
-        System.out.println(Bukkit.getLogger().getClass());
 
         SLF4JStaticBridge.trySetLogger(logger);
     }
@@ -222,9 +226,17 @@ public class BukkitMcNative implements McNative {
         getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
     }
 
-    protected void registerDescribers(){
-        ReflectVariableDescriberRegistry.registerDescriber(BukkitPlayer.class, ReflectVariableDescriber.of(BukkitPlayer.class));
-        ReflectVariableDescriberRegistry.registerDescriber(OfflinePlayer.class, ReflectVariableDescriber.of(OfflinePlayer.class));
-        ReflectVariableDescriberRegistry.registerDescriber(PlayerDesign.class, ReflectVariableDescriber.of(PlayerDesign.class));
+    protected void registerDefaultDescribers(){
+        VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
+        VariableDescriberRegistry.registerDescriber(OfflinePlayer.class);
+        VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
+        VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
+        VariableDescriberRegistry.registerDescriber(PluginDescription.class);
+        VariableDescriberRegistry.registerDescriber(DefaultPluginDescription.class);
+        VariableDescriberRegistry.registerDescriber(BukkitPluginDescription.class);
+        VariableDescriberRegistry.registerDescriber(DefaultPluginLoader.class);
+        VariableDescriberRegistry.registerDescriber(BukkitPluginLoader.class);
+        VariableDescriberRegistry.registerDescriber(PluginVersion.class);
     }
+
 }

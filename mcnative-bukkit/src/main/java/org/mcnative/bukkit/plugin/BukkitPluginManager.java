@@ -19,9 +19,14 @@
 
 package org.mcnative.bukkit.plugin;
 
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.plugin.exception.InvalidPluginDescriptionException;
 import net.pretronic.libraries.plugin.lifecycle.LifecycleState;
 import net.pretronic.libraries.plugin.loader.PluginLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
@@ -30,16 +35,20 @@ import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.interfaces.ShutdownAble;
+import net.pretronic.libraries.utility.io.archive.ZipArchive;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.*;
 import org.mcnative.bukkit.McNativeLauncher;
+import org.mcnative.bukkit.plugin.mapped.BukkitPlugin;
+import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
 import org.mcnative.common.McNative;
 import org.mcnative.common.event.service.ServiceRegisterEvent;
 import org.mcnative.common.event.service.ServiceUnregisterEvent;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -75,7 +84,7 @@ public class BukkitPluginManager implements PluginManager {
 
     @Override
     public Plugin getPlugin(String name) {
-        return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getName().equals(name));
+        return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getName().equalsIgnoreCase(name));
     }
 
     @Override
@@ -92,6 +101,40 @@ public class BukkitPluginManager implements PluginManager {
     @Override
     public Collection<PluginLoader> getLoaders() {
         return loaders;
+    }
+
+    @Override
+    public PluginLoader createPluginLoader(String name) {
+        PluginLoader loader = Iterators.findOne(this.loaders, loader1 -> loader1.getDescription().getName().equalsIgnoreCase(name));
+        if(loader == null){
+            File pluginDir = new File("plugins");
+            if(pluginDir.isDirectory()){
+                File[] files = pluginDir.listFiles();
+                if(files != null){
+                    for (File file : files) {
+                        if(file.getName().endsWith(".jar")){
+                            ZipArchive archive = new ZipArchive(file);
+                            try{
+                                InputStream input = archive.getStream("plugin.yml");
+                                if(input == null) throw new InvalidPluginDescriptionException("No plugin description found for "+file.getAbsolutePath()+" found");
+
+                                Document description = DocumentFileType.YAML.getReader().read(input);
+                                String pluginName = description.getString("name");
+                                if(pluginName.equalsIgnoreCase(name)){
+                                    loader = new BukkitPluginLoader(file,new DefaultPluginDescription(name,
+                                            null,"","","",null,null
+                                            ,new PluginVersion(description.getString("version"), -1,-1
+                                            ,-1,-1,"RELEASE"),null,null
+                                            ,Collections.emptyList(),Collections.emptyList()));
+                                    this.loaders.add(loader);
+                                }
+                            }catch (Exception ignored){}
+                        }
+                    }
+                }
+            }
+        }
+        return loader;
     }
 
     @Override
@@ -125,7 +168,9 @@ public class BukkitPluginManager implements PluginManager {
             this.plugins.add(plugin);
         }else if(state.equals(LifecycleState.INITIALISATION)){
             ResourceMessageExtractor.extractMessages(plugin);
-        }else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
+        }else if(state.equals(LifecycleState.UNLOAD)){
+            this.plugins.remove(plugin);
+        }
 
         BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);
@@ -150,7 +195,6 @@ public class BukkitPluginManager implements PluginManager {
     @Override
     public void provideLoader(PluginLoader pluginLoader) {
         this.loaders.add(pluginLoader);
-        //if(pluginLoader.isInstanceAvailable()) this.plugins.add(pluginLoader.getInstance());
     }
 
     @Override
@@ -255,11 +299,28 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     protected void registerBukkitPlugin(org.bukkit.plugin.Plugin plugin){
-        if(!plugin.getClass().getSimpleName().equals(LOADER_CLASS_NAME)) plugins.add(new MappedPlugin(plugin));
+        if(!plugin.getClass().getSimpleName().equals(LOADER_CLASS_NAME)){
+
+            PluginLoader loader = Iterators.findOne(this.loaders, loader1
+                    -> loader1 instanceof BukkitPluginLoader
+                    && plugin.equals(((BukkitPluginLoader) loader1).getOriginal()));
+            if(loader == null){
+                loader = new BukkitPluginLoader(plugin);
+                this.loaders.add(loader);
+            }
+            this.plugins.add(loader.getInstance());
+        }
     }
 
     protected void unregisterBukkitPlugin(org.bukkit.plugin.Plugin plugin){
-        this.plugins.remove(plugin);
+        Plugin<?> result = Iterators.removeOne(this.plugins, current
+                -> current instanceof BukkitPlugin
+                && ((BukkitPlugin) current).getPlugin().equals(plugin));
+        if(result != null){
+            if(result.getLoader() instanceof BukkitPluginLoader){
+                ((BukkitPluginLoader) result.getLoader()).destroy();
+            }
+        }
     }
 
     @Internal

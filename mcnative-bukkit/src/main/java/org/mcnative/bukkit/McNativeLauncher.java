@@ -33,6 +33,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
@@ -46,10 +47,12 @@ import org.mcnative.bukkit.serviceprovider.economy.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -90,6 +93,8 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative is starting, please wait...");
         logger.info(McNative.CONSOLE_PREFIX+"Version: "+version.getName());
 
+        if(!plugin.isEnabled()) enablePlugin(plugin);
+
         DocumentRegistry.getDefaultContext().registerMappingAdapter(CommandConfiguration.class, DefaultCommandConfiguration.class);
 
         if(!McNativeBukkitConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
@@ -118,7 +123,8 @@ public class McNativeLauncher {
 
         instance.registerDefaultProviders();
         instance.registerDefaultCommands();
-        instance.registerDescribers();
+        instance.registerDefaultDescribers();
+        registerDefaultListener(eventBus, pluginManager);
 
         new McNativeBridgeEventHandler(injector,eventBus,playerManager);
 
@@ -129,7 +135,7 @@ public class McNativeLauncher {
         registerDependencyHooks(pluginManager,playerManager);
 
         McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
-                .delay(500, TimeUnit.MILLISECONDS)
+                .delay(2000, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     injector.injectChannelInitializer();
                     playerManager.loadConnectedPlayers();
@@ -144,7 +150,7 @@ public class McNativeLauncher {
                     }
                 });
 
-        registerDefaultListener(eventBus, pluginManager);
+        ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
     }
 
     private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
@@ -207,11 +213,23 @@ public class McNativeLauncher {
         }
     }
 
+    /*
+    For registering a listener the plugin must be enabled. This method marks the plugin as enabled, before
+    bukkit enables the plugin.
+     */
+    private static void enablePlugin(Plugin plugin){
+        if(plugin instanceof JavaPlugin){
+            ReflectionUtil.changeFieldValue(JavaPlugin.class,plugin,"isEnabled",true);
+        }else throw new IllegalArgumentException("Could not enable plugin, requires JavaPlugin");
+    }
+
     @SuppressWarnings("unchecked")
     private static Plugin createDummyPlugin(){
         McNativeDummyPlugin plugin = new McNativeDummyPlugin(McNativeLauncher.class.getPackage().getImplementationVersion());
         List<Plugin> plugins = (List<Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
+        Map<String, Plugin> lookupNames = (Map<String, Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
         plugins.add(plugin);
+        lookupNames.put(plugin.getName(),plugin);
         return plugin;
     }
 }

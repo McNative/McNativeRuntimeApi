@@ -30,13 +30,21 @@ public class VariableBuilder implements BasicMessageBuilder {
     @Override
     public Object build(BuildContext context, boolean requiresString,Object[] parameters, Object next) {
         Object result = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
-        if(requiresString){
-            if(next != null) return result+next.toString();
-            else return result;
-        }else{
-            if(next != null) return new Object[]{result != null ? TextBuilder.buildText(result.toString(),null) : "null",next};
-            else return new Object[]{TextBuilder.buildText(result.toString(),null)!= null ? result : "null"};//@Todo replace colors
+
+        if (!requiresString) {
+            if (context instanceof MinecraftBuildContext) {
+                if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {
+                    if (next != null) {
+                        return new Object[]{result != null ? TextBuilder.buildCompileText(result.toString(), null) : "null", next};
+                    }else {
+                        return new Object[]{TextBuilder.buildCompileText(result.toString(), null) != null ? result : "null"};
+                    }
+                }
+            }
         }
+
+        if(next != null) return result+next.toString();
+        else return result;
     }
 
     @Override

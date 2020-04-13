@@ -34,8 +34,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.MappedPlugin;
-import org.mcnative.common.Messages;
-import org.mcnative.common.commands.DefaultNoPermissionHandler;
+import org.mcnative.common.plugin.DefaultNoPermissionHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;

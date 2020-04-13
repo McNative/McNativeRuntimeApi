@@ -41,13 +41,18 @@ public class IncludeMessageBuilder implements BasicMessageBuilder {
             if(message == null) message = Message.ofStaticText("{MESSAGE NOT FOUND}");
         }
         Object result = message.build(context);
-        if(requiresString){
-            if(next != null) return result.toString()+next.toString();
-            else return result.toString();
-        }else{
-            if(next != null) return new Object[]{result,next};
-            else return new Object[]{result};
+
+        if (!requiresString) {
+            if (context instanceof MinecraftBuildContext) {
+                if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {
+                    if (next != null) return new Object[]{result, next};
+                    else return new Object[]{result};
+                }
+            }
         }
+
+        if(next != null) return result.toString()+next.toString();
+        else return result.toString();
     }
 
     @Override

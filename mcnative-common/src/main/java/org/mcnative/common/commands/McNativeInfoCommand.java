@@ -28,34 +28,38 @@ import net.pretronic.libraries.utility.SystemInfo;
 import net.pretronic.libraries.utility.SystemUtil;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
-import org.mcnative.common.Messages;
+import org.mcnative.common.utils.Messages;
 
 public class McNativeInfoCommand extends BasicCommand {
 
     public McNativeInfoCommand(ObjectOwner owner) {
-        super(owner, CommandConfiguration.newBuilder().name("info").create());
+        super(owner, CommandConfiguration.newBuilder()
+                .name("info")
+                .aliases("i")
+                .permission("mcnative.manage.info")
+                .create());
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(sender.hasPermission("mcnative.admin")) {
-            String javaVersion = SystemUtil.getJavaVersion();
+        String javaVersion = SystemUtil.getJavaVersion();
+        String network = McNative.getInstance().isNetworkAvailable() ? McNative.getInstance().getNetwork().getTechnology(): "None";
 
-            sender.sendMessage(Messages.COMMAND_INFO_ADMIN, VariableSet.create()
-                    .add("platform.name", McNative.getInstance().getPlatform().getName())
-                    .add("platform.version", McNative.getInstance().getPlatform().getVersion())
-                    .add("platform.protocolVersion", McNative.getInstance().getPlatform().getProtocolVersion())
-                    .add("version", McNative.getInstance().getVersion().getName())
-                    .add("java.version", javaVersion)
-                    .add("os.name", SystemInfo.getOsName())
-                    .add("os.version", SystemInfo.getOsVersion())
-                    .add("os.arch", SystemInfo.getOsArch())
-                    .add("maxMemory", SystemInfo.getMaxMemory())
-                    .add("allocatedMemory", SystemInfo.getAllocatedMemory())
-                    .add("freeMemory", SystemInfo.getFreeMemory())
-                    .add("totalFreeMemory", SystemInfo.getTotalFreeMemory()));
-        } else {
-            sender.sendMessage(Messages.COMMAND_INFO_USER);
-        }
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_INFO, VariableSet.create()
+                .add("platform.name", McNative.getInstance().getPlatform().getName())
+                .add("platform.version", McNative.getInstance().getPlatform().getVersion())
+                .add("platform.name", McNative.getInstance().getPlatform().getName())
+                .add("protocol.version", McNative.getInstance().getPlatform().getProtocolVersion().getName())
+                .add("protocol.edition", McNative.getInstance().getPlatform().getProtocolVersion().getEdition())
+                .add("mcnative.version", McNative.getInstance().getVersion().getName())
+                .add("network", network)
+                .add("java.version", javaVersion)
+                .add("os.name", SystemInfo.getOsName())
+                .add("os.version", SystemInfo.getOsVersion())
+                .add("os.arch", SystemInfo.getOsArch())
+                .add("memory.maximum", Math.round(((double)SystemInfo.getMaxMemory())))
+                .add("memory.allocated", Math.round(((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024))))
+                .add("memory.free", Math.round(((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024))))
+                .add("memory.free.total", Math.round(((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024)))));
     }
 }

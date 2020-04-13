@@ -71,7 +71,8 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
 
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
-        builder.append(replaceVariablesAndTranslate(variables,language));
+        String result = McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
+        builder.append(result.replace("\\n","\n"));
     }
 
     @Override
@@ -108,9 +109,5 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void decompile(Document data) {
         this.key = data.getString("key");
-    }
-
-    private String replaceVariablesAndTranslate(VariableSet variables, Language language){
-        return McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
     }
 }

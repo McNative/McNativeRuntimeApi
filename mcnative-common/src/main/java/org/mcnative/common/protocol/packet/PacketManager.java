@@ -26,6 +26,7 @@ import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftClientSettingsPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftResourcePackSendPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
+import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 
 import java.util.List;
 
@@ -52,5 +53,7 @@ public interface PacketManager {
         packetManager.registerPacket(MinecraftTitlePacket.IDENTIFIER);
         packetManager.registerPacket(MinecraftResourcePackSendPacket.IDENTIFIER);
         packetManager.registerPacket(MinecraftClientSettingsPacket.IDENTIFIER);
+
+        packetManager.registerPacket(MinecraftScoreboardTeamsPacket.IDENTIFIER);
     }
 }

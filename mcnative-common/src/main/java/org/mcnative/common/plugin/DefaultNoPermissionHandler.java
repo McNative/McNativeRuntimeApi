@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 12.04.20, 21:28
+ * @author Davide Wietlisbach
+ * @since 12.04.20, 22:30
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,11 +18,11 @@
  * under the License.
  */
 
-package org.mcnative.common.commands;
+package org.mcnative.common.plugin;
 
 import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.sender.CommandSender;
-import org.mcnative.common.Messages;
+import org.mcnative.common.utils.Messages;
 
 public class DefaultNoPermissionHandler implements NoPermissionHandler {
 

@@ -25,18 +25,16 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class McNativeCommandMap extends SimpleCommandMap {
+public class McNativeCommandMap extends SimpleCommandMap implements Listener {
 
     private final BukkitCommandManager commandManager;
     private final SimpleCommandMap original;
@@ -53,10 +51,17 @@ public class McNativeCommandMap extends SimpleCommandMap {
             if(!(entry.getValue() instanceof McNativeCommand)){
                 String[] parts = entry.getKey().split(":");
                 if(parts.length == 2){
-                    commandManager.provideCommand(new BukkitCommand(entry.getValue(),getOwner(parts[0])));
+                    String owner;
+                    if(entry.getValue() instanceof PluginCommand){
+                        owner = ((PluginCommand) entry.getValue()).getPlugin().getName();
+                    }else{
+                        owner = parts[0];
+                    }
+                    commandManager.provideCommand(new BukkitCommand(entry.getValue(),getOwner(owner)));
                 }
             }
         }
+        Bukkit.getPluginManager().registerEvents(this, McNativeLauncher.getPlugin());
     }
 
     public SimpleCommandMap getOriginal() {
@@ -70,7 +75,12 @@ public class McNativeCommandMap extends SimpleCommandMap {
 
     @Override
     public void registerAll(String fallbackPrefix, List<Command> commands) {
-        original.registerAll(fallbackPrefix, commands);
+        if (commands != null) {
+            for (Command c : commands) {
+                register(fallbackPrefix, c);
+            }
+        }
+
     }
 
     @Override
@@ -137,12 +147,32 @@ public class McNativeCommandMap extends SimpleCommandMap {
         original.registerServerAliases();
     }
 
-
     public void unregister(Object command){
         for (Map.Entry<String, Command> entry : commands.entrySet()) {
             if(entry.getValue().equals(command)){
                 commands.remove(entry.getKey());
             }
         }
+        commandManager.unregisterCommand(command);
+    }
+
+    public synchronized void unregister(org.bukkit.plugin.Plugin plugin){
+        synchronized (this){
+            Iterator<Map.Entry<String, Command>> iterator =  this.commands.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry<String, Command> entry = iterator.next();
+                if(entry.getValue() instanceof PluginCommand){
+                    if(((PluginCommand) entry.getValue()).getPlugin().equals(plugin)){
+                        iterator.remove();
+                        commandManager.unregisterCommand(entry.getValue());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPluginDisable(PluginDisableEvent event){
+        unregister(event.getPlugin());
     }
 }

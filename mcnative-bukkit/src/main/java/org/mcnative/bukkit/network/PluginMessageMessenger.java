@@ -24,7 +24,6 @@ import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -66,14 +65,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
 
         this.resultListeners = new HashMap<>();
 
-        if(McNativeLauncher.getPlugin().isEnabled()){
-            register();
-        }else{
-            McNative.getInstance().getScheduler()
-                    .createTask(ObjectOwner.SYSTEM)
-                    .delay(1,TimeUnit.SECONDS)
-                    .execute(this::register);
-        }
+        register();
     }
 
     private void register(){

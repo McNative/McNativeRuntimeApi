@@ -33,15 +33,11 @@ import net.pretronic.libraries.utility.http.HttpClient;
 import net.pretronic.libraries.utility.http.HttpMethod;
 import net.pretronic.libraries.utility.http.HttpResult;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import net.pretronic.libraries.utility.io.FileUtil;
-import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
-import org.mcnative.common.Messages;
-import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.utils.Messages;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +48,10 @@ public class McNativePasteLogCommand extends BasicCommand {
     private static final Pattern IPV4_PATTERN = Pattern.compile("((\\\\)|(/))(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])?(:[0-9][0-9]?[0-9]?[0-9]?[0-9]?)?");
 
     public McNativePasteLogCommand(ObjectOwner owner) {
-        super(owner, CommandConfiguration.newBuilder().name("pasteLog").aliases("paste", "log").permission("mcnative.admin").create());
+        super(owner, CommandConfiguration.newBuilder()
+                .name("pasteLog")
+                .aliases("paste", "log")
+                .permission("mcnative.manage.paste").create());
     }
 
     @Override
@@ -75,28 +74,28 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("Operation system: " + SystemInfo.getOsName() + " version " + SystemInfo.getOsVersion());
         logger.info("OS architecture: " + SystemInfo.getOsArch());
         logger.info(" ");
-        logger.info("Max memory: " + ((double)SystemInfo.getMaxMemory()/(double) (1024 * 1024)));
-        logger.info("Free memory: " + ((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024)));
-        logger.info("Allocated memory: " + ((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024)));
-        logger.info("Total free memory: " + ((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024)));
+        logger.info("Max memory: " + Math.round(((double)SystemInfo.getMaxMemory()/(double) (1024 * 1024))));
+        logger.info("Free memory: " + Math.round(((double)SystemInfo.getFreeMemory()/(double) (1024 * 1024))));
+        logger.info("Allocated memory: " + Math.round(((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024))));
+        logger.info("Total free memory: " + Math.round(((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024))));
         logger.info(" ");
         logger.info("Plugins:");
-        for (Plugin plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            logger.info("- {} v{}", plugin.getName(), plugin.getDescription().getVersion().getName());
+        for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
+            logger.info("- {} v{} by {}", plugin.getName(), plugin.getDescription().getVersion().getName(),plugin.getDescription().getAuthor());
         }
         /*logger.info(" ");
         logger.info("Storage:");
         McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).g*/
         //@Todo storage config getting (Storage config as interface for default implementation)
         logger.info("----------------------------------------");
-
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_PASTE_STARTING);
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {
             String content = readFileReversed(McNative.getInstance().getPlatform().getLatestLogLocation());
             if(content == null) return;
             String url = publishLogAndGetUrl(content);
             if(url == null) return;
             logger.info("See your log on " + url);
-            sender.sendMessage(Messages.COMMAND_PASTE_SUCCESSFUL, VariableSet.create().add("url", url));
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PASTE_SUCCESSFUL, VariableSet.create().add("url", url));
         });
     }
 

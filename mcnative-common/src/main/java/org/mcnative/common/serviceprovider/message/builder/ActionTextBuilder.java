@@ -21,14 +21,52 @@
 package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.Module;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
-import net.pretronic.libraries.message.bml.builder.ExtensionMessageBuilder;
+import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import org.mcnative.common.text.event.HoverAction;
 
-public class ActionTextBuilder implements ExtensionMessageBuilder {
+public class ActionTextBuilder implements MessageBuilder {
+
 
     @Override
-    public Object build(BuildContext context, boolean requiresString, Object[] parameters,Object extension, Object next) {
+    public Object build(BuildContext context, boolean requiresString, String name, Module leftOperator0, String operation, Module rightOperator0, Module[] parameters0, Module extension0, Module next0) {
+        Object[] parameters = new Object[parameters0.length];
+        int index = 0;
+        for (Module parameter : parameters0) {
+            parameters[index] = parameter.build(context,false);
+            index++;
+        }
+
+        Object next = null;
+        if (next0 != null) {
+            next = next0.build(context, requiresString);
+        }
+        Object extension = this.buildModule(extension0, context, true);
+
+        if(context instanceof MinecraftBuildContext){
+            if(((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE){
+                return buildCompileActionText(parameters, next, extension);
+            }
+        }
+
+        StringBuilder builder = new StringBuilder();
+        String text = parameters[0].toString();
+        builder.append(text);
+
+        if(extension != null && !text.equals(extension)){
+            builder.append('(');
+            builder.append(extension);
+            builder.append(')');
+        }
+        if(next != null){
+            builder.append(next);
+        }
+
+        return builder.toString();
+    }
+
+    private Object buildCompileActionText(Object[] parameters, Object next, Object extension) {
         Document result = Document.newDocument();
         result.add("text","");
 
@@ -47,16 +85,7 @@ public class ActionTextBuilder implements ExtensionMessageBuilder {
         }
         result.add("extra",parameters[0]);
 
-        if(next != null){
-            return new Object[]{result,next};
-        }else{
-            return new Object[]{result};
-        }
+        if(next != null) return new Object[]{result,next};
+        else return new Object[]{result};
     }
-
-    @Override
-    public boolean isUnformattedResultRequired() {
-        return false;
-    }
-
 }
