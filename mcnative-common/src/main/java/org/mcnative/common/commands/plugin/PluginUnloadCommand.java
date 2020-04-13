@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 22.03.20, 20:25
+ * @author Davide Wietlisbach
+ * @since 13.04.20, 20:37
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,30 +18,29 @@
  * under the License.
  */
 
-package org.mcnative.common.commands;
+package org.mcnative.common.commands.plugin;
 
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.common.McNative;
 
-public class McNativePluginsCommand extends BasicCommand {
+public class PluginUnloadCommand extends BasicCommand {
 
-    public McNativePluginsCommand(ObjectOwner owner) {
-        super(owner, CommandConfiguration.newBuilder().name("plugins").aliases("plugin", "pl").create());
+    private static final String USAGE = "/mcnative plugin unload <plugin>";
+
+    public PluginUnloadCommand(ObjectOwner owner) {
+        super(owner, CommandConfiguration.newBuilder()
+                .name("unload").aliases("u")
+                .permission("mcnative.manage.plugin.unload").create());
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            String name = plugin.getName();
-            String version = plugin.getDescription().getVersion().getName();
-            int build = plugin.getDescription().getVersion().getBuild();
-            String author = plugin.getDescription().getAuthor();
+    public void execute(CommandSender sender, String[] arguments) {
+        Plugin<?> plugin = PluginCommandUtil.getPlugin(sender, arguments,getConfiguration().getName(),USAGE);
+        if (plugin == null) return;
 
-
-        }
+        PluginCommandUtil.unloadPlugin(sender,plugin);
     }
 }
