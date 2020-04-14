@@ -62,7 +62,11 @@ public class BukkitPluginDescription implements PluginDescription {
         for (String author : original.getAuthors()) {
             output.append(author).append(", ");
         }
-        output.setLength(output.length()-2);
+        if(output.length() >= 2) {
+            output.setLength(output.length()-2);
+        } else if(output.length() == 0) {
+            return "Unknown";
+        }
         return output.toString();
     }
 
