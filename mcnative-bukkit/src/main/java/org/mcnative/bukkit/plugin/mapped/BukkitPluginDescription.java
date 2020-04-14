@@ -58,6 +58,9 @@ public class BukkitPluginDescription implements PluginDescription {
 
     @Override
     public String getAuthor() {
+        if(original == null) {
+            return "Error (Contact McNative development team)";
+        }
         StringBuilder output = new StringBuilder();
         for (String author : original.getAuthors()) {
             output.append(author).append(", ");
