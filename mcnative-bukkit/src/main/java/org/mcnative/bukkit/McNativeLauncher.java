@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -135,17 +136,24 @@ public class McNativeLauncher {
         registerDependencyHooks(pluginManager,playerManager);
 
         McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
-                .delay(2000, TimeUnit.MILLISECONDS)
+                .delay(1, TimeUnit.SECONDS)
                 .execute(() -> {
-                    injector.injectChannelInitializer();
-                    playerManager.loadConnectedPlayers();
-                    instance.setReady(true);
-                    logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+                    injector.injectChannelInitializer((result) -> {
+                        if(result){
+                            playerManager.loadConnectedPlayers();
+                            instance.setReady(true);
+                            logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+                        }else{
+                            instance.setReady(true);
+                            logger.log(Level.SEVERE,McNative.CONSOLE_PREFIX+"McNative failed injecting the channel initializer, shutting down");
+                            Bukkit.getPluginManager().disablePlugin(plugin);
+                        }
+                    });
                 }).addListener(future -> {
                     if(future.isFailed()){
                         future.getThrowable().printStackTrace();
                         instance.setReady(true);
-                        logger.info(McNative.CONSOLE_PREFIX+"McNative failed injecting the channel initializer, shutting down");
+                        logger.log(Level.SEVERE,McNative.CONSOLE_PREFIX+"McNative failed injecting the channel initializer, shutting down");
                         Bukkit.getPluginManager().disablePlugin(plugin);
                     }
                 });

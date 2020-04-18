@@ -26,6 +26,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import net.pretronic.libraries.logging.Debug;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
@@ -36,6 +37,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class BukkitChannelInjector {
 
@@ -103,12 +106,24 @@ public class BukkitChannelInjector {
 
     //Code optimized from via version (https://github.com/ViaVersion/ViaVersion)
 
+    public void injectChannelInitializer(Consumer<Boolean> after){
+        injectChannelInitializer(after,0);
+    }
+
     @SuppressWarnings("unchecked")
-    public void injectChannelInitializer(){
+    private void injectChannelInitializer(Consumer<Boolean> after, int count){
         try{
             Object connection = BukkitReflectionUtil.getServerConnection();
             if(connection == null){
-                McNative.getInstance().getLogger().error("[McNative] Could not get server connection, please report this issue to the McNative developer team.");
+                if(count < 3){
+                    McNative.getInstance().getLogger().error("[McNative] Could not get server connection, trying again in a view seconds");
+                    McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                            .delay(1500, TimeUnit.MILLISECONDS)
+                            .execute(() -> injectChannelInitializer(after,count+1));
+                }else{
+                    McNative.getInstance().getLogger().error("[McNative] Could not get server connection, please report this issue to the McNative developer team.");
+                    after.accept(false);
+                }
                 return;
             }
             for (Field field : connection.getClass().getDeclaredFields()) {
@@ -121,10 +136,13 @@ public class BukkitChannelInjector {
                         field.set(connection,wrapper);
                         this.channelFutureWrapperList = wrapper;
                         this.channelFutureListField = field;
+                        after.accept(true);
                         return;
                     }
                 }
             }
+            McNative.getInstance().getLogger().error("[McNative] Could not override the channel future list in the server connection, please report this issue to the McNative developer team");
+            after.accept(false);
         }catch (Exception e){
             throw new ReflectException(e);
         }
