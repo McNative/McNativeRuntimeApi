@@ -160,6 +160,8 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
                 MinecraftProtocolUtil.writeString(buffer,"never");
                 buffer.writeByte(0);
                 MinecraftProtocolUtil.writeStringArray(buffer,new String[]{"Dkrieger","DkriesciTV"});
+
+
                 //nameTagVisibility != null ? nameTagVisibility.name() : OptionStatus.ALWAYS.name()
 
                 /*
