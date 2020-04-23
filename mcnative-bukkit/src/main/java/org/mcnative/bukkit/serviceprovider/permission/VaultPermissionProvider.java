@@ -1,8 +1,9 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Davide Wietlisbach
- * @since 18.03.20, 18:49
+ * @author Philipp Elvin Friedhoff
+ * @since 22.04.20, 22:35
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +18,13 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.permission.vault;
+package org.mcnative.bukkit.serviceprovider.permission;
 
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.World;
+import net.pretronic.libraries.utility.Iterators;
+import org.bukkit.Bukkit;
+import org.mcnative.common.McNative;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
@@ -30,49 +34,61 @@ import java.util.Collection;
 
 public class VaultPermissionProvider implements PermissionProvider {
 
-    private final Permission permission;
+    private Permission permission;
+    private Chat chat;
 
-    public VaultPermissionProvider(Permission permission) {
+    public VaultPermissionProvider(Permission permission, Chat chat) {
         this.permission = permission;
+        this.chat = chat;
+    }
+
+    public VaultPermissionProvider setPermission(Permission permission) {
+        this.permission = permission;
+        return this;
+    }
+
+    public VaultPermissionProvider setChat(Chat chat) {
+        this.chat = chat;
+        return this;
     }
 
     @Override
     public Collection<MinecraftPlayer> getOperators() {
-        return null;
-    }
-
-    public Permission getPermission() {
-        return permission;
+        return Iterators.map(Bukkit.getOperators(), offlinePlayer ->
+                McNative.getInstance().getPlayerManager().getPlayer(offlinePlayer.getUniqueId()));
     }
 
     @Override
     public Collection<String> getGroups() {
-        return Arrays.asList(permission.getGroups());
+        return Arrays.asList(this.chat.getGroups());
     }
 
     @Override
     public PermissionHandler getPlayerHandler(MinecraftPlayer player) {
-        return null;
+        return new VaultPermissionHandler(player.getUniqueId(), permission, chat);
     }
 
     @Override
     public boolean createGroup(String name) {
-        throw new UnsupportedOperationException("Vault does not support modifying permission groups");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean deleteGroup(String name) {
-        throw new UnsupportedOperationException("Vault does not support modifying permission groups");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setGroupPermission(String group, String permission, boolean allowed) {
-        if(allowed) this.permission.groupAdd((World)null,group,permission);
-        else this.permission.groupRemove((World)null,group,permission);
+        if(allowed) {
+            this.permission.groupAdd((String)null, group,  permission);
+        } else {
+            this.permission.groupRemove((String)null, group,  permission);
+        }
     }
 
     @Override
     public void unsetGroupPermission(String group, String permission) {
-        this.permission.groupRemove((World)null,group,permission);
+        this.permission.groupRemove((String) null, group, permission);
     }
 }

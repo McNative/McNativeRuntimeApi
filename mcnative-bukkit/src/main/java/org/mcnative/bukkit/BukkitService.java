@@ -19,7 +19,9 @@
 
 package org.mcnative.bukkit;
 
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
@@ -32,6 +34,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.serviceprovider.economy.VaultEconomyProvider;
+import org.mcnative.bukkit.serviceprovider.permission.VaultPermissionProvider;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
@@ -48,6 +51,7 @@ import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.serviceprovider.economy.EconomyProvider;
+import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.MinecraftService;
 import org.mcnative.service.ObjectCreator;
@@ -345,6 +349,15 @@ public class BukkitService implements MinecraftService, MinecraftServer {
                 VaultEconomyProvider vaultEconomyProvider = new VaultEconomyProvider(economyService.getProvider());
                 McNative.getInstance().getRegistry().registerService(McNative.getInstance(), EconomyProvider.class,
                         vaultEconomyProvider, ServicePriority.LOWEST);
+            }
+
+            RegisteredServiceProvider<Permission> permissionService = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+            RegisteredServiceProvider<Chat> chatService = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
+            if(permissionService != null || chatService != null) {
+                VaultPermissionProvider vaultPermissionProvider = new VaultPermissionProvider(permissionService != null ? permissionService.getProvider() : null,
+                        chatService != null ? chatService.getProvider() : null);
+                McNative.getInstance().getRegistry().registerService(McNative.getInstance(), PermissionProvider.class,
+                        vaultPermissionProvider, ServicePriority.LOWEST);
             }
         }
     }

@@ -43,7 +43,7 @@ import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
-import org.mcnative.bukkit.serviceprovider.economy.VaultServiceListener;
+import org.mcnative.bukkit.serviceprovider.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
