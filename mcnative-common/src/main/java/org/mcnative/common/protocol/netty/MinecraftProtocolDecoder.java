@@ -22,6 +22,7 @@ package org.mcnative.common.protocol.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -47,20 +48,24 @@ public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
     }
     @Override
     protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> output) {
-        int packetId = MinecraftProtocolUtil.readVarInt(in);
+        try {
+            int packetId = MinecraftProtocolUtil.readVarInt(in);
 
-        PacketIdentifier identifier = packetManager.getPacketIdentifier(connection.getState(),direction,version,packetId);
-        if(identifier != null){
-            MinecraftPacket packet = identifier.newPacketInstance();
-            packet.read(connection,direction,version,in);
-            List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
-            if(listeners != null && !listeners.isEmpty()){
-                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
-                listeners.forEach(listener -> listener.handle(event));
-                if(event.isCancelled()) return;
-                packet = event.getPacket();
+            PacketIdentifier identifier = packetManager.getPacketIdentifier(connection.getState(),direction,version,packetId);
+            if(identifier != null){
+                MinecraftPacket packet = identifier.newPacketInstance();
+                packet.read(connection,direction,version,in);
+                List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
+                if(listeners != null && !listeners.isEmpty()){
+                    MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+                    listeners.forEach(listener -> listener.handle(event));
+                    if(event.isCancelled()) return;
+                    packet = event.getPacket();
+                }
+                output.add(packet);
             }
-            output.add(packet);
+        } catch (Exception exception) {
+            McNative.getInstance().getLogger().error("An error occurred in McNative:", exception.getMessage());
         }
     }
 }

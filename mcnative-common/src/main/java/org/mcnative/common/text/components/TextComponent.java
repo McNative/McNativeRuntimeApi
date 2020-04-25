@@ -64,7 +64,7 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
 
     @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        return super.compile(key,variables,language).add("text",variables.replace(text));
+        return super.compile(key, connection,variables,language).add("text",variables.replace(text));
     }
 
     @Override

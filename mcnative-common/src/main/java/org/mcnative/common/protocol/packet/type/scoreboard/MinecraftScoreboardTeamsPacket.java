@@ -30,6 +30,8 @@ import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.format.TextColor;
 
+import java.util.Arrays;
+
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
@@ -56,6 +58,13 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
     private MessageComponent<?> prefix;
     private MessageComponent<?> suffix;
     private String[] entities;
+
+    public MinecraftScoreboardTeamsPacket() {
+        this.friendlyFlag = FriendlyFlag.ENABLED;
+        this.nameTagVisibility = OptionStatus.ALWAYS;
+        this.collisionRule = OptionStatus.ALWAYS;
+        this.color = TextColor.WHITE;
+    }
 
     public String getName() {
         return name;
@@ -150,38 +159,49 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         if(direction == PacketDirection.OUTGOING){
-            MinecraftProtocolUtil.writeString(buffer,"TEST");//name
-            buffer.writeByte(action.ordinal());//action.ordinal()
+            MinecraftProtocolUtil.writeString(buffer,name);
+
+            buffer.writeByte(action.ordinal());
+
             if(action == Action.CREATE || action == Action.UPDATE){
-                MinecraftProtocolUtil.writeString(buffer,"TEAM-DISPLAY");
-                MinecraftProtocolUtil.writeString(buffer,"TEAM-prefix ");
-                MinecraftProtocolUtil.writeString(buffer,"TEAM-suffix ");
-                buffer.writeByte(friendlyFlag != null ? friendlyFlag.ordinal(): FriendlyFlag.DISABLED.ordinal());
-                MinecraftProtocolUtil.writeString(buffer,"never");
-                buffer.writeByte(0);
-                MinecraftProtocolUtil.writeStringArray(buffer,new String[]{"Dkrieger","DkriesciTV"});
+                if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_13)) {
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString());
+                    buffer.writeByte(friendlyFlag.getCode());
+
+                    MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibiltyName());
+
+                    MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
+
+                    MinecraftProtocolUtil.writeVarInt(buffer, 0);
+
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString());
+
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString());
+
+                } else {
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.toPlainText());
+
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.toPlainText());
+
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.toPlainText());
+
+                    if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_10)) {
+                        buffer.writeByte(friendlyFlag.getCode());
+                    } else {
+                        buffer.writeByte(friendlyFlag.ordinal());
+                    }
 
 
-                //nameTagVisibility != null ? nameTagVisibility.name() : OptionStatus.ALWAYS.name()
-
-                /*
-                MinecraftProtocolUtil.writeString(buffer,displayName != null ? displayName.compileToString() : "");
-                buffer.writeByte(friendlyFlag != null ? friendlyFlag.ordinal(): FriendlyFlag.ALLOW.ordinal());
-                MinecraftProtocolUtil.writeString(buffer,"never");//nameTagVisibility != null ? nameTagVisibility.name() : OptionStatus.ALWAYS.name()
-                MinecraftProtocolUtil.writeString(buffer,"never");//collisionRule != null ? collisionRule.name(): OptionStatus.ALWAYS.name()
-                MinecraftProtocolUtil.writeVarInt(buffer,0);//buffer,color != null ? color.ordinal(): TextColor.WHITE.ordinal()
-                System.out.println(prefix.compileToString());
-                System.out.println(suffix.compileToString());
-                MinecraftProtocolUtil.writeString(buffer,"[\"\",{\"text\":\"Test\"}]");//buffer,prefix != null ? prefix.compileToString() : ""
-                MinecraftProtocolUtil.writeString(buffer,"[\"\",{\"text\":\"Test\"}]");
-                if(action == Action.CREATE){
-                    MinecraftProtocolUtil.writeStringArray(buffer,entities);
+                    buffer.writeByte(color.getClientCode());
                 }
-                 */
+                if(action == Action.CREATE) {
+                    MinecraftProtocolUtil.writeStringArray(buffer, entities);
+                }
+
             }else if(action == Action.ADD_ENTITIES){
-
+                MinecraftProtocolUtil.writeStringArray(buffer, entities);
             }else if(action == Action.REMOVE_ENTITIES){
-
+                MinecraftProtocolUtil.writeStringArray(buffer, entities);
             }
         }
     }
@@ -198,18 +218,42 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
     public enum OptionStatus {
 
-        ALWAYS,
-        NEVER,
-        FOR_OTHER_TEAMS,
-        FOR_OWN_TEAM;
+        ALWAYS("always", "always"),
+        NEVER("never", "never"),
+        FOR_OTHER_TEAMS("hideForOtherTeams", "pushOtherTeams"),
+        FOR_OWN_TEAM("hideForOwnTeam", "pushOwnTeam");
 
+        private final String nameTagVisibiltyName;
+        private final String collisionRuleName;
+
+        OptionStatus(String nameTagVisibiltyName, String collisionRuleName) {
+            this.nameTagVisibiltyName = nameTagVisibiltyName;
+            this.collisionRuleName = collisionRuleName;
+        }
+
+        public String getNameTagVisibiltyName() {
+            return nameTagVisibiltyName;
+        }
+
+        public String getCollisionRuleName() {
+            return collisionRuleName;
+        }
     }
 
     public enum FriendlyFlag {
 
-        DISABLED,
-        ENABLED,
-        CAN_SEE_INVISIBLE_PLAYERS;
+        DISABLED((byte) 0x02),
+        ENABLED((byte) 0x01),
+        CAN_SEE_INVISIBLE_PLAYERS((byte) 0);
 
+        private final byte code;
+
+        FriendlyFlag(byte code) {
+            this.code = code;
+        }
+
+        public byte getCode() {
+            return code;
+        }
     }
 }

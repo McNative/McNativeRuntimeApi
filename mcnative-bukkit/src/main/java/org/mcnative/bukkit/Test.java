@@ -20,23 +20,36 @@
 
 package org.mcnative.bukkit;
 
+import net.pretronic.libraries.event.Listener;
+import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
+import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
+import org.mcnative.service.event.player.MinecraftPlayerJoinEvent;
 
 public class Test {
 
+    @Listener
+    public void onLogin(MinecraftPlayerJoinEvent event) {
+        System.out.println("login");
+
+        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
+            System.out.println("send");
+            execute();
+        }, 20*10);
+    }
 
     public void execute(){
-        OnlineMinecraftPlayer dkrieger = McNative.getInstance().getLocal().getOnlinePlayer("Dkrieger");
-        OnlineMinecraftPlayer dkriescitv = McNative.getInstance().getLocal().getOnlinePlayer("DkriesciTV");
-        //OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("FridiousHD");
+        //OnlineMinecraftPlayer dkrieger = McNative.getInstance().getLocal().getOnlinePlayer("Dkrieger");
+        //OnlineMinecraftPlayer dkriescitv = McNative.getInstance().getLocal().getOnlinePlayer("DkriesciTV");
+        OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("FridiousHD");
 
         System.out.println("XXXX");
 
-        sendPrefix(dkrieger,dkrieger,"Admin : ",TextColor.DARK_RED);
+        sendPrefix(fridious, fridious,"Admin:",TextColor.DARK_RED);
       //  sendPrefix(dkrieger,fridious,"Admin : ",TextColor.DARK_RED);
       //  sendPrefix(dkrieger,dkriescitv,"Player : ",TextColor.GRAY);
 
@@ -49,7 +62,7 @@ public class Test {
 
        // sendPrefix(dkriescitv,dkrieger,"Admin : ",TextColor.DARK_RED);
      //   sendPrefix(dkriescitv,fridious,"Admin (H) : ",TextColor.DARK_RED);
-        sendPrefix(dkriescitv,dkriescitv,"Player : ",TextColor.GRAY);
+        //sendPrefix(dkriescitv,dkriescitv,"Player : ",TextColor.GRAY);
 
 
         /*
@@ -68,13 +81,13 @@ public class Test {
 
     public void sendPrefix(OnlineMinecraftPlayer player, OnlineMinecraftPlayer target, String prefix,TextColor color){
         MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
-        packet.setName("PREFIX-"+target.getName());
-
-        packet.setDisplayName(Text.of("test"));
-        packet.setPrefix(Text.of(prefix,color));
-        packet.setSuffix(Text.of("test"));
-
         packet.setAction(MinecraftScoreboardTeamsPacket.Action.CREATE);
+        packet.setName("XX"+target.getName());
+
+        packet.setDisplayName(Text.of("d"));
+        packet.setPrefix(Text.of(prefix,color));
+        packet.setSuffix(Text.of("s"));
+
         packet.setColor(color);
         packet.setEntities(new String[]{target.getName()});
         player.sendPacket(packet);

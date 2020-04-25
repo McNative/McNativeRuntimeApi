@@ -21,50 +21,66 @@ package org.mcnative.common.text.format;
 
 public enum TextColor {
 
-    BLACK( '0', "black" ),
+    BLACK( '0', "black", (byte) 0),
 
-    DARK_BLUE( '1', "dark_blue" ),
+    DARK_BLUE( '1', "dark_blue", (byte) 1),
 
-    DARK_GREEN( '2', "dark_green" ),
+    DARK_GREEN( '2', "dark_green", (byte) 2),
 
-    DARK_AQUA( '3', "dark_aqua" ),
+    DARK_AQUA( '3', "dark_aqua", (byte) 3),
 
-    DARK_RED( '4', "dark_red" ),
+    DARK_RED( '4', "dark_red", (byte) 4),
 
-    DARK_PURPLE( '5', "dark_purple" ),
+    DARK_PURPLE( '5', "dark_purple", (byte) 5),
 
-    GOLD( '6', "gold" ),
+    GOLD( '6', "gold", (byte) 6),
 
-    GRAY( '7', "gray" ),
+    GRAY( '7', "gray", (byte) 7),
 
-    DARK_GRAY( '8', "dark_gray" ),
+    DARK_GRAY( '8', "dark_gray", (byte) 8),
 
-    BLUE( '9', "blue" ),
+    BLUE( '9', "blue", (byte) 9),
 
-    GREEN( 'a', "green" ),
+    GREEN( 'a', "green", (byte) 10),
 
-    AQUA( 'b', "aqua" ),
+    AQUA( 'b', "aqua", (byte) 11),
 
-    RED( 'c', "red" ),
+    RED( 'c', "red", (byte) 12),
 
-    LIGHT_PURPLE( 'd', "light_purple" ),
+    LIGHT_PURPLE( 'd', "light_purple", (byte) 13),
 
-    YELLOW( 'e', "yellow" ),
+    YELLOW( 'e', "yellow", (byte) 14),
 
-    WHITE( 'f', "white" ),
+    WHITE( 'f', "white", (byte) 15),
 
-    RESET( 'r', "reset" );
+    OBFUSCATED('k', "obfuscated", (byte) 16),
 
-    private char code;
-    private String name;
+    BOLD('l', "bold", (byte) 17),
 
-    TextColor(char code, String name) {
+    STRIKETHROUGH('m', "strikethrough", (byte) 18),
+
+    UNDERLINED('n', "underlined", (byte) 19),
+
+    ITALIC('o', "italic", (byte) 20),
+
+    RESET( 'r', "reset", (byte) 21);
+
+    private final char code;
+    private final String name;
+    private final byte clientCode;
+
+    TextColor(char code, String name, byte clientCode) {
         this.code = code;
         this.name = name;
+        this.clientCode = clientCode;
     }
 
     public char getCode() {
         return code;
+    }
+
+    public byte getClientCode() {
+        return clientCode;
     }
 
     public String getName() {
