@@ -22,7 +22,9 @@ package org.mcnative.common.plugin.configuration;
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.GeneralUtil;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.interfaces.ShutdownAble;
@@ -31,6 +33,8 @@ import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveMap;
 import org.mcnative.common.McNative;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -93,6 +97,13 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
             this.databaseDrivers.put(name, driver);
         }
         return this.databaseDrivers.get(name);
+    }
+
+    @Override
+    public Collection<String> getDatabaseTypes(Plugin<?> plugin) {
+        Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), entry -> storageConfig.getDriverConfig(entry.name).getDriverClass().getSimpleName());
+        if(types.isEmpty()) return Collections.singleton("none");
+        return types;
     }
 
     @Override

@@ -21,9 +21,12 @@ package org.mcnative.common.plugin.configuration;
 
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.plugin.MinecraftPlugin;
 
 import java.io.File;
+import java.util.Collection;
 
 public interface ConfigurationProvider {
 
@@ -45,4 +48,6 @@ public interface ConfigurationProvider {
     Database getDatabase(ObjectOwner owner, String name, boolean configCreate);
 
     DatabaseDriver getDatabaseDriver(String name);
+
+    Collection<String> getDatabaseTypes(Plugin<?> plugin);
 }

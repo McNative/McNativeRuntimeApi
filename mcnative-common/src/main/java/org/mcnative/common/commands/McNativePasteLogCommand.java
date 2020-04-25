@@ -34,6 +34,7 @@ import net.pretronic.libraries.utility.http.HttpMethod;
 import net.pretronic.libraries.utility.http.HttpResult;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
+import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.utils.Messages;
 
@@ -41,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 public class McNativePasteLogCommand extends BasicCommand {
@@ -81,7 +83,15 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info(" ");
         logger.info("Plugins:");
         for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
-            logger.info("- {} v{} by {}", plugin.getName(), plugin.getDescription().getVersion().getName(),plugin.getDescription().getAuthor());
+            StringBuilder builder = new StringBuilder();
+            builder.append("- ")
+                    .append(plugin.getName())
+                    .append("v").append(plugin.getDescription().getVersion().getName())
+                    .append(plugin.getDescription().getAuthor())
+                    .append("[Databases: ");
+            AtomicBoolean first = new AtomicBoolean(true);
+            McNative.getInstance().getPluginManager().getService(ConfigurationProvider.class).getDatabaseTypes(plugin).forEach(type -> builder.append(first.get() ? "" : ",").append(type));
+            logger.info(builder.toString());
         }
         /*logger.info(" ");
         logger.info("Storage:");

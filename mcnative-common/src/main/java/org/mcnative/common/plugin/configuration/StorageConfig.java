@@ -24,6 +24,7 @@ import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.databasequery.driverloader.PretronicDependencyDriverLoader;
 import net.pretronic.databasequery.sql.dialect.Dialect;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfigBuilder;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
@@ -51,8 +52,8 @@ public class StorageConfig {
         PretronicDependencyDriverLoader.registerDefaults();
     }
 
-    private final Map<String, DatabaseDriverConfig<?>> databaseDrivers;
-    private final Collection<DatabaseEntry> databaseEntries;
+    protected final Map<String, DatabaseDriverConfig<?>> databaseDrivers;
+    protected final Collection<DatabaseEntry> databaseEntries;
     private Configuration configuration;
 
     public StorageConfig(ConfigurationProvider configurationProvider,Configuration configuration) {
@@ -76,6 +77,11 @@ public class StorageConfig {
                     entry.pluginName.equalsIgnoreCase(plugin.getName()) && entry.name.equalsIgnoreCase("default"));
         }
         return databaseEntry;
+    }
+
+    public Collection<DatabaseEntry> getDatabaseEntries(Plugin<?> plugin) {
+        return Iterators.filter(this.databaseEntries, entry ->
+                entry.pluginName.equalsIgnoreCase(plugin.getName()));
     }
 
     public DatabaseEntry addDatabaseEntry(DatabaseEntry entry) {
