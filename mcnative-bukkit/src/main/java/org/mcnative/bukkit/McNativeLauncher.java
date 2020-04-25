@@ -202,9 +202,6 @@ public class McNativeLauncher {
         if(Bukkit.getPluginManager().getPlugin("Vault") != null){
             eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
         }
-        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
-            new Test().execute();
-        },20*10);
     }
 
     private static void setupConfiguredServices(){
