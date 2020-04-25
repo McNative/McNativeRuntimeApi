@@ -24,7 +24,7 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
 import org.mcnative.common.connection.MinecraftConnection;
-import org.mcnative.common.player.ChatPosition;
+import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;

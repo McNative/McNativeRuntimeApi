@@ -20,8 +20,10 @@
 package org.mcnative.common.event.player;
 
 import net.pretronic.libraries.event.Cancellable;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Nullable;
-import org.mcnative.common.player.ChatChannel;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.text.components.MessageComponent;
 
 public interface MinecraftPlayerChatEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 
@@ -30,7 +32,18 @@ public interface MinecraftPlayerChatEvent extends MinecraftOnlinePlayerEvent, Ca
 
     void setChannel(ChatChannel channel);
 
+
     String getMessage();
 
     void setMessage(String message);
+
+
+    MessageComponent<?> getOutputMessage();
+
+    void setOutputMessage(MessageComponent<?> outputMessage);
+
+    VariableSet getOutputVariables();
+
+    void setOutputVariables(VariableSet variables);
+
 }

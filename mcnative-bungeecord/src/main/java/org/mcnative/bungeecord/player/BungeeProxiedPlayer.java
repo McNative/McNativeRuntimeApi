@@ -36,14 +36,16 @@ import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
-import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteDecoder;
@@ -89,9 +91,6 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
         super(playerData);
         this.serverMap = serverMap;
         this.connection = connection;
-
-        ChatChannel global = McNative.getInstance().getLocal().getServerChat();
-        if(global != null) setChatChannel(global);
     }
 
     @Internal
@@ -173,12 +172,12 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Override
-    public ChatChannel getChatChannel() {
+    public ChatChannel getPrimaryChatChannel() {
         return chatChannel;
     }
 
     @Override
-    public void setChatChannel(ChatChannel channel) {
+    public void setPrimaryChatChannel(ChatChannel channel) {
         if(!channel.containsPlayer(this)) channel.addPlayer(this);
         this.chatChannel = channel;
     }

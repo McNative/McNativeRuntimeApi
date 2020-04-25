@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 14:49
+ * @since 25.04.20, 16:25
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +18,10 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard;
+package org.mcnative.common.player.tablist;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
@@ -30,9 +31,9 @@ import java.util.List;
 
 public interface Tablist {
 
-    Collection<MinecraftPlayer> getPlayers();
+    Collection<ConnectedMinecraftPlayer> getReceivers();
 
-    List<ScoreboardEntry> getEntries();
+    List<TablistEntry> getEntries();
 
 
     default void setHeader(String message){
@@ -66,32 +67,40 @@ public interface Tablist {
     void clearHeaderAndFooter();
 
 
-    void addEntry(MinecraftPlayer player);
+    TablistFormatter getFormatter();
 
-    void addEntry(MinecraftPlayer player, PlayerDesign design);
+    void setFormatter(TablistFormatter formatter);
 
-    void addEntry(MinecraftPlayer player,String prefix, String suffix, int priority);
 
-    void addEntry(String entry,String prefix, String suffix, int priority);
+    void addEntry(ConnectedMinecraftPlayer player);
 
-    void addEntry(ScoreboardEntry entry);
+    void addEntry(ConnectedMinecraftPlayer player, PlayerDesign design);
 
-    void removeEntry(MinecraftPlayer player);
 
-    void removeEntry(ScoreboardEntry entry);
+    void addEntry(TablistEntry entry);
 
-    void removeEntry(String entry);
 
+    void removeEntry(ConnectedMinecraftPlayer player);
+
+    void removeEntry(TablistEntry entry);
+
+
+    void updateOverview();
+
+    void updateOverview(ConnectedMinecraftPlayer player);
 
     void updateEntries();
 
-    void updateMeta();
+    void updateEntries(ConnectedMinecraftPlayer player);
 
-    void update();
+    default void update(){
+        updateOverview();
+        updateEntries();
+    }
 
-
-    static Tablist newTablist(){
-        return null;
+    default void update(ConnectedMinecraftPlayer player){
+        updateOverview(player);
+        updateEntries(player);
     }
 
 }

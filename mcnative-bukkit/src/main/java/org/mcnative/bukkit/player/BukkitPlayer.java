@@ -30,6 +30,7 @@ import org.mcnative.bukkit.inventory.BukkitInventory;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.player.permission.BukkitPermissionHandler;
+import org.mcnative.bukkit.player.tablist.BukkitTablist;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -40,14 +41,16 @@ import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.player.*;
 import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
-import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
@@ -77,6 +80,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     private final PendingConnection connection;
 
     private ChatChannel chatChannel;
+    private Tablist tablist;
 
     private BukkitWorld world;
     private boolean permissibleInjected;
@@ -177,16 +181,6 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
         throw new UnsupportedOperationException("Currently not supported");
-    }
-
-    @Override
-    public ChatChannel getChatChannel() {
-        return chatChannel;
-    }
-
-    @Override
-    public void setChatChannel(ChatChannel channel) {
-        this.chatChannel = channel;
     }
 
     @Override
@@ -580,6 +574,16 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Override
+    public ChatChannel getPrimaryChatChannel() {
+        return chatChannel;
+    }
+
+    @Override
+    public void setPrimaryChatChannel(ChatChannel channel) {
+        this.chatChannel = channel;
+    }
+
+    @Override
     public Sidebar getSidebar() {
         throw new UnsupportedOperationException("Currently not supported");
     }
@@ -591,12 +595,18 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public Tablist getTablist() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return tablist;
     }
 
     @Override
     public void setTablist(Tablist tablist) {
-        throw new UnsupportedOperationException("Currently not supported");
+        if(this.tablist != null){
+            ((BukkitTablist)this.tablist).detachReceiver(this);
+        }
+        if(tablist != null){
+            this.tablist = tablist;
+            ((BukkitTablist)this.tablist).attachReceiver(this);
+        }
     }
 
     @Override

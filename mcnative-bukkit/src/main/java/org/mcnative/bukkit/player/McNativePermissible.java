@@ -19,8 +19,8 @@
 
 package org.mcnative.bukkit.player;
 
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveConcurrentHashMap;
-import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveMap;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
@@ -35,12 +35,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 
-//@Todo implement permission attachment bridge
+//@Todo implement child permissions
 /*
 @Todo create glowstone implementation
  Class.forName("net.glowstone.entity.GlowHumanEntity").getDeclaredField("permissions");
  */
-public class McNativePermissible implements Permissible {
+public class McNativePermissible extends PermissibleBase {
 
     private final static Class<?> CRAFT_HUMAN_ENTITY_CLASS = BukkitReflectionUtil.getCraftClass("entity.CraftHumanEntity");
     private final static Field CRAFT_HUMAN_ENTITY_PERMISSIBLE_FIELD = ReflectionUtil.getField(CRAFT_HUMAN_ENTITY_CLASS,"perm");
@@ -56,14 +56,15 @@ public class McNativePermissible implements Permissible {
     }
 
     public McNativePermissible(Player bukkitPlayer,MinecraftPlayer player) {
+        super(null);
         this.bukkitPlayer = bukkitPlayer;
         this.player = player;
 
         this.parent = bukkitPlayer;
-
         this.permissions = new CaseIntensiveConcurrentHashMap<>();
         this.attachments = new LinkedList<>();
-        clearPermissions();
+
+        recalculatePermissions();
     }
 
     @Override
@@ -101,8 +102,9 @@ public class McNativePermissible implements Permissible {
     public boolean hasPermission(String permission) {
         PermissionResult result = player.getPermissionHandler().hasPermissionExact(permission);
         if(result == PermissionResult.NORMAL) {
-            if (isPermissionSet(permission)) {
-                return permissions.get(permission).getValue();
+            PermissionAttachmentInfo attachmentInfo = permissions.get(permission);
+            if (attachmentInfo != null) {
+                return attachmentInfo.getValue();
             } else {
                 Permission perm = Bukkit.getServer().getPluginManager().getPermission(permission);
 
@@ -118,12 +120,8 @@ public class McNativePermissible implements Permissible {
 
     @Override
     public boolean hasPermission(Permission permission) {
-
-
-        if (isPermissionSet(permission.getName())) {
-            return permissions.get(permission.getName()).getValue();
-        }
-        return permission.getDefault().getValue(isOp());
+        Validate.notNull(permission);
+        return hasPermission(permission.getName());
     }
 
     @Override
@@ -220,6 +218,7 @@ public class McNativePermissible implements Permissible {
 
     @Override
     public void recalculatePermissions() {
+        if(permissions == null) return;
         clearPermissions();
         Set<Permission> defaults = Bukkit.getServer().getPluginManager().getDefaultPermissions(isOp());
         Bukkit.getServer().getPluginManager().subscribeToDefaultPerms(isOp(), parent);
@@ -245,15 +244,8 @@ public class McNativePermissible implements Permissible {
         return result;
     }
 
-    public void inject(){
-        try {
-            CRAFT_HUMAN_ENTITY_PERMISSIBLE_FIELD.set(bukkitPlayer,this);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Failed to inject McNative Permission Bridge");
-        }
-    }
-
-    private synchronized void clearPermissions() {
+    @Override
+    public synchronized void clearPermissions() {
         Set<String> permissions = this.permissions.keySet();
 
         for (String name : permissions) {
@@ -279,6 +271,14 @@ public class McNativePermissible implements Permissible {
             if (permission != null) {
                 calculateChildPermissions(permission.getChildren(), !value, attachment);
             }
+        }
+    }
+
+    public void inject(){
+        try {
+            CRAFT_HUMAN_ENTITY_PERMISSIBLE_FIELD.set(bukkitPlayer,this);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Failed to inject McNative Permission Bridge");
         }
     }
 

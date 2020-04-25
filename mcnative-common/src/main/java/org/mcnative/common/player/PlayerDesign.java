@@ -21,9 +21,12 @@ package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableObjectToString;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
+//@Todo add update listener or event
 public interface PlayerDesign extends ReflectVariableObjectToString {
 
     String getColor();
@@ -43,6 +46,19 @@ public interface PlayerDesign extends ReflectVariableObjectToString {
         else if(getColor().length() == 2) return TextColor.of(getColor().charAt(1));
         else return TextColor.WHITE;
     }
+
+    default TextColor getLastColorOfPrefix(){
+        String prefix = getPrefix();
+        if(prefix.length() >= 2){
+            char c = prefix.charAt(prefix.length() - 2);
+            if(c == Text.FORMAT_CHAR || c == Text.DEFAULT_ALTERNATE_COLOR_CHAR){
+                return TextColor.of(prefix.charAt(prefix.length()-1));
+            }
+        }
+        return TextColor.WHITE;
+    }
+
+    default void appendAdditionalVariables(VariableSet variables){ /*Optional or ignored*/}
 
     default String toJson(){
         return DocumentFileType.JSON.getWriter().write(Document.newDocument(this),false);

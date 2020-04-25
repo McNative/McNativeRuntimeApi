@@ -111,13 +111,6 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     }
 
     @Override
-    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
-        if(extras != null && !extras.isEmpty()){
-            extras.forEach(component -> component.toPlainText(builder, variables,language));
-        }
-    }
-
-    @Override
     public TextColor getColor() {
         if(color == null) return TextColor.WHITE;
         return color;
@@ -138,6 +131,23 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     public T setStyling(Set<TextStyle> styling) {
         this.styling = styling;
         return (T) this;
+    }
+
+    @Override
+    public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
+        if(extras != null && !extras.isEmpty()){
+            extras.forEach(component -> component.toPlainText(builder, variables,language));
+        }
+    }
+
+    @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        if(color != null) builder.append(Text.FORMAT_CHAR).append(color.getCode());
+        if(isBold()) builder.append(Text.FORMAT_CHAR).append(TextStyle.BOLD.getCode());
+        if(isItalic()) builder.append(Text.FORMAT_CHAR).append(TextStyle.ITALIC.getCode());
+        if(isUnderlined()) builder.append(Text.FORMAT_CHAR).append(TextStyle.UNDERLINE.getCode());
+        if(isStrikeThrough()) builder.append(Text.FORMAT_CHAR).append(TextStyle.STRIKETHROUGH.getCode());
+        if(isObfuscated()) builder.append(Text.FORMAT_CHAR).append(TextStyle.OBFUSCATED.getCode());
     }
 
     @Override

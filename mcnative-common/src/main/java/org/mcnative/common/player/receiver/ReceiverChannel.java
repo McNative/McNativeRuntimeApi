@@ -20,7 +20,6 @@
 package org.mcnative.common.player.receiver;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
@@ -28,13 +27,18 @@ import org.mcnative.common.text.components.MessageComponent;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+//@Todo maybe make accessible from player side
 public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     String getName();
 
+    void setName(String name);
+
     Collection<OnlineMinecraftPlayer> getPlayers();
 
-    boolean containsPlayer(MinecraftPlayer player);
+    void setPlayers(Collection<OnlineMinecraftPlayer> players);
+
+    boolean containsPlayer(OnlineMinecraftPlayer player);
 
     void addPlayer(OnlineMinecraftPlayer player);
 
@@ -53,7 +57,6 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
     default void send(ReceiveAble receiveAble){
         receiveAble.execute(this);
     }
-
 
     void addRemovalListener(Consumer<OnlineMinecraftPlayer> listener);
 

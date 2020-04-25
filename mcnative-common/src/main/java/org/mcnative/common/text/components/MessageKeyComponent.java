@@ -45,6 +45,11 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         this.key = key;
     }
 
+    public MessageKeyComponent(Message message) {
+        this.key = "custom";
+        this.message = message;
+    }
+
     public String getKey() {
         return key;
     }
@@ -74,6 +79,29 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         String result = McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
         builder.append(result.replace("\\n","\n"));
     }
+
+    @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        try{
+            if(message == null){
+                message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
+            }
+            OnlineMinecraftPlayer player = null;
+            if(connection instanceof OnlineMinecraftPlayer){
+                player = (OnlineMinecraftPlayer) connection;
+            }else if(connection instanceof PendingConnection && ((PendingConnection) connection).isPlayerAvailable()){
+                player = ((PendingConnection) connection).getPlayer();
+            }
+            builder.append(message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.LEGACY)).toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed building BML message");
+            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+e.getMessage());
+            builder.append("$4Internal Server Error");
+        }
+    }
+
+    //@Todo optimize
 
     @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {

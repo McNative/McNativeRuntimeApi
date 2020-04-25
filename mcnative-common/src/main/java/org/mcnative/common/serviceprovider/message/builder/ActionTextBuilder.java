@@ -26,6 +26,7 @@ import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import org.mcnative.common.text.event.HoverAction;
 
+//@Todo implement legacy
 public class ActionTextBuilder implements MessageBuilder {
 
 

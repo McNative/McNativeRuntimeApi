@@ -30,10 +30,12 @@ import java.util.Collection;
 public class RawMessageComponent implements MessageComponent<RawMessageComponent>{
 
     private final String plainText;
+    private final String compileLegacyText;
     private final Document compile;
 
-    public RawMessageComponent(String plainText, Document compile) {
+    public RawMessageComponent(String plainText,String compileLegacyText, Document compile) {
         this.plainText = plainText;
+        this.compileLegacyText = compileLegacyText;
         this.compile = compile;
     }
 
@@ -55,6 +57,11 @@ public class RawMessageComponent implements MessageComponent<RawMessageComponent
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         builder.append(plainText);
+    }
+
+    @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        builder.append(compileLegacyText);
     }
 
     @Override

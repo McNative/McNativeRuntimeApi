@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
+import org.mcnative.bukkit.player.permission.BukkitPlayerDesign;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginDescription;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
@@ -118,6 +119,11 @@ public class BukkitMcNative implements McNative {
     @Override
     public String getServiceName() {
         return Bukkit.getName();
+    }
+
+    @Override
+    public String getUserId() {
+        return McNativeBukkitConfiguration.USER_ID;
     }
 
     @Override
@@ -230,6 +236,7 @@ public class BukkitMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
         VariableDescriberRegistry.registerDescriber(OfflinePlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
+        VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
         VariableDescriberRegistry.registerDescriber(PluginDescription.class);
         VariableDescriberRegistry.registerDescriber(DefaultPluginDescription.class);

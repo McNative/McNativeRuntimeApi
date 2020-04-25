@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 14.03.20, 13:20
+ * @since 18.04.20, 12:22
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,51 +18,38 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player.scoreboard;
+package org.mcnative.common.player.tablist;
 
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.player.scoreboard.ScoreboardEntry;
 
-public class PlayerScoreboardEntry implements ScoreboardEntry {
+public class SimpleTablistEntry implements TablistEntry{
 
-    private final MinecraftPlayer player;
+    private final String name;
     private final PlayerDesign design;
 
-    public PlayerScoreboardEntry(MinecraftPlayer player) {
-        this(player,null);
-    }
-
-    public PlayerScoreboardEntry(MinecraftPlayer player,PlayerDesign design) {
-        this.player = player;
+    public SimpleTablistEntry(String name, PlayerDesign design) {
+        this.name = name;
         this.design = design;
     }
 
-    public MinecraftPlayer getPlayer() {
-        return player;
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
-    public String getPrefix() {
-        return null;
+    public PlayerDesign getDesign() {
+        return design;
     }
 
     @Override
-    public String getValue() {
-        return null;
+    public PlayerDesign getDesign(MinecraftPlayer player) {
+        return design;
     }
 
     @Override
-    public String getSuffix() {
-        return null;
-    }
-
-    @Override
-    public int getPriority() {
-        return 0;
-    }
-
-    private PlayerDesign getDesign(){
-        return null;// design != null ? design : player.getde
+    public boolean isPlayer() {
+        return false;
     }
 }

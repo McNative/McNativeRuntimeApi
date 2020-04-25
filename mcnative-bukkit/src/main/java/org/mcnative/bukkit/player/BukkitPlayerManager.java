@@ -32,6 +32,7 @@ import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.player.*;
+import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.profile.GameProfile;
@@ -131,6 +132,8 @@ public class BukkitPlayerManager implements PlayerManager {
     @Internal
     public void loadConnectedPlayers(){
         PlayerDataProvider dataProvider = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
+        ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
+        if(serverChat != null) serverChat.getPlayers().clear();
         for (org.bukkit.entity.Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             MinecraftPlayerData data = dataProvider.getPlayerData(onlinePlayer.getUniqueId());
             if(data == null){
@@ -174,6 +177,7 @@ public class BukkitPlayerManager implements PlayerManager {
             connection.setPlayer(player);
             player.setJoining(false);
             registerPlayer(player);
+            if(serverChat != null) serverChat.addPlayer(player);
         }
     }
 

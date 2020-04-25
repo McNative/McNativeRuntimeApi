@@ -35,10 +35,12 @@ public class VariableBuilder implements BasicMessageBuilder {
             if (context instanceof MinecraftBuildContext) {
                 if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {
                     if (next != null) {
-                        return new Object[]{result != null ? TextBuilder.buildCompileText(result.toString(), null) : "null", next};
+                        return new Object[]{TextBuilder.buildCompileText(result != null ? result.toString() : "null", next)};
                     }else {
                         return new Object[]{TextBuilder.buildCompileText(result.toString(), null) != null ? result : "null"};
                     }
+                }else if (((MinecraftBuildContext) context).getType() == TextBuildType.LEGACY) {
+                    return TextBuilder.buildLegacyCompileText(result != null ? result.toString() : "null", next);
                 }
             }
         }

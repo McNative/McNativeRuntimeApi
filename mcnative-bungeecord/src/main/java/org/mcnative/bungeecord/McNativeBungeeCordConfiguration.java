@@ -54,6 +54,9 @@ public class McNativeBungeeCordConfiguration {
     @DocumentKey("debug")
     public static boolean DEBUG = false;
 
+    @DocumentKey("userId")
+    public static String USER_ID = "00000";
+
     @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 

@@ -21,7 +21,6 @@ package org.mcnative.loader;
 
 import net.pretronic.libraries.dependency.DependencyGroup;
 import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.Plugin;
@@ -136,6 +135,9 @@ public class GuestPluginExecutor {
                 }else{
                     info.setDownloadUrl(replaceLoaderVariables(loader,loader.getString("downloadUrl")));
 
+                    //@Todo optimize with better solution
+                    info.setAuthenticator(httpURLConnection -> httpURLConnection.setRequestProperty("userId",McNative.getInstance().getUserId()));
+
                     logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName());
                     try{
                         resourceLoader.download(latest);
@@ -143,9 +145,11 @@ public class GuestPluginExecutor {
                     }catch (Exception exception){
                         if(current == null || current.equals(VersionInfo.UNKNOWN)){
                             logger.info("(McNative-Loader) download failed, shutting down");
+                            logger.info("(McNative-Loader) Error: "+exception.getMessage());
                             return false;
                         }else{
                             logger.info("(McNative-Loader) download failed, trying to start an older version");
+                            logger.info("(McNative-Loader) Error: "+exception.getMessage());
                         }
                     }
                 }

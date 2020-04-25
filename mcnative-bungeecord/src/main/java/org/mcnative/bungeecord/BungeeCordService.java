@@ -25,11 +25,8 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.LocalService;
@@ -39,13 +36,11 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.network.messaging.Messenger;
-import org.mcnative.common.network.messaging.SynchronisationMessagingAdapter;
-import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketManager;
 import org.mcnative.common.text.components.MessageComponent;
@@ -164,15 +159,16 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     }
 
     @Override
-    public Tablist getDefaultTablist() {
+    public Tablist getServerTablist() {
         return defaultTablist;
     }
 
     @Override
-    public void setDefaultTablist(Tablist tablist) {
+    public void setServerTablist(Tablist tablist) {
         Validate.notNull(tablist);
         this.defaultTablist = tablist;
     }
+
 
     @Override
     public ServerStatusResponse getStatusResponse() {

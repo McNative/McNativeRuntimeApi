@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.08.19, 16:42
+ * @since 25.04.20, 20:51
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +18,15 @@
  * under the License.
  */
 
-package org.mcnative.common.player.scoreboard;
+package org.mcnative.common.player.chat;
 
-public interface ScoreboardEntry {
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.text.components.MessageComponent;
 
-    String getPrefix();
+//@Todo add target and execute foreach player
+public interface ChatFormatter {
 
-    String getValue();
+    MessageComponent<?> format(OnlineMinecraftPlayer player,VariableSet variables, String message);
 
-    String getSuffix();
-
-    int getPriority();
 }

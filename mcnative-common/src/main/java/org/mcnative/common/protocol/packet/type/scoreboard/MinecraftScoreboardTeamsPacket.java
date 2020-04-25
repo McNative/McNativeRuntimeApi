@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet.type.scoreboard;
 
 import io.netty.buffer.ByteBuf;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -29,8 +30,6 @@ import org.mcnative.common.protocol.packet.PacketIdentifier;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.format.TextColor;
-
-import java.util.Arrays;
 
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
@@ -58,6 +57,8 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
     private MessageComponent<?> prefix;
     private MessageComponent<?> suffix;
     private String[] entities;
+
+    private VariableSet variables;
 
     public MinecraftScoreboardTeamsPacket() {
         this.friendlyFlag = FriendlyFlag.ENABLED;
@@ -146,15 +147,22 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
         this.entities = entities;
     }
 
+    public VariableSet getVariables() {
+        if(variables == null) return VariableSet.newEmptySet();
+        return variables;
+    }
+
+    public void setVariables(VariableSet variables) {
+        this.variables = variables;
+    }
+
     @Override
     public PacketIdentifier getIdentifier() {
         return IDENTIFIER;
     }
 
     @Override
-    public void read(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-
-    }
+    public void read(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {}
 
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
@@ -165,25 +173,26 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
             if(action == Action.CREATE || action == Action.UPDATE){
                 if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_13)) {
-                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString());
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString(getVariables()));
                     buffer.writeByte(friendlyFlag.getCode());
 
-                    MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibiltyName());
+                    MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibilityName());
 
                     MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
 
                     MinecraftProtocolUtil.writeVarInt(buffer, 0);
 
-                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString());
-
-                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString());
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(getVariables()));
 
                 } else {
-                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.toPlainText());
+                    System.out.println("Prefix: "+prefix.compileToLegacy(getVariables()));
+                    System.out.println("Suffix: "+suffix.compileToLegacy(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.compileToLegacy(getVariables()));
 
-                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.toPlainText());
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.compileToLegacy(getVariables()));
 
-                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.toPlainText());
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.compileToLegacy(getVariables()));
 
                     if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_10)) {
                         buffer.writeByte(friendlyFlag.getCode());
@@ -191,7 +200,7 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
                         buffer.writeByte(friendlyFlag.ordinal());
                     }
 
-
+                    MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibilityName());
                     buffer.writeByte(color.getClientCode());
                 }
                 if(action == Action.CREATE) {
@@ -223,16 +232,16 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
         FOR_OTHER_TEAMS("hideForOtherTeams", "pushOtherTeams"),
         FOR_OWN_TEAM("hideForOwnTeam", "pushOwnTeam");
 
-        private final String nameTagVisibiltyName;
+        private final String nameTagVisibilityName;
         private final String collisionRuleName;
 
-        OptionStatus(String nameTagVisibiltyName, String collisionRuleName) {
-            this.nameTagVisibiltyName = nameTagVisibiltyName;
+        OptionStatus(String nameTagVisibilityName, String collisionRuleName) {
+            this.nameTagVisibilityName = nameTagVisibilityName;
             this.collisionRuleName = collisionRuleName;
         }
 
-        public String getNameTagVisibiltyName() {
-            return nameTagVisibiltyName;
+        public String getNameTagVisibilityName() {
+            return nameTagVisibilityName;
         }
 
         public String getCollisionRuleName() {

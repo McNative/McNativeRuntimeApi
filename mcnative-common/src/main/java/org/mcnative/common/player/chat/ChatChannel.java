@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 03.01.20, 23:43
+ * @since 25.04.20, 12:25
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +18,21 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.player.chat;
 
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.receiver.ReceiverChannel;
-import org.mcnative.common.text.components.MessageComponent;
-
-import java.util.function.Function;
 
 public interface ChatChannel extends ReceiverChannel {
 
-    String getPrefix();
+    //boolean isReadOnly(OnlineMinecraftPlayer player);
 
-    void setPrefix(String prefix);
+    //void setReadOnly(OnlineMinecraftPlayer player, boolean readOnly);
 
-    boolean isReadOnly(OnlineMinecraftPlayer player);
+    void setMessageFormatter(ChatFormatter formatter);
 
-    void setReadOnly(OnlineMinecraftPlayer player, boolean readOnly);
+    void chat(OnlineMinecraftPlayer player, String message);
 
-    void setMessageFormatter(Function<String, MessageComponent<?>> formatter);
-
-    void chat(MinecraftPlayer player, String message);
-
+    void chat(OnlineMinecraftPlayer player, String message, VariableSet variables);
 }

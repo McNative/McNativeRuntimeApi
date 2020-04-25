@@ -86,6 +86,11 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     }
 
     @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        components.forEach(component -> component.compileToLegacy(builder, connection,variables,language));
+    }
+
+    @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
         ArrayEntry entry = DocumentRegistry.getFactory().newArrayEntry(key);
         components.forEach(component -> entry.entries().add(component.compile(variables,language)));

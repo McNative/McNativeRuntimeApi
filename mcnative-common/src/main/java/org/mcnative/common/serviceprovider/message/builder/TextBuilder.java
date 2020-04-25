@@ -49,6 +49,8 @@ public class TextBuilder implements BasicMessageBuilder {
             if(context instanceof MinecraftBuildContext){
                 if(((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE){
                     return buildCompileText(input,next);
+                }else  if(((MinecraftBuildContext) context).getType() == TextBuildType.LEGACY){
+                    return buildLegacyCompileText(input,next);
                 }
             }
             return buildPlainText(input,next);
@@ -77,6 +79,22 @@ public class TextBuilder implements BasicMessageBuilder {
             if((char0 == Text.FORMAT_CHAR || char0 == Text.DEFAULT_ALTERNATE_COLOR_CHAR) && builder.length() > ++i){
                 builder.delete(i-1,i+1);
                  i -= 1;
+            }
+        }
+
+        if(nextComp != null){
+            builder.append(nextComp instanceof String ? nextComp : nextComp.toString());
+        }
+
+        return builder.toString();
+    }
+
+    protected static String buildLegacyCompileText(String input,Object nextComp){
+        StringBuilder builder = new StringBuilder(input);
+
+        for(int i = 0; i < builder.length()-1; i++) {
+            if(builder.charAt(i) == '&' && Text.ALL_CODES.indexOf(builder.charAt(i+1)) > -1){
+                builder.setCharAt(i,Text.FORMAT_CHAR);
             }
         }
 

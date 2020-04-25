@@ -22,13 +22,20 @@ package org.mcnative.common.player;
 import net.pretronic.libraries.command.sender.CommandSender;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.player.bossbar.BossBar;
+import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
-import org.mcnative.common.player.scoreboard.Tablist;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
+import org.mcnative.common.player.tablist.Tablist;
+import org.mcnative.common.player.tablist.TablistEntry;
 
 import java.util.Collection;
 
-public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender {
+public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender, TablistEntry {
+
+    ChatChannel getPrimaryChatChannel();
+
+    void setPrimaryChatChannel(ChatChannel channel);
+
 
     Sidebar getSidebar();
 
@@ -55,5 +62,10 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     void setResourcePack(String url);
 
     void setResourcePack(String url, String hash);
+
+    @Override
+    default boolean isPlayer(){
+        return true;
+    }
 
 }

@@ -20,7 +20,7 @@
 package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
-import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableObjectToString;
+import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
@@ -29,7 +29,7 @@ import org.mcnative.common.serviceprovider.permission.Permissable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo, ReflectVariableObjectToString {
+public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo, VariableObjectToString {
 
     UUID getUniqueId();
 

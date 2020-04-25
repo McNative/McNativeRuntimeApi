@@ -42,6 +42,10 @@ public interface McNative extends ObjectOwner {
 
     String getServiceName();
 
+    @SuppressWarnings("This is only a temporary solution")
+    String getUserId();
+
+
     PluginVersion getVersion();
 
     boolean isReady();

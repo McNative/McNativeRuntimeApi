@@ -57,6 +57,12 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
     }
 
     @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        super.compileToLegacy(builder, connection, variables, language);
+        builder.append(text);
+    }
+
+    @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         builder.append(variables.replace(text));
         super.toPlainText(builder, variables,language);

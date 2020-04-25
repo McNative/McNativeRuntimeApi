@@ -23,10 +23,15 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.Message;
+import net.pretronic.libraries.message.bml.parser.MessageParser;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.components.MessageKeyComponent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,13 +51,35 @@ public class McNativeBukkitConfiguration {
     @DocumentKey("debug")
     public static boolean DEBUG = false;
 
+    @DocumentKey("userId")
+    public static String USER_ID = "00000";
+
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
 
     public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
     public static String PLAYER_COLORS_DEFAULT = "&7";
 
-    static{
+
+    public static boolean PLAYER_TABLIST_ENABLED = false;
+
+    public static String PLAYER_TABLIST_PREFIX = "{design.prefix}";
+    public static String PLAYER_TABLIST_SUFFIX = "{design.suffix}";
+
+    public static boolean PLAYER_TABLIST_OVERVIEW_ENABLED = false;
+    public static String PLAYER_TABLIST_OVERVIEW_HEADER = "&4Header";
+    public static String PLAYER_TABLIST_OVERVIEW_FOOTER = "&8Footer";
+
+    public static boolean PLAYER_CHAT_ENABLED = false;
+
+    public static String PLAYER_CHAT_FORMAT = "&e{design.chat}{player.name}&8:&f {message}";
+
+
+    public static transient MessageComponent<?> PLAYER_CHAT;
+    public static transient MessageComponent<?> PLAYER_TABLIST_PREFIX_LOADED;
+    public static transient MessageComponent<?> PLAYER_TABLIST_SUFFIX_LOADED;
+
+    static {
         PLAYER_COLORS_COLORS.put("mcnative.player.color.administrator","&4");
         PLAYER_COLORS_COLORS.put("mcnative.player.color.moderator","&c");
         PLAYER_COLORS_COLORS.put("mcnative.player.color.premium","&6");
@@ -105,5 +132,17 @@ public class McNativeBukkitConfiguration {
         } catch (IOException exception) {
             throw new OperationFailedException("Could not set update configuration");
         }
+    }
+
+    public static boolean postLoad(){
+        PLAYER_CHAT = parseCustomMessage(PLAYER_CHAT_FORMAT);
+        PLAYER_TABLIST_PREFIX_LOADED = parseCustomMessage(PLAYER_TABLIST_PREFIX);
+        PLAYER_TABLIST_SUFFIX_LOADED = parseCustomMessage(PLAYER_TABLIST_SUFFIX);
+        return true;
+    }
+    private static MessageComponent<?> parseCustomMessage(String input){
+        Message message = new MessageParser(McNative.getInstance().getRegistry()
+                .getService(MessageProvider.class).getProcessor(),input).parse();
+        return new MessageKeyComponent(message);
     }
 }

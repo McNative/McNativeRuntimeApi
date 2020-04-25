@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.08.19, 14:52
+ * @since 25.04.20, 12:25
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.common.player;
+package org.mcnative.common.player.chat;
 
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 

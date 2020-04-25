@@ -37,6 +37,7 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     T removeExtra(MessageComponent<?> component);
 
+
     default String toPlainText(){
         return toPlainText(VariableSet.newEmptySet());
     }
@@ -68,6 +69,35 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
     }
 
     void toPlainText(StringBuilder builder,VariableSet variables,Language language);
+
+
+    default String compileToLegacy(){
+        return compileToLegacy(VariableSet.newEmptySet());
+    }
+
+    default String compileToLegacy(Language language){
+        return compileToLegacy(VariableSet.newEmptySet(),language);
+    }
+
+    default String compileToLegacy(VariableSet variables){
+        return compileToLegacy(variables,null);
+    }
+
+    default String compileToLegacy(VariableSet variables,Language language){
+        return compileToLegacy((MinecraftConnection)null,variables,language);
+    }
+
+    default String compileToLegacy(MinecraftConnection connection,VariableSet variables,Language language){
+        StringBuilder builder = new StringBuilder();
+        compileToLegacy(builder,connection,variables,language);
+        return builder.toString();
+    }
+
+    default void compileToLegacy(StringBuilder builder, VariableSet variables,Language language){
+        compileToLegacy(builder,null,variables,language);
+    }
+
+    void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables,Language language);
 
 
     default Document compile(){

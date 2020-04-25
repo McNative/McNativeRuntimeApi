@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.01.20, 16:30
+ * @since 25.04.20, 20:51
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,76 +18,86 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event.player;
+package org.mcnative.bukkit.event.player;
 
-import net.md_5.bungee.api.event.ChatEvent;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
+import net.pretronic.libraries.utility.Validate;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.text.components.MessageComponent;
 
-public class BungeeMinecraftPlayerChatEvent implements MinecraftPlayerChatEvent {
+public class BukkitChatEvent implements MinecraftPlayerChatEvent {
 
-    private final ChatEvent original;
+    private final AsyncPlayerChatEvent event;
     private final OnlineMinecraftPlayer player;
-    private ChatChannel channel;
+    private ChatChannel chatChannel;
+    private MessageComponent<?> outputMessage;
+    private VariableSet variables;
 
-    public BungeeMinecraftPlayerChatEvent(ChatEvent original, OnlineMinecraftPlayer player) {
-        this.original = original;
+    public BukkitChatEvent(AsyncPlayerChatEvent event, ConnectedMinecraftPlayer player) {
+        this.event = event;
         this.player = player;
-        this.channel = null;//player.get();
+        this.chatChannel = player.getPrimaryChatChannel();
+        this.variables = new DescribedHashVariableSet();//@Todo define variable set to add
     }
 
     @Override
     public ChatChannel getChannel() {
-        return channel;
+        return chatChannel;
     }
 
     @Override
     public void setChannel(ChatChannel channel) {
-        this.channel = channel;
+        Validate.notNull(channel);
+        this.chatChannel = channel;
     }
 
     @Override
     public String getMessage() {
-        return original.getMessage();
+        return event.getMessage();
     }
 
     @Override
     public void setMessage(String message) {
-        original.setMessage(message);
+        Validate.notNull(message);
+        event.setMessage(message);
     }
 
     @Override
     public MessageComponent<?> getOutputMessage() {
-        return null;
+        return outputMessage;
     }
 
     @Override
     public void setOutputMessage(MessageComponent<?> outputMessage) {
-
+        Validate.notNull(outputMessage);
+        this.outputMessage = outputMessage;
     }
 
     @Override
     public VariableSet getOutputVariables() {
-        return null;
+        return variables;
     }
 
     @Override
     public void setOutputVariables(VariableSet variables) {
-
+        Validate.notNull(variables);
+        this.variables = variables;
     }
 
     @Override
     public boolean isCancelled() {
-        return original.isCancelled();
+        return event.isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        original.setCancelled(cancelled);
+        event.setCancelled(cancelled);
     }
 
     @Override

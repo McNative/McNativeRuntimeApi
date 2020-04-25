@@ -27,6 +27,7 @@ import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
@@ -38,8 +39,10 @@ import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
+import org.mcnative.bukkit.player.BukkitChatChannel;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
+import org.mcnative.bukkit.player.tablist.BukkitTablist;
 import org.mcnative.bukkit.plugin.BukkitPluginManager;
 import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
@@ -47,8 +50,14 @@ import org.mcnative.bukkit.serviceprovider.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.tablist.Tablist;
+import org.mcnative.common.player.tablist.TablistEntry;
+import org.mcnative.common.player.tablist.TablistFormatter;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
+import org.mcnative.common.text.components.MessageComponent;
 
 import java.io.File;
 import java.util.List;
@@ -158,19 +167,10 @@ public class McNativeLauncher {
                     }
                 });
 
+        McNativeBukkitConfiguration.postLoad();
+        setupConfiguredServices();
+
         ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
-    }
-
-    private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
-        if(Bukkit.getPluginManager().getPlugin("Vault") != null){
-            eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
-        }
-        System.out.println("register");
-        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
-            System.out.println("exec 1");
-            new Test().execute();
-
-        },20*10);
     }
 
     public static void shutdown(){
@@ -195,6 +195,40 @@ public class McNativeLauncher {
         McNative.setInstance(null);
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully stopped.");
+    }
+
+
+    private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
+        if(Bukkit.getPluginManager().getPlugin("Vault") != null){
+            eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
+        }
+        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
+            new Test().execute();
+        },20*10);
+    }
+
+    private static void setupConfiguredServices(){
+        if(McNativeBukkitConfiguration.PLAYER_CHAT_ENABLED){
+            ChatChannel serverChat = new BukkitChatChannel();
+            serverChat.setName("ServerChat");
+            serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
+            McNative.getInstance().getLocal().setServerChat(serverChat);
+        }
+        if(McNativeBukkitConfiguration.PLAYER_TABLIST_ENABLED){
+            Tablist tablist = new BukkitTablist();
+            tablist.setFormatter(new TablistFormatter() {
+                @Override
+                public MessageComponent<?> formatPrefix(ConnectedMinecraftPlayer player, TablistEntry entry, VariableSet variables) {
+                    return McNativeBukkitConfiguration.PLAYER_TABLIST_PREFIX_LOADED;
+                }
+
+                @Override
+                public MessageComponent<?> formatSuffix(ConnectedMinecraftPlayer player,TablistEntry entry, VariableSet variables) {
+                    return McNativeBukkitConfiguration.PLAYER_TABLIST_SUFFIX_LOADED;
+                }
+            });
+            McNative.getInstance().getLocal().setServerTablist(tablist);
+        }
     }
 
     private static Network setupNetwork(Logger logger,ExecutorService executor){

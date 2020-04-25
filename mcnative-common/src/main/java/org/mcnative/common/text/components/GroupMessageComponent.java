@@ -73,6 +73,15 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
     }
 
     @Override
+    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
+        for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {
+            entry.getKey().compileToLegacy(builder,connection,entry.getValue(),language);
+            builder.append("\n");
+        }
+        builder.setLength(builder.length()-1);
+    }
+
+    @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variablesUnused, Language language) {
         ArrayEntry result = DocumentRegistry.getFactory().newArrayEntry(key);
         boolean first = true;

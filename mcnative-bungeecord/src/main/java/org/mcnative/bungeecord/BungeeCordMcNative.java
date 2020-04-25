@@ -113,6 +113,11 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
+    public String getUserId() {
+        return McNativeBungeeCordConfiguration.USER_ID;
+    }
+
+    @Override
     public PluginVersion getVersion() {
         return version;
     }

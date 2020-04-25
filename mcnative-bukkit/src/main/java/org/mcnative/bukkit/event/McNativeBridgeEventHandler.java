@@ -26,7 +26,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.event.server.ServerLoadEvent;
 import org.mcnative.bukkit.event.player.*;
 import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryClickEvent;
 import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryCloseEvent;
@@ -43,11 +42,15 @@ import org.mcnative.bukkit.plugin.event.McNativeHandlerList;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
+import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
 import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.service.event.player.MinecraftPlayerJoinEvent;
 import org.mcnative.service.event.player.MinecraftPlayerWorldChangedEvent;
 import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
@@ -80,6 +83,9 @@ public class McNativeBridgeEventHandler {
     }
 
     private void setup(){
+
+        /* Lifecycle */
+
         //Pre Login
         eventBus.registerMappedClass(MinecraftPlayerLoginEvent.class, AsyncPlayerPreLoginEvent.class);
         eventBus.registerManagedEvent(AsyncPlayerPreLoginEvent.class, this::handlePreLoginEvent);
@@ -100,6 +106,14 @@ public class McNativeBridgeEventHandler {
         eventBus.registerMappedClass(MinecraftPlayerLogoutEvent.class, PlayerQuitEvent.class);
         eventBus.registerManagedEvent(PlayerQuitEvent.class, this::handleLogoutEvent);
 
+
+        /* Game */
+
+        eventBus.registerMappedClass(MinecraftPlayerChatEvent.class, AsyncPlayerChatEvent.class);
+        eventBus.registerManagedEvent(AsyncPlayerChatEvent.class, this::handleChatEvent);
+
+
+        /* Inventory */
 
         //Inventory click
         eventBus.registerMappedClass(MinecraftPlayerInventoryClickEvent.class, InventoryClickEvent.class);
@@ -183,6 +197,12 @@ public class McNativeBridgeEventHandler {
                 connection.disconnect(mcnativeEvent.getCancelReason(),mcnativeEvent.getCancelReasonVariables());
             }
         }else{
+            ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
+            if(serverChat != null){
+                serverChat.addPlayer(player);
+                player.setPrimaryChatChannel(serverChat);
+            }
+
             connection.setState(ConnectionState.GAME);
             connection.setPlayer(player);
 
@@ -199,6 +219,13 @@ public class McNativeBridgeEventHandler {
             return;
         }
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+
+        Tablist serverTablist = McNative.getInstance().getLocal().getServerTablist();
+        if(serverTablist != null){
+            serverTablist.addEntry(player);
+            player.setTablist(serverTablist);
+        }
+
         BukkitJoinEvent mcnativeEvent = new BukkitJoinEvent(event,player);
 
         player.setJoining(true);
@@ -232,6 +259,14 @@ public class McNativeBridgeEventHandler {
         }
         MinecraftPlayerLogoutEvent logoutEvent = new BukkitPlayerLogoutEvent(player);
         McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerLogoutEvent.class,logoutEvent);
+
+        ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
+        if(serverChat != null) serverChat.removePlayer(player);
+
+        player.setTablist(null);
+
+        Tablist serverTablist = McNative.getInstance().getLocal().getServerTablist();
+        if(serverTablist != null) serverTablist.removeEntry(player);
     }
 
     private void handleWorldChangedEvent(McNativeHandlerList handler,PlayerChangedWorldEvent event){
@@ -242,29 +277,19 @@ public class McNativeBridgeEventHandler {
         handler.callEvents(event,mcnativeEvent);
     }
 
-    private void handleWorldChangedEvent(McNativeHandlerList handler,PlayerCommandPreprocessEvent event){
-        handler.callEvents(event);
-
-        String command = event.getMessage();
-
-        //if (commandManager.dispatchBukkitCommand(event.getPlayer(),event.getMessage())) return;
-
-        if(commandManager.getNotFoundHandler() != null){
-       //     commandManager.getNotFoundHandler().handle();
-        }else{
-
-        }
-        //@Todo implement paper spigot command
-
-
-        event.setCancelled(true);
-    }
-
-    private void handleServerReload(McNativeHandlerList handler, ServerLoadEvent event){
-        if(event.getType() == ServerLoadEvent.LoadType.RELOAD){
-
-        }else{
-            handler.callEvents(event);
+    private void handleChatEvent(McNativeHandlerList handler, AsyncPlayerChatEvent event){
+        ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+        BukkitChatEvent mcnativeEvent = new BukkitChatEvent(event,player);
+        handler.callEvents(mcnativeEvent,event);
+        if(event.isCancelled()) return;
+        if(mcnativeEvent.getChannel() != null){
+            event.setCancelled(true);
+            if(mcnativeEvent.getOutputMessage() == null){
+                mcnativeEvent.getChannel().chat(player,mcnativeEvent.getMessage(),mcnativeEvent.getOutputVariables());
+            }else{
+                mcnativeEvent.getChannel().sendMessage(mcnativeEvent.getOutputMessage(),mcnativeEvent.getOutputVariables());
+            }
+            McNative.getInstance().getLogger().info("["+mcnativeEvent.getChannel().getName()+"] "+player.getName()+": "+event.getMessage());
         }
     }
 

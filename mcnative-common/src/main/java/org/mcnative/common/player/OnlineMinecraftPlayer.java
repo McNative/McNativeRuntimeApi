@@ -27,6 +27,7 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
+import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
@@ -73,10 +74,6 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
     }
 
     CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason);
-
-    ChatChannel getChatChannel();
-
-    void setChatChannel(ChatChannel channel);
 
     default void kick(){
         kick("Kicked by an operator.");

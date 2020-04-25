@@ -21,9 +21,9 @@ package org.mcnative.common;
 
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
-import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.packet.PacketManager;
 
 import java.util.Collection;
@@ -50,9 +50,9 @@ public interface LocalService extends ConnectableNetworkComponent {
     void setServerChat(ChatChannel channel);
 
 
-    Tablist getDefaultTablist();
+    Tablist getServerTablist();
 
-    void setDefaultTablist(Tablist tablist);
+    void setServerTablist(Tablist tablist);
 
 
     ServerStatusResponse getStatusResponse();

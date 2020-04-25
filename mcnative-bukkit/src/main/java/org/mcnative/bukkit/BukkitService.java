@@ -42,10 +42,10 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
-import org.mcnative.common.player.ChatChannel;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.scoreboard.Tablist;
+import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -75,7 +75,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     private Collection<MessageEntry> messageListeners;
 
     private ChatChannel serverChat;
-    private Tablist defaultTablist;
+    private Tablist serverTablist;
     private ServerStatusResponse statusResponse;
     private final ObjectCreator objectCreator;
 
@@ -165,13 +165,14 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     }
 
     @Override
-    public Tablist getDefaultTablist() {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public Tablist getServerTablist() {
+        return serverTablist;
     }
 
     @Override
-    public void setDefaultTablist(Tablist tablist) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void setServerTablist(Tablist tablist) {
+        Validate.notNull(tablist);
+        this.serverTablist = tablist;
     }
 
     @Override

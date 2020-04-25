@@ -23,7 +23,6 @@ package org.mcnative.bukkit;
 import net.pretronic.libraries.event.Listener;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 import org.mcnative.common.text.Text;
@@ -45,7 +44,7 @@ public class Test {
     public void execute(){
         //OnlineMinecraftPlayer dkrieger = McNative.getInstance().getLocal().getOnlinePlayer("Dkrieger");
         //OnlineMinecraftPlayer dkriescitv = McNative.getInstance().getLocal().getOnlinePlayer("DkriesciTV");
-        OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("FridiousHD");
+        OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("Dkriegser");
 
         System.out.println("XXXX");
 
