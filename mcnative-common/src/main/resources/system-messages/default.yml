@@ -51,22 +51,23 @@ messages:
   &7/mcnative plugin unload <plugin>
   &7/mcnative plugin reload <plugin>'
   mcnative.command.manage.plugin.list: '${mcnative.prefix} &7Installed and loaded plugins: @for("plugin" in {plugins},${mcnative.command.manage.plugin.list.loop},"\n","\n")'
-  mcnative.command.manage.plugin.list.loop: ' &8- &a{plugin.name} &8 &cv{plugin.description.version.name} &7by &c{plugin.description.author}'
+  mcnative.command.manage.plugin.list.loop: ' &8- &a{plugin.name} &8 &cv{plugin.description.version.name} &7by &e{plugin.description.author}'
 
-  mcnative.command.manage.plugin.notfound: '${mcnative.prefix} &7The plugin &c{plugin.name} &7was not found'
+  mcnative.command.manage.plugin.notfound: '${mcnative.prefix} &7The plugin &e{plugin.name} &7was not found'
+  mcnative.command.manage.plugin.already.enabled: '${mcnative.prefix} &cThe plugin &e{plugin.name} &cis already enabled.'
 
-  mcnative.command.manage.plugin.enable.starting: '${mcnative.prefix} &7Enabling &7plugin &c{plugin.name} v{plugin.description.version}'
-  mcnative.command.manage.plugin.enable.sucessfully: '${mcnative.prefix} &7Successfully enabled plugin &c{plugin.name}'
-  mcnative.command.manage.plugin.enable.failed: '${mcnative.prefix} &cFailed enabling plugin &c{plugin.name} &8(&7{error}&8)'
+  mcnative.command.manage.plugin.enable.starting: '${mcnative.prefix} &7Enabling &7plugin &e{plugin.name} v{plugin.description.version}'
+  mcnative.command.manage.plugin.enable.sucessfully: '${mcnative.prefix} &7Successfully enabled plugin &e{plugin.name}'
+  mcnative.command.manage.plugin.enable.failed: '${mcnative.prefix} &cFailed enabling plugin &e{plugin.name} &8(&7{error}&8)'
 
-  mcnative.command.manage.plugin.disable.starting: '${mcnative.prefix} &7Disabling &7plugin &c{plugin.name} v{plugin.description.version}'
-  mcnative.command.manage.plugin.disable.successfully: '${mcnative.prefix} &7Successfully disabled plugin &c{plugin.name}'
-  mcnative.command.manage.plugin.disable.failed: '${mcnative.prefix} &cFailed disabling plugin &c{plugin.name} &8(&7{error}&8)'
+  mcnative.command.manage.plugin.disable.starting: '${mcnative.prefix} &7Disabling &7plugin &e{plugin.name} v{plugin.description.version}'
+  mcnative.command.manage.plugin.disable.successfully: '${mcnative.prefix} &7Successfully disabled plugin &e{plugin.name}'
+  mcnative.command.manage.plugin.disable.failed: '${mcnative.prefix} &cFailed disabling plugin &ce{plugin.name} &8(&7{error}&8)'
 
-  mcnative.command.manage.plugin.load.starting: '${mcnative.prefix} &7Unloading &7plugin &c{plugin.name} v{plugin.description.version}'
-  mcnative.command.manage.plugin.load.successfully: '${mcnative.prefix} &7Successfully unloading plugin &c{plugin.name}'
-  mcnative.command.manage.plugin.load.failed: '${mcnative.prefix} &cFailed unloading plugin &c{plugin.name} &8(&7{error}&8)'
+  mcnative.command.manage.plugin.load.starting: '${mcnative.prefix} &7Unloading &7plugin &e{plugin.name} v{plugin.description.version}'
+  mcnative.command.manage.plugin.load.successfully: '${mcnative.prefix} &7Successfully unloading plugin &e{plugin.name}'
+  mcnative.command.manage.plugin.load.failed: '${mcnative.prefix} &cFailed unloading plugin &e{plugin.name} &8(&7{error}&8)'
 
-  mcnative.command.manage.plugin.unload.starting: '${mcnative.prefix} &7Unloading &7plugin &c{plugin.name} v{plugin.description.version}'
-  mcnative.command.manage.plugin.unload.successfully: '${mcnative.prefix} &7Successfully unloaded plugin &c{plugin.name}'
-  mcnative.command.manage.plugin.unload.failed: '${mcnative.prefix} &cFailed unloading plugin &c{plugin.name} &8(&7{error}&8)'
+  mcnative.command.manage.plugin.unload.starting: '${mcnative.prefix} &7Unloading &7plugin &e{plugin.name} v{plugin.description.version}'
+  mcnative.command.manage.plugin.unload.successfully: '${mcnative.prefix} &7Successfully unloaded plugin &e{plugin.name}'
+  mcnative.command.manage.plugin.unload.failed: '${mcnative.prefix} &cFailed unloading plugin &e{plugin.name} &8(&7{error}&8)'

@@ -106,6 +106,7 @@ public class BukkitPluginManager implements PluginManager {
     @Override
     public PluginLoader createPluginLoader(String name) {
         PluginLoader loader = Iterators.findOne(this.loaders, loader1 -> loader1.getDescription().getName().equalsIgnoreCase(name));
+
         if(loader == null){
             File pluginDir = new File("plugins");
             if(pluginDir.isDirectory()){

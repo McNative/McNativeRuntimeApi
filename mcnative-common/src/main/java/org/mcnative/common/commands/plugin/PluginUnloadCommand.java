@@ -41,6 +41,9 @@ public class PluginUnloadCommand extends BasicCommand {
         Plugin<?> plugin = PluginCommandUtil.getPlugin(sender, arguments,getConfiguration().getName(),USAGE);
         if (plugin == null) return;
 
+
+
+
         PluginCommandUtil.unloadPlugin(sender,plugin);
     }
 }
