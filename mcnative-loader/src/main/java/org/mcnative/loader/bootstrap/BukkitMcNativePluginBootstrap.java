@@ -30,10 +30,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.mcnative.common.McNative;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
-import org.mcnative.loader.classloader.BukkitMcNativeClassloader;
 
 import java.io.IOException;
 import java.net.URLClassLoader;
@@ -50,7 +50,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @Override
     public void onLoad() {
         try{
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,new BukkitMcNativeClassloader())) return;
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
             this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),ENVIRONMENT_NAME);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
@@ -129,6 +129,11 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
         if (classLoader instanceof URLClassLoader) {
             ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
+
+            if(McNative.class.getClassLoader() == classLoader){
+                getLogger().warning("Classes of "+getName()+" could not be unloaded, because this class loader is the host loader of McNative");
+                return;
+            }
 
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
             classes.clear();
