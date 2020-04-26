@@ -93,17 +93,17 @@ public class DefaultMessageProvider implements MessageProvider {
 
     @Override
     public Collection<MessageRepository> getRepositories() {
-        return null;
+        throw new IllegalArgumentException("Message repositories are currently not supported");
     }
 
     @Override
     public MessageRepository getRepository(String s) {
-        return null;
+        throw new IllegalArgumentException("Message repositories are currently not supported");
     }
 
     @Override
     public MessageRepository addRepository(String s, String s1) {
-        return null;
+        throw new IllegalArgumentException("Message repositories are currently not supported");
     }
 
     @Override
@@ -133,7 +133,6 @@ public class DefaultMessageProvider implements MessageProvider {
         this.packs.add(pack);
     }
 
-    //@Todo update from repository
     @Override
     public List<MessagePack> loadPacks(String module) {
         Validate.notNull(module);
@@ -168,6 +167,12 @@ public class DefaultMessageProvider implements MessageProvider {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void unloadPacks(String module) {
+        Validate.notNull(module);
+        Iterators.removeSilent(this.packs, messagePack -> messagePack.getMeta().getModule().equalsIgnoreCase(module));
     }
 
     @Override

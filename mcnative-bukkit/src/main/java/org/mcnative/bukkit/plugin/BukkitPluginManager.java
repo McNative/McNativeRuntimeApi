@@ -22,6 +22,7 @@ package org.mcnative.bukkit.plugin;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
@@ -169,6 +170,14 @@ public class BukkitPluginManager implements PluginManager {
             ResourceMessageExtractor.extractMessages(plugin);
         }else if(state.equals(LifecycleState.UNLOAD)){
             this.plugins.remove(plugin);
+            this.loaders.remove(plugin.getLoader());
+
+            MessageProvider messageProvider = McNative.getInstance().getRegistry().getServiceOrDefault(MessageProvider.class);
+            String module = plugin.getDescription().getMessageModule();
+            if(messageProvider != null && module != null){
+                messageProvider.unloadPacks(module);
+                messageProvider.calculateMessages();
+            }
         }
 
         BiConsumer<Plugin<?>,LifecycleState> listener = this.stateListeners.get(state);

@@ -130,6 +130,10 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
 
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
+
+            for (Map.Entry<String, Class<?>> entry : classes.entrySet()) {
+                System.out.println(entry.getKey());
+            }
             classes.clear();
 
             try {

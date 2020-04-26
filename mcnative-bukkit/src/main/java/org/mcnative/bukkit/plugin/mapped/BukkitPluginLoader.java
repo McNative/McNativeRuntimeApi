@@ -110,12 +110,12 @@ public class BukkitPluginLoader implements PluginLoader {
     }
 
     @Override
-    public Plugin getInstance() {
+    public Plugin<?> getInstance() {
         return plugin;
     }
 
     @Override
-    public Plugin enable() {
+    public Plugin<?> enable() {
         if(!isInstanceAvailable()) load();
         bootstrap();
         return plugin;
@@ -143,7 +143,9 @@ public class BukkitPluginLoader implements PluginLoader {
     @Override
     public void load() {
         try {
+            System.out.println("LOADING OVER MAPPED BUKKIT");
             original = Bukkit.getPluginManager().loadPlugin(location);
+            original.onLoad();
             description = new BukkitPluginDescription(original.getDescription());
             plugin = new BukkitPlugin(original,this,description);
         } catch (InvalidPluginException | InvalidDescriptionException e) {
