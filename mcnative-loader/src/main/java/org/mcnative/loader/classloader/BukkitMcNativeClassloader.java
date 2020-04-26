@@ -24,6 +24,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.mcnative.loader.bootstrap.BukkitMcNativePluginBootstrap;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -36,7 +37,7 @@ public class BukkitMcNativeClassloader extends URLClassLoader {
     private final Map<String,Class<?>> loadedClasses;
 
     public BukkitMcNativeClassloader() {
-        super(new URL[]{});
+        super(new URL[]{}, BukkitMcNativePluginBootstrap.class.getClassLoader());
         loadedClasses = findClasses();
     }
 
@@ -52,8 +53,7 @@ public class BukkitMcNativeClassloader extends URLClassLoader {
         Map<Pattern, PluginLoader> loaders = (Map<Pattern, PluginLoader>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"fileAssociations");
         for (Map.Entry<Pattern, PluginLoader> loader : loaders.entrySet()) {
             if(loader.getValue() instanceof JavaPluginLoader){
-                Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(loader.getValue(),"classes");
-                return classes;
+                return (Map<String, Class<?>>) ReflectionUtil.getFieldValue(loader.getValue(),"classes");
             }
         }
         return new HashMap<>();
