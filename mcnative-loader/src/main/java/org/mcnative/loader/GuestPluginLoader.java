@@ -50,6 +50,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     }
 
     public void bootstrapInternal() {
+        System.out.println("BOOTSTRAP INTERNAL");
         super.bootstrap();
     }
 
