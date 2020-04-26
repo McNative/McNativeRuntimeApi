@@ -83,7 +83,6 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @Override
     public void onDisable() {
         try{
-            System.out.println("MCNATIVE LOADER ON DISABLE --------------");
             if(this.executor != null) this.executor.disableGuestPlugin();
         }catch (Exception exception){
             this.executor = null;
@@ -107,14 +106,12 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
     @Override
     public void bootstrap() {
-        System.out.println("BOOTSTRAP ");
         Bukkit.getPluginManager().enablePlugin(this);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void unload() {
-        System.out.println("UNLOADING ");
 
         List<Plugin> plugins = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         Map<String, Plugin> names = (Map<String, org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
@@ -125,15 +122,10 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
         plugins.remove(this);
 
         if (classLoader instanceof URLClassLoader) {
-            System.out.println("UNLOADING CLASSES ");
             ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
 
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
-
-            for (Map.Entry<String, Class<?>> entry : classes.entrySet()) {
-                System.out.println(entry.getKey());
-            }
             classes.clear();
 
             try {

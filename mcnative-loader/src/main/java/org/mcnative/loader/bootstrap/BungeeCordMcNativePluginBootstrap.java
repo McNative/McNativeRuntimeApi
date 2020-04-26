@@ -64,7 +64,6 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
 
     @Override
     public void onDisable() {
-        System.out.println("Bukkit disabled");
         if(this.executor != null) this.executor.disableGuestPlugin();
     }
 

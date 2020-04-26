@@ -143,7 +143,6 @@ public class BukkitPluginLoader implements PluginLoader {
     @Override
     public void load() {
         try {
-            System.out.println("LOADING OVER MAPPED BUKKIT");
             original = Bukkit.getPluginManager().loadPlugin(location);
             original.onLoad();
             description = new BukkitPluginDescription(original.getDescription());

@@ -186,8 +186,6 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(getVariables()));
 
                 } else {
-                    System.out.println("Prefix: "+prefix.compileToLegacy(getVariables()));
-                    System.out.println("Suffix: "+suffix.compileToLegacy(getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.compileToLegacy(getVariables()));
 
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.compileToLegacy(getVariables()));
