@@ -115,6 +115,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     public void unload() {
         if(isEnabled()) shutdown();
 
+        System.out.println("UNLOADING ");
+
         List<Plugin> plugins = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         Map<String, Plugin> names = (Map<String, org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
 
@@ -124,7 +126,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
         plugins.remove(this);
 
         if (classLoader instanceof URLClassLoader) {
-
+            System.out.println("UNLOADING CLASSES ");
             ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
 

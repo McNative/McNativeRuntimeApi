@@ -21,6 +21,7 @@ package org.mcnative.bukkit.plugin.command;
 
 import net.pretronic.libraries.command.NotFoundHandler;
 import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
@@ -148,11 +149,7 @@ public class McNativeCommandMap extends SimpleCommandMap implements Listener {
     }
 
     public void unregister(Object command){
-        for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            if(entry.getValue().equals(command)){
-                commands.remove(entry.getKey());
-            }
-        }
+        Iterators.removeSilent(this.commands.entrySet(), entry -> entry.getValue().equals(command));
         commandManager.unregisterCommand(command);
     }
 

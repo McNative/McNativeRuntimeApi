@@ -193,7 +193,7 @@ public class GuestPluginExecutor {
 
     public void disableGuestPlugin(){
         Plugin<?> owner = loader.getInstance();
-        loader.disableInternal();
+        loader.shutdownInternal();
         McNative instance = McNative.getInstance();
         instance.getRegistry().unregisterService(owner);
         instance.getScheduler().unregister(owner);

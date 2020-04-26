@@ -58,6 +58,10 @@ public class GuestPluginLoader extends DefaultPluginLoader {
         executor.shutdown();
     }
 
+    public void shutdownInternal() {
+        super.bootstrap();
+    }
+
     @Override
     public void unload() {
         executor.unload();
@@ -66,10 +70,5 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     @Override
     public Plugin<?> enable() {
         return super.enable();
-    }
-
-    public void disableInternal() {
-        super.shutdown();
-        super.unload();
     }
 }
