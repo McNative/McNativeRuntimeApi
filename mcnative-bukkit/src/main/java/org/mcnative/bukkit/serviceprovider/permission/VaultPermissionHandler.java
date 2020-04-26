@@ -22,7 +22,6 @@ package org.mcnative.bukkit.serviceprovider.permission;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -35,7 +34,6 @@ import org.mcnative.common.serviceprovider.permission.PermissionResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 public class VaultPermissionHandler implements PermissionHandler {
 

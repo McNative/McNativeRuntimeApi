@@ -24,10 +24,11 @@ import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
+import org.mcnative.loader.PlatformExecutor;
 
 import java.util.logging.Level;
 
-public class BungeeCordMcNativePluginBootstrap extends Plugin {
+public class BungeeCordMcNativePluginBootstrap extends Plugin implements PlatformExecutor {
 
     private static final String ENVIRONMENT_NAME = "BungeeCord";
     private GuestPluginExecutor executor;
@@ -36,7 +37,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
     public void onLoad() {
         try{
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
-            this.executor = new GuestPluginExecutor(getDescription().getFile(),getLogger(),ENVIRONMENT_NAME);
+            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
@@ -72,5 +73,25 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin {
             return executor.getLoader().getInstance().equals(obj);
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void bootstrap() {
+
+    }
+
+    @Override
+    public void unload() {
+
     }
 }

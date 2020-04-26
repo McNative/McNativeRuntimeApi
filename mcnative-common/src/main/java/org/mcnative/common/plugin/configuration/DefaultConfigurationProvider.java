@@ -102,7 +102,7 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
     @Override
     public Collection<String> getDatabaseTypes(Plugin<?> plugin) {
         Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), entry -> storageConfig.getDriverConfig(entry.name).getDriverClass().getSimpleName());
-        if(types.isEmpty()) return Collections.singleton("none");
+        if(types.isEmpty()) return Collections.emptyList();
         return types;
     }
 

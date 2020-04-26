@@ -23,11 +23,9 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
-import net.pretronic.libraries.synchronisation.SynchronisationHandler;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
-import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.network.messaging.Messenger;
 
 import java.net.InetSocketAddress;

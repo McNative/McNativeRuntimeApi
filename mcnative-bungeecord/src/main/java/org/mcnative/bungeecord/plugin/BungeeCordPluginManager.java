@@ -48,9 +48,9 @@ public class BungeeCordPluginManager implements PluginManager {
     private final static String LOADER_CLASS_NAME = "org.mcnative.loader.bootstrap.BungeeCordMcNativePluginBootstrap";
 
     private final Collection<ServiceEntry> services;
-    private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
+    private final Map<String, BiConsumer<Plugin<?>,LifecycleState>> stateListeners;
     private final Collection<PluginLoader> loaders;
-    private final Collection<Plugin> plugins;
+    private final Collection<Plugin<?>> plugins;
 
     private final net.md_5.bungee.api.plugin.PluginManager original;
 
@@ -69,7 +69,7 @@ public class BungeeCordPluginManager implements PluginManager {
     }
 
     @Override
-    public Collection<Plugin> getPlugins() {
+    public Collection<Plugin<?>> getPlugins() {
         return plugins;
     }
 
@@ -121,7 +121,7 @@ public class BungeeCordPluginManager implements PluginManager {
 
     //Only for McNative Plugins
     @Override
-    public void setLifecycleStateListener(String s, BiConsumer<Plugin, LifecycleState> biConsumer) {
+    public void setLifecycleStateListener(String s, BiConsumer<Plugin<?>, LifecycleState> biConsumer) {
         this.stateListeners.put(s,biConsumer);
     }
 
@@ -132,12 +132,12 @@ public class BungeeCordPluginManager implements PluginManager {
         else if(state.equals(LifecycleState.INITIALISATION)) ResourceMessageExtractor.extractMessages(plugin);
         else if(state.equals(LifecycleState.UNLOAD)) this.plugins.remove(plugin);
 
-        BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
+        BiConsumer<Plugin<?>,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);
     }
 
     @Override
-    public Collection<Plugin> enablePlugins(File file) {
+    public Collection<Plugin<?>> enablePlugins(File file) {
         throw new UnsupportedOperationException("BungeeCord bridge is not able to enable plugins");
     }
 
@@ -175,6 +175,7 @@ public class BungeeCordPluginManager implements PluginManager {
         return getServiceOrDefault(serviceClass,null);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getServiceOrDefault(Class<T> serviceClass, Supplier<T> supplier) {
         List<ServiceEntry> services = Iterators.filter(this.services, entry -> entry.serviceClass.equals(serviceClass));

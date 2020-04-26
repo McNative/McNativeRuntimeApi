@@ -20,11 +20,14 @@
 
 package org.mcnative.common.commands.plugin;
 
+import net.pretronic.libraries.command.NotFindable;
 import net.pretronic.libraries.command.command.MainCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
+import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.common.utils.Messages;
 
-public class McNativePluginCommand extends MainCommand {
+public class McNativePluginCommand extends MainCommand implements NotFindable {
 
     public McNativePluginCommand(ObjectOwner owner) {
         super(owner, CommandConfiguration.newBuilder()
@@ -38,5 +41,10 @@ public class McNativePluginCommand extends MainCommand {
         registerCommand(new PluginLoadCommand(owner));
         registerCommand(new PluginUnloadCommand(owner));
         registerCommand(new PluginReloadCommand(owner));
+    }
+
+    @Override
+    public void commandNotFound(CommandSender sender, String s, String[] strings) {
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_HELP);
     }
 }

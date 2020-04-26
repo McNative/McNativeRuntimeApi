@@ -41,7 +41,7 @@ public class PluginListCommand extends BasicCommand {
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        Collection<Plugin> plugins =  McNative.getInstance().getPluginManager().getPlugins();
+        Collection<Plugin<?>> plugins =  McNative.getInstance().getPluginManager().getPlugins();
         sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LIST, new DescribedHashVariableSet()
                 .add("plugins", McNative.getInstance().getPluginManager().getPlugins())
                 .add("count",plugins.size()));

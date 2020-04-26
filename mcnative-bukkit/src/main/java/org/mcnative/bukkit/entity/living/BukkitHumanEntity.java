@@ -20,12 +20,9 @@
 package org.mcnative.bukkit.entity.living;
 
 import org.mcnative.bukkit.inventory.BukkitInventory;
-import org.mcnative.bukkit.inventory.BukkitInventoryOwner;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
-import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.type.PlayerInventory;
 

@@ -1,8 +1,8 @@
 /*
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
- * @author Philipp Elvin Friedhoff
- * @since 21.03.20, 13:56
+ * @author Davide Wietlisbach
+ * @since 26.04.20, 15:52
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,12 +18,15 @@
  * under the License.
  */
 
-package org.mcnative.service.event.player.inventory;
+package org.mcnative.loader;
 
-import org.mcnative.service.event.player.MinecraftEntityPlayerEvent;
-import org.mcnative.service.inventory.Inventory;
+public interface PlatformExecutor {
 
-public interface MinecraftPlayerInventoryEvent extends MinecraftEntityPlayerEvent {
+    boolean isEnabled();
 
-    Inventory getInventory();
+    void shutdown();
+
+    void bootstrap();
+
+    void unload();
 }

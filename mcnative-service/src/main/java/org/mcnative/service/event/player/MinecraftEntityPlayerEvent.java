@@ -20,7 +20,6 @@
 
 package org.mcnative.service.event.player;
 
-import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.service.entity.living.Player;
 

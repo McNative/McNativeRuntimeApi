@@ -121,8 +121,4 @@ public class McNativeLoader extends ResourceLoader {
     public static boolean install(Logger logger,String platform){
         return new McNativeLoader(logger,platform).install();
     }
-
-    private static ResourceInfo buildResourceInfo(String platform){
-        return null;
-    }
 }

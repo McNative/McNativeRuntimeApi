@@ -22,8 +22,6 @@ package org.mcnative.bukkit.plugin.command;
 import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.NoPermissionAble;
 import net.pretronic.libraries.command.NoPermissionHandler;
-import net.pretronic.libraries.command.command.MainCommand;
-import net.pretronic.libraries.command.command.object.MainObjectCommand;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
@@ -34,8 +32,6 @@ import org.bukkit.entity.Player;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
-import org.mcnative.common.text.Text;
-import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

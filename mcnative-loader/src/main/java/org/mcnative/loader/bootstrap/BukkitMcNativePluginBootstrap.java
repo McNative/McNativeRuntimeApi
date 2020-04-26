@@ -25,13 +25,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
+import org.mcnative.loader.PlatformExecutor;
 
+import java.io.IOException;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
-public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener {
+public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener, PlatformExecutor {
 
     private static final String ENVIRONMENT_NAME = "Bukkit";
     private GuestPluginExecutor executor;
@@ -40,10 +46,11 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     public void onLoad() {
         try{
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
-            this.executor = new GuestPluginExecutor(getFile(),getLogger(),ENVIRONMENT_NAME);
+            this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),ENVIRONMENT_NAME);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
+                getServer().getPluginManager().disablePlugin(this);
                 return;
             }
 
@@ -88,5 +95,44 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             getLogger().info("(McNative-Loader) McNative is shutting down, thus plugins depends on McNative and is now also shutting down.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+    }
+
+    @Override
+    public void shutdown() {
+        Bukkit.getPluginManager().disablePlugin(this);
+    }
+
+    @Override
+    public void bootstrap() {
+        Bukkit.getPluginManager().enablePlugin(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void unload() {
+        if(isEnabled()) shutdown();
+
+        List<Plugin> plugins = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
+        Map<String, Plugin> names = (Map<String, org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
+
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        names.remove(this.getName());
+        plugins.remove(this);
+
+        if (classLoader instanceof URLClassLoader) {
+
+            ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
+            ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
+
+            Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
+            classes.clear();
+
+            try {
+                ((URLClassLoader) classLoader).close();
+            } catch (IOException ignored) {}
+        }
+
+        System.gc();//Execute garbage collector
     }
 }

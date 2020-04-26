@@ -63,6 +63,7 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     void setResourcePack(String url, String hash);
 
+
     @Override
     default boolean isPlayer(){
         return true;

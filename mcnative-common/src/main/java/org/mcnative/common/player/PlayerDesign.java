@@ -22,12 +22,12 @@ package org.mcnative.common.player;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.reflect.ReflectVariableObjectToString;
+import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
 //@Todo add update listener or event
-public interface PlayerDesign extends ReflectVariableObjectToString {
+public interface PlayerDesign extends VariableObjectToString {
 
     String getColor();
 

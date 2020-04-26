@@ -19,7 +19,6 @@
 
 package org.mcnative.bukkit;
 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitMcNativeBootstrap extends JavaPlugin {

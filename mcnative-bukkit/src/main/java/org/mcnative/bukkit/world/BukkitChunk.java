@@ -38,7 +38,6 @@ import org.mcnative.service.location.Vector;
 import org.mcnative.service.world.Biome;
 import org.mcnative.service.world.Chunk;
 import org.mcnative.service.world.TreeType;
-import org.mcnative.service.world.World;
 import org.mcnative.service.world.block.Block;
 import org.mcnative.service.world.block.data.BlockData;
 import org.mcnative.service.world.particle.Particle;

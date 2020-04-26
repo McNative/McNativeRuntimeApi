@@ -143,9 +143,7 @@ public class BukkitPluginLoader implements PluginLoader {
     @Override
     public void load() {
         try {
-            System.out.println(location);
             original = Bukkit.getPluginManager().loadPlugin(location);
-            System.out.println("ORIGINAL "+original);
             description = new BukkitPluginDescription(original.getDescription());
             plugin = new BukkitPlugin(original,this,description);
         } catch (InvalidPluginException | InvalidDescriptionException e) {
@@ -171,16 +169,18 @@ public class BukkitPluginLoader implements PluginLoader {
         List<org.bukkit.plugin.Plugin> plugins = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         Map<String, org.bukkit.plugin.Plugin> names = (Map<String, org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
 
-        ClassLoader classLoader = plugin.getClass().getClassLoader();
+        ClassLoader classLoader = original.getClass().getClassLoader();
 
         names.remove(original.getName());
         plugins.remove(original);
 
         if (classLoader instanceof URLClassLoader) {
+
             ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
             classes.clear();
+
             try {
                 ((URLClassLoader) classLoader).close();
             } catch (IOException ignored) {}

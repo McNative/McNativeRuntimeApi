@@ -38,7 +38,7 @@ public class PluginCommandUtil {
             return null;
         }
         Plugin<?> plugin = McNative.getInstance().getPluginManager().getPlugin(arguments[0]);
-        if(plugin == null){
+        if(plugin == null || plugin.getName().equalsIgnoreCase("McNative")){
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_NOTFOUND, VariableSet.create()
                     .add("plugin",arguments[0]).add("plugin.name",arguments[0]));
             return null;

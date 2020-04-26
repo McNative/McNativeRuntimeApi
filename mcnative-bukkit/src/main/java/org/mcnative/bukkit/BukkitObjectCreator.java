@@ -25,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
 import org.mcnative.bukkit.inventory.BukkitInventoryHolder;
-import org.mcnative.bukkit.inventory.BukkitInventoryOwner;
 import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.inventory.type.*;
 import org.mcnative.common.McNative;

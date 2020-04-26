@@ -32,10 +32,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-/*
-@Todo In platform
-    - Versions
- */
 public class BungeeCordPlatform implements MinecraftPlatform {
 
     private final File latestLogLocation;

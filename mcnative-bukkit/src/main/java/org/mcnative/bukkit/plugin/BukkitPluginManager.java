@@ -53,15 +53,14 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-//@Todo find better parameterized type solution
 public class BukkitPluginManager implements PluginManager {
 
     private final static String LOADER_CLASS_NAME = "BukkitMcNativePluginBootstrap";
 
     private final ServicesManager serviceManager;
-    private final Map<String, BiConsumer<Plugin,LifecycleState>> stateListeners;
+    private final Map<String, BiConsumer<Plugin<?>,LifecycleState>> stateListeners;
     private final Collection<PluginLoader> loaders;
-    private final Collection<Plugin> plugins;
+    private final Collection<Plugin<?>> plugins;
 
     private McNativePluginWrapperList pluginWrapperList;
 
@@ -78,17 +77,17 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     @Override
-    public Collection<Plugin> getPlugins() {
+    public Collection<Plugin<?>> getPlugins() {
         return plugins;
     }
 
     @Override
-    public Plugin getPlugin(String name) {
+    public Plugin<?> getPlugin(String name) {
         return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getName().equalsIgnoreCase(name));
     }
 
     @Override
-    public Plugin getPlugin(UUID id) {
+    public Plugin<?> getPlugin(UUID id) {
         return Iterators.findOne(this.plugins, plugin -> plugin.getDescription().getId().equals(id));
     }
 
@@ -158,7 +157,7 @@ public class BukkitPluginManager implements PluginManager {
     }
 
     @Override
-    public void setLifecycleStateListener(String s, BiConsumer<Plugin, LifecycleState> biConsumer) {
+    public void setLifecycleStateListener(String s, BiConsumer<Plugin<?>, LifecycleState> biConsumer) {
         this.stateListeners.put(s,biConsumer);
     }
 
@@ -172,13 +171,13 @@ public class BukkitPluginManager implements PluginManager {
             this.plugins.remove(plugin);
         }
 
-        BiConsumer<Plugin,LifecycleState> listener = this.stateListeners.get(state);
+        BiConsumer<Plugin<?>,LifecycleState> listener = this.stateListeners.get(state);
         if(listener != null) listener.accept(plugin,stateEvent);
     }
 
 
     @Override
-    public Collection<Plugin> enablePlugins(File file) {//@Todo return mapped plugin
+    public Collection<Plugin<?>> enablePlugins(File file) {//@Todo return mapped plugin
         try {
             Bukkit.getPluginManager().loadPlugin(file);
         } catch (InvalidPluginException | InvalidDescriptionException e) {
@@ -337,7 +336,9 @@ public class BukkitPluginManager implements PluginManager {
     @Internal
     public Plugin<?> getMappedPlugin(org.bukkit.plugin.Plugin original){
         Validate.notNull(original);
-        for (Plugin<?> plugin : plugins) if(plugin.equals(original)) return plugin;
+        for (Plugin<?> plugin : plugins){
+            if(plugin.equals(original)) return plugin;
+        }
         throw new IllegalArgumentException("McNative Mapping error (plugin / bukkit -> mcnative)");
     }
 
@@ -348,7 +349,9 @@ public class BukkitPluginManager implements PluginManager {
             List<org.bukkit.plugin.Plugin> original = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
             McNativePluginWrapperList override = new McNativePluginWrapperList(original,this);
             ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",override);
-            for (org.bukkit.plugin.Plugin plugin : original) registerBukkitPlugin(plugin);
+            for (org.bukkit.plugin.Plugin plugin : original){
+                registerBukkitPlugin(plugin);
+            }
             pluginWrapperList = override;
         }
     }
@@ -360,16 +363,6 @@ public class BukkitPluginManager implements PluginManager {
                ReflectionUtil.changeFieldValue(Bukkit.getPluginManager(),"plugins",pluginWrapperList.getOriginal());
            }
        }
-    }
-
-    private byte mapServicePriority(ServicePriority priority) {
-        switch (priority) {
-            case Highest: return net.pretronic.libraries.plugin.service.ServicePriority.HIGHEST;
-            case High: return net.pretronic.libraries.plugin.service.ServicePriority.HIGH;
-            case Low: return net.pretronic.libraries.plugin.service.ServicePriority.LOW;
-            case Lowest: return net.pretronic.libraries.plugin.service.ServicePriority.LOWEST;
-            default: return net.pretronic.libraries.plugin.service.ServicePriority.NORMAL;
-        }
     }
 
     private ServicePriority mapServicePriorityToBukkit(byte priority) {

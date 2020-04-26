@@ -86,17 +86,17 @@ public class McNativePasteLogCommand extends BasicCommand {
             StringBuilder builder = new StringBuilder();
             builder.append("- ")
                     .append(plugin.getName())
-                    .append("v").append(plugin.getDescription().getVersion().getName())
+                    .append(" v").append(plugin.getDescription().getVersion().getName())
                     .append(plugin.getDescription().getAuthor())
-                    .append("[Databases: ");
+                    .append(" [Databases: ");
             AtomicBoolean first = new AtomicBoolean(true);
-            McNative.getInstance().getPluginManager().getService(ConfigurationProvider.class).getDatabaseTypes(plugin).forEach(type -> builder.append(first.get() ? "" : ",").append(type));
+            McNative.getInstance().getPluginManager()
+                    .getService(ConfigurationProvider.class)
+                    .getDatabaseTypes(plugin)
+                    .forEach(type -> builder.append(first.get() ? "" : ",").append(type));
+            builder.append("]");
             logger.info(builder.toString());
         }
-        /*logger.info(" ");
-        logger.info("Storage:");
-        McNative.getInstance().getRegistry().getService(ConfigurationProvider.class).g*/
-        //@Todo storage config getting (Storage config as interface for default implementation)
         logger.info("----------------------------------------");
         sender.sendMessage(Messages.COMMAND_MCNATIVE_PASTE_STARTING);
         McNative.getInstance().getScheduler().createTask(McNative.getInstance()).delay(3, TimeUnit.SECONDS).execute(()-> {

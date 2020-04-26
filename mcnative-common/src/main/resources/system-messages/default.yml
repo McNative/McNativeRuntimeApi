@@ -16,7 +16,10 @@ messages:
   &7/mcnative plugin list
   &7/mcnative plugin enable <plugin>
   &7/mcnative plugin disable <plugin>
-  &7/mcnative plugin restart <plugin>'
+  &7/mcnative plugin restart <plugin>
+  &7/mcnative plugin load <plugin>
+  &7/mcnative plugin unload <plugin>
+  &7/mcnative plugin reload <plugin>'
   mcnative.command.manage.version: '${mcnative.prefix} &7Version&8: &c{version}'
   mcnative.command.manage.paste.staring: '${mcnative.prefix} &7Pasting your server log, please wait. '
   mcnative.command.manage.paste.successful: "${mcnative.prefix} &aYou have successful pasted your log\n&8» &c![{url}]({url})"
@@ -47,9 +50,8 @@ messages:
   &7/mcnative plugin load <plugin>
   &7/mcnative plugin unload <plugin>
   &7/mcnative plugin reload <plugin>'
-  mcnative.command.manage.plugin.list: '${mcnative.prefix} &7Installed and loaded plugins:
-  @for("plugin" in {plugins},${mcnative.command.manage.plugin.list.loop},"\n","\n")'
-  mcnative.command.manage.plugin.list.loop: '&8» &a{plugin.name} &8- &cv{plugin.description.version.name} &7by &c{plugin.description.author}'
+  mcnative.command.manage.plugin.list: '${mcnative.prefix} &7Installed and loaded plugins: @for("plugin" in {plugins},${mcnative.command.manage.plugin.list.loop},"\n","\n")'
+  mcnative.command.manage.plugin.list.loop: ' &8- &a{plugin.name} &8 &cv{plugin.description.version.name} &7by &c{plugin.description.author}'
 
   mcnative.command.manage.plugin.notfound: '${mcnative.prefix} &7The plugin &c{plugin.name} &7was not found'
 
