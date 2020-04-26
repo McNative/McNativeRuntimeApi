@@ -21,6 +21,7 @@
 package org.mcnative.loader;
 
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
 import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
@@ -62,4 +63,13 @@ public class GuestPluginLoader extends DefaultPluginLoader {
         executor.unload();
     }
 
+    @Override
+    public Plugin<?> enable() {
+        return super.enable();
+    }
+
+    public void disableInternal() {
+        super.shutdown();
+        super.unload();
+    }
 }

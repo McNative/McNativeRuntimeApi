@@ -82,6 +82,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @Override
     public void onDisable() {
         try{
+            System.out.println("MCNATIVE LOADER ON DISABLE --------------");
             if(this.executor != null) this.executor.disableGuestPlugin();
         }catch (Exception exception){
             this.executor = null;
