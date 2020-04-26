@@ -55,6 +55,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public void shutdown() {
+        System.out.println("SHUTDOWN CALL");
         executor.shutdown();
     }
 
@@ -64,6 +65,8 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public void unload() {
+        System.out.println("RECEIVED UNLOAD REQUEST");
+        if(isEnabled()) shutdown();
         super.unload();
         executor.unload();
     }
