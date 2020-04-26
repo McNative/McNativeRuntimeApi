@@ -51,13 +51,18 @@ import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.player.tablist.TablistFormatter;
+import org.mcnative.common.player.tablist.TablistOverviewFormatter;
+import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.format.TextColor;
 
 import java.io.File;
 import java.util.List;
@@ -197,11 +202,20 @@ public class McNativeLauncher {
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully stopped.");
     }
 
-
     private static void registerDefaultListener(EventBus eventBus, BukkitPluginManager pluginManager) {
         if(Bukkit.getPluginManager().getPlugin("Vault") != null){
             eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
         }
+        System.out.println("register");
+        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
+            System.out.println("send");
+            PlayerListHeaderAndFooterPacket packet = new PlayerListHeaderAndFooterPacket();
+            packet.setHeader(Text.of("Header", TextColor.RED));
+            packet.setFooter(Text.of("Footer", TextColor.YELLOW));
+
+            OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("FridiousHD");
+            //fridious.sendPacket(packet);
+        },20*10);
     }
 
     private static void setupConfiguredServices(){
@@ -211,6 +225,7 @@ public class McNativeLauncher {
             serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);
         }
+
         if(McNativeBukkitConfiguration.PLAYER_TABLIST_ENABLED){
             Tablist tablist = new BukkitTablist();
             tablist.setFormatter(new TablistFormatter() {
@@ -224,6 +239,22 @@ public class McNativeLauncher {
                     return McNativeBukkitConfiguration.PLAYER_TABLIST_SUFFIX_LOADED;
                 }
             });
+
+            if(McNativeBukkitConfiguration.PLAYER_TABLIST_OVERVIEW_ENABLED) {
+                tablist.setOverviewFormatter(new TablistOverviewFormatter() {
+
+                    @Override
+                    public MessageComponent<?> formatHeader(ConnectedMinecraftPlayer receiver, VariableSet headerVariables, VariableSet footerVariables) {
+                        return McNativeBukkitConfiguration.PLAYER_TABLIST_OVERVIEW_HEADER_LOADED;
+                    }
+
+                    @Override
+                    public MessageComponent<?> formatFooter(ConnectedMinecraftPlayer receiver, VariableSet headerVariables, VariableSet footerVariables) {
+                        return McNativeBukkitConfiguration.PLAYER_TABLIST_OVERVIEW_FOOTER_LOADED;
+                    }
+                });
+            }
+
             McNative.getInstance().getLocal().setServerTablist(tablist);
         }
     }

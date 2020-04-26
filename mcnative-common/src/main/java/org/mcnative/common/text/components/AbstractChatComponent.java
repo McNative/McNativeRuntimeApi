@@ -152,6 +152,7 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
 
     @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
+        if(variables == null) variables = VariableSet.createEmpty();
         Document document = Document.newDocument(key);
         if(isBold()) document.add("bold",true);
         if(isItalic()) document.add("italic",true);

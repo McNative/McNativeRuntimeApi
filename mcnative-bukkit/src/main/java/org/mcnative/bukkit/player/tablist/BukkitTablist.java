@@ -24,12 +24,10 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
+import org.mcnative.bukkit.McNativeBukkitConfiguration;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.player.tablist.SimpleTablistEntry;
-import org.mcnative.common.player.tablist.Tablist;
-import org.mcnative.common.player.tablist.TablistEntry;
-import org.mcnative.common.player.tablist.TablistFormatter;
+import org.mcnative.common.player.tablist.*;
 import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
 import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 import org.mcnative.common.text.Text;
@@ -44,15 +42,10 @@ public class BukkitTablist implements Tablist {
 
     private final Collection<ConnectedMinecraftPlayer> receivers;
 
-    private MessageComponent<?> header;
-    private MessageComponent<?> footer;
-
-    private VariableSet headerVariables;
-    private VariableSet footerVariables;
-
-    private List<TablistEntry> entries;
+    private final List<TablistEntry> entries;
 
     private TablistFormatter formatter;
+    private TablistOverviewFormatter overviewFormatter;
 
     public BukkitTablist() {
         this.receivers = new ArrayList<>();
@@ -67,37 +60,6 @@ public class BukkitTablist implements Tablist {
     @Override
     public List<TablistEntry> getEntries() {
         return this.entries;
-    }
-
-    @Override
-    public void setHeader(MessageComponent<?> component, VariableSet variables) {
-        Validate.notNull(component,variables);
-        this.header = component;
-        this.headerVariables = variables;
-    }
-
-    @Override
-    public void setFooter(MessageComponent<?> component, VariableSet variables) {
-        Validate.notNull(component,variables);
-        this.footer = component;
-        this.footerVariables = variables;
-    }
-
-    @Override
-    public void setHeaderAndFooter(MessageComponent<?> header, MessageComponent<?> footer, VariableSet variables) {
-        Validate.notNull(header,footer,variables);
-        this.header = header;
-        this.footer = footer;
-        this.headerVariables = variables;
-        this.footerVariables = variables;
-    }
-
-    @Override
-    public void clearHeaderAndFooter() {
-        this.header = null;
-        this.footer = null;
-        this.headerVariables = null;
-        this.footerVariables = null;
     }
 
     @Override
@@ -142,18 +104,33 @@ public class BukkitTablist implements Tablist {
     }
 
     @Override
-    public void updateOverview() {
-        //for (ConnectedMinecraftPlayer receiver : receivers) updateOverview(receiver);
+    public TablistOverviewFormatter getOverviewFormatter() {
+        return this.overviewFormatter;
     }
 
     @Override
-    public void updateOverview(ConnectedMinecraftPlayer player) {
-        PlayerListHeaderAndFooterPacket packet = new PlayerListHeaderAndFooterPacket();
-        packet.setFooter(footer);
-        packet.setFooterVariables(footerVariables);
-        packet.setHeader(header);
-        packet.setHeaderVariables(headerVariables);
-        //player.sendPacket(packet);
+    public void setOverviewFormatter(TablistOverviewFormatter formatter) {
+        this.overviewFormatter = formatter;
+    }
+
+    @Override
+    public void updateOverview(VariableSet headerVariables, VariableSet footerVariables) {
+        for (ConnectedMinecraftPlayer receiver : receivers) {
+            updateOverview(receiver, headerVariables, footerVariables);
+        }
+    }
+
+    @Override
+    public void updateOverview(ConnectedMinecraftPlayer player, VariableSet headerVariables, VariableSet footerVariables) {
+        if(McNativeBukkitConfiguration.PLAYER_TABLIST_OVERVIEW_ENABLED) {
+            PlayerListHeaderAndFooterPacket packet = new PlayerListHeaderAndFooterPacket();
+            packet.setHeader(getOverviewFormatter().formatHeader(player, headerVariables, footerVariables));
+            packet.setFooter(getOverviewFormatter().formatFooter(player, headerVariables, footerVariables));
+            packet.setHeaderVariables(headerVariables);
+            packet.setFooterVariables(footerVariables);
+
+            player.sendPacket(packet);
+        }
     }
 
     @Override
@@ -199,7 +176,8 @@ public class BukkitTablist implements Tablist {
     @Internal
     public void attachReceiver(ConnectedMinecraftPlayer player){
         this.receivers.add(player);
-        //updateOverview();
+        VariableSet variables = VariableSet.createDescribed().add("player", player);
+        updateOverview(player, variables, variables);
         for (TablistEntry entry : entries) sendEntry(player,entry,true);
     }
 

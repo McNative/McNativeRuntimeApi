@@ -36,37 +36,6 @@ public interface Tablist {
     List<TablistEntry> getEntries();
 
 
-    default void setHeader(String message){
-        setHeader(Text.of(message));
-    }
-
-    default void setHeader(MessageComponent<?> component){
-        setHeader(component,VariableSet.newEmptySet());
-    }
-
-    void setHeader(MessageComponent<?> component, VariableSet variables);
-
-
-    default void setFooter(String message){
-        setFooter(Text.of(message));
-    }
-
-    default void setFooter(MessageComponent<?> component){
-        setFooter(component,VariableSet.newEmptySet());
-    }
-
-    void setFooter(MessageComponent<?> component, VariableSet variables);
-
-
-    default void setHeaderAndFooter(MessageComponent<?> header, MessageComponent<?> footer){
-        setHeaderAndFooter(header, footer,VariableSet.newEmptySet());
-    }
-
-    void setHeaderAndFooter(MessageComponent<?> header, MessageComponent<?> footer, VariableSet variables);
-
-    void clearHeaderAndFooter();
-
-
     TablistFormatter getFormatter();
 
     void setFormatter(TablistFormatter formatter);
@@ -85,9 +54,21 @@ public interface Tablist {
     void removeEntry(TablistEntry entry);
 
 
-    void updateOverview();
+    TablistOverviewFormatter getOverviewFormatter();
 
-    void updateOverview(ConnectedMinecraftPlayer player);
+    void setOverviewFormatter(TablistOverviewFormatter formatter);
+
+    void updateOverview(VariableSet headerVariables, VariableSet footerVariables);
+
+    default void updateOverview() {
+        updateOverview(VariableSet.createEmpty(), VariableSet.createEmpty());
+    }
+
+    void updateOverview(ConnectedMinecraftPlayer player, VariableSet headerVariables, VariableSet footerVariables);
+
+    default void updateOverview(ConnectedMinecraftPlayer player) {
+        updateOverview(player, VariableSet.createEmpty(), VariableSet.createEmpty());
+    }
 
     void updateEntries();
 

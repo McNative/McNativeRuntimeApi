@@ -23,6 +23,7 @@ package org.mcnative.common.protocol.packet.type.player;
 import io.netty.buffer.ByteBuf;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
@@ -32,6 +33,8 @@ import org.mcnative.common.text.components.MessageComponent;
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class PlayerListHeaderAndFooterPacket implements MinecraftPacket {
+
+    private static final String REMOVE_CONTENT = "{\"translate\":\"\"}";
 
     private MessageComponent<?> header;
     private MessageComponent<?> footer;
@@ -48,9 +51,12 @@ public class PlayerListHeaderAndFooterPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12_2,0x53)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x4E)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x53)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x54)
-                    ,map(MinecraftProtocolVersion.JE_1_14,0x53)));
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x54)));
 
+    public PlayerListHeaderAndFooterPacket() {
+        this.headerVariables = VariableSet.createEmpty();
+        this.footerVariables = VariableSet.createEmpty();
+    }
 
     public MessageComponent<?> getHeader() {
         return header;
@@ -97,6 +103,13 @@ public class PlayerListHeaderAndFooterPacket implements MinecraftPacket {
 
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
+        System.out.println("write");
+        String header = this.header == null ? REMOVE_CONTENT : this.header.compileToString(headerVariables);
+        System.out.println(header);
+        String footer = this.footer == null ? REMOVE_CONTENT : this.footer.compileToString(footerVariables);
+        System.out.println(footer);
 
+        MinecraftProtocolUtil.writeString(buffer, header);
+        MinecraftProtocolUtil.writeString(buffer, footer);
     }
 }

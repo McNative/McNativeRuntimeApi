@@ -92,6 +92,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
         this.connection = connection;
         this.permissibleInjected = false;
         this.joining = false;
+        this.world = null; //@Todo map world
     }
 
     @Override
