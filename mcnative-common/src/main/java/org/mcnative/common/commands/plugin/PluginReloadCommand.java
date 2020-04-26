@@ -24,6 +24,7 @@ import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.loader.PluginLoader;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
@@ -48,16 +49,16 @@ public class PluginReloadCommand extends BasicCommand {
             return;
         }
 
-        PluginLoader loader = McNative.getInstance().getPluginManager().createPluginLoader(arguments[0]);
+        Plugin<?> plugin = PluginCommandUtil.getPlugin(sender, arguments,getConfiguration().getName(),USAGE);
+        if (plugin == null) return;
+        PluginCommandUtil.unloadPlugin(sender,plugin);
 
+
+        PluginLoader loader = McNative.getInstance().getPluginManager().createPluginLoader(arguments[0]);
         if(loader == null){
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_NOTFOUND, VariableSet.create()
                     .add("plugin",arguments[0]).add("plugin.name",arguments[0]));
             return;
-        }
-
-        if(loader.isEnabled()){
-            PluginCommandUtil.unloadPlugin(sender,loader.getInstance());
         }
 
         PluginCommandUtil.loadPlugin(sender, loader);

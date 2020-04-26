@@ -58,9 +58,7 @@ public class BukkitPluginDescription implements PluginDescription {
 
     @Override
     public String getAuthor() {
-        if(original == null || original.getAuthors() == null) {
-            return "Unknown";
-        }
+        if(original == null) return "Unknown";
         StringBuilder output = new StringBuilder();
         for (String author : original.getAuthors()) {
             output.append(author).append(", ");
