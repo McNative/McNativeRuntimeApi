@@ -26,6 +26,7 @@ import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
 
+import java.net.URLClassLoader;
 import java.util.logging.Level;
 
 public class BungeeCordMcNativePluginBootstrap extends Plugin implements PlatformExecutor {
@@ -36,7 +37,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
     @Override
     public void onLoad() {
         try{
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, (URLClassLoader) getClass().getClassLoader())) return;
             this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME);
 
             if(!this.executor.install() || !this.executor.installDependencies()){

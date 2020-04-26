@@ -39,15 +39,17 @@ public class McNativeLoader extends ResourceLoader {
 
     private final Logger logger;
     private final String platform;
+    private final URLClassLoader classLoader;
 
     static {
         MCNATIVE.setVersionUrl(VERSION_URL);
     }
 
-    public McNativeLoader(Logger logger, String platform) {
+    public McNativeLoader(Logger logger, String platform, URLClassLoader classLoader) {
         super(MCNATIVE);
         this.logger = logger;
         this.platform = platform;
+        this.classLoader = classLoader;
     }
 
     public boolean isAvailable(){
@@ -106,9 +108,8 @@ public class McNativeLoader extends ResourceLoader {
 
     public boolean launch(){
         try{
-            ClassLoader loader = getClass().getClassLoader();
-            loadReflected((URLClassLoader) loader);
-            Class<?> mcNativeClass = loader.loadClass("org.mcnative."+this.platform.toLowerCase()+".McNativeLauncher");
+            loadReflected(classLoader);
+            Class<?> mcNativeClass = classLoader.loadClass("org.mcnative."+this.platform.toLowerCase()+".McNativeLauncher");
             Method launchMethod = mcNativeClass.getMethod("launchMcNative");
             launchMethod.invoke(null);
             return true;
@@ -118,7 +119,7 @@ public class McNativeLoader extends ResourceLoader {
         return false;
     }
 
-    public static boolean install(Logger logger,String platform){
-        return new McNativeLoader(logger,platform).install();
+    public static boolean install(Logger logger,String platform,URLClassLoader classLoader){
+        return new McNativeLoader(logger,platform,classLoader).install();
     }
 }

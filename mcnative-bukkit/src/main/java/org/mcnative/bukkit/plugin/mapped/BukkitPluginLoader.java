@@ -26,11 +26,13 @@ import net.pretronic.libraries.plugin.lifecycle.LifecycleState;
 import net.pretronic.libraries.plugin.loader.PluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.PluginClassLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.common.McNative;
 
 import java.io.File;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class BukkitPluginLoader implements PluginLoader {
 
@@ -128,7 +131,7 @@ public class BukkitPluginLoader implements PluginLoader {
     }
 
     @Override
-    public Plugin construct() {
+    public Plugin<?> construct() {
         if(isInstanceAvailable()){
             throw new OperationFailedException("Instance is already created");
         }
@@ -144,6 +147,7 @@ public class BukkitPluginLoader implements PluginLoader {
     public void load() {
         try {
             original = Bukkit.getPluginManager().loadPlugin(location);
+            if(original == null) throw new IllegalArgumentException("Received invalid plugin");
             original.onLoad();
             description = new BukkitPluginDescription(original.getDescription());
             plugin = new BukkitPlugin(original,this,description);
@@ -176,11 +180,11 @@ public class BukkitPluginLoader implements PluginLoader {
         plugins.remove(original);
 
         if (classLoader instanceof URLClassLoader) {
-
             ReflectionUtil.changeFieldValue(classLoader,"plugin",null);
             ReflectionUtil.changeFieldValue(classLoader,"pluginInit",null);
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
             classes.clear();
+            clearCachedClasses(classLoader);
 
             try {
                 ((URLClassLoader) classLoader).close();
@@ -191,6 +195,17 @@ public class BukkitPluginLoader implements PluginLoader {
         plugin = null;
 
         System.gc();//Execute garbage collector
+    }
+
+    @SuppressWarnings("unchecked")
+    private void clearCachedClasses(ClassLoader classLoader){
+        Map<Pattern, org.bukkit.plugin.PluginLoader> loaders = (Map<Pattern, org.bukkit.plugin.PluginLoader>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"fileAssociations");
+        for (Map.Entry<Pattern, org.bukkit.plugin.PluginLoader> loader : loaders.entrySet()) {
+            if(loader.getValue() instanceof JavaPluginLoader){
+                Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(loader.getValue(),"classes");
+                Iterators.removeSilent(classes.entrySet(), entry -> entry.getValue().getClassLoader().equals(classLoader));
+            }
+        }
     }
 
     public void destroy(){

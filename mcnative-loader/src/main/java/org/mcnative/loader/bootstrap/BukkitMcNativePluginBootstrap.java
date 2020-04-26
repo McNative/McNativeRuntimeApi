@@ -20,22 +20,27 @@
 package org.mcnative.loader.bootstrap;
 
 import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
+import org.mcnative.loader.classloader.BukkitMcNativeClassloader;
 
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener, PlatformExecutor {
 
@@ -45,7 +50,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @Override
     public void onLoad() {
         try{
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,new BukkitMcNativeClassloader())) return;
             this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),ENVIRONMENT_NAME);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
@@ -127,6 +132,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
             Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(classLoader,"classes");
             classes.clear();
+            clearCachedClasses(classLoader);
 
             try {
                 ((URLClassLoader) classLoader).close();
@@ -134,5 +140,16 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
         }
 
         System.gc();//Execute garbage collector
+    }
+
+    @SuppressWarnings("unchecked")
+    private void clearCachedClasses(ClassLoader classLoader){
+        Map<Pattern, PluginLoader> loaders = (Map<Pattern, PluginLoader>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"fileAssociations");
+        for (Map.Entry<Pattern, PluginLoader> loader : loaders.entrySet()) {
+            if(loader.getValue() instanceof JavaPluginLoader){
+                Map<String, Class<?>> classes = (Map<String, Class<?>>) ReflectionUtil.getFieldValue(loader.getValue(),"classes");
+                Iterators.removeSilent(classes.entrySet(), entry -> entry.getValue().getClassLoader().equals(classLoader));
+            }
+        }
     }
 }
