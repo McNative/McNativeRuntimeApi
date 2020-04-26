@@ -107,6 +107,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
     @Override
     public void bootstrap() {
+        System.out.println("BOOTSTRAP ");
         Bukkit.getPluginManager().enablePlugin(this);
     }
 

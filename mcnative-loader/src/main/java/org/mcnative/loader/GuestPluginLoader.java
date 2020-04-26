@@ -64,6 +64,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public void unload() {
+        super.unload();
         executor.unload();
     }
 
