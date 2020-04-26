@@ -26,6 +26,7 @@ import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.interfaces.ShutdownAble;
 import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveHashMap;
@@ -66,7 +67,21 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
         if(entry != null) {
             DatabaseDriver databaseDriver = getDatabaseDriver(entry.getDriverName());
             if(!databaseDriver.isConnected()) {
-                databaseDriver.connect();
+
+                try {
+                    databaseDriver.connect();
+                }catch (Exception exception){
+                    McNative.getInstance().getLogger().error("----------------------------");
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Could not connect to database");
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Plugin: "+owner.getName());
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Name: "+entry.getName());
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Driver: "+entry.getDriverName());
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Database: "+entry.getDatabase());
+                    McNative.getInstance().getLogger().error("[McNative] (Database-Driver) Error: "+exception.getMessage());
+                    McNative.getInstance().getLogger().error("----------------------------");
+                    throw new OperationFailedException("Could not connect to database",exception);
+                }
+
             }
             return databaseDriver.getDatabase(entry.getDatabase());
         }
