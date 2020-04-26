@@ -78,6 +78,8 @@ public class McNativeBukkitConfiguration {
     public static transient MessageComponent<?> PLAYER_CHAT;
     public static transient MessageComponent<?> PLAYER_TABLIST_PREFIX_LOADED;
     public static transient MessageComponent<?> PLAYER_TABLIST_SUFFIX_LOADED;
+    public static transient MessageComponent<?> PLAYER_TABLIST_OVERVIEW_HEADER_LOADED;
+    public static transient MessageComponent<?> PLAYER_TABLIST_OVERVIEW_FOOTER_LOADED;
 
     static {
         PLAYER_COLORS_COLORS.put("mcnative.player.color.administrator","&4");
@@ -138,6 +140,10 @@ public class McNativeBukkitConfiguration {
         PLAYER_CHAT = parseCustomMessage(PLAYER_CHAT_FORMAT);
         PLAYER_TABLIST_PREFIX_LOADED = parseCustomMessage(PLAYER_TABLIST_PREFIX);
         PLAYER_TABLIST_SUFFIX_LOADED = parseCustomMessage(PLAYER_TABLIST_SUFFIX);
+
+        PLAYER_TABLIST_OVERVIEW_HEADER_LOADED = parseCustomMessage(PLAYER_TABLIST_OVERVIEW_HEADER);
+        PLAYER_TABLIST_OVERVIEW_FOOTER_LOADED = parseCustomMessage(PLAYER_TABLIST_OVERVIEW_FOOTER);
+
         return true;
     }
     private static MessageComponent<?> parseCustomMessage(String input){
