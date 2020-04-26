@@ -21,12 +21,14 @@
 package org.mcnative.bukkit.network.cloudnet.v2;
 
 import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -84,7 +86,9 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public NetworkIdentifier getIdentifier(String name) {
-       throw new UnsupportedOperationException("Currently not supported");
+        ServerInfo info = CloudAPI.getInstance().getServerInfo(name);
+        if(info == null) throw new OperationFailedException("Server is not registered in cloud");
+        return new NetworkIdentifier(name,info.getServiceId().getUniqueId());
     }
 
     @Override
