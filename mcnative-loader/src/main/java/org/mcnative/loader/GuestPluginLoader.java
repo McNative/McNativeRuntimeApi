@@ -61,7 +61,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     }
 
     public void shutdownInternal() {
-        super.bootstrap();
+        super.shutdown();
     }
 
     @Override
