@@ -74,6 +74,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             }
         }catch (Exception exception){
             this.executor = null;
+            exception.printStackTrace();
             getLogger().log(Level.SEVERE,String.format("Could not enable plugin (%s)",exception.getMessage()));
             getServer().getPluginManager().disablePlugin(this);
         }
@@ -86,6 +87,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             if(this.executor != null) this.executor.disableGuestPlugin();
         }catch (Exception exception){
             this.executor = null;
+            exception.printStackTrace();
             getLogger().log(Level.SEVERE,String.format("Could not disable plugin (%s)",exception.getMessage()));
         }
     }
