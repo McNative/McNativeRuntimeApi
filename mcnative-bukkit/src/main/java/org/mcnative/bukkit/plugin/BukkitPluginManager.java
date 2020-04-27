@@ -40,6 +40,8 @@ import net.pretronic.libraries.utility.io.archive.ZipArchive;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.*;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.plugin.mapped.BukkitPlugin;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
@@ -318,7 +320,14 @@ public class BukkitPluginManager implements PluginManager {
                 this.loaders.add(loader);
             }
             this.plugins.add(loader.getInstance());
+
+            if(plugin instanceof JavaPlugin
+                    && plugin.getPluginLoader() instanceof JavaPluginLoader){
+                ReflectionUtil.changeFieldValue(JavaPlugin.class,plugin,"loader"
+                        ,new McNativePluginWrapperLoader((JavaPluginLoader) plugin.getPluginLoader()));
+            }
         }
+
     }
 
     protected void unregisterBukkitPlugin(org.bukkit.plugin.Plugin plugin){

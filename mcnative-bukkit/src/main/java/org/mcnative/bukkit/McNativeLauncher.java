@@ -51,18 +51,14 @@ import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.player.tablist.TablistFormatter;
 import org.mcnative.common.player.tablist.TablistOverviewFormatter;
-import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
-import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.format.TextColor;
 
 import java.io.File;
 import java.util.List;
@@ -206,16 +202,6 @@ public class McNativeLauncher {
         if(Bukkit.getPluginManager().getPlugin("Vault") != null){
             eventBus.subscribe(McNative.getInstance(), new VaultServiceListener(pluginManager));
         }
-        System.out.println("register");
-        Bukkit.getScheduler().runTaskLater(McNativeLauncher.getPlugin(), ()-> {
-            System.out.println("send");
-            PlayerListHeaderAndFooterPacket packet = new PlayerListHeaderAndFooterPacket();
-            packet.setHeader(Text.of("Header", TextColor.RED));
-            packet.setFooter(Text.of("Footer", TextColor.YELLOW));
-
-            OnlineMinecraftPlayer fridious = McNative.getInstance().getLocal().getOnlinePlayer("FridiousHD");
-            //fridious.sendPacket(packet);
-        },20*10);
     }
 
     private static void setupConfiguredServices(){

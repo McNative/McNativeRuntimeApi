@@ -117,7 +117,6 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @SuppressWarnings("unchecked")
     @Override
     public void unload() {
-
         List<Plugin> plugins = (List<org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"plugins");
         Map<String, Plugin> names = (Map<String, org.bukkit.plugin.Plugin>) ReflectionUtil.getFieldValue(Bukkit.getPluginManager(),"lookupNames");
 

@@ -62,7 +62,7 @@
         <dependency.pretronic.libraries.synchronisation>${dependency.pretronic.libraries}</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>${dependency.pretronic.libraries}</dependency.pretronic.libraries.logging>
         <dependency.pretronic.libraries.message>${dependency.pretronic.libraries}</dependency.pretronic.libraries.message>
-        <dependency.pretronic.libraries>1.1.7.118-SNAPSHOT</dependency.pretronic.libraries>
+        <dependency.pretronic.libraries>1.1.8.119-SNAPSHOT</dependency.pretronic.libraries>
 
         <dependency.pretronic.databasequery>1.1.19.17-SNAPSHOT</dependency.pretronic.databasequery>
 
