@@ -20,13 +20,16 @@
 
 package org.mcnative.common.commands.plugin;
 
+import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 
-public class PluginUnloadCommand extends BasicCommand {
+import java.util.Collection;
+
+public class PluginUnloadCommand extends BasicCommand implements Completable {
 
     private static final String USAGE = "/mcnative plugin unload <plugin>";
 
@@ -40,10 +43,11 @@ public class PluginUnloadCommand extends BasicCommand {
     public void execute(CommandSender sender, String[] arguments) {
         Plugin<?> plugin = PluginCommandUtil.getPlugin(sender, arguments,getConfiguration().getName(),USAGE);
         if (plugin == null) return;
-
-
-
-
         PluginCommandUtil.unloadPlugin(sender,plugin);
+    }
+
+    @Override
+    public Collection<String> complete(CommandSender commandSender, String[] arguments) {
+        return PluginCommandUtil.tabCompletePlugins(arguments);
     }
 }

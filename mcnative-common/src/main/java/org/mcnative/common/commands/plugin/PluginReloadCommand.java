@@ -20,6 +20,7 @@
 
 package org.mcnative.common.commands.plugin;
 
+import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
@@ -30,7 +31,9 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.utils.Messages;
 
-public class PluginReloadCommand extends BasicCommand {
+import java.util.Collection;
+
+public class PluginReloadCommand extends BasicCommand implements Completable {
 
     private static final String USAGE = "/mcnative plugin reload <plugin>";
 
@@ -63,4 +66,10 @@ public class PluginReloadCommand extends BasicCommand {
 
         PluginCommandUtil.loadPlugin(sender, loader);
     }
+
+    @Override
+    public Collection<String> complete(CommandSender commandSender, String[] arguments) {
+        return PluginCommandUtil.tabCompletePlugins(arguments);
+    }
+
 }

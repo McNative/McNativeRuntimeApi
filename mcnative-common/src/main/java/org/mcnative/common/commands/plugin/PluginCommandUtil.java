@@ -28,7 +28,13 @@ import net.pretronic.libraries.plugin.loader.PluginLoader;
 import org.mcnative.common.McNative;
 import org.mcnative.common.utils.Messages;
 
-public class PluginCommandUtil {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+public final class PluginCommandUtil {
+
+    private PluginCommandUtil(){}
 
     protected static Plugin<?> getPlugin(CommandSender sender, String[] arguments,String command,String usage) {
         if(arguments.length < 1){
@@ -122,5 +128,18 @@ public class PluginCommandUtil {
                     .add("plugin", loader.getInstance())
                     .add("exception", exception.getMessage()));
         }
+    }
+
+    protected static Collection<String> tabCompletePlugins(String[] arguments) {
+        if(arguments.length <= 0){
+            Collection<String> result = new ArrayList<>();
+            for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
+                if(!plugin.getName().equalsIgnoreCase("McNative")){
+                    result.add(plugin.getName());
+                }
+            }
+            return result;
+        }
+        return Collections.emptyList();
     }
 }
