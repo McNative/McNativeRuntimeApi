@@ -36,7 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
-import org.mcnative.bukkit.network.BungeeCordProxyNetwork;
+import org.mcnative.bukkit.network.bungeecord.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.bukkit.player.BukkitChatChannel;

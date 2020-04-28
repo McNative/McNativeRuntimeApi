@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 02.03.20, 20:43
+ * @since 28.04.20, 17:04
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network;
+package org.mcnative.bukkit.network.bungeecord;
 
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
