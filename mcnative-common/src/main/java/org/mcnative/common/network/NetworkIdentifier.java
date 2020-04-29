@@ -23,6 +23,8 @@ import java.util.UUID;
 
 public class NetworkIdentifier {
 
+    public static final NetworkIdentifier UNKNOWN = new NetworkIdentifier("Unknown",new UUID(-1,-1));
+
     public static final NetworkIdentifier BROADCAST = new NetworkIdentifier("Network Broadcast",new UUID(0,0));
 
     public static final NetworkIdentifier BROADCAST_PROXY = new NetworkIdentifier("Network Proxy Broadcast",new UUID(0,1));
