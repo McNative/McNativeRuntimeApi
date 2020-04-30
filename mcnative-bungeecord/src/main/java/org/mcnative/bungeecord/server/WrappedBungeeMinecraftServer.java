@@ -24,7 +24,10 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -37,11 +40,12 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class WrappedBungeeMinecraftServer implements MinecraftServer {
+public class WrappedBungeeMinecraftServer implements MinecraftServer, VariableObjectToString {
 
     private final ServerInfo original;
     private final NetworkIdentifier identifier;
@@ -49,11 +53,14 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
     private String permission;
     private MinecraftServerType type;
 
+    private Collection<OnlineMinecraftPlayer> players;
+
     public WrappedBungeeMinecraftServer(ServerInfo info) {
         this.original = info;
         this.identifier = McNative.getInstance().getNetwork().getIdentifier(info.getName());
         this.permission = info.isRestricted() ? info.getPermission() : null;
         this.type = MinecraftServerType.NORMAL;
+        this.players = new ArrayList<>();
     }
 
     public ServerInfo getOriginalInfo(){
@@ -102,12 +109,12 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
 
     @Override
     public ServerStatusResponse ping() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        return null;
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
@@ -122,7 +129,7 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return null;
+        return ping().getVersion().getProtocol();
     }
 
     @Override
@@ -132,27 +139,24 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        return null;
-    }
-
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        return null;
+        return players;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        return null;
+        Validate.notNull(uniqueId);
+        return Iterators.findOne(this.players, player -> player.getUniqueId().equals(uniqueId));
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(String nme) {
-        return null;
+    public OnlineMinecraftPlayer getOnlinePlayer(String name) {
+        Validate.notNull(name);
+        return Iterators.findOne(this.players, player -> player.getName().equals(name));
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        return null;
+        return Iterators.findOne(this.players, player -> player.getXBoxId() == xBoxId);
     }
 
     @Override
@@ -219,5 +223,20 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer {
                     && ((ServerInfo) object).getAddress().equals(original.getAddress());
         }
         return false;
+    }
+
+    @Override
+    public String toStringVariable() {
+        return getName();
+    }
+
+    @Internal
+    public void addPlayer(OnlineMinecraftPlayer player){
+        this.players.add(player);
+    }
+
+    @Internal
+    public void removePlayer(OnlineMinecraftPlayer player){
+        this.players.remove(player);
     }
 }

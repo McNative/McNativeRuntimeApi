@@ -39,7 +39,6 @@ import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.bungeecord.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
-import org.mcnative.bukkit.player.BukkitChatChannel;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.player.tablist.BukkitTablist;
@@ -206,7 +205,7 @@ public class McNativeLauncher {
 
     private static void setupConfiguredServices(){
         if(McNativeBukkitConfiguration.PLAYER_CHAT_ENABLED){
-            ChatChannel serverChat = new BukkitChatChannel();
+            ChatChannel serverChat = ChatChannel.newChatChannel();
             serverChat.setName("ServerChat");
             serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);

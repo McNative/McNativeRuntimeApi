@@ -101,7 +101,7 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
-        return null;
+        return serverMap.getServer(uniqueId);
     }
 
     @Override
@@ -196,11 +196,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
         //@Todo maybe develop reference map?
         return Iterators.map(getOnlinePlayers(), player -> player);
-    }
-
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        return getConnectedPlayer(id);
     }
 
     @Override

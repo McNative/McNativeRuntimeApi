@@ -33,23 +33,33 @@ import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.logging.level.DebugLevel;
 import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.variable.describer.VariableDescriberRegistry;
+import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
+import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Validate;
+import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.bungeecord.player.permission.BungeeCordPermissionProvider;
+import org.mcnative.bungeecord.player.permission.BungeeCordPlayerDesign;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
+import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.player.OfflineMinecraftPlayer;
+import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
 import org.mcnative.common.player.data.PlayerDataProvider;
+import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
@@ -216,6 +226,19 @@ public class BungeeCordMcNative implements McNative {
 
     protected void registerDefaultCommands() {
         getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
+    }
+
+    protected void registerDefaultDescribers(){
+        VariableDescriberRegistry.registerDescriber(BungeeProxiedPlayer.class);
+        VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
+        VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
+        VariableDescriberRegistry.registerDescriber(BungeeCordPlayerDesign.class);
+        VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
+        VariableDescriberRegistry.registerDescriber(PluginDescription.class);
+        VariableDescriberRegistry.registerDescriber(DefaultPluginDescription.class);
+        VariableDescriberRegistry.registerDescriber(DefaultPluginLoader.class);
+        VariableDescriberRegistry.registerDescriber(PluginVersion.class);
+        VariableDescriberRegistry.registerDescriber(WrappedBungeeMinecraftServer.class);
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

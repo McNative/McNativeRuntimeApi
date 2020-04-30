@@ -19,10 +19,13 @@
 
 package org.mcnative.common.network.component.server;
 
+import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import org.mcnative.common.network.component.ConnectableNetworkComponent;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 public interface MinecraftServer extends ConnectableNetworkComponent {
@@ -46,6 +49,9 @@ public interface MinecraftServer extends ConnectableNetworkComponent {
 
     CompletableFuture<ServerStatusResponse> pingAsync();
 
+    default void sendData(String channel, Document data){
+        sendData(channel, DocumentFileType.JSON.getWriter().write(data, StandardCharsets.UTF_8));
+    }
 
     default void sendData(String channel, byte[] data){
         sendData(channel, data,false);

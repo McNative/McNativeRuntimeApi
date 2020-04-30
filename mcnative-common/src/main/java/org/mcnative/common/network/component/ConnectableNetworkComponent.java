@@ -35,11 +35,9 @@ public interface ConnectableNetworkComponent extends NetworkComponent {
 
     Collection<OnlineMinecraftPlayer> getOnlinePlayers();
 
-    OnlineMinecraftPlayer getOnlinePlayer(int id);
-
     OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId);
 
-    OnlineMinecraftPlayer getOnlinePlayer(String nme);
+    OnlineMinecraftPlayer getOnlinePlayer(String name);
 
     OnlineMinecraftPlayer getOnlinePlayer(long xBoxId);
 

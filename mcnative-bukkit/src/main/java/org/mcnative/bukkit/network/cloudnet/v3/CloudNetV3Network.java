@@ -179,11 +179,6 @@ public class CloudNetV3Network implements Network {
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        throw new UnsupportedOperationException("Currently not supported");
-    }
-
-    @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
         throw new UnsupportedOperationException("Currently not supported");
     }

@@ -21,7 +21,9 @@ package org.mcnative.bungeecord.internal.event.player;
 
 import net.md_5.bungee.api.event.ChatEvent;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
@@ -33,10 +35,13 @@ public class BungeeMinecraftPlayerChatEvent implements MinecraftPlayerChatEvent 
     private final OnlineMinecraftPlayer player;
     private ChatChannel channel;
 
-    public BungeeMinecraftPlayerChatEvent(ChatEvent original, OnlineMinecraftPlayer player) {
+    private MessageComponent<?> outputMessage;
+    private VariableSet outputVariables;
+
+    public BungeeMinecraftPlayerChatEvent(ChatEvent original, ConnectedMinecraftPlayer player) {
         this.original = original;
         this.player = player;
-        this.channel = null;//player.get();
+        this.channel = player.getPrimaryChatChannel();
     }
 
     @Override
@@ -61,22 +66,24 @@ public class BungeeMinecraftPlayerChatEvent implements MinecraftPlayerChatEvent 
 
     @Override
     public MessageComponent<?> getOutputMessage() {
-        return null;
+        return outputMessage;
     }
 
     @Override
     public void setOutputMessage(MessageComponent<?> outputMessage) {
-
+        Validate.notNull(outputMessage);
+        this.outputMessage = outputMessage;
     }
 
     @Override
     public VariableSet getOutputVariables() {
-        return null;
+        return outputVariables;
     }
 
     @Override
     public void setOutputVariables(VariableSet variables) {
-
+        Validate.notNull(variables);
+        this.outputVariables = variables;
     }
 
     @Override

@@ -231,9 +231,11 @@ public final class McNativeBridgeEventHandler {
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftServer server = serverMap.getMappedServer(event.getServer().getInfo());
         MinecraftPlayerServerConnectedEvent mcNativeEvent = new BungeeServerConnectedEvent(player,server);
-        eventBus.callEvents(ServerConnectedEvent.class,event,mcNativeEvent);
+
         ((BungeeProxiedPlayer)player).setServer(server);
         ((BungeeProxiedPlayer) player).injectDownstreamProtocolHandlersToPipeline();
+
+        eventBus.callEvents(ServerConnectedEvent.class,event,mcNativeEvent);
     }
 
     private void handleServerSwitch(ServerSwitchEvent event){
@@ -265,12 +267,17 @@ public final class McNativeBridgeEventHandler {
 
     private void handleChatEvent(ChatEvent event) {
         if(event.getSender() instanceof ProxiedPlayer){
-            OnlineMinecraftPlayer player = playerManager.getMappedPlayer((ProxiedPlayer) event.getSender());
+            ConnectedMinecraftPlayer player = playerManager.getMappedPlayer((ProxiedPlayer) event.getSender());
             MinecraftPlayerChatEvent mcNativeEvent = new BungeeMinecraftPlayerChatEvent(event,player);
             eventBus.callEvents(ChatEvent.class,event,mcNativeEvent);
             if(!event.isCancelled() && mcNativeEvent.getChannel() != null){
                 event.setCancelled(true);
-                mcNativeEvent.getChannel().chat(player,event.getMessage());
+                if(mcNativeEvent.getOutputMessage() == null){
+                    mcNativeEvent.getChannel().chat(player,mcNativeEvent.getMessage(),mcNativeEvent.getOutputVariables());
+                }else{
+                    mcNativeEvent.getChannel().sendMessage(mcNativeEvent.getOutputMessage(),mcNativeEvent.getOutputVariables());
+                }
+                McNative.getInstance().getLogger().info("["+mcNativeEvent.getChannel().getName()+"] "+player.getName()+": "+event.getMessage());
             }
         }else eventBus.callEvent(event);
     }
@@ -325,7 +332,7 @@ public final class McNativeBridgeEventHandler {
     }
 
     private void handleSettingsChange(SettingsChangedEvent event){
-        OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+        ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         PlayerSettings settings = mapSettings(event.getPlayer());
         MinecraftPlayerSettingsChangedEvent mcNativeEvent = new BungeeMinecraftPlayerSettingsChangedEvent(player,settings);
         eventBus.callEvents(PermissionCheckEvent.class,event,mcNativeEvent);

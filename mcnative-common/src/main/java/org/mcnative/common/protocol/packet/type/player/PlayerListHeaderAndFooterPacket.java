@@ -103,11 +103,8 @@ public class PlayerListHeaderAndFooterPacket implements MinecraftPacket {
 
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        System.out.println("write");
         String header = this.header == null ? REMOVE_CONTENT : this.header.compileToString(headerVariables);
-        System.out.println(header);
         String footer = this.footer == null ? REMOVE_CONTENT : this.footer.compileToString(footerVariables);
-        System.out.println(footer);
 
         MinecraftProtocolUtil.writeString(buffer, header);
         MinecraftProtocolUtil.writeString(buffer, footer);

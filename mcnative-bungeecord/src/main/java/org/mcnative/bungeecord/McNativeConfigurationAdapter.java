@@ -86,7 +86,7 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
 
     @Override
     public Collection<String> getGroups(String player) {
-        return original.getGroups(player);//@Todo Implement permission and groups
+        return original.getGroups(player);
     }
 
     @Override

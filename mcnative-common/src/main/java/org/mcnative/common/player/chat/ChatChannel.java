@@ -26,13 +26,17 @@ import org.mcnative.common.player.receiver.ReceiverChannel;
 
 public interface ChatChannel extends ReceiverChannel {
 
-    //boolean isReadOnly(OnlineMinecraftPlayer player);
-
-    //void setReadOnly(OnlineMinecraftPlayer player, boolean readOnly);
-
     void setMessageFormatter(ChatFormatter formatter);
 
     void chat(OnlineMinecraftPlayer player, String message);
 
     void chat(OnlineMinecraftPlayer player, String message, VariableSet variables);
+
+    static ChatChannel newChatChannel(){
+        return new DefaultChatChannel();
+    }
+
+    static ChatChannel newChatChannel(String name){
+        return new DefaultChatChannel(name);
+    }
 }

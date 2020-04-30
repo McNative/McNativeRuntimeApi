@@ -42,7 +42,6 @@ import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.GeneralUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.permission.BukkitPermissionProvider;
 import org.mcnative.bukkit.player.permission.BukkitPlayerDesign;
@@ -54,6 +53,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.ObjectCreator;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.player.data.DefaultPlayerDataProvider;
@@ -234,7 +234,7 @@ public class BukkitMcNative implements McNative {
 
     protected void registerDefaultDescribers(){
         VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
-        VariableDescriberRegistry.registerDescriber(OfflinePlayer.class);
+        VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);

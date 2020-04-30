@@ -29,7 +29,6 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.service.ServicePriority;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
@@ -41,7 +40,6 @@ import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
@@ -60,7 +58,6 @@ import org.mcnative.service.world.WorldCreator;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -72,8 +69,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     private final CommandManager commandManager;
     private final EventBus eventBus;
 
-    private Collection<MessageEntry> messageListeners;
-
     private ChatChannel serverChat;
     private Tablist serverTablist;
     private ServerStatusResponse statusResponse;
@@ -84,7 +79,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         this.commandManager = commandManager;
         this.playerManager = playerManager;
         this.eventBus = eventBus;
-        this.messageListeners = new ArrayList<>();
         this.objectCreator = new BukkitObjectCreator();
         initVaultHook();
     }
@@ -237,6 +231,11 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public String getName() {
+        if(McNative.getInstance().isNetworkAvailable()){
+            try{
+                return McNative.getInstance().getNetwork().getLocalIdentifier().getName();
+            }catch (Exception ignored){}
+        }
         return Bukkit.getName();
     }
 
@@ -248,11 +247,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
         return Iterators.map(getOnlinePlayers(), player -> player);
-    }
-
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        return getConnectedPlayer(id);
     }
 
     @Override
@@ -360,19 +354,6 @@ public class BukkitService implements MinecraftService, MinecraftServer {
                 McNative.getInstance().getRegistry().registerService(McNative.getInstance(), PermissionProvider.class,
                         vaultPermissionProvider, ServicePriority.LOWEST);
             }
-        }
-    }
-
-    private static class MessageEntry {
-
-        private final String name;
-        private final ObjectOwner owner;
-        private final MessagingChannelListener listener;
-
-        public MessageEntry(String name, ObjectOwner owner, MessagingChannelListener listener) {
-            this.name = name;
-            this.owner = owner;
-            this.listener = listener;
         }
     }
 }

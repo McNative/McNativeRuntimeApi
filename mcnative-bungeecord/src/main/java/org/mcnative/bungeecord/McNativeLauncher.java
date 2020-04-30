@@ -42,6 +42,7 @@ import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.proxy.ProxyService;
 
@@ -94,6 +95,7 @@ public class McNativeLauncher {
 
         instance.registerDefaultProviders();
         instance.registerDefaultCommands();
+        instance.registerDefaultDescribers();
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
@@ -104,7 +106,11 @@ public class McNativeLauncher {
         new McNativeBridgeEventHandler(eventBus,localService.getEventBus(),playerManager,serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten default bungeecord events.");
 
+        McNativeBungeeCordConfiguration.postLoad();
+        setupConfiguredServices();
+
         instance.setReady(true);
+
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
@@ -118,6 +124,15 @@ public class McNativeLauncher {
         }else{
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
             return new BungeecordProxyNetwork(proxy,executor,serverMap);
+        }
+    }
+
+    private static void setupConfiguredServices(){
+        if(McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT_ENABLED){
+            ChatChannel serverChat = ChatChannel.newChatChannel();
+            serverChat.setName("ServerChat");
+            serverChat.setMessageFormatter((player, variables, message) -> McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT);
+            McNative.getInstance().getLocal().setServerChat(serverChat);
         }
     }
 

@@ -26,11 +26,16 @@ import net.pretronic.libraries.document.annotations.DocumentKey;
 import net.pretronic.libraries.document.annotations.DocumentRequired;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.Message;
+import net.pretronic.libraries.message.bml.parser.MessageParser;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
+import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.common.text.components.MessageKeyComponent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -66,6 +71,11 @@ public class McNativeBungeeCordConfiguration {
     public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
     public static String PLAYER_COLORS_DEFAULT = "&7";
 
+    public static boolean PLAYER_GLOBAL_CHAT_ENABLED = false;
+    public static String PLAYER_GLOBAL_CHAT_FORMAT = "&8[{player.server}&8] &e{design.chat}{player.name}&8:&f {message}";
+
+    public static transient MessageComponent<?> PLAYER_GLOBAL_CHAT;
+
     static{
         PLAYER_COLORS_COLORS.put("mcnative.player.color.administrator","&4");
         PLAYER_COLORS_COLORS.put("mcnative.player.color.moderator","&c");
@@ -76,32 +86,6 @@ public class McNativeBungeeCordConfiguration {
     public static boolean NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED = true;
     @DocumentKey("network.messaging.packetManipulation.downstream")
     public static boolean NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED = false;
-
-    public static class ConfiguredServer {
-
-        @DocumentRequired
-        private final InetSocketAddress address;
-        private final String permission;
-        private final MinecraftServerType type;
-
-        public ConfiguredServer(InetSocketAddress address, String permission, MinecraftServerType type) {
-            this.address = address;
-            this.permission = permission;
-            this.type = type;
-        }
-
-        public InetSocketAddress getAddress() {
-            return address;
-        }
-
-        public String getPermission() {
-            return permission;
-        }
-
-        public MinecraftServerType getType() {
-            return type;
-        }
-    }
 
     public static boolean load(PretronicLogger logger, File location){
         logger.info(McNative.CONSOLE_PREFIX+"Searching configuration file");
@@ -141,6 +125,16 @@ public class McNativeBungeeCordConfiguration {
         return true;
     }
 
+    public static void postLoad(){
+        PLAYER_GLOBAL_CHAT = parseCustomMessage(PLAYER_GLOBAL_CHAT_FORMAT);
+    }
+
+    private static MessageComponent<?> parseCustomMessage(String input){
+        Message message = new MessageParser(McNative.getInstance().getRegistry()
+                .getService(MessageProvider.class).getProcessor(),input).parse();
+        return new MessageKeyComponent(message);
+    }
+
     private static void setAutoUpdateConfiguration(){
         File location = new File("plugins/McNative/lib/resources/mcnative/update.dat");
         location.getParentFile().mkdirs();
@@ -152,5 +146,33 @@ public class McNativeBungeeCordConfiguration {
             throw new OperationFailedException("Could not set update configuration");
         }
     }
+
+    public static class ConfiguredServer {
+
+        @DocumentRequired
+        private final InetSocketAddress address;
+        private final String permission;
+        private final MinecraftServerType type;
+
+        public ConfiguredServer(InetSocketAddress address, String permission, MinecraftServerType type) {
+            this.address = address;
+            this.permission = permission;
+            this.type = type;
+        }
+
+        public InetSocketAddress getAddress() {
+            return address;
+        }
+
+        public String getPermission() {
+            return permission;
+        }
+
+        public MinecraftServerType getType() {
+            return type;
+        }
+    }
+
+
 
 }

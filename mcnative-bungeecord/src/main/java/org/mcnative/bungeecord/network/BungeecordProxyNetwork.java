@@ -178,11 +178,6 @@ public class BungeecordProxyNetwork implements Network {
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        return service.getOnlinePlayer(id);
-    }
-
-    @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
         return service.getOnlinePlayer(uniqueId);
     }

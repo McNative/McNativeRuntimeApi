@@ -22,6 +22,7 @@ package org.mcnative.bukkit.network.bungeecord;
 
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.entry.DocumentEntry;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
@@ -33,11 +34,15 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.player.data.MinecraftPlayerData;
+import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.service.MinecraftService;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -48,17 +53,22 @@ import java.util.concurrent.ExecutorService;
 
 public class BungeeCordProxyNetwork implements Network {
 
+    protected static final NetworkIdentifier SINGLE_PROXY_IDENTIFIER = new NetworkIdentifier("Proxy-1",new UUID(10,10));
+
     private final Messenger messenger;
     private final Collection<OwnedObject<NetworkSynchronisationCallback>> statusCallbacks;
 
+    private final Collection<MinecraftServer> servers;
+    private final Collection<OnlineMinecraftPlayer> players;
+
     private NetworkIdentifier localIdentifier;
     private ProxyServer proxy;
-    private Collection<MinecraftServer> servers;
 
     public BungeeCordProxyNetwork(ExecutorService executor) {
         this.messenger = new PluginMessageMessenger(this,executor);
         this.statusCallbacks = new ArrayList<>();
-        this.servers = Collections.emptyList();
+        this.servers = new ArrayList<>();
+        this.players = new ArrayList<>();
     }
 
     @Override
@@ -180,61 +190,171 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public int getOnlineCount() {
-        return 0;
+        return players.size();
     }
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        return null;
-    }
-
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(int id) {
-        return null;
+        return players;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        return null;
+        return Iterators.findOne(this.players, player -> player.getUniqueId().equals(uniqueId));
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(String nme) {
-        return null;
+    public OnlineMinecraftPlayer getOnlinePlayer(String name) {
+        return Iterators.findOne(this.players, player -> player.getName().equalsIgnoreCase(name));
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        return null;
+        return Iterators.findOne(this.players, player -> player.getXBoxId() == xBoxId);
     }
 
     @Override
     public void broadcast(MessageComponent<?> component, VariableSet variables) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void broadcastPacket(MinecraftPacket packet) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void broadcastPacket(MinecraftPacket packet, String permission) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
-    public void requestServer(){
-        Document document = Document.newDocument();
-       // localIdentifier = document.get
+    //@Todo split into different sub methods - add local connected players to list
+    protected void handleRequest(Document document){
+        String action = document.getString("action");
+        if("initial-request".equals(action)) {
+            handleInitialRequest(document);
+        }else if ("player-login".equals(action)) {
+            handlePlayerLogin(document);
+        }else if ("player-logout".equals(action)) {
+            handlePlayerLogout(document);
+        }else if ("player-server-switch".equals(action)) {
+            handlePlayerServerSwitch(document);
+        }
     }
+
+    private void handleInitialRequest(Document document) {
+        this.proxy = new BungeeCordProxy(document.getObject("address", InetSocketAddress.class));
+        String local = document.getString("local");
+        this.localIdentifier = new NetworkIdentifier(local, UUID.nameUUIDFromBytes(local.getBytes()));
+        this.servers.clear();
+        this.servers.add(MinecraftService.getInstance());
+        for (DocumentEntry entry0 : document.getDocument("servers")) {
+            Document entry = entry0.toDocument();
+            String name = entry.getString("name");
+
+            MinecraftServer server;
+            if(name.equals(local)){
+                server = MinecraftService.getInstance();
+            }
+            else{
+                server = new BungeeCordNetworkServer(
+                    new NetworkIdentifier(name, UUID.nameUUIDFromBytes(local.getBytes()))
+                    , MinecraftServerType.valueOf(entry.getString("type"))
+                    , entry.getString("permission")
+                    , entry.getObject("address", InetSocketAddress.class));
+                this.servers.add(server);
+            }
+
+            Document players0 = entry.getDocument("players");
+            if (players0 != null) {
+                for (DocumentEntry playerEntry0 : players0) {
+                    Document playerEntry = playerEntry0.toDocument();
+                    UUID uniqueId = playerEntry.getObject("uniqueId", UUID.class);
+
+                    PlayerDataProvider provider = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
+                    MinecraftPlayerData data = provider.getPlayerData(uniqueId);
+                    if (data == null) {
+                        McNative.getInstance().getLogger().error("[McNative] (BungeeCord-Network) Received unregistered player, this can cause errors.");
+                        return;
+                    }
+
+                    BungeeCordOnlinePlayer player = new BungeeCordOnlinePlayer(data
+                            ,uniqueId
+                            ,playerEntry.getString("name")
+                            ,playerEntry.getObject("address", InetSocketAddress.class)
+                            ,playerEntry.getBoolean("onlineMode")
+                            ,server);
+                    if(server instanceof BungeeCordNetworkServer){
+                        ((BungeeCordNetworkServer) server).addPlayer(player);
+                    }
+                    this.players.add(player);
+                }
+            }
+        }
+    }
+
+    private void handlePlayerLogin(Document document) {
+        UUID uniqueId = document.getObject("uniqueId", UUID.class);
+        String name = document.getString("name");
+        InetSocketAddress address = document.getObject("address", InetSocketAddress.class);
+        String serverName = document.getString("server");
+        boolean onlineMode = document.getBoolean("onlineMode");
+
+        PlayerDataProvider provider = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
+        MinecraftPlayerData data = provider.getPlayerData(uniqueId);
+        if (data == null) {
+            McNative.getInstance().getLogger().error("[McNative] (BungeeCord-Network) Received unregistered player, this can cause errors.");
+            return;
+        }
+        MinecraftServer server = Iterators.findOne(this.servers, server1 -> server1.getName().equalsIgnoreCase(serverName));
+
+        OnlineMinecraftPlayer player = new BungeeCordOnlinePlayer(data, uniqueId, name, address, onlineMode, server);
+        this.players.add(player);
+        if(server instanceof BungeeCordNetworkServer) ((BungeeCordNetworkServer) server).addPlayer(player);
+        //@Todo throw network event
+    }
+
+    private void handlePlayerLogout(Document document) {
+        UUID uniqueId = document.getObject("uniqueId", UUID.class);
+        OnlineMinecraftPlayer player = Iterators.removeOne(this.players, player1 -> player1.getUniqueId().equals(uniqueId));
+        if (player != null) {
+            if (player.getServer() instanceof BungeeCordNetworkServer) {
+                ((BungeeCordNetworkServer) player.getServer()).removePlayer(player);
+            }
+            //@Todo throw network event
+        }
+    }
+
+    private void handlePlayerServerSwitch(Document document) {
+        UUID uniqueId = document.getObject("uniqueId", UUID.class);
+        String serverName = document.getString("server");
+        OnlineMinecraftPlayer player = Iterators.removeOne(this.players, player1 -> player1.getUniqueId().equals(uniqueId));
+        MinecraftServer server = Iterators.findOne(this.servers, server1 -> server1.getName().equalsIgnoreCase(serverName));
+        if (player instanceof BungeeCordOnlinePlayer) {
+            if (player.getServer() instanceof BungeeCordNetworkServer) {
+                ((BungeeCordNetworkServer) player.getServer()).removePlayer(player);
+            }
+            ((BungeeCordOnlinePlayer) player).setServer(server);
+            if (server instanceof BungeeCordNetworkServer) {
+                ((BungeeCordNetworkServer) player.getServer()).addPlayer(player);
+            }
+            //@Todo throw network server switch event
+        }
+    }
+
+    protected void handleDisconnect(){
+        this.players.clear();
+    }
+
+
 }

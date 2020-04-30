@@ -21,14 +21,12 @@ package org.mcnative.bungeecord.server;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class BungeeCordServerMap implements Map<String, ServerInfo> {
@@ -61,6 +59,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     @Override
     public ServerInfo get(Object name) {
+        Validate.notNull(name);
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(name.toString()));
         if(result != null) return result.bungeeCord;
         else return null;
@@ -71,22 +70,33 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     }
 
     public Collection<MinecraftServer> getServers(MinecraftServerType type){
+        Validate.notNull(type);
         return Iterators.map(this.servers, entry -> entry.mcNative, entry -> entry.mcNative.getType().equals(type));
     }
 
     public MinecraftServer getServer(String name){
+        Validate.notNull(name);
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(name));
         if(result != null) return result.mcNative;
         else return null;
     }
 
+    public MinecraftServer getServer(UUID uniqueId){
+        Validate.notNull(uniqueId);
+        ServerEntry result = Iterators.findOne(this.servers, entry -> entry.mcNative.getIdentifier().getUniqueId().equals(uniqueId));
+        if(result != null) return result.mcNative;
+        else return null;
+    }
+
     public MinecraftServer getServer(InetSocketAddress address){
+        Validate.notNull(address);
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.getValue().getAddress().equals(address));
         if(result != null) return result.mcNative;
         else return null;
     }
 
     public MinecraftServer getMappedServer(ServerInfo info){
+        Validate.notNull(info);
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.equals(info));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
@@ -94,6 +104,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     }
 
     public ServerInfo getMappedInfo(MinecraftServer server){
+        Validate.notNull(server);
         if(server instanceof ServerInfo) return (ServerInfo) server;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.mcNative.equals(server));
         if(result == null) throw new IllegalArgumentException("The targeted server is not registered as a server.");
@@ -115,12 +126,9 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
         return server != null ? server.bungeeCord : null;
     }
 
-    public void remove(MinecraftServer server){
-        this.servers.remove(server);
-    }
-
     @Override
     public void putAll(Map<? extends String, ? extends ServerInfo> map) {
+        Validate.notNull(map);
         map.values().forEach((Consumer<ServerInfo>) info -> put(null,info));
     }
 

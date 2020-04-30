@@ -647,7 +647,6 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void openInventory(Inventory inventory) {
-
         if(isJoining()) {
             Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), ()->
                     getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal()));

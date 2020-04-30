@@ -22,7 +22,6 @@ package org.mcnative.common.player;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.message.Textable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
@@ -44,17 +43,11 @@ import java.util.function.Consumer;
 
 public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
 
-    PendingConnection getConnection();
-
-    InetSocketAddress getVirtualHost();
-
     InetSocketAddress getAddress();
 
     DeviceInfo getDevice();
 
     boolean isOnlineMode();
-
-    PlayerSettings getSettings();
 
     int getPing();
 

@@ -20,16 +20,17 @@
 package org.mcnative.bungeecord.internal.event.player;
 
 import org.mcnative.common.event.player.settings.MinecraftPlayerSettingsChangedEvent;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.PlayerSettings;
 
 public class BungeeMinecraftPlayerSettingsChangedEvent implements MinecraftPlayerSettingsChangedEvent {
 
-    private final OnlineMinecraftPlayer player;
+    private final ConnectedMinecraftPlayer player;
     private final PlayerSettings newSettings;
 
-    public BungeeMinecraftPlayerSettingsChangedEvent(OnlineMinecraftPlayer player, PlayerSettings newSettings) {
+    public BungeeMinecraftPlayerSettingsChangedEvent(ConnectedMinecraftPlayer player, PlayerSettings newSettings) {
         this.player = player;
         this.newSettings = newSettings;
     }

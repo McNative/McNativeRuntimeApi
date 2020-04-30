@@ -71,7 +71,6 @@ public class McNativeBukkitConfiguration {
     public static String PLAYER_TABLIST_OVERVIEW_FOOTER = "&8Footer";
 
     public static boolean PLAYER_CHAT_ENABLED = false;
-
     public static String PLAYER_CHAT_FORMAT = "&e{design.chat}{player.name}&8:&f {message}";
 
 

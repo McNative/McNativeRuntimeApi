@@ -21,6 +21,7 @@
 package org.mcnative.bukkit.network.bungeecord;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
@@ -34,7 +35,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
-import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.messaging.AbstractMessenger;
@@ -42,6 +42,7 @@ import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,29 +52,29 @@ import java.util.concurrent.*;
 public class PluginMessageMessenger extends AbstractMessenger implements PluginMessageListener, Listener {
 
     private final String CHANNEL_NAME_REQUEST = "mcnative:request";
-
     private final String CHANNEL_NAME_RESPONSE = "mcnative:response";
+    private final String CHANNEL_NAME_NETWORK = "mcnative:network";
 
-    private final Network network;
+    private final BungeeCordProxyNetwork network;
     private final Executor executor;
     private final Map<UUID,CompletableFuture<Document>> resultListeners;
 
     private Player transport;
 
-    public PluginMessageMessenger(Network network,Executor executor) {
+    public PluginMessageMessenger(BungeeCordProxyNetwork network,Executor executor) {
         this.network = network;
         this.executor = executor;
-
         this.resultListeners = new HashMap<>();
-
         register();
     }
 
     private void register(){
         Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST,PluginMessageMessenger.this);
         Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE,PluginMessageMessenger.this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_NETWORK,PluginMessageMessenger.this);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_REQUEST);
         Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_RESPONSE);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(McNativeLauncher.getPlugin(),CHANNEL_NAME_NETWORK);
         Bukkit.getPluginManager().registerEvents(PluginMessageMessenger.this,McNativeLauncher.getPlugin());
 
         Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
@@ -161,10 +162,12 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
             UUID identifier = MinecraftProtocolUtil.readUUID(buffer);
             CompletableFuture<Document> resultListener = resultListeners.remove(identifier);
             if(resultListener != null){
-
                 Document document = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
                 resultListener.complete(document);
             }
+        }else if(tag.equals(CHANNEL_NAME_NETWORK)){
+            Document document = DocumentFileType.JSON.getReader().read(new ByteBufInputStream(buffer), StandardCharsets.UTF_8);
+            network.handleRequest(document);
         }
         buffer.release();
     }
@@ -193,6 +196,7 @@ public class PluginMessageMessenger extends AbstractMessenger implements PluginM
         if(Bukkit.getOnlinePlayers().size() == 1){
             transport = null;
             McNative.getInstance().getLogger().info("[McNative] (Plugin-Message-Gateway) disconnected from proxy");
+            network.handleDisconnect();
             for (NetworkSynchronisationCallback statusCallback : network.getStatusCallbacks()) {
                 statusCallback.onDisconnect();
             }

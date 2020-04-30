@@ -18,15 +18,13 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.player;
+package org.mcnative.common.player.chat;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.chat.ChatChannel;
-import org.mcnative.common.player.chat.ChatFormatter;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
@@ -35,21 +33,21 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
-public class BukkitChatChannel implements ChatChannel {
+public class DefaultChatChannel implements ChatChannel {
 
     private String name;
     private Collection<OnlineMinecraftPlayer> players;
     private ChatFormatter messageFormatter;
 
-    public BukkitChatChannel() {
+    public DefaultChatChannel() {
         this("undefined");
     }
 
-    public BukkitChatChannel(String name) {
+    public DefaultChatChannel(String name) {
         this(name,new ArrayList<>());
     }
 
-    public BukkitChatChannel(String name,Collection<OnlineMinecraftPlayer> players) {
+    public DefaultChatChannel(String name, Collection<OnlineMinecraftPlayer> players) {
         this.name = name;
         this.players = players;
     }

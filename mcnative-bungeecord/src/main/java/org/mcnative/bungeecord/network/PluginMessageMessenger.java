@@ -45,13 +45,15 @@ import java.util.concurrent.*;
 
 public class PluginMessageMessenger extends AbstractMessenger implements Listener {
 
-    private final String CHANNEL_NAME_REQUEST = "mcnative:request";
-
-    private final String CHANNEL_NAME_RESPONSE = "mcnative:response";
+    private final static String CHANNEL_NAME_REQUEST = "mcnative:request";
+    private final static String CHANNEL_NAME_RESPONSE = "mcnative:response";
+    protected final static String CHANNEL_NAME_NETWORK = "mcnative:network";
 
     private final Executor executor;
     private final BungeeCordServerMap serverMap;
     private final Map<UUID,CompletableFuture<Document>> resultListeners;
+
+    private final BungeeCordNetworkHandler networkHandler;
 
     public PluginMessageMessenger(Executor executor, BungeeCordServerMap serverMap) {
         super();
@@ -62,7 +64,9 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
 
         ProxyServer.getInstance().registerChannel(CHANNEL_NAME_REQUEST);
         ProxyServer.getInstance().registerChannel(CHANNEL_NAME_RESPONSE);
+        ProxyServer.getInstance().registerChannel(CHANNEL_NAME_NETWORK);
         ProxyServer.getInstance().getPluginManager().registerListener(McNativeLauncher.getPlugin(),this);
+        this.networkHandler = new BungeeCordNetworkHandler();
     }
 
     @Override
@@ -159,10 +163,15 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
                 ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
                 handleDataRequest(sender,buffer);
                 buffer.release();
-            }else if(event.getTag().equals(CHANNEL_NAME_RESPONSE)){
+            }else if(event.getTag().equals(CHANNEL_NAME_RESPONSE)) {
                 ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
                 handleDataResponse(buffer);
                 buffer.release();
+            }else if(event.getTag().equals(CHANNEL_NAME_NETWORK)) {
+                ByteBuf buffer = Unpooled.copiedBuffer(event.getData());
+                Document data = DocumentFileType.JSON.getReader().read(MinecraftProtocolUtil.readString(buffer));
+                buffer.release();
+                this.networkHandler.handleRequest((Server)event.getSender(),data);
             }
         }
     }

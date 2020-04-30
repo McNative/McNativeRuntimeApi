@@ -28,6 +28,7 @@ import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.PendingConnection;
@@ -441,6 +442,12 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
         this.original = original;
         connection.setState(ConnectionState.GAME);
         connection.injectUpstreamProtocolHandlersToPipeline();
+
+        ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
+        if(serverChat != null){
+            serverChat.addPlayer(this);
+            this.chatChannel = serverChat;
+        }
     }
 
     @Internal
@@ -450,7 +457,13 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
 
     @Internal
     public void setServer(MinecraftServer server){
+        if(this.server instanceof WrappedBungeeMinecraftServer){
+            ((WrappedBungeeMinecraftServer) server).removePlayer(this);
+        }
         this.server = server;
+        if(server instanceof WrappedBungeeMinecraftServer){
+            ((WrappedBungeeMinecraftServer) server).addPlayer(this);
+        }
     }
 
     @Internal
@@ -473,7 +486,13 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
 
     @Internal
     public void handleLogout(){
-        if(this.permissionHandler != null)this.permissionHandler.onPlayerLogout();
+        if(this.permissionHandler != null) this.permissionHandler.onPlayerLogout();
+        ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
+        if(serverChat != null) serverChat.removePlayer(this);
+
+        if(this.server instanceof WrappedBungeeMinecraftServer){
+            ((WrappedBungeeMinecraftServer) server).removePlayer(this);
+        }
     }
 }
 
