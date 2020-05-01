@@ -31,7 +31,7 @@ import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
-import org.mcnative.bungeecord.internal.event.McNativeBridgeEventHandler;
+import org.mcnative.bungeecord.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.BungeecordProxyNetwork;
 import org.mcnative.bungeecord.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bungeecord.network.cloudnet.v3.CloudNetV3Network;

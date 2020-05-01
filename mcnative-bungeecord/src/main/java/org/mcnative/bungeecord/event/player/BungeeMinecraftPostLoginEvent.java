@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.11.19, 16:07
+ * @since 01.05.20, 09:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +18,17 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event.player;
+package org.mcnative.bungeecord.event.player;
 
-import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
+import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-public class BungeeMinecraftLogoutEvent implements MinecraftPlayerLogoutEvent {
+public class BungeeMinecraftPostLoginEvent implements MinecraftPlayerPostLoginEvent {
 
     private final OnlineMinecraftPlayer player;
 
-    public BungeeMinecraftLogoutEvent(OnlineMinecraftPlayer player) {
+    public BungeeMinecraftPostLoginEvent(OnlineMinecraftPlayer player) {
         this.player = player;
     }
 

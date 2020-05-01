@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 05.01.20, 16:08
+ * @since 01.05.20, 09:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event.server;
+package org.mcnative.bungeecord.event.server;
 
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.chat.ComponentSerializer;

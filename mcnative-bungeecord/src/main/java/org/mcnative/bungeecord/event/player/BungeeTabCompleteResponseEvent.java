@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.01.20, 18:01
+ * @since 01.05.20, 09:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +18,30 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event.player;
+package org.mcnative.bungeecord.event.player;
 
-import net.md_5.bungee.api.event.TabCompleteEvent;
-import org.mcnative.common.event.player.MinecraftPlayerTabCompleteEvent;
+import net.md_5.bungee.api.event.TabCompleteResponseEvent;
+import org.mcnative.common.event.player.MinecraftPlayerTabCompleteResponseEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
 import java.util.List;
 
-public class BungeeTabCompleteEvent implements MinecraftPlayerTabCompleteEvent {
+public class BungeeTabCompleteResponseEvent implements MinecraftPlayerTabCompleteResponseEvent {
 
-    private final TabCompleteEvent original;
+    private final TabCompleteResponseEvent original;
     private final OnlineMinecraftPlayer player;
+    private final String cursor;
 
-    public BungeeTabCompleteEvent(TabCompleteEvent original, OnlineMinecraftPlayer player) {
+    public BungeeTabCompleteResponseEvent(TabCompleteResponseEvent original, OnlineMinecraftPlayer player, String cursor) {
         this.original = original;
         this.player = player;
+        this.cursor = cursor;
     }
 
     @Override
     public String getCursor() {
-        return original.getCursor();
+        return cursor;
     }
 
     @Override
@@ -57,12 +60,12 @@ public class BungeeTabCompleteEvent implements MinecraftPlayerTabCompleteEvent {
     }
 
     @Override
-    public MinecraftPlayer getPlayer() {
+    public OnlineMinecraftPlayer getOnlinePlayer() {
         return player;
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer() {
+    public MinecraftPlayer getPlayer() {
         return player;
     }
 }

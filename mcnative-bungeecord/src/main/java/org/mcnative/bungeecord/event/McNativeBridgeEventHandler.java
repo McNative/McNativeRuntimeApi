@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.12.19, 19:01
+ * @since 01.05.20, 09:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event;
+package org.mcnative.bungeecord.event;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.SkinConfiguration;
@@ -28,11 +29,11 @@ import net.md_5.bungee.api.event.*;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
-import org.mcnative.bungeecord.internal.event.player.*;
-import org.mcnative.bungeecord.internal.event.server.BungeeServerConnectEvent;
-import org.mcnative.bungeecord.internal.event.server.BungeeServerConnectedEvent;
-import org.mcnative.bungeecord.internal.event.server.BungeeServerKickEvent;
-import org.mcnative.bungeecord.internal.event.server.BungeeServerSwitchEvent;
+import org.mcnative.bungeecord.event.player.*;
+import org.mcnative.bungeecord.event.server.BungeeServerConnectEvent;
+import org.mcnative.bungeecord.event.server.BungeeServerConnectedEvent;
+import org.mcnative.bungeecord.event.server.BungeeServerKickEvent;
+import org.mcnative.bungeecord.event.server.BungeeServerSwitchEvent;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.player.BungeePendingConnection;
 import org.mcnative.bungeecord.player.BungeeProxiedPlayer;

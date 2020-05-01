@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.01.20, 14:49
+ * @since 01.05.20, 09:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +18,32 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.internal.event.server;
+package org.mcnative.bungeecord.event.player;
 
-import org.mcnative.common.event.server.MinecraftPlayerServerConnectedEvent;
-import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.event.player.settings.MinecraftPlayerSettingsChangedEvent;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
+import org.mcnative.common.player.PlayerSettings;
 
-public class BungeeServerConnectedEvent implements MinecraftPlayerServerConnectedEvent {
+public class BungeeMinecraftPlayerSettingsChangedEvent implements MinecraftPlayerSettingsChangedEvent {
 
-    private final OnlineMinecraftPlayer player;
-    private final MinecraftServer server;
+    private final ConnectedMinecraftPlayer player;
+    private final PlayerSettings newSettings;
 
-    public BungeeServerConnectedEvent(OnlineMinecraftPlayer player, MinecraftServer server) {
+    public BungeeMinecraftPlayerSettingsChangedEvent(ConnectedMinecraftPlayer player, PlayerSettings newSettings) {
         this.player = player;
-        this.server = server;
+        this.newSettings = newSettings;
     }
 
     @Override
-    public MinecraftServer getServer() {
-        return server;
+    public PlayerSettings getOldSettings() {
+        return player.getSettings();
+    }
+
+    @Override
+    public PlayerSettings getNewSettings() {
+        return newSettings;
     }
 
     @Override
