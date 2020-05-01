@@ -115,6 +115,8 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     @Override
     public ServerInfo put(String unused, ServerInfo value) {
+        System.out.println("REGISTERED SERVER "+unused+" | "+value.getName());
+
         if(unused != null && !unused.equalsIgnoreCase(value.getName())) throw new IllegalArgumentException("Key does not match with the server name");
         MinecraftServer server = value instanceof MinecraftServer ? (MinecraftServer) value : new WrappedBungeeMinecraftServer(value);
         Iterators.removeOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(value.getName()));
