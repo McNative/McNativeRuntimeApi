@@ -20,6 +20,7 @@
 package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignRequestEvent;
@@ -78,6 +79,17 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     @Override
     public Document getProperties() {
         return getData().getProperties();
+    }
+
+    @Override
+    public Language getLanguage() {
+        return getData().getLanguage();
+    }
+
+    @Override
+    public void setLanguage(Language language) {
+        Validate.notNull(language);
+        data.updateLanguage(language);
     }
 
     private MinecraftPlayerData getData(){

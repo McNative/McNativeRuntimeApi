@@ -21,6 +21,8 @@ package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
+import net.pretronic.libraries.message.language.Language;
+import net.pretronic.libraries.message.language.LanguageAble;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
@@ -29,7 +31,7 @@ import org.mcnative.common.serviceprovider.permission.Permissable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo, VariableObjectToString {
+public interface MinecraftPlayer extends Permissable, ServerStatusResponse.PlayerInfo, VariableObjectToString, LanguageAble {
 
     UUID getUniqueId();
 
@@ -39,10 +41,15 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
 
     long getLastPlayed();
 
+
     @Nullable
     GameProfile getGameProfile();
 
     Document getProperties();
+
+    Language getLanguage();
+
+    void setLanguage(Language language);
 
 
     String getDisplayName();

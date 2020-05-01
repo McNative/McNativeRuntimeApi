@@ -21,6 +21,7 @@ package org.mcnative.common.player.data;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
 
@@ -37,10 +38,11 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     private String name;
     private GameProfile gameProfile;
     private PlayerDesign design;
+    private Language language;
     private long lastPlayed;
 
     public DefaultMinecraftPlayerData(DefaultPlayerDataProvider provider, String name, UUID uniqueId, long xBoxId
-            , long firstPlayed, long lastPlayed, GameProfile gameProfile,PlayerDesign design, Document properties) {
+            , long firstPlayed, long lastPlayed, GameProfile gameProfile,PlayerDesign design,Language language, Document properties) {
         this.provider = provider;
         this.name = name;
         this.uniqueId = uniqueId;
@@ -49,6 +51,7 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
         this.lastPlayed = lastPlayed;
         this.gameProfile = gameProfile;
         this.design = design;
+        this.language = language;
         this.properties = properties;
     }
 
@@ -92,6 +95,10 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
         return this.properties;
     }
 
+    @Override
+    public Language getLanguage() {
+        return language;
+    }
 
     public void updateLastPlayed(long timeStamp) {
         this.provider.getPlayerDataStorage().update()
@@ -125,6 +132,15 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
                 .where("UniqueId", uniqueId)
                 .execute();
         this.design = design;
+    }
+
+    @Override
+    public void updateLanguage(Language language) {
+        this.provider.getPlayerDataStorage().update()
+                .set("Language", language != null ? language.getCode() : null)
+                .where("UniqueId", uniqueId)
+                .execute();
+        this.language = language;
     }
 
     @Override

@@ -26,6 +26,7 @@ import net.pretronic.databasequery.api.query.result.QueryResult;
 import net.pretronic.databasequery.api.query.result.QueryResultEntry;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.DefaultPlayerDesign;
@@ -48,8 +49,9 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .field("FirstPlayed", DataType.LONG, FieldOption.NOT_NULL)
                 .field("LastPlayed", DataType.LONG, FieldOption.NOT_NULL)
                 .field("GameProfile", DataType.LONG_TEXT)
-                .field("Properties", DataType.LONG_TEXT)
                 .field("Design", DataType.STRING,500)
+                .field("Language", DataType.STRING,10)
+                .field("Properties", DataType.LONG_TEXT)
                 .create();
     }
 
@@ -81,6 +83,8 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
         try{
             String name = entry.getString("Name");
             UUID uniqueId = entry.getUniqueId("UniqueId");
+            String languageCode = entry.getString("Language");
+
             return new DefaultMinecraftPlayerData(this,
                     name,
                     uniqueId,
@@ -88,7 +92,8 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                     entry.getLong("FirstPlayed"),
                     entry.getLong("LastPlayed"),
                     GameProfile.fromJsonPart(uniqueId,name,entry.getString("GameProfile")),
-                    DefaultPlayerDesign.fromJson(entry.getString("GameProfile")),
+                    DefaultPlayerDesign.fromJson(entry.getString("Design")),
+                    languageCode != null ? Language.getLanguage(languageCode) : null,
                     DocumentFileType.JSON.getReader().read(entry.getString("Properties")));
         }catch (Exception e){
             e.printStackTrace();
@@ -108,6 +113,6 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .set("Properties","{}")
                 .set("Design","{}")
                 .execute();
-        return new DefaultMinecraftPlayerData(this, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile,null, Document.newDocument());
+        return new DefaultMinecraftPlayerData(this, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile,null,null, Document.newDocument());
     }
 }

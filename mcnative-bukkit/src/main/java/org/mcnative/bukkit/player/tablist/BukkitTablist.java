@@ -31,7 +31,6 @@ import org.mcnative.common.player.tablist.*;
 import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
 import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 import org.mcnative.common.text.Text;
-import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.format.TextColor;
 
 import java.util.ArrayList;
@@ -157,7 +156,7 @@ public class BukkitTablist implements Tablist {
         MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
         packet.setName("TL-"+entry.getName());
         packet.setAction(create ? MinecraftScoreboardTeamsPacket.Action.CREATE : MinecraftScoreboardTeamsPacket.Action.UPDATE);
-        packet.setDisplayName(Text.newBuilder().color(TextColor.RED).text("TabList").build());
+        packet.setDisplayName(Text.newBuilder().color(TextColor.RED).text("Tablist").build());
         packet.setPrefix(formatter.formatPrefix(receiver,entry,variables));
         packet.setSuffix(formatter.formatSuffix(receiver,entry,variables));
         packet.setColor(formatter.getColor(receiver,entry));
