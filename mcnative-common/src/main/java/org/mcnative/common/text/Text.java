@@ -26,10 +26,7 @@ import org.mcnative.common.text.components.*;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Text {
 
@@ -112,16 +109,37 @@ public class Text {
     }
 
 
+
     public static MessageComponent<?> parse(String text){
-        return parse(text,true);
+        return parse(text,true,DEFAULT_ALTERNATE_COLOR_CHAR);
     }
 
-    public static MessageComponent<?> parse(String text,boolean markup){
-        return parse(text,markup,true,DEFAULT_ALTERNATE_COLOR_CHAR);
-    }
-
-    public static MessageComponent<?> parse(String text, boolean markup, boolean colors, char alternateChar){
-        return null;
+    public static MessageComponent<?> parse(String text, boolean colors, char alternateChar){
+        TextComponent root = new TextComponent();
+        TextComponent current = root;
+        root.setColor(TextColor.WHITE);
+        root.setText("");
+        char[] chars = text.toCharArray();
+        int textIndex = 0;
+        for (int i = 0; i < chars.length; i++) {
+            char char0 = chars[i];
+            if((char0 == Text.FORMAT_CHAR || char0 == alternateChar) && chars.length > ++i){
+                TextColor color = TextColor.of(chars[i]);
+                if(color != null){
+                    TextComponent next = new TextComponent();
+                    current.addExtra(next);
+                    next.setColor(color);
+                    next.setText("");
+                    if(textIndex < i) current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                    current = next;
+                    textIndex = i+1;
+                }
+            }
+        }
+        if(textIndex < chars.length){
+            current.setText(new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
+        }
+        return root;
     }
 
     public static String translateAlternateColorCodes(char alternateChar,String text){

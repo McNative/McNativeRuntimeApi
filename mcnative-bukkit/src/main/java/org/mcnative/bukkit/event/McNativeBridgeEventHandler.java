@@ -76,15 +76,16 @@ public class McNativeBridgeEventHandler {
         this.eventBus = eventBus;
         this.playerManager = playerManager;
         this.commandManager = null;
-
         this.pendingConnections = new ConcurrentHashMap<>();
-
         setup();
     }
 
     private void setup(){
 
         /* Lifecycle */
+
+        //Ping
+        eventBus.registerMappedClass(org.mcnative.common.event.ServerListPingEvent.class, ServerListPingEvent.class);
 
         //Pre Login
         eventBus.registerMappedClass(MinecraftPlayerLoginEvent.class, AsyncPlayerPreLoginEvent.class);
@@ -130,10 +131,6 @@ public class McNativeBridgeEventHandler {
         //Inventory open
         eventBus.registerMappedClass(MinecraftPlayerInventoryOpenEvent.class, InventoryOpenEvent.class);
         eventBus.registerManagedEvent(InventoryOpenEvent.class, this::handleInventoryOpen);
-    }
-
-    private void handleServerListPing(McNativeHandlerList handler, ServerListPingEvent event){
-
     }
 
     private void handlePreLoginEvent(McNativeHandlerList handler, AsyncPlayerPreLoginEvent event) {

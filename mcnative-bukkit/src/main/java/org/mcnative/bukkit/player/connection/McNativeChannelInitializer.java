@@ -58,7 +58,6 @@ public class McNativeChannelInitializer extends ChannelInitializer<SocketChannel
     @Override
     protected void initChannel(SocketChannel channel) throws Exception {
         this.method.invoke(this.original, channel);
-
         Object networkManager = channel.pipeline().get(PACKET_HANDLER_CLASS);
         GenericFutureListener<Future<? super Void>> connectionUnregisterListener = future -> injector.unregisterConnection(channel);
         ChannelConnection connection = new ChannelConnection(channel,networkManager,connectionUnregisterListener);

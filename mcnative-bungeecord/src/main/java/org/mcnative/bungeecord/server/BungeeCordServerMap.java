@@ -97,6 +97,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     public MinecraftServer getMappedServer(ServerInfo info){
         Validate.notNull(info);
+        System.out.println("MAPPING SERVER "+info.getName());
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.equals(info));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
@@ -105,9 +106,10 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     public ServerInfo getMappedInfo(MinecraftServer server){
         Validate.notNull(server);
+        System.out.println("MAPPING SERVER "+server.getName());
         if(server instanceof ServerInfo) return (ServerInfo) server;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.mcNative.equals(server));
-        if(result == null) throw new IllegalArgumentException("The targeted server is not registered as a server.");
+        if(result == null) throw new IllegalArgumentException("The targeted server is not registered as a server (McNative -> BungeeCord).");
         return result.bungeeCord;
     }
 

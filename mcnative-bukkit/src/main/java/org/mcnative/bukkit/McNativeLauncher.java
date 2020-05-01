@@ -48,7 +48,10 @@ import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.bukkit.serviceprovider.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
+import org.mcnative.common.MinecraftPlatform;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.network.component.server.ServerVersion;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.tablist.Tablist;
@@ -57,6 +60,7 @@ import org.mcnative.common.player.tablist.TablistFormatter;
 import org.mcnative.common.player.tablist.TablistOverviewFormatter;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.io.File;
@@ -241,6 +245,41 @@ public class McNativeLauncher {
             }
 
             McNative.getInstance().getLocal().setServerTablist(tablist);
+        }
+
+        ServerStatusResponse defaultResponse = new BukkitServerStatusResponse();
+        defaultResponse.setOnlinePlayers(ServerStatusResponse.DYNAMIC_CALCULATED);
+        defaultResponse.setMaxPlayers(Bukkit.getMaxPlayers());
+        defaultResponse.setVersion(new ServerVersion(builtVersionInfo(),McNative.getInstance().getPlatform().getProtocolVersion()));
+        if(McNativeBukkitConfiguration.SERVER_STATUS_ENABLED){
+            defaultResponse.setDescription(McNativeBukkitConfiguration.SERVER_STATUS_DESCRIPTION_LINE1_COMPILED
+                    ,McNativeBukkitConfiguration.SERVER_STATUS_DESCRIPTION_LINE2_COMPILED);
+            defaultResponse.getVersion().setName(Text.translateAlternateColorCodes('&',McNativeBukkitConfiguration.SERVER_STATUS_VERSION_INFO));
+            for (String player : McNativeBukkitConfiguration.SERVER_STATUS_PLAYER_INFO) {
+                defaultResponse.addPlayerInfo(Text.translateAlternateColorCodes('&',player));
+            }
+        }else {
+            defaultResponse.setDescription(Text.parse("§7"+Bukkit.getMotd()));
+        }
+
+        File serverIcon = new File("server-icon.png");
+        if(serverIcon.exists()){
+            defaultResponse.setFavicon(serverIcon);
+        }else{
+            try{
+                defaultResponse.setFavicon(ServerStatusResponse.DEFAULT_FAVICON_URL);
+            }catch (Exception ignored){}
+        }
+
+        McNative.getInstance().getLocal().setStatusResponse(defaultResponse);
+    }
+
+    private static String builtVersionInfo(){
+        MinecraftPlatform platform = McNative.getInstance().getPlatform();
+        if(platform.getJoinableProtocolVersions().size() > 1){
+            return platform.getMinVersion().getName()+" - "+platform.getMaxVersion().getName();
+        }else{
+            return platform.getProtocolVersion().getName();
         }
     }
 

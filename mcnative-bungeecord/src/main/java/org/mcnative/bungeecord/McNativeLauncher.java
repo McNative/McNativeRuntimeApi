@@ -19,6 +19,7 @@
 
 package org.mcnative.bungeecord;
 
+import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
@@ -42,10 +43,12 @@ import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.proxy.ProxyService;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -133,6 +136,14 @@ public class McNativeLauncher {
             serverChat.setName("ServerChat");
             serverChat.setMessageFormatter((player, variables, message) -> McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);
+        }
+
+        //Motd setup
+        File serverIcon = new File("server-icon.png");
+        if(!serverIcon.exists()){
+            try{
+                McNativeBridgeEventHandler.DEFAULT_FAVICON = Favicon.create(ImageIO.read(ServerStatusResponse.DEFAULT_FAVICON_URL));
+            }catch (Exception ignored){}
         }
     }
 

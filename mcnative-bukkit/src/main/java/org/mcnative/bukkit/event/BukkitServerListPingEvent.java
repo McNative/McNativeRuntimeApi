@@ -19,29 +19,42 @@
 
 package org.mcnative.bukkit.event;
 
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.event.ServerListPingEvent;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 
 import java.net.InetSocketAddress;
 
 public class BukkitServerListPingEvent implements ServerListPingEvent {
+
+    private final InetSocketAddress clientAddress;
+    private final InetSocketAddress virtualAddress;
+    private ServerStatusResponse statusResponse;
+
+    public BukkitServerListPingEvent(InetSocketAddress clientAddress, InetSocketAddress virtualAddress, ServerStatusResponse statusResponse) {
+        this.clientAddress = clientAddress;
+        this.virtualAddress = virtualAddress;
+        this.statusResponse = statusResponse;
+    }
+
     @Override
     public InetSocketAddress getClientAddress() {
-        return null;
+        return clientAddress;
     }
 
     @Override
     public InetSocketAddress getVirtualHost() {
-        return null;
+        return virtualAddress;
     }
 
     @Override
     public ServerStatusResponse getResponse() {
-        return null;
+        return statusResponse;
     }
 
     @Override
     public void setResponse(ServerStatusResponse response) {
-
+        Validate.notNull(response);
+        this.statusResponse = response;
     }
 }

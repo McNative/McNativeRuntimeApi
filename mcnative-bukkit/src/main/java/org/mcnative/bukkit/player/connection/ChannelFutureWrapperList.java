@@ -101,7 +101,7 @@ public class ChannelFutureWrapperList implements List<ChannelFuture> {
     @Override
     public boolean containsAll(Collection<?> c) {
         synchronized (this) {
-            return  this.future.containsAll(c);
+            return this.future.containsAll(c);
         }
     }
 

@@ -32,7 +32,7 @@ import org.mcnative.common.player.tablist.TablistEntry;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 
-public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender, TablistEntry {
+public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender, TablistEntry{
 
     PendingConnection getConnection();
 

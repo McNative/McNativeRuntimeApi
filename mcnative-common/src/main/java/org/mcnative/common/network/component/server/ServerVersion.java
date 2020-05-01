@@ -30,8 +30,8 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 public class ServerVersion {
 
-    private final String name;
-    private final MinecraftProtocolVersion protocol;
+    private String name;
+    private MinecraftProtocolVersion protocol;
 
     public ServerVersion(String name, MinecraftProtocolVersion protocol) {
         this.name = name;
@@ -42,8 +42,17 @@ public class ServerVersion {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     public MinecraftProtocolVersion getProtocol() {
         return protocol;
+    }
+
+    public void setProtocol(MinecraftProtocolVersion protocol) {
+        this.protocol = protocol;
     }
 
     public static class Adapter implements DocumentAdapter<ServerVersion> {

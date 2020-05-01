@@ -36,6 +36,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,6 +83,11 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
     }
 
     @Override
+    public VariableSet getDescriptionVariables() {
+        throw new UnsupportedOperationException("Currently not supported");
+    }
+
+    @Override
     public ServerStatusResponse setDescription(MessageComponent<?> description,VariableSet variables) {
         ping.setDescriptionComponent(ComponentSerializer.parse(description.compileToString(variables))[0]);
         return this;
@@ -112,6 +118,15 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
     public ServerStatusResponse setFavicon(BufferedImage image) {
         ping.setFavicon(Favicon.create(image));
         return this;
+    }
+
+    @Override
+    public ServerStatusResponse setFavicon(URL url) {
+        try {
+            return setFavicon(ImageIO.read(url));
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
+        }
     }
 
     @Override
@@ -181,12 +196,8 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
 
     @Override
     public ServerStatusResponse addPlayerInfo(String text) {
-        return addPlayerInfo(UUID.randomUUID(),text);
-    }
-
-    @Override
-    public ServerStatusResponse addPlayerInfo(UUID uniqueId, String text) {
-        return addPlayerInfo(new DefaultPlayerInfo(text,uniqueId));
+        addPlayerInfo(ServerStatusResponse.newPlayerInfo(text));
+        return this;
     }
 
     @Override
@@ -202,6 +213,11 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
     public ServerStatusResponse clearPlayerInfo() {
         ping.getPlayers().setSample(new ServerPing.PlayerInfo[]{});
         return this;
+    }
+
+    @Override
+    public ServerStatusResponse clone() {
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     private ServerPing.PlayerInfo map(PlayerInfo info){

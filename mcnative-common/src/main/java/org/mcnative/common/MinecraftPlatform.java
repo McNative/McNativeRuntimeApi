@@ -36,6 +36,26 @@ public interface MinecraftPlatform {
 
     Collection<MinecraftProtocolVersion> getJoinableProtocolVersions();
 
+    default boolean canJoin(MinecraftProtocolVersion protocolVersion){
+        return getJoinableProtocolVersions().contains(protocolVersion);
+    }
+
+    default MinecraftProtocolVersion getMinVersion(){
+        MinecraftProtocolVersion result = getProtocolVersion();
+        for (MinecraftProtocolVersion version : getJoinableProtocolVersions()) {
+            if(result.isNewer(version)) result = version;
+        }
+        return result;
+    }
+
+    default MinecraftProtocolVersion getMaxVersion(){
+        MinecraftProtocolVersion result = getProtocolVersion();
+        for (MinecraftProtocolVersion version : getJoinableProtocolVersions()) {
+            if(result.isOlder(version)) result = version;
+        }
+        return result;
+    }
+
     boolean isProxy();
 
     boolean isService();

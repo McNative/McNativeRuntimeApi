@@ -171,12 +171,12 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public ServerStatusResponse getStatusResponse() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return statusResponse;
     }
 
     @Override
     public void setStatusResponse(ServerStatusResponse status) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.statusResponse = status;
     }
 
     @Override

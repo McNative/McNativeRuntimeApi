@@ -20,6 +20,7 @@
 
 package org.mcnative.bungeecord.event;
 
+import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.SkinConfiguration;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -75,6 +76,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class McNativeBridgeEventHandler {
+
+    public static Favicon DEFAULT_FAVICON;
 
     private final McNativeEventBus pluginManager;
     private final BungeeCordPlayerManager playerManager;
@@ -155,8 +158,9 @@ public final class McNativeBridgeEventHandler {
 
     private void handleProxyPing(ProxyPingEvent event) {
         BungeeServerListPingEvent mcNativeEvent = new BungeeServerListPingEvent(event.getConnection(),event);
+        if(DEFAULT_FAVICON != null) event.getResponse().setFavicon(DEFAULT_FAVICON);
         ServerStatusResponse defaultResponse = ProxyService.getInstance().getStatusResponse();
-        if(defaultResponse != null) mcNativeEvent.setResponse(defaultResponse);
+        if(defaultResponse != null) mcNativeEvent.setResponse(defaultResponse.clone());
         eventBus.callEvents(ProxyPingEvent.class,event,mcNativeEvent);
     }
 

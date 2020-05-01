@@ -37,7 +37,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class McNativeBukkitConfiguration {
@@ -79,6 +81,17 @@ public class McNativeBukkitConfiguration {
     public static transient MessageComponent<?> PLAYER_TABLIST_SUFFIX_LOADED;
     public static transient MessageComponent<?> PLAYER_TABLIST_OVERVIEW_HEADER_LOADED;
     public static transient MessageComponent<?> PLAYER_TABLIST_OVERVIEW_FOOTER_LOADED;
+
+    public static boolean SERVER_STATUS_ENABLED = false;
+    @DocumentKey("server.status.versionInfo")
+    public static String SERVER_STATUS_VERSION_INFO = "1.8.8";
+    @DocumentKey("server.status.playerInfo")
+    public static List<String> SERVER_STATUS_PLAYER_INFO = Collections.singletonList("This server is running McNative!");
+    public static String SERVER_STATUS_DESCRIPTION_LINE1 = "&6McNative &8- &9Minecraft Application Framework";
+    public static String SERVER_STATUS_DESCRIPTION_LINE2 = "&7Are you ready to build with us?";
+
+    public static transient MessageComponent<?> SERVER_STATUS_DESCRIPTION_LINE1_COMPILED;
+    public static transient MessageComponent<?> SERVER_STATUS_DESCRIPTION_LINE2_COMPILED;
 
     static {
         PLAYER_COLORS_COLORS.put("mcnative.player.color.administrator","&4");
@@ -143,6 +156,8 @@ public class McNativeBukkitConfiguration {
         PLAYER_TABLIST_OVERVIEW_HEADER_LOADED = parseCustomMessage(PLAYER_TABLIST_OVERVIEW_HEADER);
         PLAYER_TABLIST_OVERVIEW_FOOTER_LOADED = parseCustomMessage(PLAYER_TABLIST_OVERVIEW_FOOTER);
 
+        SERVER_STATUS_DESCRIPTION_LINE1_COMPILED = parseCustomMessage(SERVER_STATUS_DESCRIPTION_LINE1);
+        SERVER_STATUS_DESCRIPTION_LINE2_COMPILED = parseCustomMessage(SERVER_STATUS_DESCRIPTION_LINE2);
         return true;
     }
     private static MessageComponent<?> parseCustomMessage(String input){

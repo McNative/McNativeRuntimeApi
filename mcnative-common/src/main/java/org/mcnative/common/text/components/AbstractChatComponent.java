@@ -149,6 +149,11 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
         if(isStrikeThrough()) builder.append(Text.FORMAT_CHAR).append(TextStyle.STRIKETHROUGH.getCode());
         if(isObfuscated()) builder.append(Text.FORMAT_CHAR).append(TextStyle.OBFUSCATED.getCode());
     }
+    public void compileToLegacyPost(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language){
+        for (MessageComponent<?> extra : extras) {
+            extra.compileToLegacy(builder, connection, variables, language);
+        }
+    }
 
     @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
