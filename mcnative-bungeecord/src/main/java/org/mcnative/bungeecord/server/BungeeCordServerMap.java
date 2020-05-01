@@ -99,6 +99,11 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
         Validate.notNull(info);
         System.out.println("MAPPING SERVER "+info.getName());
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
+        System.out.println("MAPPING SERVERS");
+        for (ServerEntry server : this.servers) {
+            System.out.println(server.getValue().getName()+" | "+server.bungeeCord.equals(info));
+        }
+
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.equals(info));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
          return result.mcNative;
