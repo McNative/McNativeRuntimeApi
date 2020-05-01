@@ -97,12 +97,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     public MinecraftServer getMappedServer(ServerInfo info){
         Validate.notNull(info);
-        System.out.println("MAPPING SERVER "+info.getName());
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
-        System.out.println("MAPPING SERVERS");
-        for (ServerEntry server : this.servers) {
-            System.out.println(server.getValue().getName()+" | "+server.bungeeCord.equals(info));
-        }
 
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.getName().equalsIgnoreCase(info.getName()));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
@@ -111,7 +106,6 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     public ServerInfo getMappedInfo(MinecraftServer server){
         Validate.notNull(server);
-        System.out.println("MAPPING SERVER "+server.getName());
         if(server instanceof ServerInfo) return (ServerInfo) server;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.mcNative.equals(server));
         if(result == null) throw new IllegalArgumentException("The targeted server is not registered as a server (McNative -> BungeeCord).");
@@ -120,8 +114,6 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
 
     @Override
     public ServerInfo put(String unused, ServerInfo value) {
-        System.out.println("REGISTERED SERVER "+unused+" | "+value.getName());
-
         if(unused != null && !unused.equalsIgnoreCase(value.getName())) throw new IllegalArgumentException("Key does not match with the server name");
         MinecraftServer server = value instanceof MinecraftServer ? (MinecraftServer) value : new WrappedBungeeMinecraftServer(value);
         Iterators.removeOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(value.getName()));
