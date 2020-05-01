@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.04.20, 19:54
+ * @since 01.05.20, 09:33
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.network;
+package org.mcnative.bungeecord.network.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
