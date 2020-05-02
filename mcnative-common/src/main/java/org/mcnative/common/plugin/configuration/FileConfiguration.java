@@ -27,6 +27,7 @@ import net.pretronic.libraries.utility.io.IORuntimeException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class FileConfiguration extends WrappedDocument implements Configuration{
 
@@ -67,12 +68,12 @@ public class FileConfiguration extends WrappedDocument implements Configuration{
                 throw new IORuntimeException(e);
             }
         }
-        FILE_TYPE.getWriter().write(file,getOriginal());
+        FILE_TYPE.getWriter().write(file, StandardCharsets.UTF_8,getOriginal(),true);
     }
 
     public void load(){
         if(!file.exists()) setOriginal(Document.newDocument());
-        else setOriginal(FILE_TYPE.getReader().read(file));
+        else setOriginal(FILE_TYPE.getReader().read(file, StandardCharsets.UTF_8));
     }
 
     @Override
