@@ -179,11 +179,7 @@ public class BungeeCordPluginManager implements PluginManager {
     @Override
     public <T> T getServiceOrDefault(Class<T> serviceClass, Supplier<T> supplier) {
         List<ServiceEntry> services = Iterators.filter(this.services, entry -> entry.serviceClass.equals(serviceClass));
-        services.sort((o1, o2) -> {
-            if(o1.priority < o2.priority) return -1;
-            else if(o1.priority > o2.priority) return 1;
-            return 0;
-        });
+        services.sort((o1, o2) -> Integer.compare(o2.priority,o1.priority));
         if(services.size() > 0) return  (T) services.get(0).service;
         else if(supplier != null) return supplier.get();
         return null;

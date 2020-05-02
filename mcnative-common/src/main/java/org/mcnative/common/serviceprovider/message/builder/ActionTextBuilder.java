@@ -29,7 +29,6 @@ import org.mcnative.common.text.event.HoverAction;
 //@Todo implement legacy
 public class ActionTextBuilder implements MessageBuilder {
 
-
     @Override
     public Object build(BuildContext context, boolean requiresString, String name, Module leftOperator0, String operation, Module rightOperator0, Module[] parameters0, Module extension0, Module next0) {
         Object[] parameters = new Object[parameters0.length];

@@ -30,6 +30,7 @@ public class VariableBuilder implements BasicMessageBuilder {
     @Override
     public Object build(BuildContext context, boolean requiresString,Object[] parameters, Object next) {
         Object result = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
+
         if (!requiresString) {
             if (context instanceof MinecraftBuildContext) {
                 if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {

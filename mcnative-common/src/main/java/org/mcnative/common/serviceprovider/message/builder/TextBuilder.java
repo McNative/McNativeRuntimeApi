@@ -122,14 +122,14 @@ public class TextBuilder implements BasicMessageBuilder {
                     current.set("extra",new Document[]{next});
                     next.set("color",color.getName());
                     next.set("text","");
-                    if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                    if(textIndex < i) current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)).replace("\\","\\\\"));
                     current = next;
                     textIndex = i+1;
                 }
             }
         }
         if(textIndex < chars.length){
-            current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
+            current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)).replace("\\","\\\\"));
         }
         if(nextComp != null){
             if(nextComp instanceof DocumentEntry){
