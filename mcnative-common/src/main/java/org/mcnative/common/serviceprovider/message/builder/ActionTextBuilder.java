@@ -80,8 +80,14 @@ public class ActionTextBuilder implements MessageBuilder {
 
         if(extension != null){
             Document click = Document.newDocument();
-            click.set("action","open_url");
-            click.set("value",extension.toString());
+            String value = extension.toString();
+            boolean command = false;
+            if(value.startsWith("run://")){
+                command = true;
+                value = value.substring(6);
+            }
+            click.set("action",command ? "run_command" : "open_url");
+            click.set("value",value);
             result.add("clickEvent",click);
         }
         result.add("extra",parameters[0]);

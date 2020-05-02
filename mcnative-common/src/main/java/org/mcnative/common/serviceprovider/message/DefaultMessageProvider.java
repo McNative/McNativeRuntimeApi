@@ -48,6 +48,7 @@ import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.serviceprovider.message.builder.*;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DefaultMessageProvider implements MessageProvider {
@@ -149,7 +150,7 @@ public class DefaultMessageProvider implements MessageProvider {
                             DocumentFileType type = DocumentRegistry.findType(file);
                             if(type != null){
                                 try{
-                                    FileMessagePack pack = type.getReader().read(file).getAsObject(FileMessagePack.class);
+                                    FileMessagePack pack = type.getReader().read(file, StandardCharsets.UTF_8).getAsObject(FileMessagePack.class);
                                     pack.setFile(file);
                                     addPack(pack);
                                     result.add(pack);
@@ -183,7 +184,7 @@ public class DefaultMessageProvider implements MessageProvider {
         addPack(pack);
 
         File location = getFile(pack, owner);
-        DocumentFileType.YAML.getWriter().write(location,Document.newDocument(pack));
+        DocumentFileType.YAML.getWriter().write(location, StandardCharsets.UTF_8,Document.newDocument(pack),true);
         owner.getLogger().info("(Message-Provider) Imported message pack {}",pack.getMeta().getName());
         owner.getLogger().info("(Message-Provider) Loaded {} messages",pack.getMessages().size());
         return pack;
@@ -200,11 +201,11 @@ public class DefaultMessageProvider implements MessageProvider {
     public void updatePack(MessagePack pack, int updateCount) {
         MinecraftPlugin owner = findModuleOwner(pack.getMeta().getModule());
         if(pack instanceof FileMessagePack){
-            DocumentFileType.YAML.getWriter().write(((FileMessagePack) pack).getFile(),Document.newDocument(pack));
+            DocumentFileType.YAML.getWriter().write(((FileMessagePack) pack).getFile(), StandardCharsets.UTF_8,Document.newDocument(pack),true);
         }else{
             if(owner == null) throw new IllegalArgumentException("Packet owner is missing");
             File location = getFile(pack, owner);
-            DocumentFileType.YAML.getWriter().write(location,Document.newDocument(pack));
+            DocumentFileType.YAML.getWriter().write(location, StandardCharsets.UTF_8,Document.newDocument(pack),true);
         }
 
         if(owner != null){
