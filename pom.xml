@@ -64,7 +64,7 @@
         <dependency.pretronic.libraries.message>${dependency.pretronic.libraries}</dependency.pretronic.libraries.message>
         <dependency.pretronic.libraries>1.1.18.129-SNAPSHOT</dependency.pretronic.libraries>
 
-        <dependency.pretronic.databasequery>1.1.19.17-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.databasequery>1.2.5.31-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
         <dependency.slf4j>1.8.0-beta4</dependency.slf4j>
