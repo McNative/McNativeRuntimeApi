@@ -27,12 +27,11 @@ import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.scoreboard.BelowNameInfo;
 import org.mcnative.common.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.common.player.tablist.Tablist;
-import org.mcnative.common.player.tablist.TablistEntry;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
 
-public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender, TablistEntry{
+public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender{
 
     PendingConnection getConnection();
 

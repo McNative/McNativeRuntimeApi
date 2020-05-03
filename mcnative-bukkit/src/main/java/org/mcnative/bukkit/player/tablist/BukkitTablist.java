@@ -20,11 +20,13 @@
 
 package org.mcnative.bukkit.player.tablist;
 
+import net.pretronic.libraries.event.Listener;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.bukkit.McNativeBukkitConfiguration;
+import org.mcnative.common.event.player.design.MinecraftPlayerDesignUpdateEvent;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.tablist.*;
@@ -184,5 +186,14 @@ public class BukkitTablist implements Tablist {
     public void detachReceiver(ConnectedMinecraftPlayer player){
         this.receivers.remove(player);
         for (TablistEntry entry : entries) sendRemoveEntry(player,entry);
+    }
+
+    @Listener
+    public void onPlayerDesignUpdate(MinecraftPlayerDesignUpdateEvent event){
+        if(this.entries.contains(event.getOnlinePlayer())){
+            for (ConnectedMinecraftPlayer receiver : receivers) {
+                sendEntry(receiver, event.getOnlinePlayer(),false);
+            }
+        }
     }
 }

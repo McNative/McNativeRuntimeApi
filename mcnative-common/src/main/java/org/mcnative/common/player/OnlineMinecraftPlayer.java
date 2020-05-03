@@ -31,6 +31,7 @@ import org.mcnative.common.player.sound.Instrument;
 import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
+import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
@@ -41,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
-public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender {
+public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, TablistEntry {
 
     InetSocketAddress getAddress();
 

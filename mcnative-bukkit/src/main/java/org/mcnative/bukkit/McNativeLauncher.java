@@ -245,6 +245,7 @@ public class McNativeLauncher {
             }
 
             McNative.getInstance().getLocal().setServerTablist(tablist);
+            McNative.getInstance().getLocal().getEventBus().subscribe(ObjectOwner.SYSTEM,tablist);
         }
 
         ServerStatusResponse defaultResponse = new BukkitServerStatusResponse();
