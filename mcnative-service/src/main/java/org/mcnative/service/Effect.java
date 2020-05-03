@@ -20,4 +20,5 @@
 package org.mcnative.service;
 
 public enum Effect {
+
 }
