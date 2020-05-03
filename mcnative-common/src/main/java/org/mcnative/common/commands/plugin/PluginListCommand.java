@@ -23,7 +23,7 @@ package org.mcnative.common.commands.plugin;
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
@@ -42,7 +42,7 @@ public class PluginListCommand extends BasicCommand {
     @Override
     public void execute(CommandSender sender, String[] strings) {
         Collection<Plugin<?>> plugins =  McNative.getInstance().getPluginManager().getPlugins();
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LIST, new DescribedHashVariableSet()
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LIST, VariableSet.create()
                 .add("plugins", McNative.getInstance().getPluginManager().getPlugins())
                 .add("count",plugins.size()));
     }

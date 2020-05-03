@@ -23,7 +23,7 @@ package org.mcnative.common.commands.plugin;
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.utils.Messages;
@@ -44,7 +44,7 @@ public class PluginEnableCommand extends BasicCommand {
         if (plugin == null) return;
 
         if(plugin.getLoader().isEnabled()){
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ALREADY_ENABLED, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ALREADY_ENABLED, VariableSet.create()
                     .add("plugin",plugin));
             return;
         }

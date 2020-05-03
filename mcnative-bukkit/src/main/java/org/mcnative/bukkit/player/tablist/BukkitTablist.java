@@ -22,7 +22,6 @@ package org.mcnative.bukkit.player.tablist;
 
 import net.pretronic.libraries.event.Listener;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.bukkit.McNativeBukkitConfiguration;
@@ -148,7 +147,7 @@ public class BukkitTablist implements Tablist {
 
     private void sendEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry,boolean create){
         PlayerDesign design = entry.getDesign(receiver);
-        VariableSet variables = new DescribedHashVariableSet();
+        VariableSet variables = VariableSet.create();
         variables.add("entry",entry);
         if(entry.isPlayer()) variables.add("player",entry);
         variables.add("design",design);

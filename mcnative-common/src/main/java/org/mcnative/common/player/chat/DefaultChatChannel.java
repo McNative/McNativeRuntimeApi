@@ -21,7 +21,6 @@
 package org.mcnative.common.player.chat;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -137,7 +136,7 @@ public class DefaultChatChannel implements ChatChannel {
         //@Todo add design option foreach player
         Validate.notNull(player,message);
 
-        VariableSet variables = variables0 != null ? variables0: new DescribedHashVariableSet();
+        VariableSet variables = variables0 != null ? variables0: VariableSet.create();
         variables.add("player",player);
         variables.add("design",player.getDesign());
         variables.add("message",message);

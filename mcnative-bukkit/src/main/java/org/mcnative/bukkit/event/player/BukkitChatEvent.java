@@ -21,7 +21,6 @@
 package org.mcnative.bukkit.event.player;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.utility.Validate;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
@@ -43,7 +42,7 @@ public class BukkitChatEvent implements MinecraftPlayerChatEvent {
         this.event = event;
         this.player = player;
         this.chatChannel = player.getPrimaryChatChannel();
-        this.variables = new DescribedHashVariableSet();//@Todo define variable set to add
+        this.variables = VariableSet.create();
     }
 
     @Override

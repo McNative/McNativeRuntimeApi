@@ -22,7 +22,6 @@ package org.mcnative.common.commands.plugin;
 
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.describer.DescribedHashVariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.loader.PluginLoader;
 import org.mcnative.common.McNative;
@@ -53,16 +52,16 @@ public final class PluginCommandUtil {
     }
 
     protected static boolean enablePlugin(CommandSender sender, Plugin<?> plugin) {
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_STARTING, new DescribedHashVariableSet()
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_STARTING,VariableSet.create()
                 .add("plugin",plugin));
 
         try{
             plugin.getLoader().bootstrap();//In McNative is enable called bootstrap
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_SUCCESSFULLY, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_SUCCESSFULLY, VariableSet.create()
                     .add("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_FAILED, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_FAILED, VariableSet.create()
                     .add("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
@@ -71,16 +70,16 @@ public final class PluginCommandUtil {
     }
 
     protected static boolean disablePlugin(CommandSender sender, Plugin<?> plugin) {
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_STARTING, new DescribedHashVariableSet()
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_STARTING, VariableSet.create()
                 .add("plugin",plugin));
 
         try{
             plugin.getLoader().shutdown();//In McNative is disable called shutdown
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_SUCCESSFULLY, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_SUCCESSFULLY,VariableSet.create()
                     .add("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_FAILED, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_FAILED, VariableSet.create()
                     .add("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
@@ -90,17 +89,17 @@ public final class PluginCommandUtil {
 
 
     protected static boolean unloadPlugin(CommandSender sender, Plugin<?> plugin) {
-        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_STARTING, new DescribedHashVariableSet()
+        sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_STARTING, VariableSet.create()
                 .add("plugin",plugin));
 
         try{
             plugin.getLoader().unload();//In McNative is enable called UNLOAD
 
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_SUCCESSFULLY, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_SUCCESSFULLY, VariableSet.create()
                     .add("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
-            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_FAILED, new DescribedHashVariableSet()
+            sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_FAILED, VariableSet.create()
                     .add("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
