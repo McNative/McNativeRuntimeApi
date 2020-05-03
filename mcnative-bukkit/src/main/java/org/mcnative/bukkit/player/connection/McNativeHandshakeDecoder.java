@@ -92,7 +92,10 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
             ByteBuf resultBuffer = Unpooled.directBuffer();
             ServerStatusResponse response = McNative.getInstance().getLocal().getStatusResponse().clone();
 
-            MinecraftProtocolVersion clientVersion = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,connection.getProtocolVersion());
+            MinecraftProtocolVersion clientVersion = MinecraftProtocolVersion.UNKNOWN;
+            try{
+                clientVersion = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,connection.getProtocolVersion());
+            }catch (Exception ignored){}
 
             if(McNative.getInstance().getPlatform().canJoin(clientVersion)){
                 response.getVersion().setProtocol(clientVersion);
