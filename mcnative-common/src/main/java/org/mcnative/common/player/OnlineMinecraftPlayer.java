@@ -177,4 +177,9 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     default OnlineMinecraftPlayer getAsOnlinePlayer() {
         return this;
     }
+
+    @Override
+    default boolean isPlayer() {
+        return true;
+    }
 }

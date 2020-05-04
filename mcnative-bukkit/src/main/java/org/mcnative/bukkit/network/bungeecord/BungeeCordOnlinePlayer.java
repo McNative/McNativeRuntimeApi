@@ -74,6 +74,7 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
         return name;
     }
 
+
     @Override
     public OnlineMinecraftPlayer getAsOnlinePlayer() {
         return this;
