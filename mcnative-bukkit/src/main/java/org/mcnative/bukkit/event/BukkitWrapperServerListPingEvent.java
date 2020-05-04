@@ -20,10 +20,20 @@
 
 package org.mcnative.bukkit.event;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.mcnative.bukkit.player.BukkitPlayer;
+import org.mcnative.bukkit.player.BukkitPlayerManager;
+import org.mcnative.common.McNative;
+import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.text.Text;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class BukkitWrapperServerListPingEvent extends ServerListPingEvent {
 
@@ -62,5 +72,49 @@ public class BukkitWrapperServerListPingEvent extends ServerListPingEvent {
     @Override
     public void setMaxPlayers(int maxPlayers) {
         mcNativeEvent.getResponse().setMaxPlayers(maxPlayers);
+    }
+
+    @Override
+    public Iterator<Player> iterator() throws UnsupportedOperationException {
+        return new ServerPingIterator();
+    }
+
+    private class ServerPingIterator implements Iterator<Player> {
+
+        private final Iterator<Player> iterator;
+        private Player current;
+
+        public ServerPingIterator() {
+            List<Player> players = new ArrayList<>();
+            for (ServerStatusResponse.PlayerInfo playerInfo : mcNativeEvent.getResponse().getPlayerInfo()) {
+                if(playerInfo instanceof BukkitPlayer){
+                    players.add((Player) playerInfo);
+                }
+            }
+            iterator = players.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public Player next() {
+            current = iterator.next();
+            return current;
+        }
+
+        @Override
+        public void remove() {
+            iterator.remove();
+            PlayerManager playerManager = McNative.getInstance().getPlayerManager();
+            if(playerManager instanceof BukkitPlayerManager){
+                MinecraftPlayer player = ((BukkitPlayerManager) playerManager).getMappedPlayer(current);
+                if(player != null){
+                    mcNativeEvent.getResponse().removePlayerInfo(player);
+                }
+            }
+        }
     }
 }

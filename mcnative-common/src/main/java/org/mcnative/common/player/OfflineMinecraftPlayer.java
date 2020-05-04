@@ -117,7 +117,7 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     @Override
     public PlayerDesign getDesign(MinecraftPlayer player) {
         PermissionHandler handler = getPermissionHandler();
-        PlayerDesign design = handler != null ?  handler.getDesign(player): null;
+        PlayerDesign design = handler != null ? handler.getDesign(player): null;
         if(design == null) design = getData().getDesign();
         MinecraftPlayerDesignRequestEvent event = new MinecraftPlayerDesignRequestEvent(this,design);
         McNative.getInstance().getLocal().getEventBus().callEvent(event);
