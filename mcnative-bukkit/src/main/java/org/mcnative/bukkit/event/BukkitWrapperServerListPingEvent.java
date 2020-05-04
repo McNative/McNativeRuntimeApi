@@ -88,7 +88,7 @@ public class BukkitWrapperServerListPingEvent extends ServerListPingEvent {
             List<Player> players = new ArrayList<>();
             for (ServerStatusResponse.PlayerInfo playerInfo : mcNativeEvent.getResponse().getPlayerInfo()) {
                 if(playerInfo instanceof BukkitPlayer){
-                    players.add((Player) playerInfo);
+                    players.add(((BukkitPlayer) playerInfo).getOriginal());
                 }
             }
             iterator = players.iterator();

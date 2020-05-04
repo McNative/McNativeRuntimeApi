@@ -21,6 +21,7 @@ package org.mcnative.bukkit.player.connection;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -34,6 +35,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Map;
 
 //@Todo implement legacy < 1.6 status ping
 public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
@@ -59,7 +61,11 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
         if(!finished){
             finished = true;
             int packetId = MinecraftProtocolUtil.readVarInt(buffer);
-            if(packetId == HANDSHAKE_PACKET_ID){
+            if(packetId == 10){
+                for (Map.Entry<String, ChannelHandler> entry : connection.getChannel().pipeline()) {
+                    System.out.println(entry.getKey()+" | "+entry.getValue());
+                }
+
                 int protocolVersion = MinecraftProtocolUtil.readVarInt(buffer);
                 String host = MinecraftProtocolUtil.readString(buffer);
                 int port = buffer.readUnsignedShort();
