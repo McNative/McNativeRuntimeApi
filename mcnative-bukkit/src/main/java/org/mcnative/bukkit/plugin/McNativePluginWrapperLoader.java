@@ -20,21 +20,13 @@
 
 package org.mcnative.bukkit.plugin;
 
-import net.pretronic.libraries.event.EventBus;
-import net.pretronic.libraries.event.executor.MethodEventExecutor;
-import net.pretronic.libraries.utility.Validate;
-import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.bukkit.Bukkit;
-import org.bukkit.event.*;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPluginLoader;
-import org.mcnative.common.McNative;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -64,6 +56,8 @@ public class McNativePluginWrapperLoader implements PluginLoader {
 
     @Override
     public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(Listener listener, Plugin plugin) {
+        return original.createRegisteredListeners(listener,plugin);
+        /*
         Validate.notNull(plugin, "Plugin can not be null");
         Validate.notNull(listener, "Listener can not be null");
 
@@ -109,8 +103,8 @@ public class McNativePluginWrapperLoader implements PluginLoader {
                     }
                 }
             }
-        }
-        return result;
+                   return result;
+         */
     }
 
     @Override
