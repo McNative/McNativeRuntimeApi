@@ -29,6 +29,7 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.service.ServicePriority;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
@@ -95,7 +96,12 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public World getWorld(String name) {
-        return new BukkitWorld(Bukkit.getWorld(name));
+        return new BukkitWorld(Bukkit.getWorld(name)); //@Todo optimize with world pool
+    }
+
+    @Internal
+    public World getMappedWorld(org.bukkit.World world) {
+        return new BukkitWorld(world);
     }
 
     @Override
