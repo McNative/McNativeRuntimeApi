@@ -23,6 +23,8 @@ package org.mcnative.bukkit.player;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
+import org.mcnative.bukkit.BukkitMcNative;
+import org.mcnative.bukkit.BukkitService;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.entity.BukkitEntity;
 import org.mcnative.bukkit.entity.living.BukkitHumanEntity;
@@ -92,7 +94,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
         this.connection = connection;
         this.permissibleInjected = false;
         this.joining = false;
-        this.world = null; //@Todo map world
+        this.world = (BukkitWorld) ((BukkitService)MinecraftService.getInstance()).getMappedWorld(original.getWorld());
     }
 
     @Override
@@ -312,7 +314,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public BukkitWorld getBukkitWorld() {
-        return world;
+        return this.world;
     }
 
     @Override
