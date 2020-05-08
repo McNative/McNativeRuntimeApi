@@ -148,9 +148,9 @@ public class BukkitTablist implements Tablist {
     private void sendEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry,boolean create){
         PlayerDesign design = entry.getDesign(receiver);
         VariableSet variables = VariableSet.create();
-        variables.add("entry",entry);
+        variables.addDescribed("entry",entry);
         if(entry.isPlayer()) variables.add("player",entry);
-        variables.add("design",design);
+        variables.addDescribed("design",design);
 
         design.appendAdditionalVariables(variables);
 

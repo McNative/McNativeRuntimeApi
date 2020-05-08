@@ -137,8 +137,8 @@ public class DefaultChatChannel implements ChatChannel {
         Validate.notNull(player,message);
 
         VariableSet variables = variables0 != null ? variables0: VariableSet.create();
-        variables.add("player",player);
-        variables.add("design",player.getDesign());
+        variables.addDescribed("player",player);
+        variables.addDescribed("design",player.getDesign());
         variables.add("message",message);
 
         player.getDesign().appendAdditionalVariables(variables);

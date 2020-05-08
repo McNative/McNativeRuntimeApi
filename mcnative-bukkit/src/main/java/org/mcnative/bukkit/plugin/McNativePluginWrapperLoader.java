@@ -77,7 +77,6 @@ public class McNativePluginWrapperLoader implements PluginLoader {
             final EventHandler eventHandler = method.getAnnotation(EventHandler.class);
             if (eventHandler != null && !method.isBridge() && !method.isSynthetic() && method.getParameterTypes().length == 1) {
                 Class<?> eventClass = method.getParameterTypes()[0];
-                method.setAccessible(true);
                 if (!Event.class.isAssignableFrom(eventClass)) {//McNative event
                     System.out.println("--------- Register McNative Event "+eventClass+" for "+plugin.getName());
                     Class<?> mappedClass = eventBus.getMappedClass(eventClass);
