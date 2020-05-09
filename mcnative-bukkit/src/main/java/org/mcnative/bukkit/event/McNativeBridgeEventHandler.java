@@ -213,7 +213,7 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleJoinEvent(McNativeHandlerList handler, PlayerJoinEvent event){
-        if(!McNative.getInstance().isReady() && firstPlayerConnected){
+        if(!McNative.getInstance().isReady() || !firstPlayerConnected){
             event.getPlayer().kickPlayer("Server is still starting");
             return;
         }
