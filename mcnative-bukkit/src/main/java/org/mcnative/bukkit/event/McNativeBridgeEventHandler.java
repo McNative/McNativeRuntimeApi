@@ -243,7 +243,7 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleLogoutEvent(McNativeHandlerList handler, PlayerQuitEvent event){
-        if(!McNative.getInstance().isReady()) return;
+        if(!McNative.getInstance().isReady() || !firstPlayerConnected) return;
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
         player.handleLogout();
@@ -293,21 +293,19 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleInventoryClick(McNativeHandlerList handler, InventoryClickEvent event) {
-        if(!McNative.getInstance().isReady()) return;
         BukkitPlayer player = playerManager.getMappedPlayer((org.bukkit.entity.Player) event.getWhoClicked());
         MinecraftPlayerInventoryClickEvent mcnativeEvent = new BukkitPlayerInventoryClickEvent(event, player);
         handler.callEvents(event,mcnativeEvent);
     }
 
     private void handleInventoryClose(McNativeHandlerList handler, InventoryCloseEvent event) {
-        if(!McNative.getInstance().isReady()) return;
+        if(!McNative.getInstance().isReady() || !firstPlayerConnected) return;
         BukkitPlayer player = playerManager.getMappedPlayer((org.bukkit.entity.Player) event.getPlayer());
         MinecraftPlayerInventoryCloseEvent mcnativeEvent = new BukkitPlayerInventoryCloseEvent(event, player);
         handler.callEvents(event,mcnativeEvent);
     }
 
     private void handleInventoryDrag(McNativeHandlerList handler, InventoryDragEvent event) {
-        if(!McNative.getInstance().isReady()) return;
         BukkitPlayer player = playerManager.getMappedPlayer((org.bukkit.entity.Player) event.getWhoClicked());
         MinecraftPlayerInventoryDragEvent mcnativeEvent = new BukkitPlayerInventoryDragEvent(event, player);
         handler.callEvents(event,mcnativeEvent);

@@ -90,7 +90,7 @@ public class BukkitTablist implements Tablist {
     public void addEntry(TablistEntry entry) {
         Validate.notNull(entry);
         this.entries.add(entry);
-        for (ConnectedMinecraftPlayer receiver : this.receivers) sendEntry(receiver,entry,true);
+        for (ConnectedMinecraftPlayer receiver : this.receivers) sendEntry(receiver,entry);
     }
 
     @Override
@@ -144,10 +144,10 @@ public class BukkitTablist implements Tablist {
 
     @Override
     public void updateEntries(ConnectedMinecraftPlayer player) {
-        for (TablistEntry entry : entries) sendEntry(player,entry,false);
+        for (TablistEntry entry : entries) sendEntry(player,entry);
     }
 
-    private void sendEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry,boolean create){
+    private void sendEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry){
         if(!(receiver instanceof BukkitPlayer)) return;
         PlayerDesign design = entry.getDesign(receiver);
         VariableSet variables = VariableSet.create();
@@ -187,7 +187,7 @@ public class BukkitTablist implements Tablist {
         packet.setSuffix(formatter.formatSuffix(receiver,entry,variables));
         packet.setColor(formatter.getColor(receiver,entry));
         packet.setVariables(variables);
-        if(create) packet.setEntities(new String[]{entry.getName()});
+        packet.setEntities(new String[]{entry.getName()});
         receiver.sendPacket(packet);
     }
     //T000000LLLKKKKKK          16
@@ -206,7 +206,7 @@ public class BukkitTablist implements Tablist {
         this.receivers.add(player);
         VariableSet variables = VariableSet.createDescribed().add("player", player);
         updateOverview(player, variables, variables);
-        for (TablistEntry entry : entries) sendEntry(player,entry,true);
+        for (TablistEntry entry : entries) sendEntry(player,entry);
     }
 
     @Internal
@@ -221,7 +221,7 @@ public class BukkitTablist implements Tablist {
             if(entry instanceof MinecraftPlayer){
                 if(((MinecraftPlayer) entry).getUniqueId().equals(event.getOnlinePlayer().getUniqueId())){
                     for (ConnectedMinecraftPlayer receiver : receivers) {
-                        sendEntry(receiver, event.getOnlinePlayer(),false);
+                        sendEntry(receiver, event.getOnlinePlayer());
                     }
                     return;
                 }
