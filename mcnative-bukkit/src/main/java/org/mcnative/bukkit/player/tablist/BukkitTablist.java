@@ -162,12 +162,12 @@ public class BukkitTablist implements Tablist {
         String priority = buildPriorityString(design.getPriority());
 
         if(teamName == null){
-            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamNames();
+            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamIndexAndIncrement();
 
             action = MinecraftScoreboardTeamsPacket.Action.CREATE;
             ((BukkitPlayer) receiver).getTablistTeamNames().put(entry,teamName);
         }else if(!teamName.startsWith(priority)){
-            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamNames();
+            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamIndexAndIncrement();
 
             MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
             packet.setName("T"+teamName);
