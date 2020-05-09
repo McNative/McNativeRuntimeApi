@@ -23,7 +23,6 @@ package org.mcnative.bukkit.player;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.Bukkit;
-import org.mcnative.bukkit.BukkitMcNative;
 import org.mcnative.bukkit.BukkitService;
 import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.entity.BukkitEntity;
@@ -53,6 +52,7 @@ import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.player.tablist.Tablist;
+import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
@@ -73,6 +73,8 @@ import org.mcnative.service.location.Location;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -88,6 +90,9 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     private boolean permissibleInjected;
     private boolean joining;
 
+    private Map<TablistEntry,String> tablistTeamNames;
+    private int tablistTeamIndex;
+
     public BukkitPlayer(org.bukkit.entity.Player original, PendingConnection connection,MinecraftPlayerData playerData) {
         super(playerData);
         this.original = original;
@@ -95,6 +100,8 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
         this.permissibleInjected = false;
         this.joining = false;
         this.world = (BukkitWorld) ((BukkitService)MinecraftService.getInstance()).getMappedWorld(original.getWorld());
+        this.tablistTeamNames = new HashMap<>();
+        this.tablistTeamIndex = 0;
     }
 
     @Override
@@ -606,6 +613,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
         if(this.tablist != null){
             ((BukkitTablist)this.tablist).detachReceiver(this);
         }
+        this.tablistTeamNames.clear();
         if(tablist != null){
             this.tablist = tablist;
             ((BukkitTablist)this.tablist).attachReceiver(this);
@@ -670,5 +678,15 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     @Internal
     public void handleLogout(){
         if(this.permissionHandler != null)this.permissionHandler.onPlayerLogout();
+    }
+
+    @Internal
+    public Map<TablistEntry, String> getTablistTeamNames() {
+        return tablistTeamNames;
+    }
+
+    @Internal
+    public int getTablistTeamIndexAndIncrement(){
+        return tablistTeamIndex++;
     }
 }

@@ -25,6 +25,7 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.bukkit.McNativeBukkitConfiguration;
+import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignUpdateEvent;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
@@ -147,6 +148,7 @@ public class BukkitTablist implements Tablist {
     }
 
     private void sendEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry,boolean create){
+        if(!(receiver instanceof BukkitPlayer)) return;
         PlayerDesign design = entry.getDesign(receiver);
         VariableSet variables = VariableSet.create();
         variables.addDescribed("entry",entry);
@@ -155,9 +157,31 @@ public class BukkitTablist implements Tablist {
 
         design.appendAdditionalVariables(variables);
 
+        MinecraftScoreboardTeamsPacket.Action action;
+        String teamName = ((BukkitPlayer) receiver).getTablistTeamNames().get(entry);
+        String priority = buildPriorityString(design.getPriority());
+
+        if(teamName == null){
+            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamNames();
+
+            action = MinecraftScoreboardTeamsPacket.Action.CREATE;
+            ((BukkitPlayer) receiver).getTablistTeamNames().put(entry,teamName);
+        }else if(!teamName.startsWith(priority)){
+            teamName = priority+entry.getName().substring(0,4)+((BukkitPlayer) receiver).getTablistTeamNames();
+
+            MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
+            packet.setName("T"+teamName);
+            packet.setAction(MinecraftScoreboardTeamsPacket.Action.DELETE);
+            receiver.sendPacket(packet);
+
+            action = MinecraftScoreboardTeamsPacket.Action.CREATE;
+            ((BukkitPlayer) receiver).getTablistTeamNames().put(entry,teamName);
+        }else action = MinecraftScoreboardTeamsPacket.Action.UPDATE;
+
+
         MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
-        packet.setName("TL-"+entry.getName());
-        packet.setAction(create ? MinecraftScoreboardTeamsPacket.Action.CREATE : MinecraftScoreboardTeamsPacket.Action.UPDATE);
+        packet.setName("T"+teamName);
+        packet.setAction(action);
         packet.setDisplayName(Text.newBuilder().color(TextColor.RED).text("Tablist").build());
         packet.setPrefix(formatter.formatPrefix(receiver,entry,variables));
         packet.setSuffix(formatter.formatSuffix(receiver,entry,variables));
@@ -166,12 +190,15 @@ public class BukkitTablist implements Tablist {
         if(create) packet.setEntities(new String[]{entry.getName()});
         receiver.sendPacket(packet);
     }
+    //T000000LLLKKKKKK          16
 
     private void sendRemoveEntry(ConnectedMinecraftPlayer receiver,TablistEntry entry){
+        if(!(receiver instanceof BukkitPlayer)) return;
         MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
         packet.setName("TL-"+entry.getName());
         packet.setAction(MinecraftScoreboardTeamsPacket.Action.DELETE);
         receiver.sendPacket(packet);
+        ((BukkitPlayer) receiver).getTablistTeamNames().remove(entry);
     }
 
     @Internal
@@ -190,7 +217,6 @@ public class BukkitTablist implements Tablist {
 
     @Listener
     public void onPlayerDesignUpdate(MinecraftPlayerDesignUpdateEvent event){
-        System.out.println("RECEIVED Design update ");
         for (TablistEntry entry : this.entries) {
             if(entry instanceof MinecraftPlayer){
                 if(((MinecraftPlayer) entry).getUniqueId().equals(event.getOnlinePlayer().getUniqueId())){
@@ -201,5 +227,14 @@ public class BukkitTablist implements Tablist {
                 }
             }
         }
+    }
+
+    private String buildPriorityString(int priority){
+        StringBuilder stringPriority = new StringBuilder(String.valueOf(priority));
+        int amount = 6-stringPriority.length();
+        for (int i = 0; i < amount; i++) {
+            stringPriority.insert(0, "0");
+        }
+        return stringPriority.toString();
     }
 }
