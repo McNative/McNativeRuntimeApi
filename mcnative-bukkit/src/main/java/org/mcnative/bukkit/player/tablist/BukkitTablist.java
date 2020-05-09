@@ -27,6 +27,7 @@ import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.bukkit.McNativeBukkitConfiguration;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignUpdateEvent;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.tablist.*;
 import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
@@ -189,10 +190,15 @@ public class BukkitTablist implements Tablist {
 
     @Listener
     public void onPlayerDesignUpdate(MinecraftPlayerDesignUpdateEvent event){
-        System.out.println("RECEIVED Design update");
-        if(this.entries.contains(event.getOnlinePlayer())){
-            for (ConnectedMinecraftPlayer receiver : receivers) {
-                sendEntry(receiver, event.getOnlinePlayer(),false);
+        System.out.println("RECEIVED Design update ");
+        for (TablistEntry entry : this.entries) {
+            if(entry instanceof MinecraftPlayer){
+                if(((MinecraftPlayer) entry).getUniqueId().equals(event.getOnlinePlayer().getUniqueId())){
+                    for (ConnectedMinecraftPlayer receiver : receivers) {
+                        sendEntry(receiver, event.getOnlinePlayer(),false);
+                    }
+                    return;
+                }
             }
         }
     }
