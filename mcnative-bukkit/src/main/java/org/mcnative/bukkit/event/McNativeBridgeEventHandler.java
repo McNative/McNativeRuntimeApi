@@ -36,7 +36,6 @@ import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.player.connection.ChannelConnection;
-import org.mcnative.bukkit.plugin.command.BukkitCommandManager;
 import org.mcnative.bukkit.plugin.event.BukkitEventBus;
 import org.mcnative.bukkit.plugin.event.McNativeHandlerList;
 import org.mcnative.bukkit.world.BukkitWorld;
@@ -66,17 +65,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class McNativeBridgeEventHandler {
 
     private final BukkitEventBus eventBus;
-    private final BukkitCommandManager commandManager;
     private final BukkitChannelInjector injector;
     private final BukkitPlayerManager playerManager;
     private final Map<UUID,BukkitPendingConnection> pendingConnections;
+
+    //For preventing McNative mapping error.
+    private boolean firstPlayerConnected;
 
     public McNativeBridgeEventHandler(BukkitChannelInjector injector, BukkitEventBus eventBus, BukkitPlayerManager playerManager) {
         this.injector = injector;
         this.eventBus = eventBus;
         this.playerManager = playerManager;
-        this.commandManager = null;
         this.pendingConnections = new ConcurrentHashMap<>();
+        firstPlayerConnected = false;
         setup();
     }
 
@@ -207,11 +208,12 @@ public class McNativeBridgeEventHandler {
             McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerPostLoginEvent.class,postLoginEvent);
 
             playerManager.registerPlayer(player);
+            firstPlayerConnected = true;
         }
     }
 
     private void handleJoinEvent(McNativeHandlerList handler, PlayerJoinEvent event){
-        if(!McNative.getInstance().isReady()){
+        if(!McNative.getInstance().isReady() && firstPlayerConnected){
             event.getPlayer().kickPlayer("Server is still starting");
             return;
         }
