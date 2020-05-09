@@ -78,7 +78,6 @@ public class McNativePluginWrapperLoader implements PluginLoader {
             if (eventHandler != null && !method.isBridge() && !method.isSynthetic() && method.getParameterTypes().length == 1) {
                 Class<?> eventClass = method.getParameterTypes()[0];
                 if (!Event.class.isAssignableFrom(eventClass)) {//McNative event
-                    System.out.println("--------- Register McNative Event "+eventClass+" for "+plugin.getName());
                     Class<?> mappedClass = eventBus.getMappedClass(eventClass);
                     if (mappedClass == null) mappedClass = eventClass;
 
@@ -90,7 +89,6 @@ public class McNativePluginWrapperLoader implements PluginLoader {
                     }
                     eventBus.addExecutor(mappedClass, new MethodEventExecutor(mappedOwner, mapPriority(eventHandler.priority()), listener, eventClass, method));
                 } else { //Bukkit Event
-                    System.out.println("--------- Register Bukkit Event "+eventClass+" for "+plugin.getName());
                     Class<? extends Event> directClass = eventClass.asSubclass(Event.class);
                     Set<RegisteredListener> eventSet = result.computeIfAbsent(directClass, k -> new HashSet<>());
                     EventExecutor executor = (listener1, event) -> {

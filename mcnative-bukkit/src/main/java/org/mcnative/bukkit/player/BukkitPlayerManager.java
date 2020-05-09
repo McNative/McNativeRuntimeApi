@@ -31,7 +31,9 @@ import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
-import org.mcnative.common.player.*;
+import org.mcnative.common.player.AbstractPlayerManager;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -42,16 +44,15 @@ import org.mcnative.service.entity.living.Player;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
-public class BukkitPlayerManager implements PlayerManager {
+public class BukkitPlayerManager extends AbstractPlayerManager{
 
-    private final Map<Class<?>,Function<MinecraftPlayer,?>> adapters;
     private final Collection<ConnectedMinecraftPlayer> onlineMinecraftPlayers;
 
     public BukkitPlayerManager() {
-        this.adapters = new LinkedHashMap<>();
         this.onlineMinecraftPlayers = new ArrayList<>();
     }
 
@@ -59,57 +60,19 @@ public class BukkitPlayerManager implements PlayerManager {
         return onlineMinecraftPlayers;
     }
 
+    @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(UUID uniqueId) {
         return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getUniqueId().equals(uniqueId));
     }
 
+    @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(long xBoxId) {
         return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getXBoxId() == xBoxId);
     }
 
+    @Override
     public ConnectedMinecraftPlayer getConnectedPlayer(String name) {
         return Iterators.findOne(this.onlineMinecraftPlayers, player -> player.getName().equalsIgnoreCase(name));
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(UUID uniqueId) {
-        ConnectedMinecraftPlayer online = getConnectedPlayer(uniqueId);
-        if(online != null) return online;
-        MinecraftPlayerData data = getDataProvider().getPlayerData(uniqueId);
-        return data!=null?new OfflineMinecraftPlayer(data):null;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(long xBoxId) {
-        ConnectedMinecraftPlayer online = getConnectedPlayer(xBoxId);
-        if(online != null) return online;
-        MinecraftPlayerData data = getDataProvider().getPlayerData(xBoxId);
-        return data!=null?new OfflineMinecraftPlayer(data):null;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer(String name) {
-        ConnectedMinecraftPlayer online = getConnectedPlayer(name);
-        if(online != null) return online;
-        MinecraftPlayerData data = getDataProvider().getPlayerData(name);
-        return data!=null?new OfflineMinecraftPlayer(data):null;
-    }
-
-    private PlayerDataProvider getDataProvider(){
-        return McNative.getInstance().getRegistry().getService(PlayerDataProvider.class);
-    }
-
-    @Override
-    public <T> void registerPlayerAdapter(Class<T> playerClass, Function<MinecraftPlayer, T> translator) {
-        this.adapters.put(playerClass, translator);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T translate(Class<T> translatedClass, MinecraftPlayer player) {
-        Function<MinecraftPlayer,?> translator = this.adapters.get(translatedClass);
-        if(translator == null) throw new IllegalArgumentException(String.format("No translator for player %s class found.",translatedClass));
-        return (T) translator.apply(player);
     }
 
     @Internal
@@ -201,4 +164,5 @@ public class BukkitPlayerManager implements PlayerManager {
             channel.pipeline().remove("mcnative-packet-rewrite-decoder");
         }
     }
+
 }
