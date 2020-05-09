@@ -26,7 +26,6 @@ import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToSt
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
-//@Todo add update listener or event
 public interface PlayerDesign extends VariableObjectToString {
 
     String getColor();

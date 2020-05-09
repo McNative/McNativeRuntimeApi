@@ -19,5 +19,4 @@
 
 package org.mcnative.common.event;
 
-//@Todo maybe change to network event?
 public interface ServiceReloadedEvent extends MinecraftEvent {}

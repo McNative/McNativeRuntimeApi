@@ -28,7 +28,6 @@ import org.mcnative.common.connection.MinecraftConnection;
 
 import java.util.Collection;
 
-//@Todo add legacy builder
 public interface MessageComponent<T extends MessageComponent<?>> extends Textable {
 
     Collection<MessageComponent<?>> getExtras();

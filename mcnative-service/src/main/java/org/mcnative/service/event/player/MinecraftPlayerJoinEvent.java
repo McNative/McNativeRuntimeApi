@@ -23,7 +23,6 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.service.location.Location;
 
-//@Todo implement chat channel for join message
 public interface MinecraftPlayerJoinEvent extends MinecraftEntityPlayerEvent{
 
     MessageComponent<?> getJoinMessage();

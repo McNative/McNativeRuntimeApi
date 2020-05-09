@@ -31,7 +31,6 @@ import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 
-//@Todo maybe optimize reason mapping
 public class BungeeServerKickEvent implements MinecraftPlayerServerKickEvent {
 
     private final BungeeCordServerMap serverMap;

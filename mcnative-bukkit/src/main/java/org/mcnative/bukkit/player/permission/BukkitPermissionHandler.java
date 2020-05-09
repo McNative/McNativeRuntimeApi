@@ -30,7 +30,6 @@ import org.mcnative.common.serviceprovider.permission.PermissionResult;
 import java.util.Collection;
 import java.util.Collections;
 
-//@Todo implement design workaround and crate vault integration
 public class BukkitPermissionHandler implements PermissionHandler {
 
     private final BukkitPlayer player;

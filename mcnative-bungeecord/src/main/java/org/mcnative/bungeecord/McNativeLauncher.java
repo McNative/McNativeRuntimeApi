@@ -151,7 +151,7 @@ public class McNativeLauncher {
     private static Plugin setupDummyPlugin(){
         PluginDescription description = new PluginDescription();
         description.setName("McNative");
-        description.setVersion(McNativeLauncher.class.getPackage().getImplementationVersion());//@Todo update
+        description.setVersion(McNativeLauncher.class.getPackage().getImplementationVersion());
         description.setAuthor("Pretronic and McNative contributors");
         description.setMain("reflected");
 
