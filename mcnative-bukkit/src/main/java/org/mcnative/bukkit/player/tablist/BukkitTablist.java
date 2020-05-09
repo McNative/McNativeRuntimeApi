@@ -189,6 +189,7 @@ public class BukkitTablist implements Tablist {
 
     @Listener
     public void onPlayerDesignUpdate(MinecraftPlayerDesignUpdateEvent event){
+        System.out.println("RECEIVED Design update");
         if(this.entries.contains(event.getOnlinePlayer())){
             for (ConnectedMinecraftPlayer receiver : receivers) {
                 sendEntry(receiver, event.getOnlinePlayer(),false);
