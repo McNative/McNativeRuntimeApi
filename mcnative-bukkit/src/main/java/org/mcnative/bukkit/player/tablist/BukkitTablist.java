@@ -178,7 +178,7 @@ public class BukkitTablist implements Tablist {
             ((BukkitPlayer) receiver).getTablistTeamNames().put(entry,teamName);
         }else action = MinecraftScoreboardTeamsPacket.Action.UPDATE;
 
-        System.out.println(receiver.getName()+"   ->   "+entry.getName()+ " | "+teamName);
+        System.out.println(receiver.getName()+"   ->   "+entry.getName()+ " | "+teamName+" | P:"+design.getPriority());
 
         MinecraftScoreboardTeamsPacket packet = new MinecraftScoreboardTeamsPacket();
         packet.setName("T"+teamName);
