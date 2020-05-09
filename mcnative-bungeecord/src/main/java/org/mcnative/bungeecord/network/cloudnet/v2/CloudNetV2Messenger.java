@@ -27,6 +27,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
+import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -52,6 +53,7 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
     public CloudNetV2Messenger(Executor executor) {
         this.executor = executor;
         this.resultListeners = new ConcurrentHashMap<>();
+        net.md_5.bungee.api.ProxyServer.getInstance().getPluginManager().registerListener(McNativeLauncher.getPlugin(),this);
     }
 
     @Override

@@ -25,8 +25,10 @@ import de.dytanic.cloudnet.bridge.event.bukkit.BukkitSubChannelMessageEvent;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -52,6 +54,7 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
     public CloudNetV2Messenger(Executor executor) {
         this.executor = executor;
         this.resultListeners = new ConcurrentHashMap<>();
+        Bukkit.getPluginManager().registerEvents(this, McNativeLauncher.getPlugin());
     }
 
     @Override
