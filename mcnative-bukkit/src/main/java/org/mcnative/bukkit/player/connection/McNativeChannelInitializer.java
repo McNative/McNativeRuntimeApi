@@ -60,8 +60,10 @@ public class McNativeChannelInitializer extends ChannelInitializer<SocketChannel
         this.method.invoke(this.original, channel);
         Object networkManager = channel.pipeline().get(PACKET_HANDLER_CLASS);
         GenericFutureListener<Future<? super Void>> connectionUnregisterListener = future -> injector.unregisterConnection(channel);
+
         ChannelConnection connection = new ChannelConnection(channel,networkManager,connectionUnregisterListener);
         this.injector.registerConnection(connection);
+
         channel.pipeline().addBefore("decoder","mcnative-handshake-decoder",new McNativeHandshakeDecoder(connection));
         channel.closeFuture().addListener(connectionUnregisterListener);
     }

@@ -89,7 +89,6 @@ public class BukkitMcNative implements McNative {
 
     protected BukkitMcNative(PluginVersion version, PluginManager pluginManager, PlayerManager playerManager, LocalService local, Network network) {
         this.version = version;
-        this.platform = new BukkitPlatform();
 
         JdkPretronicLogger logger0 = new JdkPretronicLogger(Bukkit.getLogger());
         if(McNativeBukkitConfiguration.DEBUG){
@@ -102,6 +101,7 @@ public class BukkitMcNative implements McNative {
         this.logger = logger0;
 
         this.scheduler = new SimpleTaskScheduler();
+        this.platform = new BukkitPlatform(this.scheduler);
         this.dependencyManager = new DependencyManager(this.logger,new File("plugins/McNative/lib/dependencies/"));
         this.dependencyManager.setLoggerPrefix("[McNative] (Dependency-Manager) ");
 

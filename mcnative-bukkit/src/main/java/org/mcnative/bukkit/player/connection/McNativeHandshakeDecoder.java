@@ -23,6 +23,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import org.bukkit.Bukkit;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.mcnative.bukkit.event.BukkitServerListPingEvent;
 import org.mcnative.bukkit.event.BukkitWrapperServerListPingEvent;
@@ -37,6 +38,9 @@ import java.util.List;
 
 //@Todo implement legacy < 1.6 status ping
 public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
+
+    public static boolean VIA_VERSION = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
+    public static boolean PROTOCOL_LIB = Bukkit.getPluginManager().getPlugin("ProtocolLib") != null;
 
     private final static int HANDSHAKE_PACKET_ID = 0;
     private final static int HANDSHAKE_PACKET_ID_LEGACY =  0xFE;
@@ -66,7 +70,8 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
                 int port = buffer.readUnsignedShort();
                 int next = MinecraftProtocolUtil.readVarInt(buffer);
                 connection.initHandshake(protocolVersion,host,port);
-                if(next == 10){
+                if(next == 1){
+                    tryRemoveHandlers();
                     statusRequest = true;
                     handleServerListPing();
                     out.release();
@@ -86,6 +91,17 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
             return;
         }
         list.add(out);
+    }
+
+    //This is currently only a work workaround and should be optimized with an own multiple version implementation
+    private void tryRemoveHandlers(){
+        if(PROTOCOL_LIB){
+            connection.getChannel().pipeline().remove("protocol_lib_encoder");
+        }
+        if(VIA_VERSION){
+            connection.getChannel().pipeline().remove("encoder");
+            connection.getChannel().pipeline().remove("viaversion_packet_handler");
+        }
     }
 
     private void handleServerListPing(){

@@ -38,7 +38,7 @@ import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.profile.GameProfile;
-import org.mcnative.common.protocol.netty.McNativeMessageEncoderIgnoreWrapper;
+import org.mcnative.common.protocol.netty.wrapper.McNativeMessageEncoderIgnoreWrapper;
 import org.mcnative.service.entity.living.Player;
 
 import java.net.InetAddress;

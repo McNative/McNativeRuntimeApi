@@ -22,7 +22,7 @@ package org.mcnative.bukkit.utils;
 
 import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
-import us.myles.ViaVersion.api.Via;
+import us.myles.ViaVersion.api.protocol.ProtocolRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class ViaVersionExtensionUtil {
 
     public static Collection<MinecraftProtocolVersion> getVersions(){
         Collection<MinecraftProtocolVersion> versions = new ArrayList<>();
-        SortedSet<Integer> supported = Via.getAPI().getSupportedVersions();
+        SortedSet<Integer> supported = ProtocolRegistry.getSupportedVersions();
         for (Integer supportedVersion : supported) {
             try{
                 versions.add(MinecraftProtocolVersion.of(MinecraftEdition.JAVA,supportedVersion));

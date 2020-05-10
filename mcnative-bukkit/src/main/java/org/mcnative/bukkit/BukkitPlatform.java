@@ -19,7 +19,10 @@
 
 package org.mcnative.bukkit;
 
+import net.pretronic.libraries.concurrent.TaskScheduler;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.bukkit.utils.ViaVersionExtensionUtil;
 import org.mcnative.common.MinecraftPlatform;
@@ -30,21 +33,35 @@ import org.mcnative.common.protocol.support.ProtocolCheck;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class BukkitPlatform implements MinecraftPlatform {
 
+    private final Plugin VIAVERSION = Bukkit.getPluginManager().getPlugin("ViaVersion");
+
     private final MinecraftProtocolVersion protocolVersion = BukkitReflectionUtil.getProtocolVersionByServerVersion();
-    private final Collection<MinecraftProtocolVersion> versions;
+    private Collection<MinecraftProtocolVersion> versions;
     private final File latestLogLocation;
 
-    public BukkitPlatform() {
+    public BukkitPlatform(TaskScheduler scheduler) {
         this.latestLogLocation = new File("logs/latest.log");
-        if (Bukkit.getPluginManager().getPlugin("ViaVersion") == null) {
-            versions = Collections.singletonList(protocolVersion);
-        }else{
-            versions = ViaVersionExtensionUtil.getVersions();
+        versions = Collections.singletonList(protocolVersion);
+        trySetViaVersions(scheduler,0);
+    }
+
+    private void trySetViaVersions(TaskScheduler scheduler,int amount){
+        if(VIAVERSION == null) return;
+        if(VIAVERSION.isEnabled()){
+            Collection<MinecraftProtocolVersion> result = ViaVersionExtensionUtil.getVersions();
+            if(!result.isEmpty()){
+                this.versions = Collections.unmodifiableCollection(result);
+                return;
+            }
         }
+        scheduler.createTask(ObjectOwner.SYSTEM)
+                .delay(3,TimeUnit.SECONDS)
+                .execute(() -> trySetViaVersions(scheduler, amount));
     }
 
     @Override

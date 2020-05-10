@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.04.20, 11:31
+ * @since 09.05.20, 21:15
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.common.protocol.netty;
+package org.mcnative.common.protocol.netty.wrapper;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -27,11 +27,12 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.MessageToByteEncoder;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.common.protocol.netty.MinecraftProtocolEncoder;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 
 import java.lang.reflect.Method;
 
-public class McNativeMessageEncoderIgnoreWrapper extends ChannelOutboundHandlerAdapter {
+public class McNativeMinecraftProtocolEncoderForwardWrapper extends ChannelOutboundHandlerAdapter {
 
     private final static Method ENCODE_METHOD = ReflectionUtil.getMethod(MessageToByteEncoder.class,"encode"
             ,new Class[]{ChannelHandlerContext.class,Object.class, ByteBuf.class});
@@ -40,9 +41,11 @@ public class McNativeMessageEncoderIgnoreWrapper extends ChannelOutboundHandlerA
         ENCODE_METHOD.setAccessible(true);
     }
 
+    private final MinecraftProtocolEncoder encoder;
     private final MessageToByteEncoder<Object> original;
 
-    public McNativeMessageEncoderIgnoreWrapper(MessageToByteEncoder<Object> original) {
+    public McNativeMinecraftProtocolEncoderForwardWrapper(MinecraftProtocolEncoder encoder, MessageToByteEncoder<Object> original) {
+        this.encoder = encoder;
         this.original = original;
     }
 
@@ -53,12 +56,13 @@ public class McNativeMessageEncoderIgnoreWrapper extends ChannelOutboundHandlerA
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if(msg instanceof MinecraftPacket){
-            ctx.write(msg, promise);
+            encoder.write(ctx, msg, promise);
         }else {
             ByteBuf buffer = Unpooled.directBuffer();
             ENCODE_METHOD.invoke(original,ctx,msg,buffer);
             ctx.write(buffer, promise);
         }
     }
+
 
 }
