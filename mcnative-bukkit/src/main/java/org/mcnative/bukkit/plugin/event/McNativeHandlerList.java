@@ -23,6 +23,7 @@ import net.pretronic.libraries.event.executor.ConsumerEventExecutor;
 import net.pretronic.libraries.event.executor.EventExecutor;
 import net.pretronic.libraries.event.executor.MethodEventExecutor;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
@@ -105,7 +106,8 @@ public class McNativeHandlerList extends HandlerList implements org.bukkit.plugi
     }
 
     public void unregister(ObjectOwner owner){
-        Iterators.removeSilent(executors, executor -> executor.getOwner().equals(owner));
+        Validate.notNull(owner);
+        Iterators.removeSilent(executors, executor -> executor. getOwner() != null && executor.getOwner().equals(owner));
     }
 
     public void unregister(Consumer<?> handler){
