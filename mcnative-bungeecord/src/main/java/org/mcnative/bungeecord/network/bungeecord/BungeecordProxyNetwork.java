@@ -26,11 +26,13 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.event.NetworkEventBus;
 import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -47,10 +49,14 @@ public class BungeecordProxyNetwork implements Network {
 
     private final ProxyService service;
     private final Messenger messenger;
+    private final NetworkEventBus eventBus;
 
     public BungeecordProxyNetwork(ProxyService service, ExecutorService executor, BungeeCordServerMap serverMap) {
         this.service = service;
         this.messenger = new PluginMessageMessenger(executor,serverMap);
+        this.eventBus = new NetworkEventBus();
+        this.messenger.registerChannel("mcnative_event",ObjectOwner.SYSTEM,eventBus);
+        this.messenger.registerChannel("mcnative_player",ObjectOwner.SYSTEM,new McNativePlayerActionListener());
     }
 
     @Override
@@ -70,7 +76,7 @@ public class BungeecordProxyNetwork implements Network {
 
     @Override
     public EventBus getEventBus() {
-        throw new UnsupportedOperationException("Network events are currently not supported");
+        return eventBus;
     }
 
     @Override

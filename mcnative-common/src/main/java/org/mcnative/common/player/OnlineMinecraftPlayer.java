@@ -52,6 +52,7 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
 
     int getPing();
 
+    CompletableFuture<Integer> getPingAsync();
 
     ProxyServer getProxy();
 

@@ -2,7 +2,8 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 03.01.20, 23:31
+ * @since 16.05.20, 17:53
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +18,27 @@
  * under the License.
  */
 
-package org.mcnative.common.event.server;
+package org.mcnative.common.network.event.defaults;
 
-import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
+import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 
+public class NetworkPlayerPostLoginEvent implements MinecraftPlayerPostLoginEvent {
 
-public interface MinecraftPlayerServerConnectedEvent extends MinecraftOnlinePlayerEvent {
+    private final OnlineMinecraftPlayer player;
 
-    MinecraftServer getServer();
+    public NetworkPlayerPostLoginEvent(OnlineMinecraftPlayer player) {
+        this.player = player;
+    }
 
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer() {
+        return player;
+    }
 }

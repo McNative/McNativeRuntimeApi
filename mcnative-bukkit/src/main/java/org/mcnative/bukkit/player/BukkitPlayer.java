@@ -174,6 +174,11 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Override
+    public CompletableFuture<Integer> getPingAsync() {
+        throw new UnsupportedOperationException("Currently not supported");
+    }
+
+    @Override
     public ProxyServer getProxy() {
         throw new UnsupportedOperationException("Currently not supported");
     }

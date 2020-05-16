@@ -32,12 +32,8 @@ import net.md_5.bungee.event.EventHandler;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import org.mcnative.bungeecord.McNativeLauncher;
-import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
-import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.chat.ChatPosition;
-import org.mcnative.common.text.components.RawMessageComponent;
 import org.mcnative.proxy.ProxyService;
 
 import java.nio.charset.StandardCharsets;
@@ -58,24 +54,6 @@ public class BungeeCordNetworkHandler implements Listener {
         String action = request.getString("action");
         if(action.equalsIgnoreCase("initial-request")){
             sendInitialRequest(server);
-        }else if(action.equalsIgnoreCase("sendMessage")){//@Todo maybe optimize text compilation
-            UUID uniqueId = request.getObject("uniqueId",UUID.class);
-            Document jsonText = request.getDocument("text");
-            ChatPosition position = ChatPosition.of(request.getByte("position"));
-            OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(uniqueId);
-            if(player != null){
-                player.sendMessage(position,new RawMessageComponent("Pre compiled","Pre compiled",jsonText));
-            }
-        }else if(action.equalsIgnoreCase("connect")){
-            UUID uniqueId = request.getObject("uniqueId",UUID.class);
-            String targetName = request.getString("target");
-            ServerConnectReason reason = ServerConnectReason.valueOf(request.getString("reason"));
-
-            OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(uniqueId);
-            MinecraftServer target = ProxyService.getInstance().getServer(targetName);
-            if(player != null && target != null){
-                player.connect(target,reason);
-            }
         }
     }
 

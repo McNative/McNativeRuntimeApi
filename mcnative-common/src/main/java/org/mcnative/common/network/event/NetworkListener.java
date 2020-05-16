@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.12.19, 13:41
+ * @since 16.05.20, 17:40
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +20,17 @@
 
 package org.mcnative.common.network.event;
 
-public class NetworkEventSubscribeAdapter {
+import net.pretronic.libraries.event.EventPriority;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NetworkListener {
+
+    byte priority() default EventPriority.NORMAL;
+
 }

@@ -25,6 +25,7 @@ import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
@@ -217,6 +218,15 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     public int getPing() {
         if(original == null) throw new IllegalArgumentException("Player is not finally connected.");
         return original.getPing();
+    }
+
+    @Override
+    public CompletableFuture<Integer> getPingAsync() {
+        if(original == null) throw new IllegalArgumentException("Player is not finally connected.");
+        CompletableFuture<Integer> result = new CompletableFuture<>();
+        McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                .async().execute(() -> result.complete(original.getPing()));
+        return result;
     }
 
     @Override

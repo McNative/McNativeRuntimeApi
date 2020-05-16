@@ -1,8 +1,9 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.12.19, 13:41
+ * @since 16.05.20, 17:31
+ * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +20,10 @@
 
 package org.mcnative.common.network.event;
 
-public class NetworkEventExecuteAdapter {
+public enum NetworkEventType {
 
-
+    LOCAL_MANAGED(),
+    SELF_MANAGED(),
+    MANAGED();
 
 }

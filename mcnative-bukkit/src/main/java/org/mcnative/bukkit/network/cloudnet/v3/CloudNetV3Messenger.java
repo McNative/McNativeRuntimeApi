@@ -107,6 +107,15 @@ public class CloudNetV3Messenger extends AbstractMessenger implements Listener {
         return result;
     }
 
+    @Override
+    public CompletableFuture<Document> sendQueryMessageAsync(NetworkIdentifier receiver, String channel, Document request) {
+        CompletableFuture<Document> result = new CompletableFuture<>();
+        UUID id = UUID.randomUUID();
+        this.resultListeners.put(id,result);
+        executor.execute(()-> sendMessage(receiver, channel, request,id));
+        return result;
+    }
+
     @EventHandler
     public void onMessageReceive(BukkitChannelMessageReceiveEvent event){
         if(event.getChannel().equals(CHANNEL_NAME)){

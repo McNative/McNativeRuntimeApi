@@ -30,12 +30,17 @@ import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.OwnedObject;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.event.NetworkEventBus;
+import org.mcnative.common.network.event.defaults.NetworkPlayerLogoutEvent;
+import org.mcnative.common.network.event.defaults.NetworkPlayerPostLoginEvent;
+import org.mcnative.common.network.event.defaults.NetworkPlayerServerSwitchEvent;
 import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.data.MinecraftPlayerData;
@@ -56,6 +61,7 @@ public class BungeeCordProxyNetwork implements Network {
     protected static final NetworkIdentifier SINGLE_PROXY_IDENTIFIER = new NetworkIdentifier("Proxy-1",new UUID(10,10));
 
     private final Messenger messenger;
+    private final NetworkEventBus eventBus;
     private final Collection<OwnedObject<NetworkSynchronisationCallback>> statusCallbacks;
 
     private final Collection<MinecraftServer> servers;
@@ -66,9 +72,11 @@ public class BungeeCordProxyNetwork implements Network {
 
     public BungeeCordProxyNetwork(ExecutorService executor) {
         this.messenger = new PluginMessageMessenger(this,executor);
+        this.eventBus = new NetworkEventBus();
         this.statusCallbacks = new ArrayList<>();
         this.servers = new ArrayList<>();
         this.players = new ArrayList<>();
+        this.messenger.registerChannel("mcnative_event", ObjectOwner.SYSTEM,eventBus);
     }
 
     @Override
@@ -88,7 +96,7 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public EventBus getEventBus() {
-        throw new IllegalArgumentException("Network events are currently not supported");
+        return eventBus;
     }
 
     @Override
@@ -321,7 +329,7 @@ public class BungeeCordProxyNetwork implements Network {
         OnlineMinecraftPlayer player = new BungeeCordOnlinePlayer(data, uniqueId, name, address, onlineMode, server);
         this.players.add(player);
         if(server instanceof BungeeCordNetworkServer) ((BungeeCordNetworkServer) server).addPlayer(player);
-        //@Todo throw network event
+        this.eventBus.callEvent(new NetworkPlayerPostLoginEvent(player));
     }
 
     private void handlePlayerLogout(Document document) {
@@ -331,7 +339,7 @@ public class BungeeCordProxyNetwork implements Network {
             if (player.getServer() instanceof BungeeCordNetworkServer) {
                 ((BungeeCordNetworkServer) player.getServer()).removePlayer(player);
             }
-            //@Todo throw network event
+            this.eventBus.callEvent(new NetworkPlayerLogoutEvent(player));
         }
     }
 
@@ -341,6 +349,7 @@ public class BungeeCordProxyNetwork implements Network {
         OnlineMinecraftPlayer player = Iterators.removeOne(this.players, player1 -> player1.getUniqueId().equals(uniqueId));
         MinecraftServer server = Iterators.findOne(this.servers, server1 -> server1.getName().equalsIgnoreCase(serverName));
         if (player instanceof BungeeCordOnlinePlayer) {
+            MinecraftServer from = player.getServer();
             if (player.getServer() instanceof BungeeCordNetworkServer) {
                 ((BungeeCordNetworkServer) player.getServer()).removePlayer(player);
             }
@@ -348,13 +357,12 @@ public class BungeeCordProxyNetwork implements Network {
             if (server instanceof BungeeCordNetworkServer) {
                 ((BungeeCordNetworkServer) player.getServer()).addPlayer(player);
             }
-            //@Todo throw network server switch event
+            this.eventBus.callEvent(new NetworkPlayerServerSwitchEvent(player,from,server));
         }
     }
 
     protected void handleDisconnect(){
         this.players.clear();
     }
-
 
 }

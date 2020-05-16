@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.04.20, 19:54
+ * @since 16.05.20, 20:42
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -24,6 +24,9 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
+import org.mcnative.common.McNative;
+import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
@@ -45,6 +48,9 @@ import org.mcnative.common.text.components.MessageComponent;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements OnlineMinecraftPlayer {
@@ -102,7 +108,20 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     @Override
     public int getPing() {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        try {
+            return getPingAsync().get(2, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new OperationFailedException(e);
+        }
+    }
+
+    @Override
+    public CompletableFuture<Integer> getPingAsync() {
+        CompletableFuture<Integer> resultFuture = new CompletableFuture<>();
+        executePlayerBasedFuture(Document.newDocument()
+                .set("action","getPing"))
+                .thenAccept(documentEntries -> resultFuture.complete(documentEntries.getInt("ping")));
+        return resultFuture;
     }
 
     @Override
@@ -118,33 +137,47 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
     @Override
     public void connect(MinecraftServer target, ServerConnectReason reason) {
         executePlayerBased(Document.newDocument()
+                .set("action","connect")
                 .set("target",target.getName())
                 .set("reason",reason));
     }
 
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        CompletableFuture<ServerConnectResult> resultFuture = new CompletableFuture<>();
+        executePlayerBasedFuture(Document.newDocument()
+                .set("action","connectAsync")
+                .set("target",target.getName())
+                .set("reason",reason))
+                .thenAccept(documentEntries -> resultFuture.complete(documentEntries.getObject("result",ServerConnectResult.class)));
+        return resultFuture;
     }
 
     @Override
     public void kick(MessageComponent<?> message, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        executePlayerBased(Document.newDocument()
+                .set("action","kick")
+                .set("message",message.compile(variables)));
     }
 
     @Override
     public void performCommand(String command) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        executePlayerBased(Document.newDocument()
+                .set("action","performCommand")
+                .set("command",command));
     }
 
     @Override
     public void chat(String message) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        executePlayerBased(Document.newDocument()
+                .set("action","chat")
+                .set("message",message));
     }
 
     @Override
     public void sendMessage(ChatPosition position, MessageComponent<?> component, VariableSet variables) {
         executePlayerBased(Document.newDocument()//@Todo find solution for sending component with player
+                .set("action","sendMessage")
                 .set("position",position.getId())
                 .set("text",component.compile(variables)));
     }
@@ -207,6 +240,13 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     private void executePlayerBased(Document data){
         data.set("uniqueId",uniqueId);
-        //@Todo send
+        McNative.getInstance().getNetwork().getMessenger()
+                .sendMessage(NetworkIdentifier.BROADCAST_PROXY,"mcnative_player",data);
+    }
+
+    private CompletableFuture<Document> executePlayerBasedFuture(Document data){
+        data.set("uniqueId",uniqueId);
+        return McNative.getInstance().getNetwork().getMessenger()
+                .sendQueryMessageAsync(NetworkIdentifier.BROADCAST_PROXY,"mcnative_player",data);
     }
 }

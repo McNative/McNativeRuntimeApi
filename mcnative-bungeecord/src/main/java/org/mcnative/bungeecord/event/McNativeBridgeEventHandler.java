@@ -245,7 +245,8 @@ public final class McNativeBridgeEventHandler {
 
     private void handleServerSwitch(ServerSwitchEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
-        MinecraftPlayerServerSwitchEvent mcNativeEvent = new BungeeServerSwitchEvent(player);
+        MinecraftServer from = serverMap.getMappedServer(event.getFrom());
+        MinecraftPlayerServerSwitchEvent mcNativeEvent = new BungeeServerSwitchEvent(player,from);
         eventBus.callEvents(ServerSwitchEvent.class,event,mcNativeEvent);
     }
 

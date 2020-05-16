@@ -120,6 +120,15 @@ public class PluginMessageMessenger extends AbstractMessenger implements Listene
         return result;
     }
 
+    @Override
+    public CompletableFuture<Document> sendQueryMessageAsync(NetworkIdentifier receiver, String channel, Document request) {
+        CompletableFuture<Document> result = new CompletableFuture<>();
+        UUID id = UUID.randomUUID();
+        this.resultListeners.put(id,result);
+        executor.execute(()-> sendMessage(receiver, channel, request,id));
+        return result;
+    }
+
     private byte[] writeData(UUID sender,UUID requestId,String channel, Document request) {
         ByteBuf buffer = Unpooled.directBuffer();
         MinecraftProtocolUtil.writeUUID(buffer,sender);//Sender

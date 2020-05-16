@@ -29,6 +29,7 @@ import net.pretronic.libraries.command.NoPermissionAble;
 import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.utility.Validate;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.CustomCommandSender;
@@ -58,19 +59,22 @@ public class McNativeCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
+        McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                .async().execute(() -> {
+            net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);
 
-        NoPermissionHandler noPermissionHandler;
-        if(original instanceof NoPermissionAble) {
-            noPermissionHandler = ((NoPermissionAble)original);
-        } else {
-            noPermissionHandler = this.commandManager.getNoPermissionHandler();
-        }
+            NoPermissionHandler noPermissionHandler;
+            if(original instanceof NoPermissionAble) {
+                noPermissionHandler = ((NoPermissionAble)original);
+            } else {
+                noPermissionHandler = commandManager.getNoPermissionHandler();
+            }
 
-        if(CommandManager.hasPermission(mappedSender, noPermissionHandler, null, original.getConfiguration().getPermission(),
-                this.original.getConfiguration().getName(), args)) {
-            original.execute(mappedSender,args);
-        }
+            if(CommandManager.hasPermission(mappedSender, noPermissionHandler, null, original.getConfiguration().getPermission(),
+                    original.getConfiguration().getName(), args)) {
+                original.execute(mappedSender,args);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

@@ -21,6 +21,7 @@ package org.mcnative.common.event.player.login;
 
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.event.NetworkEvent;
+import org.mcnative.common.network.event.NetworkEventType;
 
-@NetworkEvent
+@NetworkEvent(type = NetworkEventType.LOCAL_MANAGED)
 public interface MinecraftPlayerPostLoginEvent extends MinecraftOnlinePlayerEvent {}

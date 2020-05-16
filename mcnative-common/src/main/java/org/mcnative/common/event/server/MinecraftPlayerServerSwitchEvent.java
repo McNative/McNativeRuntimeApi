@@ -22,10 +22,17 @@ package org.mcnative.common.event.server;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.event.NetworkEvent;
+import org.mcnative.common.network.event.NetworkEventType;
 
-@NetworkEvent
+@NetworkEvent(type = NetworkEventType.LOCAL_MANAGED)
 public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent {
 
-    MinecraftServer getServer();
+    MinecraftServer getFrom();
+
+    MinecraftServer getTo();
+
+    default MinecraftServer getServer(){
+        return getTo();
+    }
 
 }

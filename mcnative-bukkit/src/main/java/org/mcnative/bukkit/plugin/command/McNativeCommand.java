@@ -71,7 +71,8 @@ public class McNativeCommand extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] arguments) {
-        McNative.getInstance().getScheduler().createTask(McNative.getInstance()).async()
+        McNative.getInstance().getScheduler().createTask(McNative.getInstance())
+                .async()
                 .execute(() -> {
                     try {
                         net.pretronic.libraries.command.sender.CommandSender mappedSender = getMappedSender(sender);

@@ -22,6 +22,7 @@ package org.mcnative.common.network.messaging;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.SynchronisationHandler;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.network.NetworkIdentifier;
 
 import java.util.Collection;
@@ -51,6 +52,8 @@ public interface Messenger {
 
     CompletableFuture<Document> sendQueryMessageAsync(MessageReceiver receiver, String channel, Document request);
 
+    CompletableFuture<Document> sendQueryMessageAsync(NetworkIdentifier receiver, String channel, Document request);
+
 
 
     Collection<String> getChannels();
@@ -59,8 +62,7 @@ public interface Messenger {
 
     MessagingChannelListener getChannelListener(String name);
 
-
-    void registerChannel(String channel, Plugin<?> owner, MessagingChannelListener listener);
+    void registerChannel(String channel, ObjectOwner owner, MessagingChannelListener listener);
 
     <I> void registerSynchronizingChannel(String channel, Plugin<?> owner,Class<I> identifier, SynchronisationHandler<?,I> handler);
 

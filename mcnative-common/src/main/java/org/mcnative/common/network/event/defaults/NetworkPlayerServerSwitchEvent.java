@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.05.20, 09:31
+ * @since 16.05.20, 17:53
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,21 +18,33 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.event.server;
+package org.mcnative.common.network.event.defaults;
 
 import org.mcnative.common.event.server.MinecraftPlayerServerSwitchEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-public class BungeeServerSwitchEvent implements MinecraftPlayerServerSwitchEvent {
+public class NetworkPlayerServerSwitchEvent implements MinecraftPlayerServerSwitchEvent {
 
     private final OnlineMinecraftPlayer player;
     private final MinecraftServer from;
+    private final MinecraftServer to;
 
-    public BungeeServerSwitchEvent(OnlineMinecraftPlayer player,MinecraftServer from) {
+    public NetworkPlayerServerSwitchEvent(OnlineMinecraftPlayer player, MinecraftServer from, MinecraftServer to) {
         this.player = player;
         this.from = from;
+        this.to = to;
+    }
+
+    @Override
+    public OnlineMinecraftPlayer getOnlinePlayer() {
+        return player;
+    }
+
+    @Override
+    public MinecraftPlayer getPlayer() {
+        return player;
     }
 
     @Override
@@ -42,15 +54,6 @@ public class BungeeServerSwitchEvent implements MinecraftPlayerServerSwitchEvent
 
     @Override
     public MinecraftServer getTo() {
-        return player.getServer();
-    }
-    @Override
-    public OnlineMinecraftPlayer getOnlinePlayer() {
-        return player;
-    }
-
-    @Override
-    public MinecraftPlayer getPlayer() {
-        return player;
+        return to;
     }
 }

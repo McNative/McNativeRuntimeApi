@@ -60,7 +60,7 @@ public abstract class AbstractMessenger implements Messenger {
     }
 
     @Override
-    public void registerChannel(String channel, Plugin<?> owner, MessagingChannelListener listener) {
+    public void registerChannel(String channel, ObjectOwner owner, MessagingChannelListener listener) {
         Validate.notNull(channel,listener,owner);
         if(getChannelListener(channel) != null) throw new IllegalArgumentException("Message channel "+channel+" already in use");
         this.messageListeners.add(new MessageEntry(channel,owner,listener));
