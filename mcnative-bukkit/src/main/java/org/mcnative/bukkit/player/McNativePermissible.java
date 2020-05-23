@@ -103,17 +103,7 @@ public class McNativePermissible extends PermissibleBase {
         PermissionResult result = player.getPermissionHandler().hasPermissionExact(permission);
         if(result == PermissionResult.NORMAL) {
             PermissionAttachmentInfo attachmentInfo = permissions.get(permission);
-            if (attachmentInfo != null) {
-                return attachmentInfo.getValue();
-            } else {
-                Permission perm = Bukkit.getServer().getPluginManager().getPermission(permission);
-
-                if (perm != null) {
-                    return perm.getDefault().getValue(isOp());
-                } else {
-                    return Permission.DEFAULT_PERMISSION.getValue(isOp());
-                }
-            }
+            return attachmentInfo != null && attachmentInfo.getValue();
         }
         return result == PermissionResult.ALLOWED;
     }
@@ -220,15 +210,6 @@ public class McNativePermissible extends PermissibleBase {
     public void recalculatePermissions() {
         if(permissions == null) return;
         clearPermissions();
-        Set<Permission> defaults = Bukkit.getServer().getPluginManager().getDefaultPermissions(isOp());
-        Bukkit.getServer().getPluginManager().subscribeToDefaultPerms(isOp(), parent);
-
-        for (Permission permission : defaults) {
-            String name = permission.getName().toLowerCase(java.util.Locale.ENGLISH);
-            permissions.put(name, new PermissionAttachmentInfo(parent, name, null, true));
-            Bukkit.getServer().getPluginManager().subscribeToPermission(name, parent);
-            calculateChildPermissions(permission.getChildren(), false, null);
-        }
 
         for (PermissionAttachment attachment : attachments) {
             calculateChildPermissions(attachment.getPermissions(), false, attachment);
