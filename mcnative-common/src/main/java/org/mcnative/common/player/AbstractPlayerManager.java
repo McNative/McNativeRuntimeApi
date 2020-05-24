@@ -20,9 +20,9 @@
 
 package org.mcnative.common.player;
 
+import net.pretronic.libraries.caching.ArrayCache;
 import net.pretronic.libraries.caching.Cache;
 import net.pretronic.libraries.caching.CacheQuery;
-import net.pretronic.libraries.caching.ShadowArrayCache;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
@@ -44,7 +44,8 @@ public abstract class AbstractPlayerManager implements PlayerManager{
 
     public AbstractPlayerManager() {
         this.adapters = new LinkedHashMap<>();
-        this.offlineMinecraftPlayers = new ShadowArrayCache<>();
+        //There is an error in the ShadowArrayCache which caused a server timeout.
+        this.offlineMinecraftPlayers = new ArrayCache<>();
         this.offlineMinecraftPlayers.setExpireAfterAccess(10, TimeUnit.MINUTES);
         this.offlineMinecraftPlayers.setMaxSize(512);
     }

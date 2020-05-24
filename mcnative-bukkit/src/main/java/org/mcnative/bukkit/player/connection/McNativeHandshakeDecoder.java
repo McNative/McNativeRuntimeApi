@@ -59,38 +59,42 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     @Override
     protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> list) {
-        ByteBuf out = buffer.copy();
-        if(!finished){
-            finished = true;
-            int packetId = MinecraftProtocolUtil.readVarInt(buffer);
-            if(packetId == HANDSHAKE_PACKET_ID){
+        try{
+            ByteBuf out = buffer.copy();
+            if(!finished){
+                finished = true;
+                int packetId = MinecraftProtocolUtil.readVarInt(buffer);
+                if(packetId == HANDSHAKE_PACKET_ID){
 
-                int protocolVersion = MinecraftProtocolUtil.readVarInt(buffer);
-                String host = MinecraftProtocolUtil.readString(buffer);
-                int port = buffer.readUnsignedShort();
-                int next = MinecraftProtocolUtil.readVarInt(buffer);
-                connection.initHandshake(protocolVersion,host,port);
-                if(next == 1){
-                    tryRemoveHandlers();
-                    statusRequest = true;
-                    handleServerListPing();
-                    out.release();
-                    return;
+                    int protocolVersion = MinecraftProtocolUtil.readVarInt(buffer);
+                    String host = MinecraftProtocolUtil.readString(buffer);
+                    int port = buffer.readUnsignedShort();
+                    int next = MinecraftProtocolUtil.readVarInt(buffer);
+                    connection.initHandshake(protocolVersion,host,port);
+                    if(next == 1){
+                        tryRemoveHandlers();
+                        statusRequest = true;
+                        handleServerListPing();
+                        out.release();
+                        return;
+                    }
                 }
+            }else if(statusRequest){
+                int packetId = MinecraftProtocolUtil.readVarInt(buffer);
+                if(packetId == HANDSHAKE_PING){
+                    long payload = out.readLong();
+                    ByteBuf resultBuffer = Unpooled.directBuffer();
+                    resultBuffer.writeByte(HANDSHAKE_PONG);
+                    resultBuffer.writeLong(payload);
+                    connection.getChannel().writeAndFlush(resultBuffer);
+                }
+                out.release();
+                return;
             }
-        }else if(statusRequest){
-            int packetId = MinecraftProtocolUtil.readVarInt(buffer);
-            if(packetId == HANDSHAKE_PING){
-                long payload = out.readLong();
-                ByteBuf resultBuffer = Unpooled.directBuffer();
-                resultBuffer.writeByte(HANDSHAKE_PONG);
-                resultBuffer.writeLong(payload);
-                connection.getChannel().writeAndFlush(resultBuffer);
-            }
-            out.release();
-            return;
+            list.add(out);
+        }catch (Exception exception){
+            exception.printStackTrace();
         }
-        list.add(out);
     }
 
     //This is currently only a work workaround and should be optimized with an own multiple version implementation
@@ -105,31 +109,27 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
     }
 
     private void handleServerListPing(){
+        ByteBuf resultBuffer = Unpooled.directBuffer();
+        ServerStatusResponse response = McNative.getInstance().getLocal().getStatusResponse().clone();
+
+        MinecraftProtocolVersion clientVersion = MinecraftProtocolVersion.UNKNOWN;
         try{
-            ByteBuf resultBuffer = Unpooled.directBuffer();
-            ServerStatusResponse response = McNative.getInstance().getLocal().getStatusResponse().clone();
+            clientVersion = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,connection.getProtocolVersion());
+        }catch (Exception ignored){}
 
-            MinecraftProtocolVersion clientVersion = MinecraftProtocolVersion.UNKNOWN;
-            try{
-                clientVersion = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,connection.getProtocolVersion());
-            }catch (Exception ignored){}
-
-            if(McNative.getInstance().getPlatform().canJoin(clientVersion)){
-                response.getVersion().setProtocol(clientVersion);
-            }
-
-            BukkitServerListPingEvent mcnativeEvent = new BukkitServerListPingEvent(
-                    (InetSocketAddress) connection.getChannel().remoteAddress()
-                    ,new InetSocketAddress(connection.getHostname(),connection.getPort())
-                    ,response);
-            BukkitWrapperServerListPingEvent bukkitEvent = new BukkitWrapperServerListPingEvent(mcnativeEvent);
-            McNative.getInstance().getLocal().getEventBus().callEvents(ServerListPingEvent.class,bukkitEvent,mcnativeEvent);
-
-            resultBuffer.writeByte(HANDSHAKE_PACKET_ID);
-            MinecraftProtocolUtil.writeString(resultBuffer,response.compileToString());
-            connection.getChannel().writeAndFlush(resultBuffer);
-        }catch (Exception exception){
-            exception.printStackTrace();
+        if(McNative.getInstance().getPlatform().canJoin(clientVersion)){
+            response.getVersion().setProtocol(clientVersion);
         }
+
+        BukkitServerListPingEvent mcnativeEvent = new BukkitServerListPingEvent(
+                (InetSocketAddress) connection.getChannel().remoteAddress()
+                ,new InetSocketAddress(connection.getHostname(),connection.getPort())
+                ,response);
+        BukkitWrapperServerListPingEvent bukkitEvent = new BukkitWrapperServerListPingEvent(mcnativeEvent);
+        McNative.getInstance().getLocal().getEventBus().callEvents(ServerListPingEvent.class,bukkitEvent,mcnativeEvent);
+
+        resultBuffer.writeByte(HANDSHAKE_PACKET_ID);
+        MinecraftProtocolUtil.writeString(resultBuffer,response.compileToString());
+        connection.getChannel().writeAndFlush(resultBuffer);
     }
 }
