@@ -29,7 +29,7 @@ import org.mcnative.common.network.component.server.ServerVersion;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
-import org.mcnative.common.text.components.MessageComponentSet;
+import org.mcnative.common.text.components.TextComponent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -94,7 +94,8 @@ public class BukkitServerStatusResponse implements ServerStatusResponse {
 
     @Override
     public ServerStatusResponse setDescription(MessageComponent<?> line1, MessageComponent<?> line2, VariableSet variables) {
-        MessageComponent<?> root = new MessageComponentSet();
+        TextComponent root = new TextComponent();
+        root.setText("");
         root.addExtra(line1);
         root.addExtra(Text.of("\n"));
         root.addExtra(line2);
