@@ -44,6 +44,7 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private final static int HANDSHAKE_PACKET_ID = 0;
     private final static int HANDSHAKE_PACKET_ID_LEGACY =  0xFE;
+    private final static int HANDSHAKE_STATUS = HANDSHAKE_PACKET_ID;
     private final static int HANDSHAKE_PING = 0x01;
     private final static int HANDSHAKE_PONG = 0x01;
 
@@ -61,6 +62,7 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
     protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> list) {
         try{
             ByteBuf out = buffer.copy();
+
             if(!finished){
                 finished = true;
                 int packetId = MinecraftProtocolUtil.readVarInt(buffer);
@@ -74,7 +76,6 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
                     if(next == 1){
                         tryRemoveHandlers();
                         statusRequest = true;
-                        handleServerListPing();
                         out.release();
                         return;
                     }
@@ -87,6 +88,8 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
                     resultBuffer.writeByte(HANDSHAKE_PONG);
                     resultBuffer.writeLong(payload);
                     connection.getChannel().writeAndFlush(resultBuffer);
+                }else if(packetId == HANDSHAKE_STATUS){
+                    handleServerListPing();
                 }
                 out.release();
                 return;
