@@ -61,11 +61,6 @@ public class DefaultPlayerDesign implements PlayerDesign {
     }
 
     @Override
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    @Override
     public int getPriority() {
         return priority;
     }

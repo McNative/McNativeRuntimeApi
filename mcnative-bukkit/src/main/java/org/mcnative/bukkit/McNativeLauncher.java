@@ -39,6 +39,7 @@ import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.bungeecord.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
+import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
 import org.mcnative.bukkit.player.tablist.BukkitTablist;
@@ -49,6 +50,7 @@ import org.mcnative.bukkit.serviceprovider.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.event.player.design.MinecraftPlayerDesignUpdateEvent;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.component.server.ServerVersion;
@@ -273,6 +275,14 @@ public class McNativeLauncher {
         }
 
         McNative.getInstance().getLocal().setStatusResponse(defaultResponse);
+
+        if(McNativeBukkitConfiguration.PLAYER_DISPLAY_APPLY_ON_BUKKIT){
+            McNative.getInstance().getLocal().getEventBus().subscribe(ObjectOwner.SYSTEM, MinecraftPlayerDesignUpdateEvent.class, event -> {
+                if(event.getPlayer() instanceof BukkitPlayer){
+                    ((BukkitPlayer) event.getPlayer()).getOriginal().setDisplayName(event.getPlayer().getDisplayName());
+                }
+            });
+        }
     }
 
     private static String builtVersionInfo(){

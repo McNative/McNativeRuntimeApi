@@ -21,7 +21,6 @@ package org.mcnative.bukkit.player.permission;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.bukkit.entity.Player;
 import org.mcnative.bukkit.McNativeBukkitConfiguration;
 import org.mcnative.common.player.PlayerDesign;
@@ -62,12 +61,6 @@ public class BukkitPlayerDesign implements PlayerDesign {
     }
 
     @Override
-    public String getDisplayName() {
-        VariableSet variables = VariableSet.create().add("color",getColor());
-        return VariableSet.replace(McNativeBukkitConfiguration.PLAYER_DISPLAY_NAME_FORMAT,variables);
-    }
-
-    @Override
     public int getPriority() {
         return 0;//Unsupported without exception
     }
@@ -76,7 +69,6 @@ public class BukkitPlayerDesign implements PlayerDesign {
     public String toJson() {
         Document result = Document.newDocument();
         result.set("color",getColor());
-        result.set("displayName",getDisplayName());
         result.set("prefix","").set("suffix","").set("chat","").set("priority",0);
         return DocumentFileType.JSON.getWriter().write(result,false);
     }

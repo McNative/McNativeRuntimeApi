@@ -29,6 +29,7 @@ import net.pretronic.libraries.message.bml.parser.MessageParser;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
+import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.MessageKeyComponent;
@@ -57,7 +58,10 @@ public class McNativeBukkitConfiguration {
     public static String USER_ID = "00000";
 
     @DocumentKey("player.displayName.format")
-    public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
+    public static String PLAYER_DISPLAY_NAME_FORMAT = "{design.color}{name}";
+
+    @DocumentKey("player.displayName.applyOnBukkit")
+    public static boolean PLAYER_DISPLAY_APPLY_ON_BUKKIT = false;
 
     public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
     public static String PLAYER_COLORS_DEFAULT = "&7";
@@ -158,6 +162,8 @@ public class McNativeBukkitConfiguration {
 
         SERVER_STATUS_DESCRIPTION_LINE1_COMPILED = parseCustomMessage(SERVER_STATUS_DESCRIPTION_LINE1);
         SERVER_STATUS_DESCRIPTION_LINE2_COMPILED = parseCustomMessage(SERVER_STATUS_DESCRIPTION_LINE2);
+
+        OfflineMinecraftPlayer.DISPLAY_NAME_FORMAT = PLAYER_DISPLAY_NAME_FORMAT;
         return true;
     }
     private static MessageComponent<?> parseCustomMessage(String input){

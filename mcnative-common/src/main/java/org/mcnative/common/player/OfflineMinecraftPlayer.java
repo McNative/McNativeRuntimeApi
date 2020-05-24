@@ -20,6 +20,7 @@
 package org.mcnative.common.player;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
@@ -38,6 +39,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class OfflineMinecraftPlayer implements MinecraftPlayer {
+
+    public static String DISPLAY_NAME_FORMAT = "{name}";
 
     protected MinecraftPlayerData data;
     protected PermissionHandler permissionHandler;
@@ -104,8 +107,18 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     @Override
     public String getDisplayName(MinecraftPlayer player) {
-        String result = getDesign(player).getDisplayName();
-        if(result != null) result = result.replace("{name}",getName());
+        String result = DISPLAY_NAME_FORMAT;
+        if(result != null){
+            VariableSet variables = VariableSet.create();
+            variables.add("name",getName());
+            variables.add("player",player);
+            PlayerDesign design = getDesign(player);
+            if(design != null){
+                variables.add("design",design);
+                design.appendAdditionalVariables(variables);
+            }
+            result = variables.replace(result);
+        }
         return result;
     }
 

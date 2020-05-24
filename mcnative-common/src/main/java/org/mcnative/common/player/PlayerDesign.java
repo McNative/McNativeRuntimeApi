@@ -22,11 +22,10 @@ package org.mcnative.common.player;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.format.TextColor;
 
-public interface PlayerDesign extends VariableObjectToString {
+public interface PlayerDesign {
 
     String getColor();
 
@@ -35,8 +34,6 @@ public interface PlayerDesign extends VariableObjectToString {
     String getSuffix();
 
     String getChat();
-
-    String getDisplayName();
 
     int getPriority();
 
@@ -59,12 +56,13 @@ public interface PlayerDesign extends VariableObjectToString {
 
     default void appendAdditionalVariables(VariableSet variables){ /*Optional or ignored*/}
 
-    default String toJson(){
-        return DocumentFileType.JSON.getWriter().write(Document.newDocument(this),false);
+    default String replacePlaceholders(String input){
+        VariableSet variables = VariableSet.create();
+        appendAdditionalVariables(variables);
+        return variables.replace(input);
     }
 
-    @Override
-    default String toStringVariable() {
-        return getDisplayName();
+    default String toJson(){
+        return DocumentFileType.JSON.getWriter().write(Document.newDocument(this),false);
     }
 }
