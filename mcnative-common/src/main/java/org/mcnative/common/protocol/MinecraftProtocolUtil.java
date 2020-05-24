@@ -50,17 +50,20 @@ public class MinecraftProtocolUtil {
     }
 
     public static int readVarInt(ByteBuf buffer, int maximumLength) {
+        int numRead = 0;
         int result = 0;
-        int bytes = 0;
-        byte input;
+        byte read;
         do {
-            input = buffer.readByte();
+            read = buffer.readByte();
+            int value = (read & 0b01111111);
+            result |= (value << (7 * numRead));
 
-            result |= (input & 0x7F) << (bytes++ * 7);
+            numRead++;
+            if (numRead > 5) {
+                throw new RuntimeException("VarInt is too big");
+            }
+        } while ((read & 0b10000000) != 0);
 
-            if (bytes > maximumLength) throw new IllegalArgumentException("VarInt is too big");
-
-        } while ((input & 0x80) == 0x80);
         return result;
     }
 

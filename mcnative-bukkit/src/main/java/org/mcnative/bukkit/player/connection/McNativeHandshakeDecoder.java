@@ -61,11 +61,11 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
     protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> list) {
         try{
             ByteBuf out = buffer.copy();
+            System.out.println("In: "+out.readableBytes());
             if(!finished){
                 finished = true;
                 int packetId = MinecraftProtocolUtil.readVarInt(buffer);
                 if(packetId == HANDSHAKE_PACKET_ID){
-
                     int protocolVersion = MinecraftProtocolUtil.readVarInt(buffer);
                     String host = MinecraftProtocolUtil.readString(buffer);
                     int port = buffer.readUnsignedShort();
@@ -82,9 +82,9 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
             }else if(statusRequest){
                 int packetId = MinecraftProtocolUtil.readVarInt(buffer);
                 if(packetId == HANDSHAKE_PING){
-                    long payload = out.readLong();
+                    long payload = buffer.readLong();
                     ByteBuf resultBuffer = Unpooled.directBuffer();
-                    resultBuffer.writeByte(HANDSHAKE_PONG);
+                    MinecraftProtocolUtil.writeVarInt(resultBuffer,HANDSHAKE_PONG);
                     resultBuffer.writeLong(payload);
                     connection.getChannel().writeAndFlush(resultBuffer);
                 }
@@ -128,7 +128,7 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
         BukkitWrapperServerListPingEvent bukkitEvent = new BukkitWrapperServerListPingEvent(mcnativeEvent);
         McNative.getInstance().getLocal().getEventBus().callEvents(ServerListPingEvent.class,bukkitEvent,mcnativeEvent);
 
-        resultBuffer.writeByte(HANDSHAKE_PACKET_ID);
+        MinecraftProtocolUtil.writeVarInt(resultBuffer,HANDSHAKE_PACKET_ID);
         MinecraftProtocolUtil.writeString(resultBuffer,response.compileToString());
         connection.getChannel().writeAndFlush(resultBuffer);
     }
