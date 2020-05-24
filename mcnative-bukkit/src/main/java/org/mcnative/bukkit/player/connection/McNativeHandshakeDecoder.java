@@ -61,7 +61,6 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
     protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> list) {
         try{
             ByteBuf out = buffer.copy();
-            System.out.println("In: "+out.readableBytes());
             if(!finished){
                 finished = true;
                 int packetId = MinecraftProtocolUtil.readVarInt(buffer);
