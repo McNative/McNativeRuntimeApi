@@ -107,7 +107,7 @@ public interface ServerStatusResponse {
         versionEntry.set("protocol",getVersion().getProtocol().getNumber());
 
         result.addEntry(versionEntry);
-        result.set("description",getDescription() != null ? getDescription().compile() : "");
+        result.set("description",getDescription() != null ? getDescription().compileToLegacy() : "");
         result.set("favicon",getFavicon());
 
         Document players = Document.newDocument("players");
