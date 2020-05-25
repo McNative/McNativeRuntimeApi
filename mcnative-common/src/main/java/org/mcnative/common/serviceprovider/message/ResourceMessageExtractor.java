@@ -45,15 +45,15 @@ public class ResourceMessageExtractor {
         if(messageProvider != null && module != null){
             List<MessagePack> result = messageProvider.loadPacks(module);
             MessagePack defaultPack = readPack(loader, location+"default.yml");
-            if(defaultPack != null){
+            if(defaultPack != null && defaultPack.getMeta() != null){
                 if(result.isEmpty()){
                     String languageTag = Locale.getDefault().toLanguageTag().replace("-","_");
                     String language = Locale.getDefault().getLanguage();
 
                     MessagePack pack = readPack(loader, location+languageTag+".yml");
-                    if(pack == null) pack = readPack(loader, location +language+".yml");
+                    if(pack == null || pack.getMeta() == null) pack = readPack(loader, location +language+".yml");
 
-                    if(pack == null){
+                    if(pack == null || pack.getMeta() == null){
                         messageProvider.importPack(defaultPack);
                     }else{
                         updateMessages(pack,defaultPack);
@@ -62,10 +62,10 @@ public class ResourceMessageExtractor {
                 }else{
                     for (MessagePack original : result) {
                         MessagePack pack = readPack(loader, location +original.getMeta().getLanguage().getCode()+".yml");
-                        if(pack == null) pack = readPack(loader, location+original.getMeta().getLanguage().getName()+".yml");
+                        if(pack == null || pack.getMeta() == null) pack = readPack(loader, location+original.getMeta().getLanguage().getName()+".yml");
 
                         int updated = 0;
-                        if(pack != null) updated += updateMessages(original,pack);
+                        if(pack != null && pack.getMeta() != null) updated += updateMessages(original,pack);
                         updated += updateMessages(original,defaultPack);
 
                         if(updated > 0){
