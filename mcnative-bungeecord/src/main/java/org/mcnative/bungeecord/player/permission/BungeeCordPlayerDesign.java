@@ -62,12 +62,6 @@ public class BungeeCordPlayerDesign implements PlayerDesign {
     }
 
     @Override
-    public String getDisplayName() {
-        VariableSet variables = VariableSet.create().add("color",getColor());
-        return VariableSet.replace(McNativeBungeeCordConfiguration.PLAYER_DISPLAY_NAME_FORMAT,variables);
-    }
-
-    @Override
     public int getPriority() {
         return 0;//Unsupported without exception
     }
@@ -76,7 +70,6 @@ public class BungeeCordPlayerDesign implements PlayerDesign {
     public String toJson() {
         Document result = Document.newDocument();
         result.set("color",getColor());
-        result.set("displayName",getDisplayName());
         result.set("prefix","").set("suffix","").set("chat","").set("priority",0);
         return DocumentFileType.JSON.getWriter().write(result,false);
     }

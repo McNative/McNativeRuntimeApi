@@ -65,6 +65,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
         }catch (Exception exception){
             this.executor = null;
+            exception.printStackTrace();
             getLogger().log(Level.SEVERE,String.format("Could not load plugin (%s)",exception.getMessage()));
             getServer().getPluginManager().disablePlugin(this);
         }
