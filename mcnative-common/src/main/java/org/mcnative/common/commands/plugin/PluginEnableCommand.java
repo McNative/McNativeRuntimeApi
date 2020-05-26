@@ -45,7 +45,7 @@ public class PluginEnableCommand extends BasicCommand {
 
         if(plugin.getLoader().isEnabled()){
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ALREADY_ENABLED, VariableSet.create()
-                    .add("plugin",plugin));
+                    .addDescribed("plugin",plugin));
             return;
         }
 

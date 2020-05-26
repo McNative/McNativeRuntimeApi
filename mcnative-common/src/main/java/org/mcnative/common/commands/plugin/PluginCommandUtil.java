@@ -58,11 +58,11 @@ public final class PluginCommandUtil {
         try{
             plugin.getLoader().bootstrap();//In McNative is enable called bootstrap
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_SUCCESSFULLY, VariableSet.create()
-                    .add("plugin",plugin));
+                    .addDescribed("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ENABLE_FAILED, VariableSet.create()
-                    .add("plugin",plugin)
+                    .addDescribed("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
         }
@@ -71,16 +71,16 @@ public final class PluginCommandUtil {
 
     protected static boolean disablePlugin(CommandSender sender, Plugin<?> plugin) {
         sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_STARTING, VariableSet.create()
-                .add("plugin",plugin));
+                .addDescribed("plugin",plugin));
 
         try{
             plugin.getLoader().shutdown();//In McNative is disable called shutdown
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_SUCCESSFULLY,VariableSet.create()
-                    .add("plugin",plugin));
+                    .addDescribed("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_DISABLE_FAILED, VariableSet.create()
-                    .add("plugin",plugin)
+                    .addDescribed("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
         }
@@ -96,11 +96,11 @@ public final class PluginCommandUtil {
             plugin.getLoader().unload();//In McNative is enable called UNLOAD
 
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_SUCCESSFULLY, VariableSet.create()
-                    .add("plugin",plugin));
+                    .addDescribed("plugin",plugin));
         }catch (Exception exception){
             exception.printStackTrace();
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_UNLOAD_FAILED, VariableSet.create()
-                    .add("plugin",plugin)
+                    .addDescribed("plugin",plugin)
                     .add("error",exception.getMessage()));
             return false;
         }
@@ -110,21 +110,21 @@ public final class PluginCommandUtil {
     protected static void loadPlugin(CommandSender sender, PluginLoader loader) {
         if (loader.isEnabled()) {
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_ALREADY_ENABLED, VariableSet.create()
-                    .add("plugin", loader.getInstance()));
+                    .addDescribed("plugin", loader.getInstance()));
             return;
         }
 
         sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LOAD_STARTING, VariableSet.create()
-                .add("plugin", loader));
+                .addDescribed("plugin", loader));
 
         try {
             loader.enable();
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LOAD_SUCCESSFULLY, VariableSet.create()
-                    .add("plugin", loader.getInstance()));
+                    .addDescribed("plugin", loader.getInstance()));
         } catch (Exception exception) {
             exception.printStackTrace();
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_LOAD_FAILED, VariableSet.create()
-                    .add("plugin", loader.getInstance())
+                    .addDescribed("plugin", loader.getInstance())
                     .add("exception", exception.getMessage()));
         }
     }

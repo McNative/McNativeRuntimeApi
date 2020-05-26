@@ -60,7 +60,8 @@ public class PluginReloadCommand extends BasicCommand implements Completable {
         PluginLoader loader = McNative.getInstance().getPluginManager().createPluginLoader(arguments[0]);
         if(loader == null){
             sender.sendMessage(Messages.COMMAND_MCNATIVE_PLUGIN_NOTFOUND, VariableSet.create()
-                    .add("plugin",arguments[0]).add("plugin.name",arguments[0]));
+                    .add("plugin",arguments[0])
+                    .add("plugin.name",arguments[0]));
             return;
         }
 
