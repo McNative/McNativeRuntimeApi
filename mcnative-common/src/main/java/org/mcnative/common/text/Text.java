@@ -121,6 +121,7 @@ public class Text {
         root.setText("");
         char[] chars = text.toCharArray();
         int textIndex = 0;
+        int lastColour = -1;
         for (int i = 0; i < chars.length; i++) {
             char char0 = chars[i];
             if((char0 == Text.FORMAT_CHAR || char0 == alternateChar) && chars.length > ++i){
@@ -133,6 +134,20 @@ public class Text {
                     if(textIndex < i) current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
                     current = next;
                     textIndex = i+1;
+                    lastColour = i;
+                }else {
+                    if(lastColour != i-2){//@Todo Check if working
+                        TextComponent next = new TextComponent();
+                        current.addExtra(next);
+                        next.setText("");
+                        if(textIndex < i) current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                        current = next;
+                    }
+                    TextStyle style = TextStyle.of(char0);
+                    if(style != null){
+                        current.addStyle(style);
+                    }
+                    lastColour = i;
                 }
             }
         }

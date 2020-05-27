@@ -51,19 +51,7 @@ public enum TextColor {
 
     YELLOW( 'e', "yellow", (byte) 14),
 
-    WHITE( 'f', "white", (byte) 15),
-
-    OBFUSCATED('k', "obfuscated", (byte) 16),
-
-    BOLD('l', "bold", (byte) 17),
-
-    STRIKETHROUGH('m', "strikethrough", (byte) 18),
-
-    UNDERLINED('n', "underlined", (byte) 19),
-
-    ITALIC('o', "italic", (byte) 20),
-
-    RESET( 'r', "reset", (byte) 21);
+    WHITE( 'f', "white", (byte) 15);
 
     private final char code;
     private final String name;

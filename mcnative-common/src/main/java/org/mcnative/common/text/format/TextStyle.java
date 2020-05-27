@@ -54,7 +54,7 @@ public enum TextStyle {
         return name;
     }
 
-    public static TextStyle fromCode(char code){
+    public static TextStyle of(char code){
         for(TextStyle color : values()) if(color.code == code) return color;
         return null;
     }
