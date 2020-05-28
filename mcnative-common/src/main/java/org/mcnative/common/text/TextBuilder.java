@@ -60,8 +60,9 @@ public class TextBuilder {
     }
 
     public TextBuilder reset(){
-        //return color(TextColor.RESET).blank();
-        throw new UnsupportedOperationException();
+        styling(TextStyle.RESET);
+        color = TextColor.WHITE;
+        return this;
     }
 
     public TextBuilder blank(){
