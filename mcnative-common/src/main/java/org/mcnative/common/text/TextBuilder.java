@@ -60,7 +60,8 @@ public class TextBuilder {
     }
 
     public TextBuilder reset(){
-        return color(TextColor.RESET).blank();
+        //return color(TextColor.RESET).blank();
+        throw new UnsupportedOperationException();
     }
 
     public TextBuilder blank(){
