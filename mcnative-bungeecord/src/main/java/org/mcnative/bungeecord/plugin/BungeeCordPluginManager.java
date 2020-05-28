@@ -30,6 +30,7 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import net.pretronic.libraries.utility.map.callback.CallbackMap;
 import net.pretronic.libraries.utility.map.callback.LinkedHashCallbackMap;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
@@ -221,6 +222,11 @@ public class BungeeCordPluginManager implements PluginManager {
         for (ServiceEntry result : results) {
             McNative.getInstance().getLocal().getEventBus()
                     .callEvent(new ServiceUnregisterEvent(result.serviceClass,result.service, result.owner));
+        }
+        for (ServiceEntry service : services) {
+            if(service.service instanceof OwnerUnregisterAble){
+                ((OwnerUnregisterAble) service.service).unregister(owner);
+            }
         }
     }
 

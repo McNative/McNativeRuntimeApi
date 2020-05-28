@@ -35,6 +35,7 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import net.pretronic.libraries.utility.interfaces.ShutdownAble;
 import net.pretronic.libraries.utility.io.archive.ZipArchive;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
@@ -293,6 +294,13 @@ public class BukkitPluginManager implements PluginManager {
                 if(registration.getProvider() instanceof ShutdownAble) ((ShutdownAble) registration.getProvider()).shutdown();
                 McNative.getInstance().getLocal().getEventBus().callEvent(new ServiceUnregisterEvent(
                         registration.getService(),registration.getProvider(),getMappedPlugin(registration.getPlugin())));
+            }
+            for (Class<?> knownService : serviceManager.getKnownServices()) {
+                for (RegisteredServiceProvider<?> registration : serviceManager.getRegistrations(knownService)) {
+                    if(registration.getProvider() instanceof OwnerUnregisterAble){
+                        ((OwnerUnregisterAble) registration.getProvider()).unregister(owner);
+                    }
+                }
             }
         }else throw new IllegalArgumentException("It is not possible to unsubscribe services, if the owner is not a plugin");
     }
