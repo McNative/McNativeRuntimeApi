@@ -22,6 +22,7 @@ package org.mcnative.common.serviceprovider.placeholder;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.TextComponent;
@@ -38,7 +39,7 @@ import java.util.regex.Pattern;
  * <p>This class contains code from the PlaceholderApi project.</p>
  * <p>https://github.com/PlaceholderAPI/PlaceholderAPI/blob/master/src/main/java/me/clip/placeholderapi/PlaceholderAPI.java</p>
  */
-public class McNativePlaceholderProvider implements PlaceholderProvider{
+public class McNativePlaceholderProvider implements PlaceholderProvider, OwnerUnregisterAble {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%]([^%]+)[%]");
 
@@ -139,6 +140,11 @@ public class McNativePlaceholderProvider implements PlaceholderProvider{
         for (MessageComponent<?> extra : rawComponent.getExtras()) {
             replacePlaceholders(player,extra);
         }
+    }
+
+    @Override
+    public void unregister(ObjectOwner objectOwner) {
+        unregisterPlaceHolders(objectOwner);
     }
 
     private final static class Entry {

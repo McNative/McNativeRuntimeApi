@@ -22,6 +22,7 @@ package org.mcnative.bukkit.serviceprovider.placeholder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -38,7 +39,7 @@ import org.mcnative.common.text.components.TextComponent;
 
 import java.util.Collection;
 
-public class PlaceHolderApiProvider implements PlaceholderProvider {
+public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregisterAble {
 
     private final BukkitPlayerManager playerManager;
     private final BukkitPluginManager pluginManager;
@@ -129,6 +130,11 @@ public class PlaceHolderApiProvider implements PlaceholderProvider {
         }else{
             return McNativeLauncher.getPlugin();
         }
+    }
+
+    @Override
+    public void unregister(ObjectOwner objectOwner) {
+        unregisterPlaceHolders(objectOwner);
     }
 
     private class McNativePlaceHolderExpansion extends PlaceholderExpansion {
