@@ -19,7 +19,6 @@
 
 package org.mcnative.common.player;
 
-import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
@@ -46,8 +45,6 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
 
     @Nullable
     GameProfile getGameProfile();
-
-    Document getProperties();
 
     Language getLanguage();
 

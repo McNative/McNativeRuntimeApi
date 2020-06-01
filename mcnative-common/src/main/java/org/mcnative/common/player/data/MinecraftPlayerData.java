@@ -20,7 +20,6 @@
 package org.mcnative.common.player.data;
 
 import net.pretronic.libraries.caching.CacheStateAble;
-import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.profile.GameProfile;
@@ -42,8 +41,6 @@ public interface MinecraftPlayerData extends CacheStateAble<MinecraftPlayerData>
     GameProfile getGameProfile();
 
     PlayerDesign getDesign();
-
-    Document getProperties();
 
     Language getLanguage();
 

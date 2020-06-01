@@ -19,7 +19,6 @@
 
 package org.mcnative.common.player;
 
-import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Iterators;
@@ -81,11 +80,6 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     @Override
     public GameProfile getGameProfile() {
         return getData().getGameProfile();
-    }
-
-    @Override
-    public Document getProperties() {
-        return getData().getProperties();
     }
 
     @Override

@@ -59,10 +59,10 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
         this.settingsStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
                 .getDatabase(McNative.getInstance()).createCollection("mcnative_settings")
                 .field("Id", DataType.INTEGER,FieldOption.UNIQUE, FieldOption.INDEX,FieldOption.AUTO_INCREMENT)
-                .field("Player", DataType.UUID, FieldOption.INDEX, FieldOption.INDEX)
+                .field("Player", DataType.UUID, FieldOption.INDEX, FieldOption.INDEX, FieldOption.NOT_NULL)
                 .field("Owner", DataType.STRING,32, FieldOption.NOT_NULL)
                 .field("Key", DataType.STRING,64, FieldOption.NOT_NULL)
-                .field("Value", DataType.STRING, 512, FieldOption.NOT_NULL)
+                .field("Value", DataType.STRING, 1024, FieldOption.NOT_NULL)
                 .create();
     }
 
@@ -136,6 +136,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
     public PlayerSetting createSetting(UUID uniqueId, String owner, String key, Object value) {
         Validate.notNull(uniqueId,owner,key,value);
         int id = settingsStorage.insert()
+                .set("Player",uniqueId)
                 .set("Owner",owner)
                 .set("Key",key)
                 .set("Value",serialize(value))
@@ -168,7 +169,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
             if(value instanceof Document) result = DocumentFileType.JSON.getWriter().write((Document) value,false);
             else result = value.toString();
         }
-        if(result.length() > 512) throw new IllegalArgumentException("Setting value is to big");
+        if(result.length() > 1024) throw new IllegalArgumentException("Setting value is to big");
         return result;
     }
 }

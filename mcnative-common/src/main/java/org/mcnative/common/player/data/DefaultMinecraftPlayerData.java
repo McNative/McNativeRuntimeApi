@@ -92,11 +92,6 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
     }
 
     @Override
-    public Document getProperties() {
-        return this.properties;
-    }
-
-    @Override
     public Language getLanguage() {
         return language;
     }
