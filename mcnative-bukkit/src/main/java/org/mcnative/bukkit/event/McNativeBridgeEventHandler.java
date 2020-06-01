@@ -42,6 +42,7 @@ import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
+import org.mcnative.common.event.player.MinecraftPlayerCommandPreprocessEvent;
 import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
@@ -114,6 +115,8 @@ public class McNativeBridgeEventHandler {
         eventBus.registerMappedClass(MinecraftPlayerChatEvent.class, AsyncPlayerChatEvent.class);
         eventBus.registerManagedEvent(AsyncPlayerChatEvent.class, this::handleChatEvent);
 
+        eventBus.registerMappedClass(MinecraftPlayerCommandPreprocessEvent.class, PlayerCommandPreprocessEvent.class);
+        eventBus.registerManagedEvent(PlayerCommandPreprocessEvent.class, this::handleCommandEvent);
 
         /* Inventory */
 
@@ -290,6 +293,12 @@ public class McNativeBridgeEventHandler {
             }
             McNative.getInstance().getLogger().info("["+mcnativeEvent.getChannel().getName()+"] "+player.getName()+": "+event.getMessage());
         }
+    }
+
+    private void handleCommandEvent(McNativeHandlerList handler, PlayerCommandPreprocessEvent event){
+        ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+        MinecraftPlayerCommandPreprocessEvent mcnativeEvent = new BukkitMinecraftPlayerCommandPreprocessEvent(event,player);
+        handler.callEvents(event,mcnativeEvent);
     }
 
     private void handleInventoryClick(McNativeHandlerList handler, InventoryClickEvent event) {

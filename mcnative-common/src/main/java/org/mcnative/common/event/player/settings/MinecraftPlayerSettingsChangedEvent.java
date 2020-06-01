@@ -21,12 +21,12 @@ package org.mcnative.common.event.player.settings;
 
 import net.pretronic.libraries.utility.annonations.Nullable;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
-import org.mcnative.common.player.PlayerSettings;
+import org.mcnative.common.player.PlayerClientSettings;
 
 public interface MinecraftPlayerSettingsChangedEvent extends MinecraftOnlinePlayerEvent {
 
     @Nullable
-    PlayerSettings getOldSettings();
+    PlayerClientSettings getOldSettings();
 
-    PlayerSettings getNewSettings();
+    PlayerClientSettings getNewSettings();
 }

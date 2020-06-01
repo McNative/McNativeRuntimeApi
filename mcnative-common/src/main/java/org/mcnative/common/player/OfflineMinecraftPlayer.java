@@ -22,11 +22,13 @@ package org.mcnative.common.player;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignRequestEvent;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignSetEvent;
 import org.mcnative.common.player.data.MinecraftPlayerData;
+import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
@@ -44,6 +46,8 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     protected MinecraftPlayerData data;
     protected PermissionHandler permissionHandler;
+
+    private Collection<PlayerSetting> settings;
 
     public OfflineMinecraftPlayer(MinecraftPlayerData data) {
         this.data = data;
@@ -143,6 +147,44 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         MinecraftPlayerDesignSetEvent event = new MinecraftPlayerDesignSetEvent(this,design);
         McNative.getInstance().getLocal().getEventBus().callEventAsync(event)
                 .thenAccept(event1 -> getData().updateDesign(event1.getDesign()));
+    }
+
+
+    @Override
+    public Collection<PlayerSetting> getSettings() {
+        return settings;
+    }
+
+    @Override
+    public Collection<PlayerSetting> getSettings(String owner) {
+        return Iterators.filter(this.settings, setting -> setting.getOwner().equalsIgnoreCase(owner));
+    }
+
+    @Override
+    public PlayerSetting getSetting(String owner, String key) {
+        return Iterators.findOne(this.settings, setting
+                -> setting.getOwner().equalsIgnoreCase(owner)
+                && setting.getKey().equalsIgnoreCase(key));
+    }
+
+    @Override
+    public PlayerSetting setSetting(String owner, String key, Object value) {
+        PlayerSetting setting = getSetting(owner,key);
+        if(setting == null){
+            McNative.getInstance().getRegistry().getService(PlayerDataProvider.class)
+                    .createSetting(getUniqueId(),owner,key,value);
+        }else {
+            setting.setValue(value);
+        }
+        return setting;
+    }
+
+    @Override
+    public void removeSetting(String owner, String key) {
+        PlayerSetting setting = getSetting(owner,key);
+        this.settings.remove(setting);
+        McNative.getInstance().getRegistry().getService(PlayerDataProvider.class)
+                .deleteSetting(setting);
     }
 
     @Override

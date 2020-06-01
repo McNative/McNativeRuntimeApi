@@ -19,6 +19,7 @@
 
 package org.mcnative.common.player.data;
 
+import net.pretronic.databasequery.api.query.type.UpdateQuery;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.language.Language;
@@ -153,12 +154,13 @@ public class DefaultMinecraftPlayerData implements MinecraftPlayerData {
 
     @Override
     public void updateLoginInformation(String name, GameProfile profile, long timeStamp) {
-        this.provider.getPlayerDataStorage().update()
+        UpdateQuery query = this.provider.getPlayerDataStorage().update()
                 .set("Name", name)
                 .set("GameProfile", profile.toJsonPart())
                 .set("LastPlayed", timeStamp)
-                .where("UniqueId",this.uniqueId)
-                .execute();
+                .where("UniqueId",this.uniqueId);
+        if(firstPlayed < 0 ) query.set("FirstPlayed",timeStamp);
+        query.execute();
         this.name = name;
         this.gameProfile = profile;
         this.lastPlayed = timeStamp;

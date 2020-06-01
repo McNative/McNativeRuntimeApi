@@ -21,7 +21,7 @@ package org.mcnative.common.player;
 
 import java.util.Locale;
 
-public class PlayerSettings {
+public class PlayerClientSettings {
 
     private final Locale locale;
     private final byte viewDistance;
@@ -30,7 +30,7 @@ public class PlayerSettings {
     private final SkinParts skinParts;
     private final MainHand mainHand;
 
-    public PlayerSettings(Locale locale, byte viewDistance, ChatMode chatMode, boolean chatColorsEnabled, SkinParts skinParts, MainHand mainHand) {
+    public PlayerClientSettings(Locale locale, byte viewDistance, ChatMode chatMode, boolean chatColorsEnabled, SkinParts skinParts, MainHand mainHand) {
         this.locale = locale;
         this.viewDistance = viewDistance;
         this.chatMode = chatMode;

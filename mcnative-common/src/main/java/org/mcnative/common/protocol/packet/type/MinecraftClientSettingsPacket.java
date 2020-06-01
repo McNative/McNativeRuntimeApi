@@ -21,7 +21,7 @@ package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
 import org.mcnative.common.connection.MinecraftConnection;
-import org.mcnative.common.player.PlayerSettings;
+import org.mcnative.common.player.PlayerClientSettings;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
@@ -43,7 +43,7 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_14,0x05)));
 
     private String languageTag;
-    private PlayerSettings settings;
+    private PlayerClientSettings settings;
 
     public static PacketIdentifier getIDENTIFIER() {
         return IDENTIFIER;
@@ -57,11 +57,11 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
         this.languageTag = languageTag;
     }
 
-    public PlayerSettings getSettings() {
+    public PlayerClientSettings getSettings() {
         return settings;
     }
 
-    public void setSettings(PlayerSettings settings) {
+    public void setSettings(PlayerClientSettings settings) {
         this.settings = settings;
         this.languageTag = settings.getLocale().toLanguageTag();
     }
@@ -85,12 +85,12 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
         byte skinParts = buffer.readByte();
         int mainHand = 0;
         if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_9)) mainHand = MinecraftProtocolUtil.readVarInt(buffer);
-        settings = new PlayerSettings(Locale.forLanguageTag(languageTag)
+        settings = new PlayerClientSettings(Locale.forLanguageTag(languageTag)
                 ,viewDistance
-                ,PlayerSettings.ChatMode.of(chatMode)
+                , PlayerClientSettings.ChatMode.of(chatMode)
                 ,chatColor
-                ,new PlayerSettings.SkinParts(skinParts)
-                ,PlayerSettings.MainHand.of(mainHand));
+                ,new PlayerClientSettings.SkinParts(skinParts)
+                , PlayerClientSettings.MainHand.of(mainHand));
     }
 
     @Override

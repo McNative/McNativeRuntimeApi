@@ -46,10 +46,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.event.ServerListPingEvent;
 import org.mcnative.common.event.ServiceReloadedEvent;
-import org.mcnative.common.event.player.MinecraftPlayerChatEvent;
-import org.mcnative.common.event.player.MinecraftPlayerLogoutEvent;
-import org.mcnative.common.event.player.MinecraftPlayerTabCompleteEvent;
-import org.mcnative.common.event.player.MinecraftPlayerTabCompleteResponseEvent;
+import org.mcnative.common.event.player.*;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPostLoginEvent;
@@ -62,7 +59,7 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PlayerSettings;
+import org.mcnative.common.player.PlayerClientSettings;
 import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.serviceprovider.permission.Permissable;
@@ -129,6 +126,7 @@ public final class McNativeBridgeEventHandler {
 
         //Chat event
         eventBus.registerMappedClass(MinecraftPlayerChatEvent.class, ChatEvent.class);
+        eventBus.registerMappedClass(MinecraftPlayerCommandPreprocessEvent.class, ChatEvent.class);
         pluginManager.registerMangedEvent(ChatEvent.class,this::handleChatEvent);
 
         //Tab complete
@@ -274,17 +272,23 @@ public final class McNativeBridgeEventHandler {
     private void handleChatEvent(ChatEvent event) {
         if(event.getSender() instanceof ProxiedPlayer){
             ConnectedMinecraftPlayer player = playerManager.getMappedPlayer((ProxiedPlayer) event.getSender());
-            MinecraftPlayerChatEvent mcNativeEvent = new BungeeMinecraftPlayerChatEvent(event,player);
-            eventBus.callEvents(ChatEvent.class,event,mcNativeEvent);
-            if(!event.isCancelled() && mcNativeEvent.getChannel() != null){
-                event.setCancelled(true);
-                if(mcNativeEvent.getOutputMessage() == null){
-                    mcNativeEvent.getChannel().chat(player,mcNativeEvent.getMessage(),mcNativeEvent.getOutputVariables());
-                }else{
-                    mcNativeEvent.getChannel().sendMessage(mcNativeEvent.getOutputMessage(),mcNativeEvent.getOutputVariables());
+            if(event.isCommand()){
+                MinecraftPlayerCommandPreprocessEvent mcNativeEvent = new BungeeMinecraftPlayerCommandPreprocessEvent(event,player);
+                eventBus.callEvents(ChatEvent.class,event,mcNativeEvent);
+            }else{
+                MinecraftPlayerChatEvent mcNativeEvent = new BungeeMinecraftPlayerChatEvent(event,player);
+                eventBus.callEvents(ChatEvent.class,event,mcNativeEvent);
+                if(!event.isCancelled() && mcNativeEvent.getChannel() != null){
+                    event.setCancelled(true);
+                    if(mcNativeEvent.getOutputMessage() == null){
+                        mcNativeEvent.getChannel().chat(player,mcNativeEvent.getMessage(),mcNativeEvent.getOutputVariables());
+                    }else{
+                        mcNativeEvent.getChannel().sendMessage(mcNativeEvent.getOutputMessage(),mcNativeEvent.getOutputVariables());
+                    }
+                    McNative.getInstance().getLogger().info("["+mcNativeEvent.getChannel().getName()+"] "+player.getName()+": "+event.getMessage());
                 }
-                McNative.getInstance().getLogger().info("["+mcNativeEvent.getChannel().getName()+"] "+player.getName()+": "+event.getMessage());
             }
+
         }else eventBus.callEvent(event);
     }
 
@@ -339,27 +343,27 @@ public final class McNativeBridgeEventHandler {
 
     private void handleSettingsChange(SettingsChangedEvent event){
         ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
-        PlayerSettings settings = mapSettings(event.getPlayer());
+        PlayerClientSettings settings = mapSettings(event.getPlayer());
         MinecraftPlayerSettingsChangedEvent mcNativeEvent = new BungeeMinecraftPlayerSettingsChangedEvent(player,settings);
         eventBus.callEvents(PermissionCheckEvent.class,event,mcNativeEvent);
         ((BungeeProxiedPlayer)player).setSettings(settings);
     }
 
-    private PlayerSettings mapSettings(ProxiedPlayer player){
-        return new PlayerSettings(player.getLocale()
+    private PlayerClientSettings mapSettings(ProxiedPlayer player){
+        return new PlayerClientSettings(player.getLocale()
                 ,player.getViewDistance()
-                ,PlayerSettings.ChatMode.valueOf(player.getChatMode().name())
+                , PlayerClientSettings.ChatMode.valueOf(player.getChatMode().name())
                 ,player.hasChatColors()
                 ,mapSkinPart(player)
-                ,PlayerSettings.MainHand.valueOf(player.getMainHand().name()));
+                , PlayerClientSettings.MainHand.valueOf(player.getMainHand().name()));
     }
 
-    private PlayerSettings.SkinParts mapSkinPart(ProxiedPlayer player){
+    private PlayerClientSettings.SkinParts mapSkinPart(ProxiedPlayer player){
         SkinConfiguration skin = player.getSkinParts();
         if(skin.getClass().getName().equals("net.md_5.bungee.PlayerSkinConfiguration")){
-            return new PlayerSettings.SkinParts(ReflectionUtil.getFieldValue(skin,"bitmask",Byte.class));
+            return new PlayerClientSettings.SkinParts(ReflectionUtil.getFieldValue(skin,"bitmask",Byte.class));
         }else{
-            return PlayerSettings.SkinParts.SKIN_SHOW_ALL;
+            return PlayerClientSettings.SkinParts.SKIN_SHOW_ALL;
         }
     }
 

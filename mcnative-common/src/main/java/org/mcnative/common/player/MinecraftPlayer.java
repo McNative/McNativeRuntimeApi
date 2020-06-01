@@ -24,10 +24,12 @@ import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToSt
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
 import net.pretronic.libraries.utility.annonations.Nullable;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.Permissable;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -61,6 +63,53 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
     PlayerDesign getDesign(MinecraftPlayer player);
 
     void setDesign(PlayerDesign design);
+
+
+
+    Collection<PlayerSetting> getSettings();
+
+    default Collection<PlayerSetting> getSettings(ObjectOwner owner){
+        return getSettings(owner.getName());
+    }
+
+    Collection<PlayerSetting> getSettings(String owner);
+
+    default PlayerSetting getSetting(ObjectOwner owner, String key){
+        return getSetting(owner.getName(),key);
+    }
+
+    PlayerSetting getSetting(String owner, String key);
+
+
+    default PlayerSetting setSetting(ObjectOwner owner, String key, Object value){
+        return setSetting(owner.getName(),key,value);
+    }
+
+    PlayerSetting setSetting(String owner, String key, Object value);
+
+    default boolean hasSetting(ObjectOwner owner, String key){
+        return hasSetting(owner.getName(),key);
+    }
+
+    default boolean hasSetting(String owner, String key){
+        return getSetting(owner,key) != null;
+    }
+
+    default boolean hasSetting(ObjectOwner owner, String key,Object value){
+        return hasSetting(owner.getName(),key,value);
+    }
+
+    default boolean hasSetting(String owner, String key,Object value){
+        PlayerSetting settings = getSetting(owner, key);
+        return settings != null && settings.equalsValue(value);
+    }
+
+    default void removeSetting(ObjectOwner owner, String key){
+        removeSetting(owner.getName(),key);
+    }
+
+    void removeSetting(String owner, String key);
+
 
     @Nullable
     <T> T getAs(Class<T> otherPlayerClass);

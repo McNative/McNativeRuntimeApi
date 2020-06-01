@@ -37,7 +37,7 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     InetSocketAddress getVirtualHost();
 
-    PlayerSettings getSettings();
+    PlayerClientSettings getClientSettings();
 
 
     ChatChannel getPrimaryChatChannel();

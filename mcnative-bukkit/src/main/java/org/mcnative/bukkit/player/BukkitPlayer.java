@@ -164,7 +164,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     }
 
     @Override
-    public PlayerSettings getSettings() {
+    public PlayerClientSettings getClientSettings() {
         throw new UnsupportedOperationException("Currently not supported");
     }
 

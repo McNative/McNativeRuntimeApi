@@ -85,7 +85,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     private net.md_5.bungee.api.connection.ProxiedPlayer original;
 
     private MinecraftServer server;
-    private PlayerSettings settings;
+    private PlayerClientSettings settings;
 
     private ChatChannel chatChannel;
 
@@ -210,7 +210,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Override
-    public PlayerSettings getSettings() {
+    public PlayerClientSettings getClientSettings() {
         return settings;
     }
 
@@ -461,7 +461,7 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Internal
-    public void setSettings(PlayerSettings settings){
+    public void setSettings(PlayerClientSettings settings){
         this.settings = settings;
     }
 

@@ -30,19 +30,22 @@ import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.DefaultPlayerDesign;
+import org.mcnative.common.player.PlayerSetting;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
 public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
-    final DatabaseCollection playerDataStorage;
+    private final DatabaseCollection playerDataStorage;
+    private final DatabaseCollection settingsStorage;
 
     public DefaultPlayerDataProvider() {
         this.playerDataStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
-                .getDatabase(McNative.getInstance()).createCollection("mcnative_playerdata")
+                .getDatabase(McNative.getInstance()).createCollection("mcnative_players")
                 .field("UniqueId", DataType.UUID, FieldOption.NOT_NULL,FieldOption.UNIQUE, FieldOption.INDEX)
                 .field("XBoxId", DataType.LONG, FieldOption.NOT_NULL, FieldOption.INDEX)
                 .field("Name", DataType.STRING, 32, FieldOption.NOT_NULL, FieldOption.UNIQUE, FieldOption.INDEX)
@@ -52,6 +55,14 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .field("Design", DataType.STRING,500)
                 .field("Language", DataType.STRING,10)
                 .field("Properties", DataType.LONG_TEXT)
+                .create();
+        this.settingsStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
+                .getDatabase(McNative.getInstance()).createCollection("mcnative_settings")
+                .field("Id", DataType.INTEGER,FieldOption.UNIQUE, FieldOption.INDEX,FieldOption.AUTO_INCREMENT)
+                .field("Player", DataType.UUID, FieldOption.INDEX, FieldOption.INDEX)
+                .field("Owner", DataType.STRING,32, FieldOption.NOT_NULL)
+                .field("Key", DataType.STRING,64, FieldOption.NOT_NULL)
+                .field("Value", DataType.STRING, 512, FieldOption.NOT_NULL)
                 .create();
     }
 
@@ -114,5 +125,50 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .set("Design","{}")
                 .execute();
         return new DefaultMinecraftPlayerData(this, name, uniqueId, xBoxId, firstPlayed, lastPlayed, gameProfile,null,null, Document.newDocument());
+    }
+
+    @Override
+    public Collection<PlayerSetting> loadSettings(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public PlayerSetting createSetting(UUID uniqueId, String owner, String key, Object value) {
+        Validate.notNull(uniqueId,owner,key,value);
+        int id = settingsStorage.insert()
+                .set("Owner",owner)
+                .set("Key",key)
+                .set("Value",serialize(value))
+                .executeAndGetGeneratedKeyAsInt("Id");
+        return new DefaultPlayerSetting(id,owner,key,value);
+    }
+
+    @Override
+    public void updateSetting(PlayerSetting setting) {
+        Validate.notNull(setting);
+        settingsStorage.update()
+                .set("Value",serialize(setting.getValue()))
+                .where("Id",setting.getId())
+                .execute();
+
+    }
+
+    @Override
+    public void deleteSetting(PlayerSetting setting) {
+        Validate.notNull(setting);
+        settingsStorage.delete()
+                .where("Id",setting.getId())
+                .execute();
+    }
+
+    private String serialize(Object value){
+        String result;
+        if(value instanceof String) result = (String) value;
+        else{
+            if(value instanceof Document) result = DocumentFileType.JSON.getWriter().write((Document) value,false);
+            else result = value.toString();
+        }
+        if(result.length() > 512) throw new IllegalArgumentException("Setting value is to big");
+        return result;
     }
 }

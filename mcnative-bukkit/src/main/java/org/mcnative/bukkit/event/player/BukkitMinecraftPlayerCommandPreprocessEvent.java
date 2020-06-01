@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 01.05.20, 09:31
+ * @since 01.06.20, 13:06
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,32 +18,43 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.event.player;
+package org.mcnative.bukkit.event.player;
 
-import org.mcnative.common.event.player.settings.MinecraftPlayerSettingsChangedEvent;
-import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import net.pretronic.libraries.utility.Validate;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.mcnative.common.event.player.MinecraftPlayerCommandPreprocessEvent;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.player.PlayerClientSettings;
 
-public class BungeeMinecraftPlayerSettingsChangedEvent implements MinecraftPlayerSettingsChangedEvent {
+public class BukkitMinecraftPlayerCommandPreprocessEvent implements MinecraftPlayerCommandPreprocessEvent {
 
-    private final ConnectedMinecraftPlayer player;
-    private final PlayerClientSettings newSettings;
+    private final PlayerCommandPreprocessEvent event;
+    private final OnlineMinecraftPlayer player;
 
-    public BungeeMinecraftPlayerSettingsChangedEvent(ConnectedMinecraftPlayer player, PlayerClientSettings newSettings) {
+    public BukkitMinecraftPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event, OnlineMinecraftPlayer player) {
+        this.event = event;
         this.player = player;
-        this.newSettings = newSettings;
     }
 
     @Override
-    public PlayerClientSettings getOldSettings() {
-        return player.getClientSettings();
+    public String getCommand() {
+        return event.getMessage();
     }
 
     @Override
-    public PlayerClientSettings getNewSettings() {
-        return newSettings;
+    public void setCommand(String command) {
+        Validate.notNull(command);
+        event.setMessage(command);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 
     @Override

@@ -19,8 +19,10 @@
 
 package org.mcnative.common.player.data;
 
+import org.mcnative.common.player.PlayerSetting;
 import org.mcnative.common.player.profile.GameProfile;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface PlayerDataProvider {
@@ -32,5 +34,14 @@ public interface PlayerDataProvider {
     MinecraftPlayerData getPlayerData(long xBoxId);
 
     MinecraftPlayerData createPlayerData(String name, UUID uniqueId, long xBoxId, long firstPlayed, long lastPlayed, GameProfile gameProfile);
+
+
+    Collection<PlayerSetting> loadSettings(UUID uniqueId);
+
+    PlayerSetting createSetting(UUID uniqueId, String owner, String key, Object value);
+
+    void updateSetting(PlayerSetting setting);
+
+    void deleteSetting(PlayerSetting setting);
 
 }
