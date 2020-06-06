@@ -58,7 +58,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
                 .create();
         this.settingsStorage = McNative.getInstance().getRegistry().getService(ConfigurationProvider.class)
                 .getDatabase(McNative.getInstance()).createCollection("mcnative_settings")
-                .field("Id", DataType.INTEGER,FieldOption.UNIQUE, FieldOption.INDEX,FieldOption.AUTO_INCREMENT)
+                .field("Id", DataType.INTEGER,FieldOption.PRIMARY_KEY, FieldOption.INDEX,FieldOption.AUTO_INCREMENT)
                 .field("Player", DataType.UUID, FieldOption.INDEX, FieldOption.INDEX, FieldOption.NOT_NULL)
                 .field("Owner", DataType.STRING,32, FieldOption.NOT_NULL)
                 .field("Key", DataType.STRING,64, FieldOption.NOT_NULL)
