@@ -34,9 +34,7 @@ import org.mcnative.common.player.PlayerSetting;
 import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
@@ -129,7 +127,15 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
     @Override
     public Collection<PlayerSetting> loadSettings(UUID uniqueId) {
-        return null;
+        QueryResult result = settingsStorage.find().where("UniqueId",uniqueId).execute();
+        List<PlayerSetting> settings = new ArrayList<>();
+        for (QueryResultEntry entry : result) {
+            settings.add(new DefaultPlayerSetting(entry.getInt("Id")
+                    ,entry.getString("Owner")
+                    ,entry.getString("Key")
+                    ,entry.getString("Value")));
+        }
+        return settings;
     }
 
     @Override
