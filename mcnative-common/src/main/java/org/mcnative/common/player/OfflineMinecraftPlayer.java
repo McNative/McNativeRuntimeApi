@@ -146,17 +146,20 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     @Override
     public Collection<PlayerSetting> getSettings() {
+        if(settings == null){
+            settings = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class).loadSettings(getUniqueId());
+        }
         return settings;
     }
 
     @Override
     public Collection<PlayerSetting> getSettings(String owner) {
-        return Iterators.filter(this.settings, setting -> setting.getOwner().equalsIgnoreCase(owner));
+        return Iterators.filter(getSettings(), setting -> setting.getOwner().equalsIgnoreCase(owner));
     }
 
     @Override
     public PlayerSetting getSetting(String owner, String key) {
-        return Iterators.findOne(this.settings, setting
+        return Iterators.findOne(getSettings(), setting
                 -> setting.getOwner().equalsIgnoreCase(owner)
                 && setting.getKey().equalsIgnoreCase(key));
     }
@@ -165,8 +168,9 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     public PlayerSetting setSetting(String owner, String key, Object value) {
         PlayerSetting setting = getSetting(owner,key);
         if(setting == null){
-            McNative.getInstance().getRegistry().getService(PlayerDataProvider.class)
+            setting = McNative.getInstance().getRegistry().getService(PlayerDataProvider.class)
                     .createSetting(getUniqueId(),owner,key,value);
+            this.settings.add(setting);
         }else {
             setting.setValue(value);
         }
