@@ -127,7 +127,7 @@ public class DefaultPlayerDataProvider implements PlayerDataProvider {
 
     @Override
     public Collection<PlayerSetting> loadSettings(UUID uniqueId) {
-        QueryResult result = settingsStorage.find().where("UniqueId",uniqueId).execute();
+        QueryResult result = settingsStorage.find().where("Player",uniqueId).execute();
         List<PlayerSetting> settings = new ArrayList<>();
         for (QueryResultEntry entry : result) {
             settings.add(new DefaultPlayerSetting(entry.getInt("Id")
