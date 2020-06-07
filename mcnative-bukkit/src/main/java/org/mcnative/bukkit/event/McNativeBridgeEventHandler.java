@@ -207,8 +207,6 @@ public class McNativeBridgeEventHandler {
             connection.setState(ConnectionState.GAME);
             connection.setPlayer(player);
 
-            MinecraftPlayerPostLoginEvent postLoginEvent = new BukkitPostLoginEvent(player);
-            McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerPostLoginEvent.class,postLoginEvent);
 
             playerManager.registerPlayer(player);
             firstPlayerConnected = true;
@@ -221,6 +219,9 @@ public class McNativeBridgeEventHandler {
             return;
         }
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+
+        MinecraftPlayerPostLoginEvent postLoginEvent = new BukkitPostLoginEvent(player);
+        McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerPostLoginEvent.class,postLoginEvent);
 
         Tablist serverTablist = McNative.getInstance().getLocal().getServerTablist();
         if(serverTablist != null){

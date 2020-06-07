@@ -96,7 +96,7 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
         }
     }
 
-    //This is currently only a work workaround and should be optimized with an own multiple version implementation
+    //This is currently only a workaround and should be optimized with an own multiple version implementation
     private void tryRemoveHandlers(){
         if(PROTOCOL_LIB){
             connection.getChannel().pipeline().remove("protocol_lib_encoder");
