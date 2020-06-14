@@ -109,10 +109,10 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         if(result != null){
             VariableSet variables = VariableSet.create();
             variables.add("name",getName());
-            variables.add("player",player);
+            variables.addDescribed("player",player);
             PlayerDesign design = getDesign(player);
             if(design != null){
-                variables.add("design",design);
+                variables.addDescribed("design",design);
                 design.appendAdditionalVariables(variables);
             }
             result = variables.replace(result);
