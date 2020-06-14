@@ -26,6 +26,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.mcnative.bukkit.McNativeBukkitConfiguration;
 import org.mcnative.bukkit.event.player.*;
 import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryClickEvent;
 import org.mcnative.bukkit.event.player.inventory.BukkitPlayerInventoryCloseEvent;
@@ -210,6 +211,10 @@ public class McNativeBridgeEventHandler {
 
             playerManager.registerPlayer(player);
             firstPlayerConnected = true;
+
+            if(McNativeBukkitConfiguration.PLAYER_DISPLAY_APPLY_ON_BUKKIT){
+                event.getPlayer().setDisplayName(player.getDisplayName());
+            }
         }
     }
 
