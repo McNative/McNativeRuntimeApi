@@ -61,7 +61,7 @@ public class BukkitEventBus implements EventBus {
     @Override
     public void subscribe(ObjectOwner owner, Object listener) {
         Validate.notNull(owner,listener);
-
+        System.out.println("subscribe");
         for(Method method : listener.getClass().getDeclaredMethods()){
             try{
                 Listener info = method.getAnnotation(Listener.class);
@@ -69,6 +69,7 @@ public class BukkitEventBus implements EventBus {
                     Class<?> eventClass = method.getParameterTypes()[0];
                     Class<?> mappedClass = this.mappedClasses.get(eventClass);
                     if(mappedClass == null) mappedClass = eventClass;
+                    System.out.println(eventClass+":"+mappedClass);
                     addExecutor(mappedClass,new MethodEventExecutor(owner,info.priority(),listener,eventClass,method));
                 }
             }catch (Exception exception){
@@ -140,15 +141,18 @@ public class BukkitEventBus implements EventBus {
 
     @Override
     public void addExecutor(Class<?> event, EventExecutor executor) {
+        System.out.println("addExecutor " + event);
         Validate.notNull(event,executor);
         if(Event.class.isAssignableFrom(event)){
             McNativeHandlerList handlerList = getHandlerList(event);
             handlerList.registerExecutor(executor);
             handlerList.bake();
         }else{
+            System.out.println("exec 2 add " + event);
             List<EventExecutor> executors = this.executors.computeIfAbsent(event, k -> new ArrayList<>());
             executors.add(executor);
             executors.sort((o1, o2) -> o1.getPriority() >= o2.getPriority()?0:-1);
+            System.out.println(this.executors.get(event));
         }
     }
 
