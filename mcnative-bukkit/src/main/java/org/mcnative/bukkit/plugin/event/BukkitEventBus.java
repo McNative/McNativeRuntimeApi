@@ -154,13 +154,19 @@ public class BukkitEventBus implements EventBus {
 
     @Override
     public <T> void callEvents(Class<T> event, Object... objects) {
+        System.out.println("call");
+        System.out.println(event);
+        System.out.println(Arrays.toString(objects));
         Validate.notNull(event,objects);
+        System.out.println("call 2");
         if(Event.class.isAssignableFrom(event)){
+            System.out.println("bukkit event");
             McNativeHandlerList handlerList = getHandlerList(event);
             handlerList.callEvents(objects);
         }else{
             List<EventExecutor> executors = this.executors.get(event);
-            if(executors != null) executors.forEach(executor ->executor.execute(objects));
+            System.out.println("not bukkit: " + executors);
+            if(executors != null) executors.forEach(executor -> executor.execute(objects));
         }
     }
 
