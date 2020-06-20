@@ -53,6 +53,7 @@ import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.service.event.player.MinecraftPlayerJoinEvent;
+import org.mcnative.service.event.player.MinecraftPlayerQuitEvent;
 import org.mcnative.service.event.player.MinecraftPlayerWorldChangedEvent;
 import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
@@ -107,7 +108,7 @@ public class McNativeBridgeEventHandler {
         eventBus.registerManagedEvent(PlayerChangedWorldEvent.class, this::handleWorldChangedEvent);
 
         //Logout
-        eventBus.registerMappedClass(MinecraftPlayerLogoutEvent.class, PlayerQuitEvent.class);
+        eventBus.registerMappedClass(MinecraftPlayerQuitEvent.class, PlayerQuitEvent.class);
         eventBus.registerManagedEvent(PlayerQuitEvent.class, this::handleLogoutEvent);
 
 

@@ -172,8 +172,8 @@ public class BukkitEventBus implements EventBus {
             System.out.println("not bukkit: " + executors);
             if(executors != null) executors.forEach(executor -> executor.execute(objects));
 
-            List<EventExecutor> mappedExecutors = this.executors.get(getMappedClass(event));
-            if(mappedExecutors != null) mappedExecutors.forEach(executor -> executor.execute(objects));
+            //List<EventExecutor> mappedExecutors = this.executors.get(getMappedClass(event));
+            //if(mappedExecutors != null) mappedExecutors.forEach(executor -> executor.execute(objects));
         }
     }
 
