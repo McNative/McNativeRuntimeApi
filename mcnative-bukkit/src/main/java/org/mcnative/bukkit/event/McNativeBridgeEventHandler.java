@@ -252,6 +252,10 @@ public class McNativeBridgeEventHandler {
     }
 
     private void handleLogoutEvent(McNativeHandlerList handler, PlayerQuitEvent event){
+        System.out.println("handle logout");
+        System.out.println(McNative.getInstance().isReady());
+        System.out.println(firstPlayerConnected);
+        System.out.println("---");
         if(!McNative.getInstance().isReady() || !firstPlayerConnected) return;
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
