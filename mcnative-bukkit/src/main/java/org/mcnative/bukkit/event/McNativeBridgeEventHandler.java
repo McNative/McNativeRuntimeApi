@@ -257,6 +257,7 @@ public class McNativeBridgeEventHandler {
         System.out.println(firstPlayerConnected);
         System.out.println("---");
         if(!McNative.getInstance().isReady() || !firstPlayerConnected) return;
+        System.out.println("logout");
         BukkitPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
         player.handleLogout();
@@ -271,6 +272,7 @@ public class McNativeBridgeEventHandler {
         }
         MinecraftPlayerLogoutEvent logoutEvent = new BukkitPlayerLogoutEvent(player);
         McNative.getInstance().getLocal().getEventBus().callEvent(MinecraftPlayerLogoutEvent.class,logoutEvent);
+        System.out.println("logout finish");
 
         ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
         if(serverChat != null) serverChat.removePlayer(player);
