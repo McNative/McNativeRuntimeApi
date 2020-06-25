@@ -61,7 +61,6 @@ public class BukkitEventBus implements EventBus {
     @Override
     public void subscribe(ObjectOwner owner, Object listener) {
         Validate.notNull(owner,listener);
-
         for(Method method : listener.getClass().getDeclaredMethods()){
             try{
                 Listener info = method.getAnnotation(Listener.class);
@@ -160,7 +159,7 @@ public class BukkitEventBus implements EventBus {
             handlerList.callEvents(objects);
         }else{
             List<EventExecutor> executors = this.executors.get(event);
-            if(executors != null) executors.forEach(executor ->executor.execute(objects));
+            if(executors != null) executors.forEach(executor -> executor.execute(objects));
         }
     }
 
