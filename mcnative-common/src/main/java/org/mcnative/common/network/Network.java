@@ -39,6 +39,8 @@ public interface Network extends ConnectableNetworkComponent {
 
     Messenger getMessenger();
 
+    NetworkOperations getOperations();
+
 
     boolean isConnected();
 

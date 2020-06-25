@@ -30,6 +30,7 @@ import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.network.NetworkOperations;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.messaging.Messenger;
@@ -61,6 +62,11 @@ public class CloudNetV2Network implements Network {
     @Override
     public Messenger getMessenger() {
         return messenger;
+    }
+
+    @Override
+    public NetworkOperations getOperations() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

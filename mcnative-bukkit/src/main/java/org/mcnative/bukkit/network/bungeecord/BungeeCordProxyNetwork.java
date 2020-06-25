@@ -34,6 +34,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.network.NetworkOperations;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
 import org.mcnative.common.network.component.server.ProxyServer;
@@ -61,6 +62,7 @@ public class BungeeCordProxyNetwork implements Network {
     protected static final NetworkIdentifier SINGLE_PROXY_IDENTIFIER = new NetworkIdentifier("Proxy-1",new UUID(10,10));
 
     private final Messenger messenger;
+    private final NetworkOperations operations;
     private final NetworkEventBus eventBus;
     private final Collection<OwnedObject<NetworkSynchronisationCallback>> statusCallbacks;
 
@@ -73,6 +75,7 @@ public class BungeeCordProxyNetwork implements Network {
     public BungeeCordProxyNetwork(ExecutorService executor) {
         this.messenger = new PluginMessageMessenger(this,executor);
         this.eventBus = new NetworkEventBus();
+        this.operations = new BungeeCordNetworkOperations(this);
         this.statusCallbacks = new ArrayList<>();
         this.servers = new ArrayList<>();
         this.players = new ArrayList<>();
@@ -87,6 +90,11 @@ public class BungeeCordProxyNetwork implements Network {
     @Override
     public Messenger getMessenger() {
         return messenger;
+    }
+
+    @Override
+    public NetworkOperations getOperations() {
+        return operations;
     }
 
     @Override
@@ -119,6 +127,10 @@ public class BungeeCordProxyNetwork implements Network {
     @Override
     public Collection<ProxyServer> getProxies() {
         return Collections.singleton(proxy);
+    }
+
+    public ProxyServer getProxy() {
+        return proxy;
     }
 
     @Override
@@ -208,17 +220,27 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        return Iterators.findOne(this.players, player -> player.getUniqueId().equals(uniqueId));
+        OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(uniqueId);
+        if(player != null) return player;
+        return Iterators.findOne(this.players, player0 -> player0.getUniqueId().equals(uniqueId));
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(String name) {
-        return Iterators.findOne(this.players, player -> player.getName().equalsIgnoreCase(name));
+        OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(name);
+        if(player != null) return player;
+        return Iterators.findOne(this.players, player0 -> player0.getName().equalsIgnoreCase(name));
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        return Iterators.findOne(this.players, player -> player.getXBoxId() == xBoxId);
+        OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(xBoxId);
+        if(player != null) return player;
+        return Iterators.findOne(this.players, player0 -> player0.getXBoxId() == xBoxId);
+    }
+
+    public OnlineMinecraftPlayer getBungeeCordPlayer(UUID uniqueId){
+        return Iterators.findOne(this.players, player -> player.getUniqueId().equals(uniqueId));
     }
 
     @Override
@@ -246,7 +268,6 @@ public class BungeeCordProxyNetwork implements Network {
         throw new UnsupportedOperationException("Currently not supported");
     }
 
-    //@Todo split into different sub methods - add local connected players to list
     protected void handleRequest(Document document){
         String action = document.getString("action");
         if("initial-request".equals(action)) {

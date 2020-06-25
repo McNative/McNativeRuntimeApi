@@ -30,6 +30,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.network.NetworkOperations;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.event.NetworkEventBus;
@@ -67,6 +68,11 @@ public class BungeecordProxyNetwork implements Network {
     @Override
     public Messenger getMessenger() {
         return messenger;
+    }
+
+    @Override
+    public NetworkOperations getOperations() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

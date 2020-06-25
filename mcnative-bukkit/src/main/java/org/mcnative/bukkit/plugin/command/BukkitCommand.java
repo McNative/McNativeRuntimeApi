@@ -118,7 +118,7 @@ public class BukkitCommand implements Command {
         }
 
         @Override
-        public boolean isPermissionSet(Permission permission) {//@Todo check if right implementation
+        public boolean isPermissionSet(Permission permission) {
             if(original instanceof Permissable) return ((Permissable) original).isPermissionSet(permission.getName());
             return hasPermission(permission);
         }

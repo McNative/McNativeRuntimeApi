@@ -32,6 +32,7 @@ import org.mcnative.bukkit.inventory.item.BukkitItemStack;
 import org.mcnative.bukkit.location.BukkitLocation;
 import org.mcnative.bukkit.player.permission.BukkitPermissionHandler;
 import org.mcnative.bukkit.player.tablist.BukkitTablist;
+import org.mcnative.bukkit.utils.BukkitReflectionUtil;
 import org.mcnative.bukkit.world.BukkitWorld;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -90,7 +91,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     private boolean permissibleInjected;
     private boolean joining;
 
-    private Map<TablistEntry,String> tablistTeamNames;
+    private final Map<TablistEntry,String> tablistTeamNames;
     private int tablistTeamIndex;
 
     public BukkitPlayer(org.bukkit.entity.Player original, PendingConnection connection,MinecraftPlayerData playerData) {
@@ -170,17 +171,24 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public int getPing() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return BukkitReflectionUtil.getPing(original);
     }
 
     @Override
     public CompletableFuture<Integer> getPingAsync() {
-        throw new UnsupportedOperationException("Currently not supported");
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        McNative.getInstance().getExecutorService().execute(() -> {
+            try {
+                Thread.sleep(0,10);
+            } catch (InterruptedException ignored) { }
+            future.complete(getPing());
+        });
+        return future;
     }
 
     @Override
     public ProxyServer getProxy() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return McNative.getInstance().getNetwork().getOperations().getProxy(this);
     }
 
     @Override
@@ -190,18 +198,23 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void connect(MinecraftServer target, ServerConnectReason reason) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNative.getInstance().getNetwork().getOperations().connect(this,target,reason);
     }
 
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
-        throw new UnsupportedOperationException("Currently not supported");
+        return McNative.getInstance().getNetwork().getOperations().connectAsync(this,target,reason);
     }
 
     @Override
     public void kick(MessageComponent<?> message, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        if(McNative.getInstance().isNetworkAvailable()){
+            McNative.getInstance().getNetwork().getOperations().kick(this,message,variables);
+        }else{
+            disconnect(message,variables);
+        }
     }
+
 
     @Override
     public void performCommand(String command) {
@@ -264,7 +277,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
-        throw new UnsupportedOperationException("Coming soon");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -274,12 +287,12 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void sendLocalLoopPacket(MinecraftPacket packet) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override
     public void sendData(String channel, byte[] output) {
-
+        throw new UnsupportedOperationException("Currently not supported");
     }
 
     @Override

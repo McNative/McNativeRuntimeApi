@@ -23,7 +23,6 @@ import net.pretronic.libraries.command.Completable;
 import net.pretronic.libraries.command.NoPermissionAble;
 import net.pretronic.libraries.command.NoPermissionHandler;
 import net.pretronic.libraries.command.manager.CommandManager;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -112,22 +111,12 @@ public class McNativeCommand extends Command {
 
     @Override
     public boolean testPermission(CommandSender target) {
-        boolean result = testPermissionSilent(target);
-        if(!result){
-            VariableSet variables = VariableSet.create()
-                    .add("command.name",original.getConfiguration().getName())
-                    .add("command.permission",original.getConfiguration().getPermission())
-                    .add("command.description",original.getConfiguration().getDescription())
-                    .add("sender.name",target.getName());
-
-        }
-        return result;
+        return true;
     }
 
     @Override
     public boolean testPermissionSilent(CommandSender target) {
-        String permission = original.getConfiguration().getPermission();
-        return permission == null || target.hasPermission(original.getConfiguration().getPermission());
+        return true;
     }
 
     @Override

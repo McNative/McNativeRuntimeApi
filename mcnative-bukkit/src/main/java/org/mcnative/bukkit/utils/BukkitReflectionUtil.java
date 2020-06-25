@@ -104,6 +104,11 @@ public class BukkitReflectionUtil {
         return ReflectionUtil.invokeMethod(getMNSClass("EntityHuman") ,entityPlayer,"getProfile",new Object[]{});
     }
 
+    public static int getPing(Player player){
+        Object entityPlayer = ReflectionUtil.invokeMethod(player,"getHandle");
+        return ReflectionUtil.getFieldValue(entityPlayer,"ping",Integer.class);
+    }
+
     public static String getServerVersion(){
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
     }
