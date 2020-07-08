@@ -22,7 +22,6 @@ package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.entry.DocumentEntry;
-import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
@@ -180,8 +179,6 @@ public class TextBuilder implements BasicMessageBuilder {
                 current.set("extra",new Object[]{nextComp.toString()});
             }
         }
-
-        System.out.println(DocumentFileType.JSON.getWriter().write(root,true));
 
         return root;
     }
