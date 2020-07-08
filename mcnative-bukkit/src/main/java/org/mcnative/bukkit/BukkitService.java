@@ -65,6 +65,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class BukkitService implements MinecraftService, MinecraftServer {
 
+    private final static NetworkIdentifier NO_NETWORK_IDENTIFIER = new NetworkIdentifier(Bukkit.getName(),new UUID(0,0));
+
     private final PacketManager packetManager;
     private final BukkitPlayerManager playerManager;
     private final CommandManager commandManager;
@@ -325,7 +327,12 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public NetworkIdentifier getIdentifier() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if(McNative.getInstance().isNetworkAvailable()){
+            try{
+                return McNative.getInstance().getNetwork().getLocalIdentifier();
+            }catch (Exception ignored){}
+        }
+        return NO_NETWORK_IDENTIFIER;
     }
 
     @Override
