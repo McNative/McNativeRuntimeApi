@@ -201,7 +201,7 @@ public class BukkitTablist implements Tablist {
     @Internal
     public void attachReceiver(ConnectedMinecraftPlayer player){
         this.receivers.add(player);
-        VariableSet variables = VariableSet.createDescribed().add("player", player);
+        VariableSet variables = VariableSet.create().addDescribed("player", player);
         updateOverview(player, variables, variables);
         for (TablistEntry entry : entries) sendEntry(player,entry);
     }
