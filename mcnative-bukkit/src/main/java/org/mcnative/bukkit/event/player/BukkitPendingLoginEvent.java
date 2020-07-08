@@ -20,6 +20,7 @@
 package org.mcnative.bukkit.event.player;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.mcnative.common.connection.PendingConnection;
@@ -29,7 +30,7 @@ import org.mcnative.common.text.components.MessageComponent;
 
 public class BukkitPendingLoginEvent implements MinecraftPlayerPendingLoginEvent {
 
-    public final static String NULL = "MESSAGE_NULL";
+    public final static String NULL = "MESSAGE_NULL (Result mananged by McNative))";
 
     private final AsyncPlayerPreLoginEvent original;
     private final PendingConnection connection;
@@ -57,6 +58,7 @@ public class BukkitPendingLoginEvent implements MinecraftPlayerPendingLoginEvent
 
     @Override
     public void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables) {
+        Validate.notNull(cancelReason,variables);
         this.variables = variables;
         this.original.setKickMessage(NULL);
     }

@@ -154,6 +154,7 @@ public class BukkitPendingConnection implements PendingConnection {
         MinecraftDisconnectPacket packet = new MinecraftDisconnectPacket();
         packet.setReason(reason);
         packet.setVariables(variables);
+        sendPacket(packet);
     }
 
     @Override

@@ -22,12 +22,15 @@ package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.entry.DocumentEntry;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
 import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.MessageKeyComponent;
 import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.text.format.TextStyle;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -105,6 +108,34 @@ public class TextBuilder implements BasicMessageBuilder {
         return builder.toString();
     }
 
+    protected static Document buildCompileText(BuildContext context,Object input,Object nextComp){
+        if(input instanceof MessageKeyComponent){
+            Document result = ((MessageKeyComponent) input).compile(context);
+            if(nextComp != null){
+                Document root = Document.newDocument();
+                root.set("text","");
+
+                if(nextComp instanceof DocumentEntry){
+                    root.set("extra",new Object[]{result,nextComp});
+                }else if(nextComp.getClass().isArray()){
+                    int length = Array.getLength(nextComp);
+                    if(length >= 0){
+                        root.set("extra",nextComp);
+                        //@Todo optimize with direct method in document
+                        root.getDocument("extra").entries().add(0,result);
+                    }
+                }else{
+                    root.set("extra",new Object[]{result,nextComp.toString()});
+                }
+
+                return root;
+            }
+            return result;
+        }else{
+            return buildCompileText(input.toString(),nextComp);
+        }
+    }
+
     protected static Document buildCompileText(String input,Object nextComp){
         Document root = Document.newDocument();
         Document current = root;
@@ -126,6 +157,12 @@ public class TextBuilder implements BasicMessageBuilder {
                     current = next;
                     textIndex = i+1;
                 }
+
+                TextStyle style = TextStyle.of(chars[i]);
+                if(style != null){
+                    current.set(style.getName().toLowerCase(),true);
+                    textIndex = i+1;
+                }
             }
         }
         if(textIndex < chars.length){
@@ -143,6 +180,9 @@ public class TextBuilder implements BasicMessageBuilder {
                 current.set("extra",new Object[]{nextComp.toString()});
             }
         }
+
+        System.out.println(DocumentFileType.JSON.getWriter().write(root,true));
+
         return root;
     }
 

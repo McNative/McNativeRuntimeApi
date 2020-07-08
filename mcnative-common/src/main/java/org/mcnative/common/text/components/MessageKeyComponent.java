@@ -22,6 +22,7 @@ package org.mcnative.common.text.components;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.message.bml.Message;
+import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.McNative;
@@ -83,15 +84,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
         try{
-            if(message == null){
-                message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
-            }
-            OnlineMinecraftPlayer player = null;
-            if(connection instanceof OnlineMinecraftPlayer){
-                player = (OnlineMinecraftPlayer) connection;
-            }else if(connection instanceof PendingConnection && ((PendingConnection) connection).isPlayerAvailable()){
-                player = ((PendingConnection) connection).getPlayer();
-            }
+            OnlineMinecraftPlayer player = getPlayer(connection, language);
             builder.append(message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.LEGACY)).toString());
         }catch (Exception e){
             e.printStackTrace();
@@ -101,22 +94,20 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         }
     }
 
-    //@Todo optimize
-
     @Override
     public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
+        OnlineMinecraftPlayer player = getPlayer(connection, language);
+
+        return compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
+    }
+
+    public Document compile(BuildContext context){
         try{
             if(message == null){
-                message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
-            }
-            OnlineMinecraftPlayer player = null;
-            if(connection instanceof OnlineMinecraftPlayer){
-                player = (OnlineMinecraftPlayer) connection;
-            }else if(connection instanceof PendingConnection && ((PendingConnection) connection).isPlayerAvailable()){
-                player = ((PendingConnection) connection).getPlayer();
+                message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, context.getLanguage());
             }
 
-            Object result = message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.COMPILE));
+            Object result = message.build(context);
             if(result instanceof Document){
                 return (Document) result;
             }
@@ -137,5 +128,18 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void decompile(Document data) {
         this.key = data.getString("key");
+    }
+
+    private OnlineMinecraftPlayer getPlayer(MinecraftConnection connection, Language language) {
+        if (message == null) {
+            message = McNative.getInstance().getRegistry().getService(MessageProvider.class).getMessage(this.key, language);
+        }
+        OnlineMinecraftPlayer player = null;
+        if (connection instanceof OnlineMinecraftPlayer) {
+            player = (OnlineMinecraftPlayer) connection;
+        } else if (connection instanceof PendingConnection && ((PendingConnection) connection).isPlayerAvailable()) {
+            player = ((PendingConnection) connection).getPlayer();
+        }
+        return player;
     }
 }

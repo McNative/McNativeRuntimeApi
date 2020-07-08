@@ -252,7 +252,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        return Iterators.map(getOnlinePlayers(), player -> player);
+        return Iterators.map(playerManager.getConnectedPlayers(), player -> player);
     }
 
     @Override

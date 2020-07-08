@@ -20,6 +20,7 @@
 package org.mcnative.bukkit.event.player;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.mcnative.common.connection.PendingConnection;
@@ -58,7 +59,7 @@ public class BukkitLoginEvent implements MinecraftPlayerLoginEvent {
 
     @Override
     public MessageComponent<?> getCancelReason() {
-        if(original.getKickMessage() != NULL) cancelReason = Text.of(original.getKickMessage());
+        if(!original.getKickMessage().equals(NULL)) cancelReason = Text.of(original.getKickMessage());
         return cancelReason;
     }
 
@@ -74,6 +75,7 @@ public class BukkitLoginEvent implements MinecraftPlayerLoginEvent {
 
     @Override
     public void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables) {
+        Validate.notNull(cancelReason,variables);
         this.cancelReason = cancelReason;
         this.variables = variables;
         this.original.setKickMessage(NULL);

@@ -21,6 +21,7 @@
 package org.mcnative.bukkit.network.cloudnet.v2;
 
 import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.server.info.ProxyInfo;
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
@@ -39,6 +40,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -98,42 +100,84 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public Collection<ProxyServer> getProxies() {
-        throw new UnsupportedOperationException("Currently not supported");
+        Collection<ProxyServer> result = new ArrayList<>();
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            result.add(new CloudNetProxy(server));
+        }
+        return result;
     }
 
     @Override
     public ProxyServer getProxy(String name) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            String infoName = server.getServiceId().getGroup()+"-"+server.getServiceId().getId();
+            if(infoName.equalsIgnoreCase(name)){
+                return new CloudNetProxy(server);
+            }
+        }
+        return null;
     }
 
+    //@Todo maybe find better solution
     @Override
     public ProxyServer getProxy(UUID uniqueId) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            if(server.getServiceId().getUniqueId() == uniqueId){
+                return new CloudNetProxy(server);
+            }
+        }
+        return null;
     }
 
+    //@Todo maybe find better solution
     @Override
     public ProxyServer getProxy(InetSocketAddress address) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            if(server.getPort() == address.getPort()
+                    && server.getHost().equalsIgnoreCase(address.getAddress().getHostAddress())){
+                return new CloudNetProxy(server);
+            }
+        }
+        return null;
     }
 
     @Override
     public Collection<MinecraftServer> getServers() {
-        throw new UnsupportedOperationException("Currently not supported");
+        Collection<MinecraftServer> result = new ArrayList<>();
+        for (ServerInfo server : CloudAPI.getInstance().getServers()) {
+            result.add(new CloudNetServer(server));
+        }
+        return result;
     }
 
     @Override
     public MinecraftServer getServer(String name) {
-        throw new UnsupportedOperationException("Currently not supported");
+        ServerInfo info = CloudAPI.getInstance().getServerInfo(name);
+        if(info != null) return new CloudNetServer(info);
+        return null;
     }
 
+    //@Todo maybe find better solution
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ServerInfo server : CloudAPI.getInstance().getServers()) {
+            if(server.getServiceId().getUniqueId() == uniqueId){
+                return new CloudNetServer(server);
+            }
+        }
+        return null;
     }
 
+    //@Todo maybe find better solution
     @Override
     public MinecraftServer getServer(InetSocketAddress address) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ServerInfo server : CloudAPI.getInstance().getServers()) {
+            if(server.getPort() == address.getPort()
+                    && server.getHost().equalsIgnoreCase(address.getAddress().getHostAddress())){
+                return new CloudNetServer(server);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -158,17 +202,17 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public void registerStatusCallback(Plugin<?> owner, NetworkSynchronisationCallback synchronisationCallback) {
-
+        //Unused, always connected
     }
 
     @Override
     public void unregisterStatusCallback(NetworkSynchronisationCallback synchronisationCallback) {
-
+        //Unused, always connected
     }
 
     @Override
     public void unregisterStatusCallbacks(Plugin<?> owner) {
-
+        //Unused, always connected
     }
 
     @Override
