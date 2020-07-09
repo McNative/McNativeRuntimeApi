@@ -195,7 +195,7 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
         //@Todo maybe develop reference map?
-        return Iterators.map(getOnlinePlayers(), player -> player);
+        return Iterators.map(playerManager.getConnectedPlayers(), player -> player);
     }
 
     @Override
