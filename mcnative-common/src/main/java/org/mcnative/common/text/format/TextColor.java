@@ -19,6 +19,8 @@
 
 package org.mcnative.common.text.format;
 
+import org.mcnative.common.text.Text;
+
 public enum TextColor {
 
     BLACK( '0', "black", (byte) 0),
@@ -73,6 +75,10 @@ public enum TextColor {
 
     public String getName() {
         return name;
+    }
+
+    public String toFormatCode(){
+        return ""+ Text.FORMAT_CHAR+getCode();
     }
 
     @Override
