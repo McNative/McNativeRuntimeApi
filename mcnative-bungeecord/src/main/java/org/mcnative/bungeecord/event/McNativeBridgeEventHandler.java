@@ -265,8 +265,9 @@ public final class McNativeBridgeEventHandler {
 
     private void handleLogout(PlayerDisconnectEvent event){
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
-        if(player instanceof  BungeeProxiedPlayer) ((BungeeProxiedPlayer) player).handleLogout();
+        if(player instanceof BungeeProxiedPlayer) ((BungeeProxiedPlayer) player).handleLogout();
         MinecraftPlayerLogoutEvent mcNativeEvent = new BungeeMinecraftLogoutEvent(player);
+        playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
         eventBus.callEvents(PlayerDisconnectEvent.class,event,mcNativeEvent);
     }
 
