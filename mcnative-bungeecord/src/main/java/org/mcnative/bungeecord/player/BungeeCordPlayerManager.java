@@ -31,7 +31,6 @@ import java.util.UUID;
 
 public class BungeeCordPlayerManager extends AbstractPlayerManager{
 
-
     private final Collection<ConnectedMinecraftPlayer> onlineMinecraftPlayers;
 
     public BungeeCordPlayerManager() {

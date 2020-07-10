@@ -58,9 +58,13 @@ public class McNativeMinecraftProtocolEncoderForwardWrapper extends ChannelOutbo
         if(msg instanceof MinecraftPacket){
             encoder.write(ctx, msg, promise);
         }else {
-            ByteBuf buffer = Unpooled.directBuffer();
-            ENCODE_METHOD.invoke(original,ctx,msg,buffer);
-            ctx.write(buffer, promise);
+            if(original.acceptOutboundMessage(msg)){
+                ByteBuf buffer = Unpooled.directBuffer();
+                ENCODE_METHOD.invoke(original,ctx,msg,buffer);
+                ctx.write(buffer, promise);
+            }else{
+                ctx.write(msg,promise);
+            }
         }
     }
 

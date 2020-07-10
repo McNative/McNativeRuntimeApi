@@ -68,6 +68,7 @@ import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.proxy.ProxyService;
 import org.mcnative.proxy.ServerConnectHandler;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -191,7 +192,7 @@ public final class McNativeBridgeEventHandler {
         eventBus.callEvents(LoginEvent.class,event,loginEvent);
 
         if(loginEvent.isCancelled()){
-            if(event.getCancelReasonComponents() == null){
+            if(Arrays.equals(event.getCancelReasonComponents(), BungeeMinecraftLoginEvent.MCNATIVE_MANAGER)){
                 connection.disconnect(loginEvent.getCancelReason(),loginEvent.getCancelReasonVariables());
                 event.setCancelled(false);
             }

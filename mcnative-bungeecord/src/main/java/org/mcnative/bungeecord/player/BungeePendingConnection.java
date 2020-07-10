@@ -21,6 +21,7 @@ package org.mcnative.bungeecord.player;
 
 import io.netty.channel.Channel;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
@@ -74,6 +75,7 @@ public class BungeePendingConnection implements PendingConnection {
             this.channel = ReflectionUtil.getFieldValue(channelWrapper, "ch", Channel.class);
         }else throw new IllegalArgumentException("Invalid pending connection.");
         this.gameProfile = extractGameProfile();
+        injectUpstreamProtocolHandlersToPipeline();
     }
 
     @Override
@@ -153,6 +155,7 @@ public class BungeePendingConnection implements PendingConnection {
 
     @Override
     public void disconnect(MessageComponent<?> reason, VariableSet variables) {
+        Validate.notNull(reason,variables);
         String state = getRawState().toString();
         if(state.equals("STATUS") || state.equals("PING")) channel.close();
         else{
@@ -206,11 +209,12 @@ public class BungeePendingConnection implements PendingConnection {
     public void injectUpstreamProtocolHandlersToPipeline(){
         this.channel.pipeline().addAfter("packet-encoder","mcnative-packet-encoder"
                 ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
-                        ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+                ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
 
         if(!McNativeBungeeCordConfiguration.NETWORK_PACKET_MANIPULATION_UPSTREAM_ENABLED) return;
 
-        this.channel.pipeline().addAfter("mcnative-packet-encoder","mcnative-packet-rewrite-encoder"
+        this.channel.pipeline().addAfter("packet-encoder","mcnative-packet-rewrite-encoder"
                 ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
 

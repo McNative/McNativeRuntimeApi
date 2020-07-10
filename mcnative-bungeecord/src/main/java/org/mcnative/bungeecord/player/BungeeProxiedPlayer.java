@@ -451,7 +451,6 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     public void postLogin(net.md_5.bungee.api.connection.ProxiedPlayer original){
         this.original = original;
         connection.setState(ConnectionState.GAME);
-        connection.injectUpstreamProtocolHandlersToPipeline();
 
         ChatChannel serverChat = McNative.getInstance().getLocal().getServerChat();
         if(serverChat != null){

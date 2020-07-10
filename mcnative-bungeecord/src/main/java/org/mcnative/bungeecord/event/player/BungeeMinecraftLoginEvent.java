@@ -21,6 +21,7 @@
 package org.mcnative.bungeecord.event.player;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.PendingConnection;
@@ -30,6 +31,8 @@ import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.components.MessageComponent;
 
 public class BungeeMinecraftLoginEvent implements MinecraftPlayerLoginEvent {
+
+    public final static BaseComponent[] MCNATIVE_MANAGER = new BaseComponent[]{new TextComponent("McNative managed")};
 
     private final LoginEvent original;
     private final PendingConnection connection;
@@ -63,7 +66,7 @@ public class BungeeMinecraftLoginEvent implements MinecraftPlayerLoginEvent {
     public void setCancelReason(MessageComponent<?> cancelReason, VariableSet variables) {
         this.cancelReason = cancelReason;
         this.variables = variables;
-        this.original.setCancelReason((BaseComponent) null);
+        this.original.setCancelReason(MCNATIVE_MANAGER);
     }
 
     @Override
