@@ -94,7 +94,7 @@ public class CloudNetV3Network implements Network {
     @Override
     public NetworkIdentifier getIdentifier(String name) {
         ServiceInfoSnapshot service = Wrapper.getInstance().getCloudServiceProvider().getCloudServiceByName(name);
-       // if(service == null) throw new OperationFailedException("Server is not registered in cloud");
+        if(service == null) return null; //throw new OperationFailedException("Server is not registered in cloud");
         return new NetworkIdentifier(name,service.getServiceId().getUniqueId());
     }
 
