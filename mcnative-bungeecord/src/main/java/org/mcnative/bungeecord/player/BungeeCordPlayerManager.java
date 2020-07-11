@@ -25,16 +25,16 @@ import org.mcnative.common.player.AbstractPlayerManager;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BungeeCordPlayerManager extends AbstractPlayerManager{
 
     private final Collection<ConnectedMinecraftPlayer> onlineMinecraftPlayers;
 
     public BungeeCordPlayerManager() {
-        this.onlineMinecraftPlayers = new ArrayList<>();
+        this.onlineMinecraftPlayers = ConcurrentHashMap.newKeySet();
     }
 
     public Collection<ConnectedMinecraftPlayer> getConnectedPlayers() {

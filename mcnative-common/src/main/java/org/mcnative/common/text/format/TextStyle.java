@@ -19,6 +19,8 @@
 
 package org.mcnative.common.text.format;
 
+import org.mcnative.common.text.Text;
+
 public enum TextStyle {
 
     OBFUSCATED( 'k', "obfuscated"),
@@ -47,6 +49,10 @@ public enum TextStyle {
 
     public String getName() {
         return name;
+    }
+
+    public String toFormatCode(){
+        return ""+Text.FORMAT_CHAR+getCode();
     }
 
     @Override

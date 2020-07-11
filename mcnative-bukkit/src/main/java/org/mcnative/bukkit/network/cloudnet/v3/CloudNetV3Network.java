@@ -28,7 +28,6 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
-import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.NetworkOperations;
@@ -95,7 +94,7 @@ public class CloudNetV3Network implements Network {
     @Override
     public NetworkIdentifier getIdentifier(String name) {
         ServiceInfoSnapshot service = Wrapper.getInstance().getCloudServiceProvider().getCloudServiceByName(name);
-        if(service == null) throw new OperationFailedException("Server is not registered in cloud");
+        if(service == null) return null;//throw new OperationFailedException("Server is not registered in cloud");
         return new NetworkIdentifier(name,service.getServiceId().getUniqueId());
     }
 

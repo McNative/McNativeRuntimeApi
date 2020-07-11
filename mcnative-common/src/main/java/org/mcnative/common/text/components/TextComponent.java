@@ -32,7 +32,9 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
 
     private String text;
 
-    public TextComponent() {}
+    public TextComponent() {
+        this("");
+    }
 
     public TextComponent(String text) {
         this.text = text;
