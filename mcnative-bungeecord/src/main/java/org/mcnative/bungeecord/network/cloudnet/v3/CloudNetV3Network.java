@@ -92,6 +92,7 @@ public class CloudNetV3Network implements Network {
         return localIdentifier;
     }
 
+
     @Override
     public NetworkIdentifier getIdentifier(String name) {
         ServiceInfoSnapshot service = Wrapper.getInstance().getCloudServiceProvider().getCloudServiceByName(name);
