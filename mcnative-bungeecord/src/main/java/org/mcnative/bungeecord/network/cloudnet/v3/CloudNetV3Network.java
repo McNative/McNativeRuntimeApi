@@ -100,6 +100,7 @@ public class CloudNetV3Network implements Network {
         return new NetworkIdentifier(name,service.getServiceId().getUniqueId());
     }
 
+
     @Override
     public Collection<ProxyServer> getProxies() {
         throw new UnsupportedOperationException("Currently not supported");
