@@ -41,7 +41,8 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_9,0x1A)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x1B)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x1A)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x1B))
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x1B)
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x1A))
             ,on(PacketDirection.OUTGOING, ConnectionState.LOGIN
                     ,map(MinecraftProtocolVersion.JE_1_7,0x00)));
 

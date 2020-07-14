@@ -43,6 +43,7 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12_1,0x44)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x47)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x4B)
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x4C)
                     ,map(MinecraftProtocolVersion.JE_1_15,0x4C)));
 
     private String name;

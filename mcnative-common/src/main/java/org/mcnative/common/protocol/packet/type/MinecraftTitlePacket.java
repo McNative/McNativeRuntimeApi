@@ -41,7 +41,8 @@ public class MinecraftTitlePacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12_1,0x48)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x4B)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x4F)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x50)));
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x50)
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x4F)));
 
     private Action action;
     private Object data;

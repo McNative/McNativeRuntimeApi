@@ -42,7 +42,8 @@ public class MinecraftChatPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_7,0x02)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x0F)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x0E)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x0F))
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x0F)
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x0E))
             ,on(PacketDirection.INCOMING
                     ,map(MinecraftProtocolVersion.JE_1_7,0x01)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x02)

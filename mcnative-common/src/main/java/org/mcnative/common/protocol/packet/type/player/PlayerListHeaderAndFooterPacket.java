@@ -51,7 +51,8 @@ public class PlayerListHeaderAndFooterPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12_2,0x53)
                     ,map(MinecraftProtocolVersion.JE_1_13,0x4E)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x53)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x54)));
+                    ,map(MinecraftProtocolVersion.JE_1_15,0x54)
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x53)));
 
     public PlayerListHeaderAndFooterPacket() {
         this.headerVariables = VariableSet.createEmpty();
