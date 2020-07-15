@@ -23,8 +23,6 @@ package org.mcnative.common.player.tablist;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
-import org.mcnative.common.text.Text;
-import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.Collection;
 import java.util.List;

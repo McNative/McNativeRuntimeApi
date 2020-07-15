@@ -22,7 +22,6 @@ package org.mcnative.bungeecord.player.permission;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.bungeecord.McNativeBungeeCordConfiguration;
 import org.mcnative.common.player.PlayerDesign;
 
