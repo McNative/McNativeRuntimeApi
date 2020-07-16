@@ -76,10 +76,12 @@
         <plugin.compiler.version>3.8.1</plugin.compiler.version>
         <plugin.source.version>3.2.1</plugin.source.version>
         <plugin.shade.version>3.2.1</plugin.shade.version>
+        <plugin.jar.version>3.2.0</plugin.jar.version>
     </properties>
 
     <modules>
         <module>mcnative-common</module>
+        <module>mcnative-network-integrations</module>
         <module>mcnative-proxy</module>
         <module>mcnative-service</module>
         <module>mcnative-bukkit</module>
@@ -87,7 +89,6 @@
         <module>mcnative-buildtool-maven</module>
         <module>mcnative-loader</module>
         <module>mcnative-build</module>
-        <module>mcnative-network-integrations</module>
     </modules>
 
     <repositories>
