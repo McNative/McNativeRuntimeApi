@@ -18,9 +18,11 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v2;
 
 import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.player.CloudPlayer;
+import de.dytanic.cloudnet.lib.server.info.ProxyInfo;
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
@@ -28,17 +30,18 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.NetworkOperations;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
-import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.network.integrations.McNativeGlobalExecutor;
 
-import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -47,10 +50,12 @@ import java.util.concurrent.Executor;
 public class CloudNetV2Network implements Network {
 
     private final CloudNetV2Messenger messenger;
+    private final NetworkOperations operations;
     private final NetworkIdentifier localIdentifier;
 
     public CloudNetV2Network(Executor executor) {
         this.messenger = new CloudNetV2Messenger(executor);
+        this.operations = new CloudNetV2NetworkOperations(this);
         this.localIdentifier = new NetworkIdentifier(CloudAPI.getInstance().getServerId(),CloudAPI.getInstance().getUniqueId());
     }
 
@@ -60,13 +65,13 @@ public class CloudNetV2Network implements Network {
     }
 
     @Override
-    public Messenger getMessenger() {
+    public CloudNetV2Messenger getMessenger() {
         return messenger;
     }
 
     @Override
     public NetworkOperations getOperations() {
-        throw new UnsupportedOperationException();
+        return operations;
     }
 
     @Override
@@ -98,42 +103,58 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public Collection<ProxyServer> getProxies() {
-        throw new UnsupportedOperationException("Currently not supported");
+        Collection<ProxyServer> result = new ArrayList<>();
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            result.add(new CloudNetProxy(server));
+        }
+        return result;
     }
 
     @Override
     public ProxyServer getProxy(String name) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            String infoName = server.getServiceId().getGroup()+"-"+server.getServiceId().getId();
+            if(infoName.equalsIgnoreCase(name)){
+                return new CloudNetProxy(server);
+            }
+        }
+        return null;
     }
 
     @Override
     public ProxyServer getProxy(UUID uniqueId) {
-        throw new UnsupportedOperationException("Currently not supported");
-    }
-
-    @Override
-    public ProxyServer getProxy(InetSocketAddress address) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ProxyInfo server : CloudAPI.getInstance().getProxys()) {
+            if(server.getServiceId().getUniqueId() == uniqueId){
+                return new CloudNetProxy(server);
+            }
+        }
+        return null;
     }
 
     @Override
     public Collection<MinecraftServer> getServers() {
-        throw new UnsupportedOperationException("Currently not supported");
+        Collection<MinecraftServer> result = new ArrayList<>();
+        for (ServerInfo server : CloudAPI.getInstance().getServers()) {
+            result.add(new CloudNetServer(server));
+        }
+        return result;
     }
 
     @Override
     public MinecraftServer getServer(String name) {
-        throw new UnsupportedOperationException("Currently not supported");
+        ServerInfo info = CloudAPI.getInstance().getServerInfo(name);
+        if(info != null) return new CloudNetServer(info);
+        return null;
     }
 
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
-        throw new UnsupportedOperationException("Currently not supported");
-    }
-
-    @Override
-    public MinecraftServer getServer(InetSocketAddress address) {
-        throw new UnsupportedOperationException("Currently not supported");
+        for (ServerInfo server : CloudAPI.getInstance().getServers()) {
+            if(server.getServiceId().getUniqueId() == uniqueId){
+                return new CloudNetServer(server);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -158,17 +179,17 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public void registerStatusCallback(Plugin<?> owner, NetworkSynchronisationCallback synchronisationCallback) {
-
+        //Unused, always connected
     }
 
     @Override
     public void unregisterStatusCallback(NetworkSynchronisationCallback synchronisationCallback) {
-
+        //Unused, always connected
     }
 
     @Override
     public void unregisterStatusCallbacks(Plugin<?> owner) {
-
+        //Unused, always connected
     }
 
     @Override
@@ -178,32 +199,50 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        throw new UnsupportedOperationException("Currently not supported");
+        Collection<OnlineMinecraftPlayer> players = new ArrayList<>();
+        for (CloudPlayer onlinePlayer : CloudAPI.getInstance().getOnlinePlayers()) {
+            players.add(new CloudNetOnlinePlayer(onlinePlayer));
+        }
+        return players;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        throw new UnsupportedOperationException("Currently not supported");
+        OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(uniqueId);
+        if(player != null) return player;
+
+        return getDirectOnlinePlayer(uniqueId);
     }
 
     @Override
-    public OnlineMinecraftPlayer getOnlinePlayer(String nme) {
-        throw new UnsupportedOperationException("Currently not supported");
+    public OnlineMinecraftPlayer getOnlinePlayer(String name) {
+        OnlineMinecraftPlayer player = McNative.getInstance().getLocal().getConnectedPlayer(name);
+        if(player != null) return player;
+
+        UUID uniqueId =  CloudAPI.getInstance().getPlayerUniqueId(name);
+        if(uniqueId == null) return null;
+        CloudPlayer onlinePlayer = CloudAPI.getInstance().getOnlinePlayer(uniqueId);
+        return onlinePlayer != null ? new CloudNetOnlinePlayer(onlinePlayer) : null;
+    }
+
+    public OnlineMinecraftPlayer getDirectOnlinePlayer(UUID uniqueId) {
+        CloudPlayer onlinePlayer = CloudAPI.getInstance().getOnlinePlayer(uniqueId);
+        return onlinePlayer != null ? new CloudNetOnlinePlayer(onlinePlayer) : null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException("CloudNet does not support support bedrock players.");
     }
 
     @Override
     public void broadcast(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.broadcast(component, variables);
     }
 
     @Override
     public void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.broadcast(permission,component, variables);
     }
 
     @Override
@@ -218,6 +257,7 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.kickAll(component, variables);
     }
+
 }

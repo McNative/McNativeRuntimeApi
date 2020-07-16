@@ -37,8 +37,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.bungeecord.BungeeCordProxyNetwork;
-import org.mcnative.bukkit.network.cloudnet.v2.CloudNetV2Network;
-import org.mcnative.bukkit.network.cloudnet.v3.CloudNetV3Network;
+import org.mcnative.bukkit.network.cloudnet.CloudNetV2PlatformListener;
+import org.mcnative.bukkit.network.cloudnet.CloudNetV3PlatformListener;
 import org.mcnative.bukkit.player.BukkitPlayer;
 import org.mcnative.bukkit.player.BukkitPlayerManager;
 import org.mcnative.bukkit.player.connection.BukkitChannelInjector;
@@ -64,6 +64,8 @@ import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
+import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
 
 import java.io.File;
 import java.util.List;
@@ -297,10 +299,14 @@ public class McNativeLauncher {
     private static Network setupNetwork(Logger logger,ExecutorService executor){
         if(Bukkit.getPluginManager().getPlugin("CloudNetAPI") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
-            return new CloudNetV2Network(executor);
+            CloudNetV2Network network = new CloudNetV2Network(executor);
+            new CloudNetV2PlatformListener(network.getMessenger());
+            return network;
         }else if(Bukkit.getPluginManager().getPlugin("CloudNet-Bridge") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V3 networking technology");
-            return new CloudNetV3Network(executor);
+            CloudNetV3Network network = new CloudNetV3Network(executor);
+            new CloudNetV3PlatformListener(network.getMessenger());
+            return network;
         }else if(!Bukkit.getOnlineMode()){
             File spigotConfigFile = new File("spigot.yml");
             if(spigotConfigFile.exists()){

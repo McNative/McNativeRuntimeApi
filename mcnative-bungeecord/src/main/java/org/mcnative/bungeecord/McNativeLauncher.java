@@ -30,12 +30,15 @@ import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.event.McNativeBridgeEventHandler;
+import org.mcnative.bungeecord.network.McNativeGlobalActionListener;
+import org.mcnative.bungeecord.network.McNativePlayerActionListener;
 import org.mcnative.bungeecord.network.bungeecord.BungeecordProxyNetwork;
-import org.mcnative.bungeecord.network.cloudnet.v2.CloudNetV2Network;
-import org.mcnative.bungeecord.network.cloudnet.v3.CloudNetV3Network;
+import org.mcnative.bungeecord.network.cloudnet.CloudNetV2PlatformListener;
+import org.mcnative.bungeecord.network.cloudnet.CloudNetV3PlatformListener;
 import org.mcnative.bungeecord.player.BungeeCordPlayerManager;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.McNativeEventBus;
@@ -46,6 +49,8 @@ import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
+import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
+import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.proxy.ProxyService;
 
 import javax.imageio.ImageIO;
@@ -96,13 +101,16 @@ public class McNativeLauncher {
         McNative.setInstance(instance);
         instance.setNetwork(setupNetwork(logger,localService,instance.getExecutorService(),serverMap));
 
+        instance.getNetwork().getMessenger().registerChannel("mcnative_player",ObjectOwner.SYSTEM,new McNativePlayerActionListener());
+        instance.getNetwork().getMessenger().registerChannel("mcnative_global",ObjectOwner.SYSTEM,new McNativeGlobalActionListener());
+
         instance.registerDefaultProviders();
         instance.registerDefaultCommands();
         instance.registerDefaultDescribers();
 
         proxy.setConfigurationAdapter(new McNativeConfigurationAdapter(serverMap,proxy.getConfigurationAdapter()));
         logger.info(McNative.CONSOLE_PREFIX+"McNative has overwritten the configuration adapter.");
-        
+
         McNativeEventBus eventBus = new McNativeEventBus(localService.getEventBus());
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected event bus.");
 
@@ -120,10 +128,14 @@ public class McNativeLauncher {
     private static Network setupNetwork(Logger logger,ProxyService proxy,ExecutorService executor, BungeeCordServerMap serverMap){
         if(ProxyServer.getInstance().getPluginManager().getPlugin("CloudNetAPI") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V2 networking technology");
-            return new CloudNetV2Network(executor);
+            CloudNetV2Network network = new CloudNetV2Network(executor);
+            new CloudNetV2PlatformListener(network.getMessenger());
+            return network;
         }else if(ProxyServer.getInstance().getPluginManager().getPlugin("CloudNet-Bridge") != null){
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized CloudNet V3 networking technology");
-            return new CloudNetV3Network(executor);
+            CloudNetV3Network network = new CloudNetV3Network(executor);
+            new CloudNetV3PlatformListener(network.getMessenger());
+            return network;
         }else{
             logger.info(McNative.CONSOLE_PREFIX+"(Network) Initialized BungeeCord networking technology");
             return new BungeecordProxyNetwork(proxy,executor,serverMap);

@@ -53,7 +53,7 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer, VariableOb
     private String permission;
     private MinecraftServerType type;
 
-    private Collection<OnlineMinecraftPlayer> players;
+    private final Collection<OnlineMinecraftPlayer> players;
 
     public WrappedBungeeMinecraftServer(ServerInfo info) {
         this.original = info;

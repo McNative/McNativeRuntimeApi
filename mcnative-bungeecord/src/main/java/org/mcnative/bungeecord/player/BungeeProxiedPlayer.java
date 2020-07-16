@@ -57,8 +57,6 @@ import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftResourcePackSendPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
-import org.mcnative.common.protocol.support.DefaultProtocolChecker;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 
@@ -66,7 +64,6 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 /*
 @Todo In proxy player
@@ -430,13 +427,6 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     @Override
     public boolean isOnline() {
         return isConnected();
-    }
-
-    @Override
-    public void check(Consumer<ProtocolCheck> checker) {
-        ProtocolCheck check = new DefaultProtocolChecker();
-        checker.accept(check);
-        check.process(getProtocolVersion());
     }
 
     @Override

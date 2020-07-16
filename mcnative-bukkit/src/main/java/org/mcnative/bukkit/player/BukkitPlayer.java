@@ -58,7 +58,6 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
@@ -77,7 +76,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, BukkitHumanEntity<org.bukkit.entity.Player> {
 
@@ -314,12 +312,6 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
     public void stopSound(String sound, SoundCategory category) {
         throw new UnsupportedOperationException("Currently not supported");
     }
-
-    @Override
-    public void check(Consumer<ProtocolCheck> checker) {
-        throw new UnsupportedOperationException("Currently not supported");
-    }
-
 
     @Override
     public boolean isBlocking() {

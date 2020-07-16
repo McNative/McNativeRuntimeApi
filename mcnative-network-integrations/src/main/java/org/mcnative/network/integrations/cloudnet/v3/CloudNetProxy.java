@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 26.06.20, 21:33
+ * @since 16.07.20, 11:53
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,9 +18,10 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v3;
 
-import de.dytanic.cloudnet.lib.server.info.ProxyInfo;
+import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.ext.bridge.ServiceInfoSnapshotUtil;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
@@ -39,25 +40,25 @@ import java.util.concurrent.CompletableFuture;
 
 public class CloudNetProxy implements ProxyServer {
 
-    private final ProxyInfo info;
+    private final ServiceInfoSnapshot snapshot;
 
-    public CloudNetProxy(ProxyInfo info) {
-        this.info = info;
+    public CloudNetProxy(ServiceInfoSnapshot snapshot) {
+        this.snapshot = snapshot;
     }
 
     @Override
     public InetSocketAddress getAddress() {
-        return new InetSocketAddress(info.getHost(),info.getPort());
+        return new InetSocketAddress(snapshot.getAddress().getHost(),snapshot.getAddress().getPort());
     }
 
     @Override
     public String getName() {
-        return info.getServiceId().getGroup()+"-"+info.getServiceId().getId();
+        return snapshot.getServiceId().getName();
     }
 
     @Override
     public int getOnlineCount() {
-        return info.getOnlineCount();
+        return ServiceInfoSnapshotUtil.getOnlineCount(snapshot);
     }
 
     @Override
@@ -107,22 +108,22 @@ public class CloudNetProxy implements ProxyServer {
 
     @Override
     public EventBus getEventBus() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Network commands are currently not supported");
     }
 
     @Override
     public CommandManager getCommandManager() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Network commands are currently not supported");
     }
 
     @Override
     public boolean isOnline() {
-        return info.isOnline();
+        return snapshot.isConnected();
     }
 
     @Override
     public NetworkIdentifier getIdentifier() {
-        return new NetworkIdentifier(getName(),info.getServiceId().getUniqueId());
+        return new NetworkIdentifier(snapshot.getServiceId().getName(),snapshot.getServiceId().getUniqueId());
     }
 
     @Override

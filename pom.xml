@@ -87,6 +87,7 @@
         <module>mcnative-buildtool-maven</module>
         <module>mcnative-loader</module>
         <module>mcnative-build</module>
+        <module>mcnative-network-integrations</module>
     </modules>
 
     <repositories>

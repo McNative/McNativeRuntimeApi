@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+  ~ (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
   ~
   ~ @author Davide Wietlisbach
-  ~ @since 22.07.19 22:26
+  ~ @since 16.07.20, 11:12
+  ~ @web %web%
   ~
   ~ The McNative Project is under the Apache License, version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -28,44 +29,55 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mcnative-service</artifactId>
-
+    <artifactId>mcnative-network-integrations</artifactId>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${plugin.compiler.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${plugin.source.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>cloudnet</id>
+            <url>https://cloudnetservice.eu/repositories/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
-        <!-- Internal project dependencies -->
         <dependency>
             <groupId>org.mcnative</groupId>
             <artifactId>mcnative-common</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-api-bridge</artifactId>
+            <version>${dependency.cloudnet.v2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-wrapper-jvm</artifactId>
+            <version>3.2.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-bridge</artifactId>
+            <version>3.2.0-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

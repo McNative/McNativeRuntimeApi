@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v2;
 
 import de.dytanic.cloudnet.lib.player.CloudPlayer;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
@@ -37,12 +37,12 @@ import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.network.integrations.McNativePlayerExecutor;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements OnlineMinecraftPlayer {
 
@@ -51,6 +51,26 @@ public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements Onli
     public CloudNetOnlinePlayer(CloudPlayer player) {
         super(null);
         this.player = player;
+    }
+
+    @Override
+    public String getName() {
+        return player.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return player.getUniqueId();
+    }
+
+    @Override
+    public long getFirstPlayed() {
+        return player.getFirstLogin();
+    }
+
+    @Override
+    public long getLastPlayed() {
+        return player.getLastLogin();
     }
 
     @Override
@@ -70,12 +90,12 @@ public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements Onli
 
     @Override
     public int getPing() {
-        throw new UnsupportedOperationException();
+        return McNativePlayerExecutor.getPing(player.getUniqueId());
     }
 
     @Override
     public CompletableFuture<Integer> getPingAsync() {
-        throw new UnsupportedOperationException();
+        return McNativePlayerExecutor.getPingAsync(player.getUniqueId());
     }
 
     @Override
@@ -90,32 +110,32 @@ public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements Onli
 
     @Override
     public void connect(MinecraftServer target, ServerConnectReason reason) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.connect(player.getUniqueId(),target,reason);
     }
 
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
-        throw new UnsupportedOperationException();
+        return McNativePlayerExecutor.connectAsync(player.getUniqueId(),target,reason);
     }
 
     @Override
     public void kick(MessageComponent<?> message, VariableSet variables) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.kick(player.getUniqueId(),message,variables);
     }
 
     @Override
     public void performCommand(String command) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.performCommand(player.getUniqueId(),command);
     }
 
     @Override
     public void chat(String message) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.chat(player.getUniqueId(),message);
     }
 
     @Override
     public void sendMessage(ChatPosition position, MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.sendMessage(player.getUniqueId(),position,component,variables);
     }
 
     @Override
@@ -160,11 +180,6 @@ public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements Onli
 
     @Override
     public void stopSound(String sound, SoundCategory category) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void check(Consumer<ProtocolCheck> checker) {
         throw new UnsupportedOperationException();
     }
 }

@@ -48,6 +48,7 @@ import org.mcnative.common.player.data.MinecraftPlayerData;
 import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.network.integrations.McNativeGlobalExecutor;
 import org.mcnative.service.MinecraftService;
 
 import java.net.InetSocketAddress;
@@ -144,11 +145,6 @@ public class BungeeCordProxyNetwork implements Network {
     }
 
     @Override
-    public ProxyServer getProxy(InetSocketAddress address) {
-        return proxy.getAddress().equals(address) ? proxy: null;
-    }
-
-    @Override
     public Collection<MinecraftServer> getServers() {
         return servers;
     }
@@ -163,11 +159,6 @@ public class BungeeCordProxyNetwork implements Network {
     public MinecraftServer getServer(UUID uniqueId) {
         if(localIdentifier != null && localIdentifier.getUniqueId().equals(uniqueId)) return (MinecraftServer) McNative.getInstance().getLocal();
         else return Iterators.findOne(this.servers, server -> server.getIdentifier().getUniqueId().equals(uniqueId));
-    }
-
-    @Override
-    public MinecraftServer getServer(InetSocketAddress address) {
-        return Iterators.findOne(this.servers, server -> server.getAddress().equals(address));
     }
 
     @Override
@@ -245,12 +236,12 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public void broadcast(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.broadcast(component, variables);
     }
 
     @Override
     public void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.broadcast(permission,component, variables);
     }
 
     @Override
@@ -265,7 +256,7 @@ public class BungeeCordProxyNetwork implements Network {
 
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        McNativeGlobalExecutor.kickAll(component, variables);
     }
 
     protected void handleRequest(Document document){

@@ -18,17 +18,12 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v2;
 
 import de.dytanic.cloudnet.api.CloudAPI;
-import de.dytanic.cloudnet.bridge.event.bukkit.BukkitSubChannelMessageEvent;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -41,7 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
+public class CloudNetV2Messenger extends AbstractMessenger {
 
     private final String CHANNEL_NAME = "mcnative";
 
@@ -54,7 +49,6 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
     public CloudNetV2Messenger(Executor executor) {
         this.executor = executor;
         this.resultListeners = new ConcurrentHashMap<>();
-        Bukkit.getPluginManager().registerEvents(this, McNativeLauncher.getPlugin());
     }
 
     @Override
@@ -122,16 +116,15 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
         return result;
     }
 
-    @EventHandler
-    public void onMessageReceive(BukkitSubChannelMessageEvent event){
-        if(event.getChannel().equals(CHANNEL_NAME)){
-            if(event.getMessage().equals(MESSAGE_NAME_REQUEST)){
+    public void handleMessageEvent(String channel0,String message, de.dytanic.cloudnet.lib.utility.document.Document document){
+        if(channel0.equals(CHANNEL_NAME)){
+            if(message.equals(MESSAGE_NAME_REQUEST)){
 
-                String channel = event.getDocument().getString("channel");
-                boolean proxy = event.getDocument().getBoolean("proxy");
-                String sender = event.getDocument().getString("sender");
-                UUID identifier = UUID.fromString(event.getDocument().getString("identifier"));
-                Document data = DocumentFileType.JSON.getReader().read(event.getDocument().getString("data"));
+                String channel = document.getString("channel");
+                boolean proxy = document.getBoolean("proxy");
+                String sender = document.getString("sender");
+                UUID identifier = UUID.fromString(document.getString("identifier"));
+                Document data = DocumentFileType.JSON.getReader().read(document.getString("data"));
 
                 MessagingChannelListener listener = getChannelListener(channel);
                 if(listener != null){
@@ -150,11 +143,11 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
                         }
                     }
                 }
-            }else if(event.getMessage().equals(MESSAGE_NAME_RESPONSE)){
-                UUID identifier = UUID.fromString(event.getDocument().getString("identifier"));
+            }else if(message.equals(MESSAGE_NAME_RESPONSE)){
+                UUID identifier = UUID.fromString(document.getString("identifier"));
                 CompletableFuture<Document> listener = resultListeners.remove(identifier);
                 if(listener != null){
-                    Document data = DocumentFileType.JSON.getReader().read(event.getDocument().getString("data"));
+                    Document data = DocumentFileType.JSON.getReader().read(document.getString("data"));
                     listener.complete(data);
                 }
             }

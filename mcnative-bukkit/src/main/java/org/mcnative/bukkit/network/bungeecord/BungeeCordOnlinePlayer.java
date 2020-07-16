@@ -24,7 +24,6 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
-import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -42,16 +41,12 @@ import org.mcnative.common.player.sound.Note;
 import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.components.MessageComponent;
+import org.mcnative.network.integrations.McNativePlayerExecutor;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 
 public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements OnlineMinecraftPlayer {
 
@@ -108,20 +103,12 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     @Override
     public int getPing() {
-        try {
-            return getPingAsync().get(2, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new OperationFailedException(e);
-        }
+        return McNativePlayerExecutor.getPing(uniqueId);
     }
 
     @Override
     public CompletableFuture<Integer> getPingAsync() {
-        CompletableFuture<Integer> resultFuture = new CompletableFuture<>();
-        executePlayerBasedFuture(Document.newDocument()
-                .set("action","getPing"))
-                .thenAccept(documentEntries -> resultFuture.complete(documentEntries.getInt("ping")));
-        return resultFuture;
+        return McNativePlayerExecutor.getPingAsync(uniqueId);
     }
 
     @Override
@@ -136,50 +123,32 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     @Override
     public void connect(MinecraftServer target, ServerConnectReason reason) {
-        executePlayerBased(Document.newDocument()
-                .set("action","connect")
-                .set("target",target.getName())
-                .set("reason",reason));
+        McNativePlayerExecutor.connect(uniqueId,target,reason);
     }
 
     @Override
     public CompletableFuture<ServerConnectResult> connectAsync(MinecraftServer target, ServerConnectReason reason) {
-        CompletableFuture<ServerConnectResult> resultFuture = new CompletableFuture<>();
-        executePlayerBasedFuture(Document.newDocument()
-                .set("action","connectAsync")
-                .set("target",target.getName())
-                .set("reason",reason))
-                .thenAccept(documentEntries -> resultFuture.complete(documentEntries.getObject("result",ServerConnectResult.class)));
-        return resultFuture;
+        return McNativePlayerExecutor.connectAsync(uniqueId,target,reason);
     }
 
     @Override
     public void kick(MessageComponent<?> message, VariableSet variables) {
-        executePlayerBased(Document.newDocument()
-                .set("action","kick")
-                .set("message",message.compile(variables)));
+        McNativePlayerExecutor.kick(uniqueId,message,variables);
     }
 
     @Override
     public void performCommand(String command) {
-        executePlayerBased(Document.newDocument()
-                .set("action","performCommand")
-                .set("command",command));
+        McNativePlayerExecutor.performCommand(uniqueId,command);
     }
 
     @Override
     public void chat(String message) {
-        executePlayerBased(Document.newDocument()
-                .set("action","chat")
-                .set("message",message));
+        McNativePlayerExecutor.chat(uniqueId,message);
     }
 
     @Override
     public void sendMessage(ChatPosition position, MessageComponent<?> component, VariableSet variables) {
-        executePlayerBased(Document.newDocument()//@Todo find solution for sending component with player
-                .set("action","sendMessage")
-                .set("position",position.getId())
-                .set("text",component.compile(variables)));
+        McNativePlayerExecutor.sendMessage(uniqueId,position,component,variables);
     }
 
     @Override
@@ -224,11 +193,6 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     @Override
     public void stopSound(String sound, SoundCategory category) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
-    }
-
-    @Override
-    public void check(Consumer<ProtocolCheck> checker) {
         throw new UnsupportedOperationException("Currently not supported, implementation in progress");
     }
 

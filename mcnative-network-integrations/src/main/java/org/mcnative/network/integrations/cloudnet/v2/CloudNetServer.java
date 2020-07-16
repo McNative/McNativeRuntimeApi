@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 28.04.20, 17:04
+ * @since 26.06.20, 21:12
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,14 +18,17 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network.bungeecord;
+package org.mcnative.network.integrations.cloudnet.v2;
 
+import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.server.ServerGroup;
+import de.dytanic.cloudnet.lib.server.ServerGroupMode;
+import de.dytanic.cloudnet.lib.server.info.ServerInfo;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Iterators;
-import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
@@ -42,143 +45,146 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public final class BungeeCordNetworkServer implements MinecraftServer {
+public class CloudNetServer implements MinecraftServer {
 
-    private final NetworkIdentifier identifier;
-    private final MinecraftServerType type;
-    private final String permission;
-    private final InetSocketAddress address;
-    private final Collection<OnlineMinecraftPlayer> players;
+    private final ServerInfo info;
 
-    protected BungeeCordNetworkServer(NetworkIdentifier identifier, MinecraftServerType type, String permission
-            , InetSocketAddress address) {
-        this.identifier = identifier;
-        this.type = type;
-        this.permission = permission;
-        this.address = address;
-        this.players = new ArrayList<>();
+    public CloudNetServer(ServerInfo info) {
+        this.info = info;
     }
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        return ping().getVersion().getProtocol();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public InetSocketAddress getAddress() {
-        return address;
+        return new InetSocketAddress(info.getHost(),info.getPort());
     }
 
     @Override
     public MinecraftServerType getType() {
-        return type;
+        ServerGroup group = CloudAPI.getInstance().getServerGroup(info.getServiceId().getGroup());
+        if(group.getGroupMode() == ServerGroupMode.LOBBY || group.getGroupMode() == ServerGroupMode.STATIC_LOBBY){
+            return MinecraftServerType.FALLBACK;
+        }else{
+            return MinecraftServerType.NORMAL;
+        }
     }
 
     @Override
     public void setType(MinecraftServerType type) {
-        throw new UnsupportedOperationException("It is not possible to update the server on a BungeeCord network");
+        throw new UnsupportedOperationException("It is not possible to modify the server type of a CloudNet server");
     }
 
     @Override
     public String getPermission() {
-        return permission;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setPermission(String permission) {
-        throw new UnsupportedOperationException("It is not possible to update the permission on a BungeeCord network");
+        throw new UnsupportedOperationException("It is not possible to modify the permission of a CloudNet server");
     }
 
     @Override
     public ServerStatusResponse ping() {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void sendData(String channel, byte[] data, boolean queued) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getName() {
-        return identifier.getName();
+        return info.getServiceId().getGroup()+"-"+info.getServiceId().getId();
     }
 
     @Override
     public int getOnlineCount() {
-        return players.size();
+        return info.getOnlineCount();
     }
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        return players;
+        Collection<OnlineMinecraftPlayer> result = new ArrayList<>();
+        for (String player : info.getPlayers()) {
+            result.add(McNative.getInstance().getNetwork().getOnlinePlayer(player));
+        }
+        return result;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        Validate.notNull(uniqueId);
-        return Iterators.findOne(this.players, player -> player.getUniqueId().equals(uniqueId));
+        OnlineMinecraftPlayer player = McNative.getInstance().getNetwork().getOnlinePlayer(uniqueId);
+        if(Iterators.findOne(info.getPlayers(), o -> o.equalsIgnoreCase(player.getName())) == null) return null;
+        return player;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(String name) {
-        Validate.notNull(name);
-        return Iterators.findOne(this.players, player -> player.getName().equalsIgnoreCase(name));
+        if(Iterators.findOne(info.getPlayers(), o -> o.equalsIgnoreCase(name)) != null) {
+            return McNative.getInstance().getNetwork().getOnlinePlayer(name);
+        }
+        return null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        return Iterators.findOne(this.players, player -> player.getXBoxId() == xBoxId);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void broadcast(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void broadcastPacket(MinecraftPacket packet) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void broadcastPacket(MinecraftPacket packet, String permission) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public EventBus getEventBus() {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public CommandManager getCommandManager() {
-        throw new UnsupportedOperationException("Currently not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isOnline() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return info.isOnline();
     }
 
     @Override
     public NetworkIdentifier getIdentifier() {
-        return identifier;
+        return new NetworkIdentifier(getName(),info.getServiceId().getUniqueId());
     }
 
     @Override
@@ -188,14 +194,6 @@ public final class BungeeCordNetworkServer implements MinecraftServer {
 
     @Override
     public CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        return McNative.getInstance().getNetwork().getMessenger().sendQueryMessageAsync(this,channel,request);
-    }
-
-    protected void addPlayer(OnlineMinecraftPlayer player){
-        this.players.add(player);
-    }
-
-    protected void removePlayer(OnlineMinecraftPlayer player){
-        this.players.remove(player);
+        return  McNative.getInstance().getNetwork().getMessenger().sendQueryMessageAsync(this,channel,request);
     }
 }

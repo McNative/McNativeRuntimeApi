@@ -28,7 +28,6 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.messaging.Messenger;
 
-import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -59,16 +58,12 @@ public interface Network extends ConnectableNetworkComponent {
 
     ProxyServer getProxy(UUID uniqueId);
 
-    ProxyServer getProxy(InetSocketAddress address);
-
 
     Collection<MinecraftServer> getServers();
 
     MinecraftServer getServer(String name);
 
     MinecraftServer getServer(UUID uniqueId);
-
-    MinecraftServer getServer(InetSocketAddress address);
 
 
     void sendBroadcastMessage(String channel, Document request);

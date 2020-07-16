@@ -18,20 +18,16 @@
  * under the License.
  */
 
-package org.mcnative.bungeecord.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v3;
 
-import de.dytanic.cloudnet.api.CloudAPI;
-import de.dytanic.cloudnet.bridge.event.proxied.ProxiedSubChannelMessageEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import de.dytanic.cloudnet.common.document.gson.JsonDocument;
+import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.wrapper.Wrapper;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
-import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
-import org.mcnative.common.network.component.server.MinecraftServer;
-import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.messaging.AbstractMessenger;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
@@ -40,7 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
+public class CloudNetV3Messenger extends AbstractMessenger{
 
     private final String CHANNEL_NAME = "mcnative";
 
@@ -50,10 +46,9 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
     private final Executor executor;
     private final Map<UUID, CompletableFuture<Document>> resultListeners;
 
-    public CloudNetV2Messenger(Executor executor) {
+    public CloudNetV3Messenger(Executor executor) {
         this.executor = executor;
         this.resultListeners = new ConcurrentHashMap<>();
-        net.md_5.bungee.api.ProxyServer.getInstance().getPluginManager().registerListener(McNativeLauncher.getPlugin(),this);
     }
 
     @Override
@@ -63,35 +58,32 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
 
     @Override
     public boolean isAvailable() {
-        return CloudAPI.getInstance().getNetworkConnection().isConnected();
+        return true;//No method for checking network connection found
     }
 
     @Override
     public void sendMessage(NetworkIdentifier receiver, String channel, Document request, UUID requestId) {
         if(receiver.equals(NetworkIdentifier.BROADCAST)){
-            de.dytanic.cloudnet.lib.utility.document.Document requestData = createRequestData(channel,request, requestId);
-            CloudAPI.getInstance().sendCustomSubProxyMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
-            CloudAPI.getInstance().sendCustomSubServerMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
+            JsonDocument requestData = createRequestData(channel,request, requestId);
+            Wrapper.getInstance().getMessenger().sendChannelMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
         }else if(receiver.equals(NetworkIdentifier.BROADCAST_SERVER)){
-            de.dytanic.cloudnet.lib.utility.document.Document requestData = createRequestData(channel,request, requestId);
-            CloudAPI.getInstance().sendCustomSubServerMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
+            JsonDocument requestData = createRequestData(channel,request, requestId);
+            requestData.append("type","SERVER");
+            Wrapper.getInstance().getMessenger().sendChannelMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
         }else if(receiver.equals(NetworkIdentifier.BROADCAST_PROXY)){
-            de.dytanic.cloudnet.lib.utility.document.Document requestData = createRequestData(channel,request, requestId);
-            CloudAPI.getInstance().sendCustomSubProxyMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
+            JsonDocument requestData = createRequestData(channel,request, requestId);
+            requestData.append("type","PROXY");
+            Wrapper.getInstance().getMessenger().sendChannelMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST,requestData);
         }else throw new UnsupportedOperationException("Network identifier is not supported");
     }
 
     @Override
     public void sendMessage(MessageReceiver receiver, String channel, Document request, UUID requestId) {
-        if(receiver instanceof ProxyServer){
-            CloudAPI.getInstance().sendCustomSubProxyMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST
-                    ,createRequestData(channel,request, requestId)
-                    ,receiver.getIdentifier().getName());
-        }else if(receiver instanceof MinecraftServer){
-            CloudAPI.getInstance().sendCustomSubServerMessage(CHANNEL_NAME,MESSAGE_NAME_REQUEST
-                    ,createRequestData(channel,request, requestId)
-                    ,receiver.getIdentifier().getName());
-        }else throw new UnsupportedOperationException("Message receiver is not a proxy or server");
+        ServiceInfoSnapshot service = Wrapper.getInstance().getCloudServiceProvider().getCloudService(receiver.getIdentifier().getUniqueId());
+        if(service != null){
+            JsonDocument requestData = createRequestData(channel,request, requestId);
+            Wrapper.getInstance().getMessenger().sendChannelMessage(service,CHANNEL_NAME, MESSAGE_NAME_RESPONSE,requestData);
+        }
     }
 
     @Override
@@ -121,59 +113,54 @@ public class CloudNetV2Messenger extends AbstractMessenger implements Listener {
         return result;
     }
 
-    @EventHandler
-    public void onMessageReceive(ProxiedSubChannelMessageEvent event){
-        if(event.getChannel().equals(CHANNEL_NAME)){
-            if(event.getMessage().equals(MESSAGE_NAME_REQUEST)){
+    public void handleMessageEvent(String channel0,String message, JsonDocument document){
+        if(channel0.equals(CHANNEL_NAME)){
+            if(message.equals(MESSAGE_NAME_REQUEST)){
+                String channel = document.getString("channel");
+                UUID sender = UUID.fromString(document.getString("sender"));
+                UUID identifier = UUID.fromString(document.getString("identifier"));
+                Document data = DocumentFileType.JSON.getReader().read(document.getString("data"));
 
-                String channel = event.getDocument().getString("channel");
-                boolean proxy = event.getDocument().getBoolean("proxy");
-                String sender = event.getDocument().getString("sender");
-                UUID identifier = UUID.fromString(event.getDocument().getString("identifier"));
-                Document data = DocumentFileType.JSON.getReader().read(event.getDocument().getString("data"));
+                String type = document.getString("type");
+                if(type != null){
+                    if(type.equals("PROXY") && !McNative.getInstance().getPlatform().isProxy()) return;
+                    else if(type.equals("SERVER") && !McNative.getInstance().getPlatform().isService()) return;
+                }
 
                 MessagingChannelListener listener = getChannelListener(channel);
                 if(listener != null){
                     Document result = listener.onMessageReceive(null,identifier,data);
                     if(result != null){
-                        if(proxy){
-                            CloudAPI.getInstance().sendCustomSubProxyMessage(CHANNEL_NAME
-                                    ,MESSAGE_NAME_RESPONSE
-                                    ,createResponseData(identifier,result)
-                                    ,sender);
-                        }else{
-                            CloudAPI.getInstance().sendCustomSubServerMessage(CHANNEL_NAME
-                                    ,MESSAGE_NAME_RESPONSE
-                                    ,createResponseData(identifier,result)
-                                    ,sender);
-                        }
+                        ServiceInfoSnapshot service = Wrapper.getInstance().getCloudServiceProvider().getCloudService(sender);
+                        Wrapper.getInstance().getMessenger().sendChannelMessage(service,CHANNEL_NAME, MESSAGE_NAME_RESPONSE
+                                ,createResponseData(identifier,result));
                     }
                 }
-            }else if(event.getMessage().equals(MESSAGE_NAME_RESPONSE)){
-                UUID identifier = UUID.fromString(event.getDocument().getString("identifier"));
+            }else if(message.equals(MESSAGE_NAME_RESPONSE)){
+                UUID identifier = UUID.fromString(document.getString("identifier"));
                 CompletableFuture<Document> listener = resultListeners.remove(identifier);
                 if(listener != null){
-                    Document data = DocumentFileType.JSON.getReader().read(event.getDocument().getString("data"));
+                    Document data = DocumentFileType.JSON.getReader().read(document.getString("data"));
                     listener.complete(data);
                 }
             }
         }
     }
 
-    private de.dytanic.cloudnet.lib.utility.document.Document createRequestData(String channel,Document request, UUID requestId){
-        de.dytanic.cloudnet.lib.utility.document.Document result = new de.dytanic.cloudnet.lib.utility.document.Document();
-        result.append("sender",CloudAPI.getInstance().getServerId());
-        result.append("proxy", McNative.getInstance().getPlatform().isProxy());
+    private JsonDocument createRequestData(String channel,Document request, UUID requestId){
+        JsonDocument result = new JsonDocument();
+        result.append("sender",Wrapper.getInstance().getServiceId().getUniqueId().toString());
         result.append("channel",channel);
         result.append("identifier",requestId.toString());
         result.append("data", DocumentFileType.JSON.getWriter().write(request,false));
         return result;
     }
 
-    private de.dytanic.cloudnet.lib.utility.document.Document createResponseData(UUID requestId,Document response){
-        de.dytanic.cloudnet.lib.utility.document.Document result = new de.dytanic.cloudnet.lib.utility.document.Document();
+    private JsonDocument createResponseData(UUID requestId,Document response){
+        JsonDocument result = new JsonDocument();
         result.append("identifier",requestId.toString());
         result.append("data", DocumentFileType.JSON.getWriter().write(response,false));
         return result;
     }
+
 }

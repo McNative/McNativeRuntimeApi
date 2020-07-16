@@ -183,7 +183,9 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public InetSocketAddress getAddress() {
-        for (ListenerInfo listener : net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners()) return listener.getHost();
+        for (ListenerInfo listener : net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners()){
+            return listener.getHost();
+        }
         return null;
     }
 
@@ -194,7 +196,6 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        //@Todo maybe develop reference map?
         return Iterators.map(playerManager.getConnectedPlayers(), player -> player);
     }
 

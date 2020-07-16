@@ -40,7 +40,6 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.proxy.ProxyService;
 
-import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -57,7 +56,6 @@ public class BungeecordProxyNetwork implements Network {
         this.messenger = new PluginMessageMessenger(executor,serverMap);
         this.eventBus = new NetworkEventBus();
         this.messenger.registerChannel("mcnative_event",ObjectOwner.SYSTEM,eventBus);
-        this.messenger.registerChannel("mcnative_player",ObjectOwner.SYSTEM,new McNativePlayerActionListener());
     }
 
     @Override
@@ -141,11 +139,6 @@ public class BungeecordProxyNetwork implements Network {
     }
 
     @Override
-    public ProxyServer getProxy(InetSocketAddress address) {
-        return service.getAddress().equals(address) ? service : null;
-    }
-
-    @Override
     public Collection<MinecraftServer> getServers() {
         return service.getServers();
     }
@@ -158,11 +151,6 @@ public class BungeecordProxyNetwork implements Network {
     @Override
     public MinecraftServer getServer(UUID uniqueId) {
         return service.getServer(uniqueId);
-    }
-
-    @Override
-    public MinecraftServer getServer(InetSocketAddress address) {
-        return service.getServer(address);
     }
 
     @Override

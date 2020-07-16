@@ -33,13 +33,11 @@ import org.mcnative.common.player.sound.Sound;
 import org.mcnative.common.player.sound.SoundCategory;
 import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
-import org.mcnative.common.protocol.support.ProtocolCheck;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 
 public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, TablistEntry {
@@ -158,9 +156,6 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     void stopSound(Sound sound);
 
     void stopSound(String sound, SoundCategory category);
-
-
-    void check(Consumer<ProtocolCheck> checker);
 
     default void sendMessage(Textable textable) {
         sendMessage(textable,VariableSet.newEmptySet());

@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 26.06.20, 21:12
+ * @since 16.07.20, 12:03
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,12 +18,11 @@
  * under the License.
  */
 
-package org.mcnative.bukkit.network.cloudnet.v2;
+package org.mcnative.network.integrations.cloudnet.v3;
 
-import de.dytanic.cloudnet.api.CloudAPI;
-import de.dytanic.cloudnet.lib.server.ServerGroup;
-import de.dytanic.cloudnet.lib.server.ServerGroupMode;
-import de.dytanic.cloudnet.lib.server.info.ServerInfo;
+import de.dytanic.cloudnet.common.document.gson.JsonDocument;
+import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.ext.bridge.ServiceInfoSnapshotUtil;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
@@ -39,36 +38,32 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class CloudNetServer implements MinecraftServer {
 
-    private final ServerInfo info;
+    private final ServiceInfoSnapshot snapshot;
 
-    public CloudNetServer(ServerInfo info) {
-        this.info = info;
+    public CloudNetServer(ServiceInfoSnapshot snapshot) {
+        this.snapshot = snapshot;
     }
 
     @Override
     public MinecraftProtocolVersion getProtocolVersion() {
-        throw new UnsupportedOperationException();
+        return ping().getVersion().getProtocol();
     }
 
     @Override
     public InetSocketAddress getAddress() {
-        return new InetSocketAddress(info.getHost(),info.getPort());
+        return new InetSocketAddress(snapshot.getAddress().getHost(),snapshot.getAddress().getPort());
     }
 
     @Override
     public MinecraftServerType getType() {
-        ServerGroup group = CloudAPI.getInstance().getServerGroup(info.getServiceId().getGroup());
-        if(group.getGroupMode() == ServerGroupMode.LOBBY || group.getGroupMode() == ServerGroupMode.STATIC_LOBBY){
-            return MinecraftServerType.FALLBACK;
-        }else{
-            return MinecraftServerType.NORMAL;
-        }
+        return MinecraftServerType.NORMAL;
     }
 
     @Override
@@ -83,7 +78,7 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public void setPermission(String permission) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("It is not possible to modify the permission of a CloudNet server");
     }
 
     @Override
@@ -103,32 +98,36 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public String getName() {
-        return info.getServiceId().getGroup()+"-"+info.getServiceId().getId();
+        return snapshot.getServiceId().getName();
     }
 
     @Override
     public int getOnlineCount() {
-        return info.getOnlineCount();
+        return ServiceInfoSnapshotUtil.getOnlineCount(snapshot);
     }
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
-        throw new UnsupportedOperationException();
+        Collection<OnlineMinecraftPlayer> result = new ArrayList<>();
+        for (JsonDocument player : ServiceInfoSnapshotUtil.getPlayers(snapshot)) {
+
+        }
+        return result;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(String name) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
@@ -158,22 +157,22 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public EventBus getEventBus() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Network commands are currently not supported");
     }
 
     @Override
     public CommandManager getCommandManager() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Network commands are currently not supported");
     }
 
     @Override
     public boolean isOnline() {
-        return info.isOnline();
+        return snapshot.isConnected();
     }
 
     @Override
     public NetworkIdentifier getIdentifier() {
-        return new NetworkIdentifier(getName(),info.getServiceId().getUniqueId());
+        return new NetworkIdentifier(snapshot.getServiceId().getName(),snapshot.getServiceId().getUniqueId());
     }
 
     @Override
