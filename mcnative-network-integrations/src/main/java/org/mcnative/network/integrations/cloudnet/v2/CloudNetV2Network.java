@@ -64,11 +64,13 @@ public class CloudNetV2Network implements Network {
 
     private UUID loadId(){
         Database database = CloudAPI.getInstance().getDatabaseManager().getDatabase("mcnative");
-        de.dytanic.cloudnet.lib.utility.document.Document result = database.getDocument("network-identifier");
-        if(result != null){
-            UUID uuid = result.getObject("networkId",UUID.class);
-            if(uuid != null) return uuid;
-        }
+        try{//Used because of performance reasons
+            de.dytanic.cloudnet.lib.utility.document.Document result = database.getDocument("network-identifier");
+            if(result != null){
+                UUID uuid = result.getObject("networkId",UUID.class);
+                if(uuid != null) return uuid;
+            }
+        }catch (NullPointerException ignored){}
         UUID uuid = UUID.randomUUID();
         de.dytanic.cloudnet.lib.utility.document.Document document = new de.dytanic.cloudnet.lib.utility.document.Document();
         document.append(Database.UNIQUE_NAME_KEY,"network-identifier");
