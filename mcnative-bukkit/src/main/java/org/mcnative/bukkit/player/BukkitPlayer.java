@@ -20,8 +20,10 @@
 
 package org.mcnative.bukkit.player;
 
+import net.pretronic.libraries.concurrent.Task;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.mcnative.bukkit.BukkitService;
 import org.mcnative.bukkit.McNativeLauncher;
@@ -76,6 +78,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, BukkitHumanEntity<org.bukkit.entity.Player> {
 
@@ -275,7 +278,17 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
-        throw new UnsupportedOperationException();
+        long timeout = System.currentTimeMillis()+ TimeUnit.SECONDS.toMillis(staySeconds);
+        sendActionbar(message, variables);
+        final Task task = McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                .async().interval(3,TimeUnit.SECONDS).delay(1,TimeUnit.SECONDS).create();
+        task.append(() -> {
+            if(System.currentTimeMillis() <= timeout){
+                task.destroy();
+            }else{
+                sendActionbar(message, variables);
+            }
+        });
     }
 
     @Override

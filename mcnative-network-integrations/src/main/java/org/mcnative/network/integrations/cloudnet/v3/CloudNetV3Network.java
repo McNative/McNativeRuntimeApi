@@ -20,11 +20,17 @@
 
 package org.mcnative.network.integrations.cloudnet.v3;
 
+import de.dytanic.cloudnet.common.document.gson.JsonDocument;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceEnvironmentType;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.ext.bridge.BridgePlayerManager;
 import de.dytanic.cloudnet.ext.bridge.player.ICloudPlayer;
+import de.dytanic.cloudnet.ext.bridge.player.IPlayerManager;
+import de.dytanic.cloudnet.ext.syncproxy.AbstractSyncProxyManagement;
+import de.dytanic.cloudnet.ext.syncproxy.configuration.SyncProxyMotd;
 import de.dytanic.cloudnet.wrapper.Wrapper;
+import de.dytanic.cloudnet.wrapper.database.IDatabase;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
@@ -53,6 +59,7 @@ public class CloudNetV3Network implements Network {
     private final CloudNetV3Messenger messenger;
     private final NetworkOperations operations;
     private final NetworkIdentifier localIdentifier;
+    private final NetworkIdentifier networkIdentifier;
 
     public CloudNetV3Network(Executor executor) {
         this.messenger = new CloudNetV3Messenger(executor);
@@ -60,6 +67,21 @@ public class CloudNetV3Network implements Network {
         this.localIdentifier = new NetworkIdentifier(
                 Wrapper.getInstance().getServiceId().getName()
                 ,Wrapper.getInstance().getServiceId().getUniqueId());
+        this.networkIdentifier = new NetworkIdentifier(getName(),loadId());
+    }
+
+    private UUID loadId(){
+        IDatabase database = Wrapper.getInstance().getDatabaseProvider().getDatabase("mcnative");
+        JsonDocument document = database.get("network-identifier");
+        if(document != null){
+            UUID uniqueId = document.get("networkId",UUID.class);
+            if(uniqueId != null) return uniqueId;
+        }
+        UUID uuid = UUID.randomUUID();
+        document = JsonDocument.newDocument();
+        document.append("networkId",uuid);
+        database.insertAsync("network-identifier",document);
+        return uuid;
     }
 
     @Override
@@ -216,8 +238,21 @@ public class CloudNetV3Network implements Network {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        AbstractSyncProxyManagement service = CloudNetDriver.getInstance().getServicesRegistry().getFirstService(AbstractSyncProxyManagement.class);
+        SyncProxyMotd syncProxyMotd = service.getRandomMotd();
+        if(syncProxyMotd.isAutoSlot()){
+            return Math.min(
+                    service.getLoginConfiguration().getMaxPlayers(),
+                    getOnlineCount() + syncProxyMotd.getAutoSlotMaxPlayersDistance());
+        }
+        return service.getLoginConfiguration().getMaxPlayers();
+    }
+
+    @Override
     public int getOnlineCount() {
-        return BridgePlayerManager.getInstance().getOnlineCount();
+        IPlayerManager playerManager = CloudNetDriver.getInstance().getServicesRegistry().getFirstService(IPlayerManager.class);
+        return playerManager.getOnlineCount();
     }
 
     @Override
@@ -281,5 +316,10 @@ public class CloudNetV3Network implements Network {
     @Override
     public void kickAll(MessageComponent<?> component, VariableSet variables) {
         McNativeGlobalExecutor.kickAll(component, variables);
+    }
+
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return networkIdentifier;
     }
 }

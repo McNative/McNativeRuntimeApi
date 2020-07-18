@@ -62,6 +62,7 @@ import org.mcnative.common.player.tablist.TablistFormatter;
 import org.mcnative.common.player.tablist.TablistOverviewFormatter;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
+import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
@@ -83,6 +84,7 @@ public class McNativeLauncher {
     private static BukkitCommandManager COMMAND_MANAGER;
     private static BukkitChannelInjector CHANNEL_INJECTOR;
     private static BukkitEventBus EVENT_BUS;
+    private static McNativeStatisticService STATISTIC_SERVICE;
 
     public static Plugin getPlugin() {
         return PLUGIN;
@@ -160,6 +162,7 @@ public class McNativeLauncher {
                             playerManager.loadConnectedPlayers();
                             instance.setReady(true);
                             logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
+                            STATISTIC_SERVICE = new McNativeStatisticService();
                         }else{
                             instance.setReady(true);
                             logger.log(Level.SEVERE,McNative.CONSOLE_PREFIX+"McNative failed injecting the channel initializer, shutting down");
@@ -188,6 +191,8 @@ public class McNativeLauncher {
         McNative instance = McNative.getInstance();
 
         if(instance != null){
+            if(STATISTIC_SERVICE != null) STATISTIC_SERVICE.shutdown();
+
             instance.getLogger().shutdown();
             instance.getScheduler().shutdown();
             instance.getExecutorService().shutdown();

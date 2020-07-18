@@ -32,7 +32,6 @@ import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
-import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.McNativeGlobalActionListener;
 import org.mcnative.bungeecord.network.McNativePlayerActionListener;
@@ -49,6 +48,7 @@ import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
+import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
 import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.proxy.ProxyService;
@@ -62,6 +62,7 @@ import java.util.logging.Logger;
 public class McNativeLauncher {
 
     private static Plugin PLUGIN;
+    private static McNativeStatisticService STATISTIC_SERVICE;
 
     public static Plugin getPlugin() {
         return PLUGIN;
@@ -121,6 +122,7 @@ public class McNativeLauncher {
         setupConfiguredServices();
 
         instance.setReady(true);
+        STATISTIC_SERVICE = new McNativeStatisticService();
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
@@ -159,6 +161,23 @@ public class McNativeLauncher {
         }
     }
 
+    protected static void shutdown(){
+        if(!McNative.isAvailable()) return;
+        Logger logger = ProxyServer.getInstance().getLogger();
+        logger.info(McNative.CONSOLE_PREFIX+"McNative is stopping, please wait...");
+        McNative instance = McNative.getInstance();
+
+        if(instance != null){
+            if(STATISTIC_SERVICE != null) STATISTIC_SERVICE.shutdown();
+
+            instance.getLogger().shutdown();
+            instance.getScheduler().shutdown();
+            instance.getExecutorService().shutdown();
+            instance.getPluginManager().shutdown();
+            ((BungeeCordMcNative)instance).setReady(false);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private static Plugin setupDummyPlugin(){
         PluginDescription description = new PluginDescription();
@@ -167,7 +186,7 @@ public class McNativeLauncher {
         description.setAuthor("Pretronic and McNative contributors");
         description.setMain("reflected");
 
-        Plugin plugin = UnsafeInstanceCreator.newInstance(Plugin.class);
+        Plugin plugin = new DummyPlugin();
         ReflectionUtil.invokeMethod(plugin,"init"
                 ,new Class[]{ProxyServer.class,PluginDescription.class}
                 ,new Object[]{ProxyServer.getInstance(),description});
@@ -175,6 +194,14 @@ public class McNativeLauncher {
         Map<String, Plugin> plugins = ReflectionUtil.getFieldValue(PluginManager.class,ProxyServer.getInstance().getPluginManager(),"plugins", Map.class);
         plugins.put(description.getName(),plugin);
         return plugin;
+    }
+
+    private static class DummyPlugin extends Plugin{
+
+        @Override
+        public void onDisable() {
+            McNativeLauncher.shutdown();
+        }
     }
 
 }

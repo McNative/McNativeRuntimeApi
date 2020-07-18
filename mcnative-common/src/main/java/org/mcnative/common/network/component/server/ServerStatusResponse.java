@@ -25,7 +25,9 @@ import net.pretronic.libraries.message.bml.variable.EmptyVariableSet;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.io.FileUtil;
 import org.mcnative.common.McNative;
+import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.awt.image.BufferedImage;
@@ -99,6 +101,10 @@ public interface ServerStatusResponse {
 
     ServerStatusResponse clearPlayerInfo();
 
+    int getPing();
+
+    void setPing(int ping);
+
     default Document compile(){
         Document result = Document.newDocument();
 
@@ -125,6 +131,20 @@ public interface ServerStatusResponse {
         }
 
         return result;
+    }
+
+    default void read(String input){
+        read(DocumentFileType.JSON.getReader().read(input));
+    }
+
+    default void read(Document input){
+        setDescription(Text.decompile(input.getDocument("description")));
+        setOnlinePlayers(input.getInt("players.online"));
+        setMaxPlayers(input.getInt("players.max"));
+        setVersion(input.getString("version.name"),MinecraftProtocolVersion.of(MinecraftEdition.JAVA,input.getInt("version.protocol")));
+        if(input.contains("favicon")){
+            setFavicon(input.getString("favicon"));
+        }
     }
 
     default String compileToString(){

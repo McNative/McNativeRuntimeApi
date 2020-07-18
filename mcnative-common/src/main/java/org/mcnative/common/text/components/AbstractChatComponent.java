@@ -166,14 +166,14 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
         if(isObfuscated()) document.add("obfuscated",true);
         if(this.color != null) document.add("color",color.getName());
         if(insertion != null) document.add("insertion",variables.replace(insertion));
-        if(this.clickEvent != null){//@Todo Register temp command
+        if(this.clickEvent != null){
             Document event = Document.newDocument();
             if(clickEvent.getAction().isDirectEvent()){
                 event.add("action",clickEvent.getAction().getName().toLowerCase());
                 event.add("value",clickEvent.getValue().toString());
             }else{
                 event.add("action","run_command");
-                event.add("value","mcnOnTextClick");//@Todo add custom event managing
+                event.add("value","mcnOnTextClick");//@Todo add custom event managing / Todo Register temp command
             }
             document.add("clickEvent",event);
         }

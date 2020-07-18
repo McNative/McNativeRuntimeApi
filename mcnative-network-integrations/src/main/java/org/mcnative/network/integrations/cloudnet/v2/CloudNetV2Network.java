@@ -21,6 +21,7 @@
 package org.mcnative.network.integrations.cloudnet.v2;
 
 import de.dytanic.cloudnet.api.CloudAPI;
+import de.dytanic.cloudnet.lib.database.Database;
 import de.dytanic.cloudnet.lib.player.CloudPlayer;
 import de.dytanic.cloudnet.lib.server.info.ProxyInfo;
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
@@ -52,11 +53,27 @@ public class CloudNetV2Network implements Network {
     private final CloudNetV2Messenger messenger;
     private final NetworkOperations operations;
     private final NetworkIdentifier localIdentifier;
+    private final NetworkIdentifier networkIdentifier;
 
     public CloudNetV2Network(Executor executor) {
         this.messenger = new CloudNetV2Messenger(executor);
         this.operations = new CloudNetV2NetworkOperations(this);
         this.localIdentifier = new NetworkIdentifier(CloudAPI.getInstance().getServerId(),CloudAPI.getInstance().getUniqueId());
+        this.networkIdentifier = new NetworkIdentifier(getName(),loadId());
+    }
+
+    private UUID loadId(){
+        Database database = CloudAPI.getInstance().getDatabaseManager().getDatabase("mcnative");
+        de.dytanic.cloudnet.lib.utility.document.Document result = database.getDocument("network-identifier");
+        if(result != null){
+            UUID uuid = result.getObject("networkId",UUID.class);
+            if(uuid != null) return uuid;
+        }
+        UUID uuid = UUID.randomUUID();
+        de.dytanic.cloudnet.lib.utility.document.Document document = new de.dytanic.cloudnet.lib.utility.document.Document();
+        document.append(Database.UNIQUE_NAME_KEY,"network-identifier");
+        database.insertAsync(document);
+        return uuid;
     }
 
     @Override
@@ -193,6 +210,15 @@ public class CloudNetV2Network implements Network {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        if(!CloudAPI.getInstance().getCloudNetwork().getProxyGroups().isEmpty()){
+            throw new IllegalArgumentException("No proxy group available");
+        }
+        return CloudAPI.getInstance().getCloudNetwork().getProxyGroups()
+                .values().iterator().next().getProxyConfig().getMaxPlayers();
+    }
+
+    @Override
     public int getOnlineCount() {
         return CloudAPI.getInstance().getOnlineCount();
     }
@@ -260,4 +286,8 @@ public class CloudNetV2Network implements Network {
         McNativeGlobalExecutor.kickAll(component, variables);
     }
 
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return networkIdentifier;
+    }
 }

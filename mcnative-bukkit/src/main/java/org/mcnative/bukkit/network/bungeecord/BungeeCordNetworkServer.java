@@ -30,6 +30,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.network.component.server.ServerStatusRequester;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -91,12 +92,12 @@ public final class BungeeCordNetworkServer implements MinecraftServer {
 
     @Override
     public ServerStatusResponse ping() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return ServerStatusRequester.requestStatus(getAddress());
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return ServerStatusRequester.requestStatusAsync(getAddress());
     }
 
     @Override
@@ -107,6 +108,11 @@ public final class BungeeCordNetworkServer implements MinecraftServer {
     @Override
     public String getName() {
         return identifier.getName();
+    }
+
+    @Override
+    public int getMaxPlayerCount() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -173,7 +179,11 @@ public final class BungeeCordNetworkServer implements MinecraftServer {
 
     @Override
     public boolean isOnline() {
-        throw new UnsupportedOperationException("Currently not supported");
+        try {
+            ping();
+            return true;
+        }catch (Exception ignored){}
+        return false;
     }
 
     @Override

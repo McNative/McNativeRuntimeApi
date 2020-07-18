@@ -23,6 +23,7 @@ import io.netty.channel.Channel;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerConnectRequest;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.pretronic.libraries.concurrent.Task;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
@@ -64,6 +65,7 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /*
 @Todo In proxy player
@@ -322,7 +324,17 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
-        throw new UnsupportedOperationException("Coming soon");
+        long timeout = System.currentTimeMillis()+TimeUnit.SECONDS.toMillis(staySeconds);
+        sendActionbar(message, variables);
+        final Task task = McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                .async().interval(3,TimeUnit.SECONDS).delay(1,TimeUnit.SECONDS).create();
+        task.append(() -> {
+            if(System.currentTimeMillis() <= timeout){
+                task.destroy();
+            }else{
+                sendActionbar(message, variables);
+            }
+        });
     }
 
     @Override

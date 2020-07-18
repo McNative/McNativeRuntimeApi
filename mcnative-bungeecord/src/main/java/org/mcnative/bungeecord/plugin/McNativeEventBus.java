@@ -64,7 +64,7 @@ public class McNativeEventBus extends net.md_5.bungee.event.EventBus {
     }
 
     @Override
-    public void register(Object listener) {//@Todo implement real mapped owner
+    public void register(Object listener) {
         for(Method method : listener.getClass().getDeclaredMethods()){
             try{
                 EventHandler handler = method.getAnnotation(EventHandler.class);

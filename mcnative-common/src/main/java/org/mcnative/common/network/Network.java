@@ -77,10 +77,6 @@ public interface Network extends ConnectableNetworkComponent {
         return "Network";
     }
 
-    default NetworkIdentifier getIdentifier(){
-        return NetworkIdentifier.BROADCAST;
-    }
-
     default boolean isOnline(){
         return isConnected();
     }

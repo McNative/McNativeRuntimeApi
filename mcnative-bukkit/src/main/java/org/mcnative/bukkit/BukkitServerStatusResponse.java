@@ -53,6 +53,8 @@ public class BukkitServerStatusResponse implements ServerStatusResponse {
     private int onlinePlayers;
     private List<PlayerInfo> players;
 
+    private int ping;
+
     public BukkitServerStatusResponse() {}
 
     @Override
@@ -215,6 +217,16 @@ public class BukkitServerStatusResponse implements ServerStatusResponse {
         if(players == null) return this;
         this.players.clear();
         return this;
+    }
+
+    @Override
+    public int getPing() {
+        return ping;
+    }
+
+    @Override
+    public void setPing(int ping) {
+        this.ping = ping;
     }
 
     @Override

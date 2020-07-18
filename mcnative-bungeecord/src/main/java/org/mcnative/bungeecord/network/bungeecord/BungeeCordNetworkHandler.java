@@ -32,6 +32,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
 import org.mcnative.bungeecord.McNativeLauncher;
+import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.proxy.ProxyService;
@@ -64,6 +65,7 @@ public class BungeeCordNetworkHandler implements Listener {
         data.set("action","initial-request");
         data.set("proxy",ProxyService.getInstance().getAddress());
         data.set("local",receiver.getInfo().getName());
+        data.set("networkId", McNative.getInstance().getNetwork().getIdentifier().getUniqueId());
         for (MinecraftServer server : ProxyService.getInstance().getServers()) {
             Document serverData = Document.newDocument();
             servers.addEntry(serverData);

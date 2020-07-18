@@ -248,6 +248,11 @@ public class BukkitService implements MinecraftService, MinecraftServer {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        return Bukkit.getMaxPlayers();
+    }
+
+    @Override
     public int getOnlineCount() {
         return Bukkit.getOnlinePlayers().size();
     }

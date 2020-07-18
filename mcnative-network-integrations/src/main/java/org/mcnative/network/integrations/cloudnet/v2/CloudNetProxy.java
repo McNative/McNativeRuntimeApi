@@ -20,13 +20,16 @@
 
 package org.mcnative.network.integrations.cloudnet.v2;
 
+import de.dytanic.cloudnet.api.CloudAPI;
 import de.dytanic.cloudnet.lib.MultiValue;
+import de.dytanic.cloudnet.lib.server.ProxyGroup;
 import de.dytanic.cloudnet.lib.server.info.ProxyInfo;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.ProxyServer;
@@ -56,6 +59,13 @@ public class CloudNetProxy implements ProxyServer {
     @Override
     public String getName() {
         return info.getServiceId().getGroup()+"-"+info.getServiceId().getId();
+    }
+
+    @Override
+    public int getMaxPlayerCount() {
+        ProxyGroup group = CloudAPI.getInstance().getCloudNetwork().getProxyGroups().get(info.getServiceId().getGroup());
+        if(group == null) throw new OperationFailedException("Internal CloudNet error");
+        return group.getProxyConfig().getMaxPlayers();
     }
 
     @Override

@@ -22,12 +22,14 @@ package org.mcnative.bungeecord.network.bungeecord;
 
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.NetworkOperations;
@@ -40,6 +42,7 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.proxy.ProxyService;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -51,11 +54,28 @@ public class BungeecordProxyNetwork implements Network {
     private final Messenger messenger;
     private final NetworkEventBus eventBus;
 
+    private final UUID networkId;
+
     public BungeecordProxyNetwork(ProxyService service, ExecutorService executor, BungeeCordServerMap serverMap) {
         this.service = service;
         this.messenger = new PluginMessageMessenger(executor,serverMap);
         this.eventBus = new NetworkEventBus();
         this.messenger.registerChannel("mcnative_event",ObjectOwner.SYSTEM,eventBus);
+        networkId = loadNetworkId();
+    }
+
+    private UUID loadNetworkId(){
+        File file = new File("plugins/McNative/lib/runtime.dat");
+        if(file.exists()){
+            Document document = DocumentFileType.JSON.getReader().read(new File("plugins/McNative/lib/runtime.dat"));
+            UUID uuid =  document.getObject("networkId",UUID.class);
+            if(uuid != null) return uuid;
+        }
+        UUID uuid = UUID.randomUUID();
+        Document document = Document.newDocument();
+        document.set("networkId",uuid);
+        DocumentFileType.JSON.getWriter().write(new File("plugins/McNative/lib/runtime.dat"),document,false);
+        return uuid;
     }
 
     @Override
@@ -70,7 +90,7 @@ public class BungeecordProxyNetwork implements Network {
 
     @Override
     public NetworkOperations getOperations() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Are not required, use the normal proxy player");
     }
 
     @Override
@@ -169,6 +189,11 @@ public class BungeecordProxyNetwork implements Network {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        return McNative.getInstance().getLocal().getMaxPlayerCount();
+    }
+
+    @Override
     public int getOnlineCount() {
         return service.getOnlineCount();
     }
@@ -218,4 +243,8 @@ public class BungeecordProxyNetwork implements Network {
         service.kickAll(component, variables);
     }
 
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return new NetworkIdentifier(getName(),networkId);
+    }
 }

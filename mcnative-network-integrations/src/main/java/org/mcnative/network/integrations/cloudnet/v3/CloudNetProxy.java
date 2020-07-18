@@ -57,6 +57,11 @@ public class CloudNetProxy implements ProxyServer {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        return ServiceInfoSnapshotUtil.getMaxPlayers(snapshot);
+    }
+
+    @Override
     public int getOnlineCount() {
         return ServiceInfoSnapshotUtil.getOnlineCount(snapshot);
     }

@@ -128,6 +128,11 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
+    public String getMcNativeServerSecret() {
+        return McNativeBungeeCordConfiguration.SERVER_SECRET;
+    }
+
+    @Override
     public PluginVersion getVersion() {
         return version;
     }
@@ -212,6 +217,7 @@ public class BungeeCordMcNative implements McNative {
     public boolean isReady() {
         return ready;
     }
+
     protected void setReady(boolean ready) {
         this.ready = ready;
     }

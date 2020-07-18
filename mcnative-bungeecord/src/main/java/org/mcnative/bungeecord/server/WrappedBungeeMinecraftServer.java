@@ -32,6 +32,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.network.component.server.ServerStatusRequester;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.messaging.Messenger;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
@@ -73,6 +74,11 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer, VariableOb
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        return ping().getMaxPlayers();
+    }
+
+    @Override
     public String getPermission() {
         return permission;
     }
@@ -104,17 +110,20 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer, VariableOb
 
     @Override
     public boolean isOnline() {
-        return !original.getPlayers().isEmpty() || ping() != null;
+        try{
+            return !original.getPlayers().isEmpty() || ping() != null;
+        }catch (Exception ignore){}
+        return false;
     }
 
     @Override
     public ServerStatusResponse ping() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return ServerStatusRequester.requestStatus(this);
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        throw new UnsupportedOperationException("Currently not supported");
+        return ServerStatusRequester.requestStatusAsync(this);
     }
 
     @Override
@@ -124,7 +133,7 @@ public class WrappedBungeeMinecraftServer implements MinecraftServer, VariableOb
 
     @Override
     public InetSocketAddress getAddress() {
-        return original.getAddress();
+        return (InetSocketAddress) original.getSocketAddress();
     }
 
     @Override

@@ -26,10 +26,13 @@ import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.protocol.packet.PacketManager;
 
+import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.UUID;
 
 public interface LocalService extends ConnectableNetworkComponent {
+
+    InetSocketAddress getAddress();
 
     Collection<ConnectedMinecraftPlayer> getConnectedPlayers();
 

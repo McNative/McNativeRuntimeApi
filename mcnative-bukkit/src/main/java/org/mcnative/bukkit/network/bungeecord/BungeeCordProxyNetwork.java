@@ -71,6 +71,7 @@ public class BungeeCordProxyNetwork implements Network {
     private final Collection<OnlineMinecraftPlayer> players;
 
     private NetworkIdentifier localIdentifier;
+    private UUID networkId;
     private ProxyServer proxy;
 
     public BungeeCordProxyNetwork(ExecutorService executor) {
@@ -200,6 +201,11 @@ public class BungeeCordProxyNetwork implements Network {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int getOnlineCount() {
         return players.size();
     }
@@ -276,6 +282,7 @@ public class BungeeCordProxyNetwork implements Network {
         this.proxy = new BungeeCordProxy(document.getObject("address", InetSocketAddress.class));
         String local = document.getString("local");
         this.localIdentifier = new NetworkIdentifier(local, UUID.nameUUIDFromBytes(local.getBytes()));
+        this.networkId = document.getObject("networkId",UUID.class);
         this.servers.clear();
         this.servers.add(MinecraftService.getInstance());
         for (DocumentEntry entry0 : document.getDocument("servers")) {
@@ -377,4 +384,8 @@ public class BungeeCordProxyNetwork implements Network {
         this.players.clear();
     }
 
+    @Override
+    public NetworkIdentifier getIdentifier() {
+        return new NetworkIdentifier(getName(),networkId);
+    }
 }

@@ -20,6 +20,7 @@
 package org.mcnative.bungeecord.plugin.command;
 
 import com.google.common.collect.Multimap;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.pretronic.libraries.command.NoPermissionHandler;
@@ -32,8 +33,11 @@ import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.player.BungeeProxiedPlayer;
 import org.mcnative.bungeecord.plugin.BungeeCordPluginManager;
 import org.mcnative.bungeecord.plugin.MappedPlugin;
+import org.mcnative.common.McNative;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.plugin.DefaultNoPermissionHandler;
 
 import java.util.ArrayList;
@@ -82,8 +86,16 @@ public class BungeeCordCommandManager implements CommandManager {
     }
 
     @Override
-    public void dispatchCommand(CommandSender sender, String command) {//@Todo map sender
-        original.dispatchCommand(null,command);
+    public void dispatchCommand(CommandSender sender, String command) {
+        net.md_5.bungee.api.CommandSender mappedSender;
+        if(sender instanceof OnlineMinecraftPlayer){
+            mappedSender = ((BungeeProxiedPlayer)sender).getOriginal();
+        }else if(sender.equals(McNative.getInstance().getConsoleSender())){
+            mappedSender = ProxyServer.getInstance().getConsole();
+        }else{
+            mappedSender = new BungeeCordCommand.MappedCommandSender(sender);
+        }
+        original.dispatchCommand(mappedSender,command);
     }
 
     @Override

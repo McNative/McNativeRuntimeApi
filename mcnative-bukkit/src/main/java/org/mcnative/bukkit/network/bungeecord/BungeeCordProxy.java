@@ -55,6 +55,11 @@ public class BungeeCordProxy implements ProxyServer {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int getOnlineCount() {
         return McNative.getInstance().getNetwork().getOnlineCount();
     }

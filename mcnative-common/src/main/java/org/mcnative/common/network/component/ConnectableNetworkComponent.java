@@ -31,7 +31,14 @@ public interface ConnectableNetworkComponent extends NetworkComponent {
 
     String getName();
 
+    int getMaxPlayerCount();
+
     int getOnlineCount();
+
+    default boolean isFull(){
+        return getOnlineCount() >= getMaxPlayerCount();
+    }
+
 
     Collection<OnlineMinecraftPlayer> getOnlinePlayers();
 

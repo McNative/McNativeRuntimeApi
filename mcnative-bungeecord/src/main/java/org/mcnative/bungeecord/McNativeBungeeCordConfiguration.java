@@ -62,6 +62,9 @@ public class McNativeBungeeCordConfiguration {
     @DocumentKey("userId")
     public static String USER_ID = "00000";
 
+    @DocumentKey("serverSecret")
+    public static String SERVER_SECRET = "00000-00000-00000";
+
     @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 

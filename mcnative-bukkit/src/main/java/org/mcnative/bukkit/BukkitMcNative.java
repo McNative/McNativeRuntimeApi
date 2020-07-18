@@ -127,6 +127,11 @@ public class BukkitMcNative implements McNative {
     }
 
     @Override
+    public String getMcNativeServerSecret() {
+        return McNativeBukkitConfiguration.SERVER_SECRET;
+    }
+
+    @Override
     public PluginVersion getVersion() {
         return version;
     }

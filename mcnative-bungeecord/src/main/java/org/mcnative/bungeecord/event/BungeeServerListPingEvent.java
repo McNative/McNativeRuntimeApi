@@ -60,7 +60,7 @@ public class BungeeServerListPingEvent implements ServerListPingEvent {
     public void setResponse(ServerStatusResponse response) {
         if(response instanceof BungeeCordServerStatusResponse){
             this.response = (BungeeCordServerStatusResponse) response;
-            this.event.setResponse(((BungeeCordServerStatusResponse)response).getPing());
+            this.event.setResponse(((BungeeCordServerStatusResponse)response).getOriginal());
         }else{
             ServerStatusResponse original = getResponse();
             original.setFavicon(response.getFavicon());

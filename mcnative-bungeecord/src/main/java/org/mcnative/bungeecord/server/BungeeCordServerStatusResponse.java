@@ -47,12 +47,13 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
     private final static TextComponent NEXT_LINE_COMPONENT = Text.of("\n");
 
     private ServerPing ping;
+    private int ping0;
 
     public BungeeCordServerStatusResponse(ServerPing ping) {
         this.ping = ping;
     }
 
-    public ServerPing getPing() {
+    public ServerPing getOriginal() {
         return ping;
     }
 
@@ -213,6 +214,16 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
     public ServerStatusResponse clearPlayerInfo() {
         ping.getPlayers().setSample(new ServerPing.PlayerInfo[]{});
         return this;
+    }
+
+    @Override
+    public int getPing() {
+        return ping0;
+    }
+
+    @Override
+    public void setPing(int ping) {
+        ping0 = ping;
     }
 
     @Override

@@ -57,6 +57,9 @@ public class McNativeBukkitConfiguration {
     @DocumentKey("userId")
     public static String USER_ID = "00000";
 
+    @DocumentKey("serverSecret")
+    public static String SERVER_SECRET = "00000-00000-00000";
+
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{design.color}{name}";
 

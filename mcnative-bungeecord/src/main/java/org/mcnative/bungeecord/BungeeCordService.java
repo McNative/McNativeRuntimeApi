@@ -52,7 +52,6 @@ import java.util.concurrent.CompletableFuture;
 
 /*
 @Todo In service
-    - Implement connection Handler
     - Implement default tablist
  */
 public class BungeeCordService implements LocalService, ProxyServer, ProxyService {
@@ -270,6 +269,12 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     @Override
     public String getName() {
         return net.md_5.bungee.api.ProxyServer.getInstance().getName();
+    }
+
+    @Override
+    public int getMaxPlayerCount() {
+        ListenerInfo info = net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next();
+        return info.getMaxPlayers();
     }
 
     @Override

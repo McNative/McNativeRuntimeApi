@@ -76,7 +76,7 @@ public class BungeeCordCommand implements Command {
         }else if(sender instanceof BungeeProxiedPlayer){
             mapped = ((BungeeProxiedPlayer) sender).getOriginal();
         }else mapped = new MappedCommandSender(sender);
-        original.execute(mapped,arguments);//@Todo implement
+        original.execute(mapped,arguments);
     }
 
     @Override

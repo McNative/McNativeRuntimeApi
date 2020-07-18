@@ -33,6 +33,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.network.component.server.ServerStatusRequester;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -90,12 +91,12 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public ServerStatusResponse ping() {
-        throw new UnsupportedOperationException();
+        return ServerStatusRequester.requestStatus(getAddress());
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        throw new UnsupportedOperationException();
+        return ServerStatusRequester.requestStatusAsync(getAddress());
     }
 
     @Override
@@ -106,6 +107,11 @@ public class CloudNetServer implements MinecraftServer {
     @Override
     public String getName() {
         return info.getServiceId().getGroup()+"-"+info.getServiceId().getId();
+    }
+
+    @Override
+    public int getMaxPlayerCount() {
+        return info.getMaxPlayers();
     }
 
     @Override

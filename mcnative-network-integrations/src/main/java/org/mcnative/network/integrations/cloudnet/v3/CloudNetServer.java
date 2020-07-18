@@ -20,17 +20,19 @@
 
 package org.mcnative.network.integrations.cloudnet.v3;
 
-import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
-import de.dytanic.cloudnet.ext.bridge.ServiceInfoSnapshotUtil;
+import de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty;
+import de.dytanic.cloudnet.ext.bridge.player.ServicePlayer;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.network.component.server.ServerStatusRequester;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -40,6 +42,7 @@ import org.mcnative.common.text.components.MessageComponent;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -83,14 +86,13 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public ServerStatusResponse ping() {
-        throw new UnsupportedOperationException();
+        return ServerStatusRequester.requestStatus(getAddress());
     }
 
     @Override
     public CompletableFuture<ServerStatusResponse> pingAsync() {
-        throw new UnsupportedOperationException();
+        return ServerStatusRequester.requestStatusAsync(getAddress());
     }
-
     @Override
     public void sendData(String channel, byte[] data, boolean queued) {
         throw new UnsupportedOperationException();
@@ -102,32 +104,46 @@ public class CloudNetServer implements MinecraftServer {
     }
 
     @Override
+    public int getMaxPlayerCount() {
+        return snapshot.getProperty(BridgeServiceProperty.MAX_PLAYERS).orElse(0);
+    }
+
+    @Override
     public int getOnlineCount() {
-        return ServiceInfoSnapshotUtil.getOnlineCount(snapshot);
+        return snapshot.getProperty(BridgeServiceProperty.ONLINE_COUNT).orElse(0);
     }
 
     @Override
     public Collection<OnlineMinecraftPlayer> getOnlinePlayers() {
         Collection<OnlineMinecraftPlayer> result = new ArrayList<>();
-        for (JsonDocument player : ServiceInfoSnapshotUtil.getPlayers(snapshot)) {
-
+        Collection<ServicePlayer> players = snapshot.getProperty(BridgeServiceProperty.PLAYERS).orElse(Collections.emptyList());
+        for (ServicePlayer player : players) {
+            result.add(McNative.getInstance().getNetwork().getOnlinePlayer(player.getUniqueId()));
         }
         return result;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(UUID uniqueId) {
+        Collection<ServicePlayer> players = snapshot.getProperty(BridgeServiceProperty.PLAYERS).orElse(Collections.emptyList());
+        if(Iterators.findOne(players, servicePlayer -> servicePlayer.getUniqueId().equals(uniqueId)) != null){
+            return McNative.getInstance().getNetwork().getOnlinePlayer(uniqueId);
+        }
         return null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(String name) {
+        Collection<ServicePlayer> players = snapshot.getProperty(BridgeServiceProperty.PLAYERS).orElse(Collections.emptyList());
+        if(Iterators.findOne(players, servicePlayer -> servicePlayer.getName().equalsIgnoreCase(name)) != null){
+            return McNative.getInstance().getNetwork().getOnlinePlayer(name);
+        }
         return null;
     }
 
     @Override
     public OnlineMinecraftPlayer getOnlinePlayer(long xBoxId) {
-        return null;
+        throw new UnsupportedOperationException("Not supported in CloudNet V3");
     }
 
     @Override
@@ -167,7 +183,7 @@ public class CloudNetServer implements MinecraftServer {
 
     @Override
     public boolean isOnline() {
-        return snapshot.isConnected();
+        return snapshot.isConnected() && snapshot.getProperty(BridgeServiceProperty.IS_ONLINE).orElse(false);
     }
 
     @Override
