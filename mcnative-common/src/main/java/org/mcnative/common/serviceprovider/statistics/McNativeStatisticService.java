@@ -82,7 +82,7 @@ public class McNativeStatisticService {
     }
 
     public void shutdown(){
-        sendServerReport("SHUTDOWN");
+        //sendServerReport("SHUTDOWN");
     }
 
     private void sendComputerReport() {
