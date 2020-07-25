@@ -57,7 +57,11 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             RolloutProfile mcnative = configuration.getProfile(McNativeLoader.RESOURCE_NAME);
             RolloutProfile resource = configuration.getProfile(getName());
 
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,mcnative)) return;
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,mcnative)){
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+
             this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),ENVIRONMENT_NAME,resource);
 
             if(!this.executor.install() || !this.executor.installDependencies()){

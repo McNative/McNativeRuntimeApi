@@ -82,7 +82,9 @@ public class RolloutConfiguration {
         try{
             if(!FILE.exists()) FILE.createNewFile();
             YAML.dump(configuration,new FileWriter(FILE));
-        }catch (Exception ignored){}
+        }catch (Exception ignored){
+            ignored.printStackTrace();
+        }
     }
 
     public static class PluginEntry {
