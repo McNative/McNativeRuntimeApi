@@ -59,8 +59,8 @@ public class RolloutConfiguration {
         YAML = new Yaml(constructor,representer,dumper);
     }
 
-    private final Map<String,RolloutProfile> profiles;
-    private final Collection<PluginEntry> plugins;
+    private Map<String,RolloutProfile> profiles;
+    private Collection<PluginEntry> plugins;
 
     public RolloutConfiguration() {
         profiles = new HashMap<>();
@@ -71,8 +71,16 @@ public class RolloutConfiguration {
         return profiles;
     }
 
+    public void setProfiles(Map<String, RolloutProfile> profiles) {
+        this.profiles = profiles;
+    }
+
     public Collection<PluginEntry> getPlugins() {
         return plugins;
+    }
+
+    public void setPlugins(Collection<PluginEntry> plugins) {
+        this.plugins = plugins;
     }
 
     public RolloutProfile getProfile(String name){
