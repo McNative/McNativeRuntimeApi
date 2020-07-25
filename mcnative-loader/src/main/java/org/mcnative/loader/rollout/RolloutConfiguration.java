@@ -70,6 +70,10 @@ public class RolloutConfiguration {
                 break;
             }
         }
+
+        if(profiles.isEmpty()) profiles.put("production",RolloutProfile.DEFAULT);
+        plugins.add(new PluginEntry(name,"production"));
+
         return RolloutProfile.DEFAULT;
     }
 
@@ -91,6 +95,11 @@ public class RolloutConfiguration {
 
         private String pluginName;
         private String profile;
+
+        public PluginEntry(String pluginName, String profile) {
+            this.pluginName = pluginName;
+            this.profile = profile;
+        }
 
         public String getPluginName() {
             return pluginName;
