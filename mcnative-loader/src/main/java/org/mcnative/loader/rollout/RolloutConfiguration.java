@@ -23,7 +23,7 @@ package org.mcnative.loader.rollout;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -43,8 +43,8 @@ public class RolloutConfiguration {
         dumper.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumper.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
         dumper.setPrettyFlow(true);
+        CustomClassLoaderConstructor constructor = new CustomClassLoaderConstructor(RolloutConfiguration.class,RolloutConfiguration.class.getClassLoader());
 
-        Constructor constructor = new Constructor(RolloutConfiguration.class);
         TypeDescription configDesc = new TypeDescription(RolloutConfiguration.class);
         configDesc.putMapPropertyType("profiles",String.class,RolloutProfile.class);//In old yaml versions new method not available
         configDesc.putListPropertyType("plugins",PluginEntry.class);
@@ -97,7 +97,6 @@ public class RolloutConfiguration {
         try{
             if(!FILE.exists()) FILE.createNewFile();
 
-            System.out.println(YAML.dumpAsMap(configuration));
             Map<String,Object> output = new LinkedHashMap<>();
             output.put("profiles",configuration.getProfiles());
             output.put("plugins",configuration.getPlugins());
