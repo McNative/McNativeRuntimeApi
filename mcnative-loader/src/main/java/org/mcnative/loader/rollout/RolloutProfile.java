@@ -24,10 +24,10 @@ public class RolloutProfile {
 
     public static final RolloutProfile DEFAULT = new RolloutProfile("production","mirror.mcnative.org","RELEASE",true);
 
-    private String name;
-    private String server;
-    private String qualifier;
-    private boolean automatically;
+    private final String name;
+    private final String server;
+    private final String qualifier;
+    private final boolean automatically;
 
     public RolloutProfile(String name, String server, String qualifier, boolean automatically) {
         this.name = name;
