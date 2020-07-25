@@ -48,10 +48,7 @@ import org.mcnative.bungeecord.player.permission.BungeeCordPlayerDesign;
 import org.mcnative.bungeecord.plugin.command.McNativeCommand;
 import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
-import org.mcnative.common.LocalService;
-import org.mcnative.common.McNative;
-import org.mcnative.common.MinecraftPlatform;
-import org.mcnative.common.ObjectCreator;
+import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
@@ -128,8 +125,8 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
-    public String getMcNativeServerSecret() {
-        return McNativeBungeeCordConfiguration.SERVER_SECRET;
+    public McNativeServerIdentifier getMcNativeServerId() {
+        return new McNativeServerIdentifier(McNativeBungeeCordConfiguration.SERVER_ID,McNativeBungeeCordConfiguration.SERVER_SECRET);
     }
 
     @Override

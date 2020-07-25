@@ -47,7 +47,7 @@ public interface McNative extends ObjectOwner {
     String getUserId();
 
 
-    String getMcNativeServerSecret();
+    McNativeServerIdentifier getMcNativeServerId();
 
 
     PluginVersion getVersion();

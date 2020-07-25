@@ -25,6 +25,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
+import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.util.logging.Level;
 
@@ -36,8 +37,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
     @Override
     public void onLoad() {
         try{
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME)) return;
-            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME);
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, RolloutProfile.DEFAULT)) return;
+            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME,RolloutProfile.DEFAULT);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;

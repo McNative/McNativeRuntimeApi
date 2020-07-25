@@ -48,10 +48,7 @@ import org.mcnative.bukkit.player.permission.BukkitPlayerDesign;
 import org.mcnative.bukkit.plugin.command.McNativeCommand;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginDescription;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
-import org.mcnative.common.LocalService;
-import org.mcnative.common.McNative;
-import org.mcnative.common.MinecraftPlatform;
-import org.mcnative.common.ObjectCreator;
+import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
@@ -127,8 +124,8 @@ public class BukkitMcNative implements McNative {
     }
 
     @Override
-    public String getMcNativeServerSecret() {
-        return McNativeBukkitConfiguration.SERVER_SECRET;
+    public McNativeServerIdentifier getMcNativeServerId() {
+        return new McNativeServerIdentifier(McNativeBukkitConfiguration.SERVER_ID,McNativeBukkitConfiguration.SERVER_SECRET);
     }
 
     @Override

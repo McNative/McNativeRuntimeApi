@@ -31,9 +31,9 @@ import net.pretronic.libraries.plugin.loader.PluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
-import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
 import org.mcnative.common.McNative;
+import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.io.File;
 import java.io.InputStream;
@@ -43,17 +43,23 @@ import java.util.logging.Logger;
 
 public class GuestPluginExecutor {
 
+    private static final String VERSION_URL = "https://{profile.server}/v1/{resource.id}/versions/latest?plain=true&qualifier={profile.qualifier}";
+    private static final String DOWNLOAD_URL = "https://{profile.server}/v1/{resource.id}/versions/{version.build}/download";
+
+
     private final PlatformExecutor executor;
     private final File location;
     private final Logger logger;
     private final RuntimeEnvironment<McNative> environment;
+    private final RolloutProfile profile;
     private GuestPluginLoader loader;
 
-    public GuestPluginExecutor(PlatformExecutor executor,File location, Logger logger, String runtimeName) {
+    public GuestPluginExecutor(PlatformExecutor executor,File location, Logger logger, String runtimeName,RolloutProfile profile) {
         this.executor = executor;
         this.location = location;
         this.logger = logger;
         this.environment = new RuntimeEnvironment<>(runtimeName, McNative.getInstance());
+        this.profile = profile;
     }
 
     public boolean install(){
@@ -109,38 +115,40 @@ public class GuestPluginExecutor {
         String name = loader.getString("plugin.name");
 
         ResourceInfo info = new ResourceInfo(name,new File("plugins/McNative/lib/resources/"+name.toLowerCase()));
-        info.setVersionUrl(replaceLoaderVariables(loader,loader.getString("versionUrl")));
+        info.setVersionUrl(replaceLoaderVariables(loader,VERSION_URL));
         ResourceLoader resourceLoader = new ResourceLoader(info);
 
-        UpdateConfiguration updateConfiguration = resourceLoader.getUpdateConfiguration();
-
         VersionInfo current = resourceLoader.getCurrentVersion();
-        VersionInfo latest = null;
+        VersionInfo latest = VersionInfo.UNKNOWN;
 
-        if(updateConfiguration.isEnabled() || current == null){
-            try{
-                latest = resourceLoader.getLatestVersion();
-            }catch (Exception exception){
-                logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest "+updateConfiguration.getQualifier()+" version ("+exception.getMessage()+")");
-                if(current == null || current.equals(VersionInfo.UNKNOWN)){
-                    logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
-                    return false;
-                }
+        try{
+            latest = resourceLoader.getLatestVersion();
+        }catch (Exception exception){
+            logger.log(Level.SEVERE,"(Resource-Loader) Could not get latest "+profile.getQualifier()+" version ("+exception.getMessage()+")");
+            if(current == null || current.equals(VersionInfo.UNKNOWN)){
+                logger.log(Level.SEVERE,"(Resource-Loader) Resource is not available, shutting down");
+                return false;
             }
+        }
 
+        if(profile.isAutomatically() || current == null){
             if(latest != null){
                 if(resourceLoader.isLatestVersion()){
                     logger.info("(Resource-Loader) "+name+" "+latest.getName()+" (Up to date)");
                 }else{
-                    info.setDownloadUrl(replaceLoaderVariables(loader,loader.getString("downloadUrl")));
+                    info.setDownloadUrl(replaceLoaderVariables(loader,DOWNLOAD_URL));
 
-                    //@Todo optimize with better solution
-                    info.setAuthenticator(httpURLConnection -> httpURLConnection.setRequestProperty("userId",McNative.getInstance().getUserId()));
+                    if(McNative.getInstance().getMcNativeServerId() != null){
+                        info.setAuthenticator(httpURLConnection -> {
+                            httpURLConnection.setRequestProperty("serverId",McNative.getInstance().getMcNativeServerId().getId());
+                            httpURLConnection.setRequestProperty("serverSecret",McNative.getInstance().getMcNativeServerId().getSecret());
+                        });
+                    }
 
                     logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName());
                     try{
                         resourceLoader.download(latest);
-                        logger.info("(McNative-Loader) Successfully downloaded ");
+                        logger.info("(McNative-Loader) Successfully downloaded "+name);
                     }catch (Exception exception){
                         if(current == null || current.equals(VersionInfo.UNKNOWN)){
                             logger.info("(McNative-Loader) download failed, shutting down");
@@ -171,9 +179,10 @@ public class GuestPluginExecutor {
 
     private String replaceLoaderVariables(Document loaderConfig,String input){
         return input
-                .replace("{plugin.name}",loaderConfig.getString("plugin.name"))
-                .replace("{plugin.id}",loaderConfig.getString("plugin.id"))
-                .replace("{plugin.name}",loaderConfig.getString("plugin.name"));
+                .replace("{resource.name}",loaderConfig.getString("plugin.name"))
+                .replace("{resource.id}",loaderConfig.getString("plugin.id"))
+                .replace("{profile.server}",profile.getServer())
+                .replace("{profile.qualifier}",profile.getQualifier());
     }
 
     public PluginLoader getLoader() {

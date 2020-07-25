@@ -49,7 +49,7 @@ public class McNativeStatisticService {
     public McNativeStatisticService() {
         this.networkReporting = McNative.getInstance().getPlatform().isProxy();
         localReportingId = loadReportingId();
-        //start();
+        start();
     }
 
     private UUID loadReportingId(){
@@ -82,7 +82,7 @@ public class McNativeStatisticService {
     }
 
     public void shutdown(){
-        //sendServerReport("SHUTDOWN");
+        sendServerReport("SHUTDOWN");
     }
 
     private void sendComputerReport() {
@@ -113,7 +113,7 @@ public class McNativeStatisticService {
 
     private void sendNetworkReport(){
         Document document = Document.newDocument();
-        document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
+        //document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
         document.set("UniqueId",McNative.getInstance().getNetwork().getIdentifier().getUniqueId());
         document.set("Name",McNative.getInstance().getNetwork().getIdentifier().getName());
         document.set("Technology",McNative.getInstance().getNetwork().getTechnology());
@@ -125,7 +125,7 @@ public class McNativeStatisticService {
 
     private void sendServerReport(String lifecycleState){
         Document document = Document.newDocument();
-        document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
+       // document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
         document.set("Platform",McNative.getInstance().getPlatform().getName());
         document.set("ProtocolVersion",McNative.getInstance().getPlatform().getProtocolVersion().getNumber());
         document.set("Name",McNative.getInstance().getLocal().getIdentifier().getName());
@@ -148,7 +148,7 @@ public class McNativeStatisticService {
 
     private void sendServerStatusReport(){
         Document document = Document.newDocument();
-        document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
+        //document.set("Secret",McNative.getInstance().getMcNativeServerSecret());
         document.set("MaximumPlayerCount",McNative.getInstance().getLocal().getStatusResponse().getMaxPlayers());
         document.set("OnlinePlayerCount",McNative.getInstance().getLocal().getOnlineCount());
 
@@ -182,7 +182,8 @@ public class McNativeStatisticService {
             URL url = new URL(REPORTING_SERVICE_URL+endpoint);
             System.out.println(REPORTING_SERVICE_URL+endpoint);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setConnectTimeout(3000);
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);

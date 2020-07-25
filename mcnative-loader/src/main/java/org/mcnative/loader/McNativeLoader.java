@@ -23,6 +23,7 @@ import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
+import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -32,22 +33,26 @@ import java.util.logging.Logger;
 
 public class McNativeLoader extends ResourceLoader {
 
-    private static final String VERSION_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true&qualifier={qualifier}";
-    private static final String DOWNLOAD_URL = "https://mirror.pretronic.net/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{version.build}/download?edition={edition}";
+    public static String RESOURCE_NAME = "McNative";
 
-    private final static ResourceInfo MCNATIVE = new ResourceInfo("McNative",new File("plugins/McNative/lib/resources/mcnative/"));
+    private static final String VERSION_URL = "https://{profile.server}/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/latest?plain=true&qualifier={profile.qualifier}";
+    private static final String DOWNLOAD_URL = "https://{profile.server}/v1/e5b65750-4dcc-4631-b275-06113b31a416/versions/{version.build}/download?edition={edition}";
+    private static final ResourceInfo MCNATIVE = new ResourceInfo(RESOURCE_NAME,new File("plugins/McNative/lib/resources/mcnative/"));
 
     private final Logger logger;
     private final String platform;
+    private final RolloutProfile profile;
 
-    static {
-        MCNATIVE.setVersionUrl(VERSION_URL);
-    }
 
-    public McNativeLoader(Logger logger, String platform) {
+    public McNativeLoader(Logger logger, String platform, RolloutProfile profile) {
         super(MCNATIVE);
         this.logger = logger;
         this.platform = platform;
+        this.profile = profile;
+
+        MCNATIVE.setVersionUrl(VERSION_URL
+                .replace("{profile.server}",profile.getServer())
+                .replace("{profile.qualifier}",profile.getQualifier()));
     }
 
     public boolean isAvailable(){
@@ -80,7 +85,11 @@ public class McNativeLoader extends ResourceLoader {
                 logger.info("(McNative-Loader) McNative "+latest.getName()+" (Up to date)");
             }else{
                 if(current == null || configuration.isEnabled()){
-                    MCNATIVE.setDownloadUrl(DOWNLOAD_URL.replace("{edition}",platform));
+
+                    MCNATIVE.setDownloadUrl(DOWNLOAD_URL
+                            .replace("{profile.server}",profile.getServer())
+                            .replace("{edition}",platform));
+
                     logger.info("(McNative-Loader) Downloading McNative "+latest.getName());
                     try{
                         download(latest);
@@ -117,7 +126,7 @@ public class McNativeLoader extends ResourceLoader {
         return false;
     }
 
-    public static boolean install(Logger logger,String platform){
-        return new McNativeLoader(logger,platform).install();
+    public static boolean install(Logger logger,String platform, RolloutProfile profile){
+        return new McNativeLoader(logger,platform,profile).install();
     }
 }
