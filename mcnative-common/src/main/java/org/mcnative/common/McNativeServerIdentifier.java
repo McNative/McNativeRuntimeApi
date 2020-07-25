@@ -25,6 +25,7 @@ public class McNativeServerIdentifier {
     private final String id;
     private final String secret;
 
+
     public McNativeServerIdentifier(String id, String secret) {
         this.id = id;
         this.secret = secret;
