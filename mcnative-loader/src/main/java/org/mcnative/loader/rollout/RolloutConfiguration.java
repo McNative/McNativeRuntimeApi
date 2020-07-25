@@ -20,33 +20,90 @@
 
 package org.mcnative.loader.rollout;
 
+import org.yaml.snakeyaml.TypeDescription;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RolloutConfiguration {
 
+    public static File FILE = new File("plugins/McNative/update.yml");
+    public static Yaml YAML;
+
+    static {
+        Constructor constructor = new Constructor(RolloutConfiguration.class);
+        TypeDescription configDesc = new TypeDescription(RolloutConfiguration.class);
+        configDesc.addPropertyParameters("profiles",String.class,RolloutProfile.class);
+        configDesc.addPropertyParameters("plugins",PluginEntry.class);
+        constructor.addTypeDescription(configDesc);
+        YAML = new Yaml(constructor);
+    }
+
     private final Map<String,RolloutProfile> profiles;
-    private final Map<String,String> plugins;
+    private final Collection<PluginEntry> plugins;
 
     public RolloutConfiguration() {
         profiles = new HashMap<>();
-        plugins = new HashMap<>();
+        plugins = new ArrayList<>();
     }
 
     public Map<String,RolloutProfile> getProfiles() {
         return profiles;
     }
 
-    public Map<String, String> getPlugins() {
+    public Collection<PluginEntry> getPlugins() {
         return plugins;
     }
 
     public RolloutProfile getProfile(String name){
-        String profileName = plugins.get(name);
-        if(profileName != null){
-            RolloutProfile profile = profiles.get("profileName");
-            if(profile != null) return profile;
+        for (PluginEntry plugin : plugins) {
+            if(plugin.pluginName.equalsIgnoreCase(name)){
+                RolloutProfile profile = profiles.get(plugin.profile);
+                if(profile != null) return profile;
+                break;
+            }
         }
         return RolloutProfile.DEFAULT;
+    }
+
+    public static RolloutConfiguration load() throws Exception{
+        if(FILE.exists()) return YAML.load(new FileInputStream(FILE));
+        else return new RolloutConfiguration();
+    }
+
+    public static void save(RolloutConfiguration configuration) throws Exception{
+        try{
+            if(!FILE.exists()) FILE.createNewFile();
+            YAML.dump(configuration,new FileWriter(FILE));
+        }catch (Exception ignored){}
+    }
+
+    public static class PluginEntry {
+
+        private String pluginName;
+        private String profile;
+
+        public String getPluginName() {
+            return pluginName;
+        }
+
+        public String getProfile() {
+            return profile;
+        }
+
+        public void setPluginName(String pluginName) {
+            this.pluginName = pluginName;
+        }
+
+        public void setProfile(String profile) {
+            this.profile = profile;
+        }
     }
 }

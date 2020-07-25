@@ -134,6 +134,7 @@
             <version>${dependency.bungeecord.version}</version>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
 </project>

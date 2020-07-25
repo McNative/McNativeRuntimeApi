@@ -23,8 +23,6 @@ import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -39,7 +37,6 @@ import org.mcnative.loader.PlatformExecutor;
 import org.mcnative.loader.rollout.RolloutConfiguration;
 import org.mcnative.loader.rollout.RolloutProfile;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -50,13 +47,12 @@ import java.util.regex.Pattern;
 public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener, PlatformExecutor {
 
     private static final String ENVIRONMENT_NAME = "Bukkit";
-    private static final File ROLLOUT_CONFIGURATION_FILE = new File("plugins/McNative/update.yml");
     private GuestPluginExecutor executor;
 
     @Override
     public void onLoad() {
         try{
-            RolloutConfiguration configuration = loadRolloutConfig();
+            RolloutConfiguration configuration = RolloutConfiguration.load();
 
             RolloutProfile mcnative = configuration.getProfile(McNativeLoader.RESOURCE_NAME);
             RolloutProfile resource = configuration.getProfile(getName());
@@ -74,6 +70,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
             PluginVersion version = this.executor.getLoader().getDescription().getVersion();
             ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
+
+            RolloutConfiguration.save(configuration);
         }catch (Exception exception){
             this.executor = null;
             exception.printStackTrace();
@@ -167,35 +165,5 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
                 Iterators.removeSilent(classes.entrySet(), entry -> entry.getValue().getClassLoader().equals(classLoader));
             }
         }
-    }
-
-    private RolloutConfiguration loadRolloutConfig(){
-        RolloutConfiguration result = new RolloutConfiguration();
-
-        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(ROLLOUT_CONFIGURATION_FILE);
-
-        ConfigurationSection profiles = configuration.getConfigurationSection("profiles");
-        if(profiles != null){
-            for (String key : profiles.getKeys(false)) {
-                ConfigurationSection rawProfile = profiles.getConfigurationSection(key);
-                if(rawProfile == null) continue;
-                RolloutProfile profile = new RolloutProfile(key
-                        ,rawProfile.getString("server")
-                        ,rawProfile.getString("qualifier")
-                        ,rawProfile.getBoolean("automatically"));
-                result.getProfiles().put(key,profile);
-            }
-        }
-
-        /*
-        Constructor constructor = new Constructor(Config.class);
-        TypeDescription configDesc = new TypeDescription(Config.class);
-        configDesc.putListPropertyType("things", ConfigurableThing.class);
-        constructor.addTypeDescription(configDesc);
-        Yaml yaml = new Yaml(constructor);
-        Config config = (Config) yaml.load();
-         */
-
-        return result;
     }
 }

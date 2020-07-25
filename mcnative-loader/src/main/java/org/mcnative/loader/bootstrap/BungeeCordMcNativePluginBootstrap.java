@@ -25,6 +25,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
+import org.mcnative.loader.rollout.RolloutConfiguration;
 import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.util.logging.Level;
@@ -37,8 +38,13 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
     @Override
     public void onLoad() {
         try{
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, RolloutProfile.DEFAULT)) return;
-            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME,RolloutProfile.DEFAULT);
+            RolloutConfiguration configuration = RolloutConfiguration.load();
+
+            RolloutProfile mcnative = configuration.getProfile(McNativeLoader.RESOURCE_NAME);
+            RolloutProfile resource = configuration.getProfile(getDescription().getName());
+
+            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, mcnative)) return;
+            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME,resource);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
@@ -49,6 +55,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
 
             PluginVersion version = this.executor.getLoader().getDescription().getVersion();
             ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
+
+            RolloutConfiguration.save(configuration);
         }catch (Exception exception){
             this.executor = null;
             getLogger().log(Level.SEVERE,String.format("Could not bootstrap plugin (%s)",exception.getMessage()));
