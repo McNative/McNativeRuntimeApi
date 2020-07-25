@@ -40,8 +40,8 @@ public class RolloutConfiguration {
     static {
         Constructor constructor = new Constructor(RolloutConfiguration.class);
         TypeDescription configDesc = new TypeDescription(RolloutConfiguration.class);
-        configDesc.addPropertyParameters("profiles",String.class,RolloutProfile.class);
-        configDesc.addPropertyParameters("plugins",PluginEntry.class);
+        configDesc.putMapPropertyType("profiles",String.class,RolloutProfile.class);//In old yaml versions new method not available
+        configDesc.putListPropertyType("plugins",PluginEntry.class);
         constructor.addTypeDescription(configDesc);
         YAML = new Yaml(constructor);
     }
