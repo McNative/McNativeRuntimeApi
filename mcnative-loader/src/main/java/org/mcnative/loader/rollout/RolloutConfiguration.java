@@ -20,30 +20,41 @@
 
 package org.mcnative.loader.rollout;
 
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RolloutConfiguration {
 
-    public static File FILE = new File("plugins/McNative/update.yml");
+    public static File FILE = new File("plugins/Mcnative/update.yml");
     public static Yaml YAML;
 
     static {
+        DumperOptions dumper = new DumperOptions();
+        dumper.setIndent(2);
+        dumper.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        dumper.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
+        dumper.setPrettyFlow(true);
+
         Constructor constructor = new Constructor(RolloutConfiguration.class);
         TypeDescription configDesc = new TypeDescription(RolloutConfiguration.class);
         configDesc.putMapPropertyType("profiles",String.class,RolloutProfile.class);//In old yaml versions new method not available
         configDesc.putListPropertyType("plugins",PluginEntry.class);
         constructor.addTypeDescription(configDesc);
-        YAML = new Yaml(constructor);
+
+        Representer representer = new Representer();
+        representer.addClassTag(RolloutProfile.class, Tag.MAP);
+        representer.addClassTag(PluginEntry.class, Tag.MAP);
+
+        YAML = new Yaml(constructor,representer,dumper);
     }
 
     private final Map<String,RolloutProfile> profiles;
@@ -82,19 +93,24 @@ public class RolloutConfiguration {
         else return new RolloutConfiguration();
     }
 
-    public static void save(RolloutConfiguration configuration) throws Exception{
+    public static void save(RolloutConfiguration configuration) {
         try{
             if(!FILE.exists()) FILE.createNewFile();
-            YAML.dump(configuration,new FileWriter(FILE));
-        }catch (Exception ignored){
-            ignored.printStackTrace();
-        }
-    }
 
+            System.out.println(YAML.dumpAsMap(configuration));
+            Map<String,Object> output = new LinkedHashMap<>();
+            output.put("profiles",configuration.getProfiles());
+            output.put("plugins",configuration.getPlugins());
+
+            YAML.dump(output,new FileWriter(FILE));
+        }catch (Exception ignored){}
+    }
     public static class PluginEntry {
 
         private String pluginName;
         private String profile;
+
+        public PluginEntry() {}
 
         public PluginEntry(String pluginName, String profile) {
             this.pluginName = pluginName;
