@@ -51,6 +51,8 @@ public class RolloutConfiguration {
         constructor.addTypeDescription(configDesc);
 
         Representer representer = new Representer();
+        representer.getPropertyUtils().setAllowReadOnlyProperties(true);
+
         representer.addClassTag(RolloutProfile.class, Tag.MAP);
         representer.addClassTag(PluginEntry.class, Tag.MAP);
 
@@ -89,7 +91,7 @@ public class RolloutConfiguration {
     }
 
     public static RolloutConfiguration load() throws Exception{
-        if(FILE.exists()) return YAML.load(new FileInputStream(FILE));
+        if(FILE.exists()) return YAML.loadAs(new FileInputStream(FILE),RolloutConfiguration.class);
         else return new RolloutConfiguration();
     }
 
@@ -104,6 +106,7 @@ public class RolloutConfiguration {
             YAML.dump(output,new FileWriter(FILE));
         }catch (Exception ignored){}
     }
+
     public static class PluginEntry {
 
         private String pluginName;
