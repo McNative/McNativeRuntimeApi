@@ -23,9 +23,7 @@ import net.pretronic.libraries.event.Cancellable;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
-import org.mcnative.common.network.event.NetworkEvent;
 
-@NetworkEvent
 public interface MinecraftPlayerServerConnectEvent extends MinecraftOnlinePlayerEvent, Cancellable {
 
     MinecraftServer getTarget();

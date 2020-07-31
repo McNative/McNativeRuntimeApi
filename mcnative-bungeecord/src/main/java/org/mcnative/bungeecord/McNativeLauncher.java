@@ -46,6 +46,7 @@ import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.network.event.NetworkEventHandler;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
@@ -97,7 +98,8 @@ public class McNativeLauncher {
         BungeeCordCommandManager commandManager = new BungeeCordCommandManager(pluginManager,ProxyServer.getInstance().getPluginManager());
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected command manager.");
 
-        BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager,new DefaultEventBus(),serverMap);
+        BungeeCordService localService = new BungeeCordService(new DefaultPacketManager(),commandManager,playerManager
+                ,new DefaultEventBus(new NetworkEventHandler()),serverMap);
         BungeeCordMcNative instance = new BungeeCordMcNative(version,pluginManager,playerManager,null, localService);
         McNative.setInstance(instance);
         instance.setNetwork(setupNetwork(logger,localService,instance.getExecutorService(),serverMap));

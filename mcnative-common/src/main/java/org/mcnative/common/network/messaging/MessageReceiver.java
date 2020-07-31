@@ -20,18 +20,35 @@
 package org.mcnative.common.network.messaging;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.event.network.EventOrigin;
 import org.mcnative.common.network.NetworkIdentifier;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public interface MessageReceiver {
+public interface MessageReceiver extends EventOrigin {
 
     NetworkIdentifier getIdentifier();
 
     void sendMessage(String channel, Document request);
+
+    @Override
+    default String getName(){
+        return getIdentifier().getName();
+    }
+
+    @Override
+    default UUID getUniqueId(){
+        return getIdentifier().getUniqueId();
+    }
+
+    @Override
+    default boolean isLocal(){
+        return false;
+    }
 
     default Document sendQueryMessage(String channel, Document request){
         try {

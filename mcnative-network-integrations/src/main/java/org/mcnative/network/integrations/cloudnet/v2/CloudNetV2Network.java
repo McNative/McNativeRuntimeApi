@@ -31,12 +31,14 @@ import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.synchronisation.NetworkSynchronisationCallback;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.NetworkOperations;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
+import org.mcnative.common.network.event.NetworkEventBus;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.text.components.MessageComponent;
@@ -54,12 +56,15 @@ public class CloudNetV2Network implements Network {
     private final NetworkOperations operations;
     private final NetworkIdentifier localIdentifier;
     private final NetworkIdentifier networkIdentifier;
+    private final NetworkEventBus eventBus;
 
     public CloudNetV2Network(Executor executor) {
         this.messenger = new CloudNetV2Messenger(executor);
         this.operations = new CloudNetV2NetworkOperations(this);
         this.localIdentifier = new NetworkIdentifier(CloudAPI.getInstance().getServerId(),CloudAPI.getInstance().getUniqueId());
         this.networkIdentifier = new NetworkIdentifier(getName(),loadId());
+        this.eventBus = new NetworkEventBus();
+        this.messenger.registerChannel("mcnative_event", ObjectOwner.SYSTEM,eventBus);
     }
 
     private UUID loadId(){
@@ -100,7 +105,7 @@ public class CloudNetV2Network implements Network {
 
     @Override
     public EventBus getEventBus() {
-        throw new UnsupportedOperationException("Network event bus is currently not integrated");
+        return eventBus;
     }
 
     @Override

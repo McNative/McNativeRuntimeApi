@@ -22,10 +22,8 @@ package org.mcnative.common.event.server;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
-import org.mcnative.common.network.event.NetworkEvent;
 import org.mcnative.common.text.components.MessageComponent;
 
-@NetworkEvent
 public interface MinecraftPlayerServerKickEvent extends MinecraftOnlinePlayerEvent {
 
     MinecraftServer getCurrentServer();

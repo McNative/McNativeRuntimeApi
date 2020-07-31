@@ -272,6 +272,11 @@ public class BungeeCordService implements LocalService, ProxyServer, ProxyServic
     }
 
     @Override
+    public boolean isLocal() {
+        return true;
+    }
+
+    @Override
     public int getMaxPlayerCount() {
         ListenerInfo info = net.md_5.bungee.api.ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next();
         return info.getMaxPlayers();

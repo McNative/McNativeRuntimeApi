@@ -23,9 +23,11 @@ package org.mcnative.common.network.event;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.event.executor.MethodEventExecutor;
+import net.pretronic.libraries.event.network.*;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectException;
+import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
@@ -59,8 +61,9 @@ public class NetworkEventBus extends DefaultEventBus implements MessagingChannel
     @Override
     public <T> void callEvents(Class<T> executionClass, Object... events) {
         if(events.length > 1) throw new IllegalArgumentException("Network eventbus can not execute multiple events for the same execution class");
-        checkNetworkEvent(executionClass);
-        callNetworkEvent(executionClass,events[0]);
+        if(checkNetworkEvent(executionClass)){
+            callNetworkEvents(executionClass,events);
+        }
         super.callEvents(executionClass, events);
     }
 
@@ -68,34 +71,53 @@ public class NetworkEventBus extends DefaultEventBus implements MessagingChannel
     public <T> void callEventsAsync(Class<T> executionClass, Runnable callback, Object... events) {
         if(events.length > 1) throw new IllegalArgumentException("Network eventbus can not execute multiple events for the same execution class");
         checkNetworkEvent(executionClass);
-        callNetworkEvent(executionClass,events[0]);
+        if(checkNetworkEvent(executionClass)){
+            callNetworkEvents(executionClass,events);
+        }
         super.callEventsAsync(executionClass,callback, events);
     }
 
-    private <T> void checkNetworkEvent(Class<T> executionClass){
+    private <T> boolean checkNetworkEvent(Class<T> executionClass){
         NetworkEvent event = executionClass.getAnnotation(NetworkEvent.class);
         if(event == null) throw new IllegalArgumentException(executionClass.getName()+" is not a @NetworkEvent");
+        return event.type() != NetworkEventType.SELF_MANAGED;
     }
 
-    private <T> void callNetworkEvent(Class<T> executionClass,Object event){
+    private <T> void callNetworkEvents(Class<T> executionClass,Object[] events){
+        Object event = events[0];
+        if(events.length != 1) throw new IllegalArgumentException("Network event bus does not support multiple event objects");
         McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
                 .async()
                 .execute(() -> {
-                    Document eventData = Document.newDocument(event);
+                    Document eventData;
+                    if(event instanceof NetworkEventAdapter) eventData = ((NetworkEventAdapter) event).write();
+                    else eventData = Document.newDocument(event);
                     eventData.set("MCNATIVE_EVENT_ACTION","call");
-                    eventData.set("executionClass",executionClass);
                     eventData.set("eventClass",event.getClass());
+
+                    if(executionClass != event.getClass()){
+                        eventData.set("executionClass",executionClass);
+                    }
+
                     McNative.getInstance().getNetwork().sendBroadcastMessage("mcnative_event",eventData);
                 });
     }
 
     @Internal
-    public void executeNetworkEvent(Document data){
+    public void executeNetworkEvent(EventOrigin origin,Document data){
         try{
             Class<?> executionClass = data.getObject("executionClass",Class.class);
             Class<?> eventClass = data.getObject("eventClass",Class.class);
-            Object event = data.getAsObject(eventClass);
-            super.callEventsAsync(executionClass,event);
+            if(executionClass == null) executionClass = eventClass;
+
+            Object event;
+            if(NetworkEventAdapter.class.isAssignableFrom(eventClass)){
+                event = UnsafeInstanceCreator.newInstance(eventClass);
+                ((NetworkEventAdapter)event).read(data);
+            }else{
+                event = data.getAsObject(eventClass);
+            }
+            super.callEventsAsync(origin,executionClass,event);
         }catch (ReflectException ignored){}
     }
 
@@ -103,7 +125,7 @@ public class NetworkEventBus extends DefaultEventBus implements MessagingChannel
     public Document onMessageReceive(MessageReceiver sender, UUID requestId, Document request) {
         String action = request.getString("MCNATIVE_EVENT_ACTION");
         if(action.equalsIgnoreCase("call")){
-            executeNetworkEvent(request);
+            executeNetworkEvent(sender,request);
         }
         return null;
     }

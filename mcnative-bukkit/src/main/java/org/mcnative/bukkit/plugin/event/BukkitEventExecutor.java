@@ -20,6 +20,7 @@
 package org.mcnative.bukkit.plugin.event;
 
 import net.pretronic.libraries.event.executor.EventExecutor;
+import net.pretronic.libraries.event.network.EventOrigin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -57,7 +58,7 @@ public class BukkitEventExecutor implements EventExecutor {
     }
 
     @Override
-    public void execute(Object... events) {
+    public void execute(EventOrigin origin, Object... events) {
         for (Object event : events){
             if(allowedClass.isAssignableFrom(event.getClass())){
                 if (registration.getPlugin().isEnabled()) {

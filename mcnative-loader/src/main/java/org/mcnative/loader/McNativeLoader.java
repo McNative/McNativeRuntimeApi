@@ -21,7 +21,6 @@ package org.mcnative.loader;
 
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
-import net.pretronic.libraries.resourceloader.UpdateConfiguration;
 import net.pretronic.libraries.resourceloader.VersionInfo;
 import org.mcnative.loader.rollout.RolloutProfile;
 
@@ -68,8 +67,6 @@ public class McNativeLoader extends ResourceLoader {
         VersionInfo current = getCurrentVersion();
         VersionInfo latest = null;
 
-        UpdateConfiguration configuration = getUpdateConfiguration();
-
         try{
             latest = getLatestVersion();
         }catch (Exception exception){
@@ -84,7 +81,7 @@ public class McNativeLoader extends ResourceLoader {
             if(isLatestVersion()){
                 logger.info("(McNative-Loader) McNative "+latest.getName()+" (Up to date)");
             }else{
-                if(current == null || configuration.isEnabled()){
+                if(current == null || profile.isAutomatically()){
 
                     MCNATIVE.setDownloadUrl(DOWNLOAD_URL
                             .replace("{profile.server}",profile.getServer())

@@ -19,8 +19,8 @@
 
 package org.mcnative.common.event.player;
 
-import org.mcnative.common.network.event.NetworkEvent;
-import org.mcnative.common.network.event.NetworkEventType;
+import net.pretronic.libraries.event.network.NetworkEvent;
+import net.pretronic.libraries.event.network.NetworkEventType;
 
-@NetworkEvent(type = NetworkEventType.LOCAL_MANAGED)
+@NetworkEvent(type = NetworkEventType.BROADCAST)
 public interface MinecraftPlayerLogoutEvent extends MinecraftOnlinePlayerEvent {}
