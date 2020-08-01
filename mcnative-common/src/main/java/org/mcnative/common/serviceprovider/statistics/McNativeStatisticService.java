@@ -49,7 +49,7 @@ public class McNativeStatisticService {
     public McNativeStatisticService() {
         this.networkReporting = McNative.getInstance().getPlatform().isProxy();
         localReportingId = loadReportingId();
-        start();
+       // start();
     }
 
     private UUID loadReportingId(){
