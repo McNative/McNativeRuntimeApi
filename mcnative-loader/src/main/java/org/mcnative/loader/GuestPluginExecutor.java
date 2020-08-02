@@ -151,7 +151,7 @@ public class GuestPluginExecutor {
                         logger.info("(McNative-Loader) Successfully downloaded "+name);
                     }catch (Exception exception){
                         if(current == null || current.equals(VersionInfo.UNKNOWN)){
-                            logger.info("(McNative-Loader) download failed, shutting down");
+                            logger.info("(McNative-Loader) Download failed, shutting down");
                             logger.info("(McNative-Loader) Error: "+exception.getMessage());
                             return false;
                         }else{
