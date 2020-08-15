@@ -22,24 +22,18 @@ package org.mcnative.loader.rollout;
 
 public class RolloutProfile {
 
-    public static final RolloutProfile DEFAULT = new RolloutProfile("production","mirror.mcnative.org","RELEASE",true);
+    public static final RolloutProfile DEFAULT = new RolloutProfile("mirror.mcnative.org","RELEASE",true);
 
-    private String name;
-    private String server;
-    private String qualifier;
     private boolean automatically;
+    private String qualifier;
+    private String server;
 
     public RolloutProfile() {}
 
-    public RolloutProfile(String name, String server, String qualifier, boolean automatically) {
-        this.name = name;
+    public RolloutProfile(String server, String qualifier, boolean automatically) {
         this.server = server;
         this.qualifier = qualifier;
         this.automatically = automatically;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getServer() {
@@ -52,10 +46,6 @@ public class RolloutProfile {
 
     public boolean isAutomatically() {
         return automatically;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setServer(String server) {

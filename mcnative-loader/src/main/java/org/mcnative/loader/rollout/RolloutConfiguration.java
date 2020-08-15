@@ -34,7 +34,7 @@ import java.util.*;
 
 public class RolloutConfiguration {
 
-    public static File FILE = new File("plugins/Mcnative/update.yml");
+    public static File FILE = new File("plugins/McNative/update.yml");
     public static Yaml YAML;
 
     static {
@@ -52,6 +52,7 @@ public class RolloutConfiguration {
 
         Representer representer = new Representer();
         representer.getPropertyUtils().setAllowReadOnlyProperties(true);
+        representer.getPropertyUtils().setSkipMissingProperties(true);
 
         representer.addClassTag(RolloutProfile.class, Tag.MAP);
         representer.addClassTag(PluginEntry.class, Tag.MAP);

@@ -46,7 +46,6 @@ public class GuestPluginExecutor {
     private static final String VERSION_URL = "https://{profile.server}/v1/{resource.id}/versions/latest?plain=true&qualifier={profile.qualifier}";
     private static final String DOWNLOAD_URL = "https://{profile.server}/v1/{resource.id}/versions/{version.build}/download";
 
-
     private final PlatformExecutor executor;
     private final File location;
     private final Logger logger;
@@ -128,6 +127,7 @@ public class GuestPluginExecutor {
         VersionInfo current = resourceLoader.getCurrentVersion();
         VersionInfo latest = VersionInfo.UNKNOWN;
 
+        logger.log(Level.SEVERE,"(Resource-Loader) Rollout Server: "+profile.getServer());
         try{
             latest = resourceLoader.getLatestVersion();
         }catch (Exception exception){
