@@ -190,7 +190,7 @@ public class McNativeLauncher {
         description.setMain("reflected");
 
         Plugin plugin = UnsafeInstanceCreator.newInstance(DummyPlugin.class);
-        ReflectionUtil.invokeMethod(plugin,"init"
+        ReflectionUtil.invokeMethod(Plugin.class,plugin,"init"
                 ,new Class[]{ProxyServer.class,PluginDescription.class}
                 ,new Object[]{ProxyServer.getInstance(),description});
 
