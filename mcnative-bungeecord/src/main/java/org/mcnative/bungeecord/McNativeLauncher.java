@@ -32,6 +32,7 @@ import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.event.McNativeBridgeEventHandler;
 import org.mcnative.bungeecord.network.McNativeGlobalActionListener;
 import org.mcnative.bungeecord.network.McNativePlayerActionListener;
@@ -188,7 +189,7 @@ public class McNativeLauncher {
         description.setAuthor("Pretronic and McNative contributors");
         description.setMain("reflected");
 
-        Plugin plugin = new DummyPlugin();
+        Plugin plugin = UnsafeInstanceCreator.newInstance(DummyPlugin.class);
         ReflectionUtil.invokeMethod(plugin,"init"
                 ,new Class[]{ProxyServer.class,PluginDescription.class}
                 ,new Object[]{ProxyServer.getInstance(),description});
