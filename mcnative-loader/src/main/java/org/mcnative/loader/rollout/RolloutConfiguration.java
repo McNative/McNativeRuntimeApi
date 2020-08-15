@@ -105,6 +105,7 @@ public class RolloutConfiguration {
 
     public static void save(RolloutConfiguration configuration) {
         try{
+            FILE.getParentFile().mkdirs();
             if(!FILE.exists()) FILE.createNewFile();
 
             Map<String,Object> output = new LinkedHashMap<>();
@@ -112,7 +113,9 @@ public class RolloutConfiguration {
             output.put("plugins",configuration.getPlugins());
 
             YAML.dump(output,new FileWriter(FILE));
-        }catch (Exception ignored){}
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
     }
 
     public static class PluginEntry {
