@@ -89,7 +89,7 @@ pipeline {
                     when { equals expected: false, actual: SKIP }
                     steps {
                         script {
-                            if(BRANCH == BRANCH_MASTER || BRANCH == BRANCH_BETA || BRANCH == BRANCH_DEVELOPMENT) {
+                            if(BRANCH == BRANCH_MASTER || BRANCH == BRANCH_BETA) {
                                 sh 'mvn javadoc:aggregate-jar -Dadditionalparam=-Xdoclint:none -DadditionalJOption=-Xdoclint:none -pl :McNative,:mcnative-common,:mcnative-service,:mcnative-proxy'
                                 withCredentials([string(credentialsId: '120a9a64-81a7-4557-80bf-161e3ab8b976', variable: 'SECRET')]) {
                                     String name = env.JOB_NAME
