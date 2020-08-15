@@ -31,6 +31,7 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.common.McNative;
+import org.mcnative.loader.CertificateValidation;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
@@ -57,6 +58,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             RolloutProfile mcnative = configuration.getProfile(McNativeLoader.RESOURCE_NAME);
             RolloutProfile resource = configuration.getProfile(getName());
 
+            CertificateValidation.disable();
+
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,mcnative)){
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -69,6 +72,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
+
+            CertificateValidation.reset();
 
             this.executor.loadGuestPlugin();
 

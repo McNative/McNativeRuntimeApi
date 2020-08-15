@@ -22,6 +22,7 @@ package org.mcnative.loader.bootstrap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.loader.CertificateValidation;
 import org.mcnative.loader.GuestPluginExecutor;
 import org.mcnative.loader.McNativeLoader;
 import org.mcnative.loader.PlatformExecutor;
@@ -43,6 +44,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
             RolloutProfile mcnative = configuration.getProfile(McNativeLoader.RESOURCE_NAME);
             RolloutProfile resource = configuration.getProfile(getDescription().getName());
 
+            CertificateValidation.disable();
+
             if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, mcnative)) return;
             this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME,resource);
 
@@ -50,6 +53,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
                 this.executor = null;
                 return;
             }
+
+            CertificateValidation.reset();
 
             this.executor.loadGuestPlugin();
 
