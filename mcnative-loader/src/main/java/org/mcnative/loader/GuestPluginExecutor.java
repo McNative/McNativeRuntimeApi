@@ -118,6 +118,13 @@ public class GuestPluginExecutor {
         info.setVersionUrl(replaceLoaderVariables(loader,VERSION_URL));
         ResourceLoader resourceLoader = new ResourceLoader(info);
 
+        if(McNative.getInstance().getMcNativeServerId() != null){
+            info.setAuthenticator(httpURLConnection -> {
+                httpURLConnection.setRequestProperty("serverId",McNative.getInstance().getMcNativeServerId().getId());
+                httpURLConnection.setRequestProperty("serverSecret",McNative.getInstance().getMcNativeServerId().getSecret());
+            });
+        }
+
         VersionInfo current = resourceLoader.getCurrentVersion();
         VersionInfo latest = VersionInfo.UNKNOWN;
 
@@ -137,13 +144,6 @@ public class GuestPluginExecutor {
                     logger.info("(Resource-Loader) "+name+" "+latest.getName()+" (Up to date)");
                 }else{
                     info.setDownloadUrl(replaceLoaderVariables(loader,DOWNLOAD_URL));
-
-                    if(McNative.getInstance().getMcNativeServerId() != null){
-                        info.setAuthenticator(httpURLConnection -> {
-                            httpURLConnection.setRequestProperty("serverId",McNative.getInstance().getMcNativeServerId().getId());
-                            httpURLConnection.setRequestProperty("serverSecret",McNative.getInstance().getMcNativeServerId().getSecret());
-                        });
-                    }
 
                     logger.info("(Resource-Loader) Downloading "+name+" "+latest.getName());
                     try{

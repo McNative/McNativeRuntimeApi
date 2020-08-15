@@ -22,6 +22,7 @@ package org.mcnative.loader;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.VersionInfo;
+import org.mcnative.common.McNative;
 import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.io.File;
@@ -52,6 +53,14 @@ public class McNativeLoader extends ResourceLoader {
         MCNATIVE.setVersionUrl(VERSION_URL
                 .replace("{profile.server}",profile.getServer())
                 .replace("{profile.qualifier}",profile.getQualifier()));
+
+        McNativeConfigAdapter.load();
+        if(McNativeConfigAdapter.getId() != null){
+            MCNATIVE.setAuthenticator(httpURLConnection -> {
+                httpURLConnection.setRequestProperty("serverId",McNativeConfigAdapter.getId());
+                httpURLConnection.setRequestProperty("serverSecret",McNativeConfigAdapter.getSecret());
+            });
+        }
     }
 
     public boolean isAvailable(){
