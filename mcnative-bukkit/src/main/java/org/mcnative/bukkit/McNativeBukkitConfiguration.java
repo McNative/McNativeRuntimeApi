@@ -45,12 +45,6 @@ import java.util.Map;
 
 public class McNativeBukkitConfiguration {
 
-    @DocumentKey("autoUpdate.enabled")
-    public static boolean AUTO_UPDATE_ENABLED = true;
-
-    @DocumentKey("autoUpdate.qualifier")
-    public static String AUTO_UPDATE_QUALIFIER = "RELEASE";
-
     @DocumentKey("debug")
     public static boolean DEBUG = false;
 
@@ -140,20 +134,7 @@ public class McNativeBukkitConfiguration {
             exception.printStackTrace();
             return false;
         }
-        setAutoUpdateConfiguration();
         return true;
-    }
-
-    private static void setAutoUpdateConfiguration(){
-        File location = new File("plugins/McNative/lib/resources/mcnative/update.dat");
-        location.getParentFile().mkdirs();
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write(AUTO_UPDATE_ENABLED+";"+AUTO_UPDATE_QUALIFIER);
-            writer.close();
-        } catch (IOException exception) {
-            throw new OperationFailedException("Could not set update configuration");
-        }
     }
 
     public static boolean postLoad(){

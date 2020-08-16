@@ -50,12 +50,6 @@ public class McNativeBungeeCordConfiguration {
 
     public static transient DocumentFileType FORMAT = DocumentFileType.YAML;
 
-    @DocumentKey("autoUpdate.enabled")
-    public static boolean AUTO_UPDATE_ENABLED = true;
-
-    @DocumentKey("autoUpdate.qualifier")
-    public static String AUTO_UPDATE_QUALIFIER = "RELEASE";
-
     @DocumentKey("debug")
     public static boolean DEBUG = false;
 
@@ -124,7 +118,6 @@ public class McNativeBungeeCordConfiguration {
             exception.printStackTrace();
             return false;
         }
-        setAutoUpdateConfiguration();
         return true;
     }
 
@@ -136,18 +129,6 @@ public class McNativeBungeeCordConfiguration {
         Message message = new MessageParser(McNative.getInstance().getRegistry()
                 .getService(MessageProvider.class).getProcessor(),input).parse();
         return new MessageKeyComponent(message);
-    }
-
-    private static void setAutoUpdateConfiguration(){
-        File location = new File("plugins/McNative/lib/resources/mcnative/update.dat");
-        location.getParentFile().mkdirs();
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write(AUTO_UPDATE_ENABLED+";"+AUTO_UPDATE_QUALIFIER);
-            writer.close();
-        } catch (IOException exception) {
-            throw new OperationFailedException("Could not set update configuration");
-        }
     }
 
     public static class ConfiguredServer {
