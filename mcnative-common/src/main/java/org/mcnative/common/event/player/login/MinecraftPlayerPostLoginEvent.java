@@ -23,5 +23,5 @@ import net.pretronic.libraries.event.network.NetworkEvent;
 import net.pretronic.libraries.event.network.NetworkEventType;
 import org.mcnative.common.event.player.MinecraftOnlinePlayerEvent;
 
-@NetworkEvent(type = NetworkEventType.BROADCAST)
+@NetworkEvent(type = NetworkEventType.BROADCAST,ignoreNetworkException = true)
 public interface MinecraftPlayerPostLoginEvent extends MinecraftOnlinePlayerEvent {}

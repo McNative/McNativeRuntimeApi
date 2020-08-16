@@ -49,6 +49,8 @@ public class BukkitReflectionUtil {
         protocolVersionsByServerVersion.put("1_13_R1",MinecraftProtocolVersion.JE_1_13);
         protocolVersionsByServerVersion.put("1_14_R1",MinecraftProtocolVersion.JE_1_14);
         protocolVersionsByServerVersion.put("1_15_R1",MinecraftProtocolVersion.JE_1_15);
+        protocolVersionsByServerVersion.put("1_16_R1",MinecraftProtocolVersion.JE_1_16_1);
+        protocolVersionsByServerVersion.put("1_16_R2",MinecraftProtocolVersion.JE_1_16_2);
     }
 
     public static Class<?> getClass(String className){

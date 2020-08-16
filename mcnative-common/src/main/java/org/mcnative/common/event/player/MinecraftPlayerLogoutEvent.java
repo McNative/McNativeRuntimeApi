@@ -22,5 +22,5 @@ package org.mcnative.common.event.player;
 import net.pretronic.libraries.event.network.NetworkEvent;
 import net.pretronic.libraries.event.network.NetworkEventType;
 
-@NetworkEvent(type = NetworkEventType.BROADCAST)
+@NetworkEvent(type = NetworkEventType.BROADCAST,ignoreNetworkException = true)
 public interface MinecraftPlayerLogoutEvent extends MinecraftOnlinePlayerEvent {}

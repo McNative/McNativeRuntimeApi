@@ -36,7 +36,7 @@ public class NetworkEventHandler extends DefaultEventBus.NetworkEventHandler {
     public void handleNetworkEvents(EventOrigin origin0, Class<?> executionClass, Object[] events) {
         if(!McNative.getInstance().isNetworkAvailable()){
             NetworkEvent info = executionClass.getAnnotation(NetworkEvent.class);
-            if(info.ignoreNetworkException() && !McNative.getInstance().isNetworkAvailable()) return;
+            if(info.ignoreNetworkException()) return;
         }
         EventOrigin origin = origin0 != null ? origin0  : getLocal();
         McNative.getInstance().getNetwork().getEventBus().callEventsAsync(origin,executionClass,events);
