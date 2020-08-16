@@ -119,6 +119,7 @@ public class GuestPluginExecutor {
 
         if(McNative.getInstance().getMcNativeServerId() != null){
             info.setAuthenticator(httpURLConnection -> {
+                httpURLConnection.setRequestProperty("serverName",McNative.getInstance().getName());
                 httpURLConnection.setRequestProperty("serverId",McNative.getInstance().getMcNativeServerId().getId());
                 httpURLConnection.setRequestProperty("serverSecret",McNative.getInstance().getMcNativeServerId().getSecret());
             });

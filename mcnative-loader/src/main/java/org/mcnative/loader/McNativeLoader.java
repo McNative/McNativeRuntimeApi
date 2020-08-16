@@ -57,6 +57,7 @@ public class McNativeLoader extends ResourceLoader {
         McNativeConfigAdapter.load();
         if(McNativeConfigAdapter.getId() != null){
             MCNATIVE.setAuthenticator(httpURLConnection -> {
+                httpURLConnection.setRequestProperty("serverName",McNative.getInstance().getName());
                 httpURLConnection.setRequestProperty("serverId",McNativeConfigAdapter.getId());
                 httpURLConnection.setRequestProperty("serverSecret",McNativeConfigAdapter.getSecret());
             });
