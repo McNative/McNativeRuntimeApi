@@ -76,7 +76,7 @@ public class McNativeLoader extends ResourceLoader {
         VersionInfo current = getCurrentVersion();
         VersionInfo latest = null;
 
-        logger.log(Level.SEVERE,"(Resource-Loader) Rollout Server: "+profile.getServer());
+        logger.log(Level.SEVERE,"(McNative-Loader) Server: "+profile.getServer()+", Qualifier: "+profile.getQualifier());
         try{
             latest = getLatestVersion();
         }catch (Exception exception){
