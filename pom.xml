@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.6.7.354-SNAPSHOT</version>
+    <version>1.6.8.355-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
