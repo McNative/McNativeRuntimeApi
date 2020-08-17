@@ -72,7 +72,6 @@ import java.util.concurrent.TimeUnit;
     - Below Name
     - Sidebar
     - Tablist
-    - Actionbar
     - Bossbar
     - Sound / Note
  */
