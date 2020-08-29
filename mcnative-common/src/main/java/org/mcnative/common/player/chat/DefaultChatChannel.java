@@ -132,20 +132,28 @@ public class DefaultChatChannel implements ChatChannel {
     }
 
     @Override
-    public void chat(OnlineMinecraftPlayer player, String message, VariableSet variables0) {
+    public void chat(OnlineMinecraftPlayer sender, String message, VariableSet variables0) {
         //@Todo add design option foreach player
-        Validate.notNull(player,message);
+        Validate.notNull(sender,message);
 
         VariableSet variables = variables0 != null ? variables0: VariableSet.create();
-        variables.addDescribed("player",player);
-        variables.addDescribed("design",player.getDesign());
+        variables.addDescribed("player",sender);
+        variables.addDescribed("sender",sender);
+        variables.addDescribed("design",sender.getDesign());
         variables.add("message",message);
 
-        player.getDesign().appendAdditionalVariables(variables);
+        sender.getDesign().appendAdditionalVariables(variables);
 
         if(messageFormatter == null) throw new OperationFailedException("In chat channel "+name+" is no message formatter defined");
 
-        MessageComponent<?> output = messageFormatter.format(player,variables,message);
-        sendMessage(output,variables);
+        if(messageFormatter instanceof GroupChatFormatter){
+            MessageComponent<?> output = messageFormatter.format(null,sender,variables,message);
+            sendMessage(output,variables);
+        }else{
+            for (OnlineMinecraftPlayer player : this.players) {
+                MessageComponent<?> output = messageFormatter.format(player,sender,variables,message);
+                player.sendMessage(output,variables);
+            }
+        }
     }
 }

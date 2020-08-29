@@ -25,6 +25,7 @@ import net.pretronic.libraries.message.Textable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.util.Collection;
 
@@ -69,82 +70,48 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     void toPlainText(StringBuilder builder,VariableSet variables,Language language);
 
-
-    default String compileToLegacy(){
-        return compileToLegacy(VariableSet.newEmptySet());
+    default Document compile(MinecraftProtocolVersion version){
+        return compile(version,VariableSet.newEmptySet());
     }
 
-    default String compileToLegacy(Language language){
-        return compileToLegacy(VariableSet.newEmptySet(),language);
+    default Document compile(MinecraftProtocolVersion version,VariableSet variables){
+        return compile(version,variables,null);
     }
 
-    default String compileToLegacy(VariableSet variables){
-        return compileToLegacy(variables,null);
-    }
-
-    default String compileToLegacy(VariableSet variables,Language language){
-        return compileToLegacy((MinecraftConnection)null,variables,language);
-    }
-
-    default String compileToLegacy(MinecraftConnection connection,VariableSet variables,Language language){
-        StringBuilder builder = new StringBuilder();
-        compileToLegacy(builder,connection,variables,language);
-        return builder.toString();
-    }
-
-    default void compileToLegacy(StringBuilder builder, VariableSet variables,Language language){
-        compileToLegacy(builder,null,variables,language);
-    }
-
-    void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables,Language language);
-
-
-    default Document compile(){
-        return compile(VariableSet.newEmptySet());
-    }
-
-    default Document compile(Language language){
-        return compile(VariableSet.newEmptySet(),language);
-    }
-
-    default Document compile(VariableSet variables){
-        return compile(variables,null);
-    }
-
-    default Document compile(VariableSet variables,Language language){
-        return compile(null,null,variables,language);
+    default Document compile(MinecraftProtocolVersion version,VariableSet variables,Language language){
+        return compile(null,null,version,variables,language);
     }
 
     default Document compile(MinecraftConnection connection,VariableSet variables,Language language){
-        return compile(null,connection,variables,language);
+        return compile(null,connection,connection.getProtocolVersion(),variables,language);
     }
 
-    default Document compile(String key, VariableSet variables,Language language){
-        return compile(key,null,variables,language);
+    Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
+
+
+    default String compileToString(MinecraftProtocolVersion version){
+        return compileToString(version,VariableSet.newEmptySet(),null);
     }
 
-    Document compile(String key, MinecraftConnection connection, VariableSet variables,Language language);
-
-
-    default String compileToString(){
-        return compileToString(VariableSet.newEmptySet(),null);
+    default String compileToString(MinecraftProtocolVersion version,VariableSet variables){
+        return compileToString(version,variables,null);
     }
 
-    default String compileToString(Language language){
-        return compileToString(VariableSet.newEmptySet(),language);
-    }
-
-    default String compileToString(VariableSet variables){
-        return compileToString(variables,null);
-    }
-
-    default String compileToString(VariableSet variables,Language language){
-        return DocumentFileType.JSON.getWriter().write(compile(variables,language),false);
+    default String compileToString(MinecraftProtocolVersion version,VariableSet variables,Language language){
+        return compileToString(null,version,variables,language);
     }
 
     default String compileToString(MinecraftConnection connection,VariableSet variables,Language language){
-        return DocumentFileType.JSON.getWriter().write(compile(connection,variables,language),false);
+        return compileToString(connection,connection.getProtocolVersion(),variables,language);
     }
+
+    default String compileToString(MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language){
+        StringBuilder builder = new StringBuilder();
+        compileToString(builder,connection,version,variables,language);
+        return builder.toString();
+    }
+
+    void compileToString(StringBuilder builder,MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
 
     void decompile(Document data);
 

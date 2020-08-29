@@ -35,8 +35,8 @@ public enum TextStyle {
 
     RESET( 'r', "reset");
 
-    private char code;
-    private String name;
+    private final char code;
+    private final String name;
 
     TextStyle(char code, String name) {
         this.code = code;

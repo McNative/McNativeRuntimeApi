@@ -90,7 +90,8 @@ public class BungeeCordServerStatusResponse implements ServerStatusResponse {
 
     @Override
     public ServerStatusResponse setDescription(MessageComponent<?> description,VariableSet variables) {
-        ping.setDescriptionComponent(ComponentSerializer.parse(description.compileToString(variables))[0]);
+        //@Todo forced to 1.8, find better solution
+        ping.setDescriptionComponent(ComponentSerializer.parse(description.compileToString(MinecraftProtocolVersion.JE_1_8,variables))[0]);
         return this;
     }
 

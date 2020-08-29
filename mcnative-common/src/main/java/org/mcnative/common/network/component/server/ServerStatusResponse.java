@@ -105,7 +105,7 @@ public interface ServerStatusResponse {
 
     void setPing(int ping);
 
-    default Document compile(){
+    default Document compile(MinecraftProtocolVersion version){
         Document result = Document.newDocument();
 
         Document versionEntry = Document.newDocument("version");
@@ -113,7 +113,7 @@ public interface ServerStatusResponse {
         versionEntry.set("protocol",getVersion().getProtocol().getNumber());
 
         result.addEntry(versionEntry);
-        result.set("description",getDescription() != null ? getDescription().compile() : "");
+        result.set("description",getDescription() != null ? getDescription().compile(version) : "");
         result.set("favicon",getFavicon());
 
         Document players = Document.newDocument("players");
@@ -147,8 +147,8 @@ public interface ServerStatusResponse {
         }
     }
 
-    default String compileToString(){
-        return DocumentFileType.JSON.getWriter().write(compile(),false);
+    default String compileToString(MinecraftProtocolVersion version){
+        return DocumentFileType.JSON.getWriter().write(compile(version),false);
     }
 
     ServerStatusResponse clone();

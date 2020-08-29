@@ -24,6 +24,8 @@ import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
 
 public class IncludeMessageBuilder implements BasicMessageBuilder {
 
@@ -35,24 +37,26 @@ public class IncludeMessageBuilder implements BasicMessageBuilder {
     }
 
     @Override
-    public Object build(BuildContext context, boolean requiresString, Object[] parameters, Object next) {
+    public Object build(BuildContext context, boolean requiresUnformatted, Object[] parameters, Object next) {
         if(message == null){
             message = provider.getMessage((String)parameters[0],context.getLanguage());
             if(message == null) message = Message.ofStaticText("{MESSAGE NOT FOUND}");
         }
         Object result = message.build(context);
-
-        if (!requiresString) {
+        if(requiresUnformatted){
+            return TextBuildUtil.buildUnformattedText(result,next);
+        }else{
             if (context instanceof MinecraftBuildContext) {
-                if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {
+                MinecraftBuildContext minecraftContext = context.getAs(MinecraftBuildContext.class);
+                if(minecraftContext.getType() == TextBuildType.COMPILE){
                     if (next != null) return new Object[]{result, next};
                     else return new Object[]{result};
+                }else if(minecraftContext.getType() == TextBuildType.LEGACY){
+                    throw new UnsupportedOperationException();
                 }
             }
+            return TextBuildUtil.buildPlainText(result,next);
         }
-
-        if(next != null) return result.toString()+next.toString();
-        else return result.toString();
     }
 
     @Override

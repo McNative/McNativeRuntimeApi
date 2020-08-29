@@ -104,7 +104,8 @@ public class MinecraftTitlePacket implements MinecraftPacket {
         MinecraftProtocolUtil.writeVarInt(buffer,action.getId(version));
         if(data != null){
             if(data instanceof MessageComponent){
-                MinecraftProtocolUtil.writeString(buffer,((MessageComponent<?>)this.data).compileToString(variables!=null?variables: VariableSet.newEmptySet()));
+                MinecraftProtocolUtil.writeString(buffer,((MessageComponent<?>)this.data)
+                        .compileToString(connection.getProtocolVersion(),variables!=null?variables: VariableSet.newEmptySet()));
             }else if(data instanceof int[]){
                 int[] array = (int[]) data;
                 buffer.writeInt(array[0]);

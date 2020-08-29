@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.04.20, 20:51
+ * @since 22.03.20, 13:22
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -18,14 +18,12 @@
  * under the License.
  */
 
-package org.mcnative.common.player.chat;
+package org.mcnative.common.serviceprovider.message.builder.context;
 
-import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.text.components.MessageComponent;
+public enum  TextBuildType {
 
-public interface ChatFormatter {
-
-    MessageComponent<?> format(OnlineMinecraftPlayer receiver,OnlineMinecraftPlayer sender,VariableSet variables, String message);
+    PLAIN(),
+    LEGACY(),
+    COMPILE();
 
 }

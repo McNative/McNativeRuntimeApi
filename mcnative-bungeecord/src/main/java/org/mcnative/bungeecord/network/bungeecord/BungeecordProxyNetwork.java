@@ -74,7 +74,8 @@ public class BungeecordProxyNetwork implements Network {
         UUID uuid = UUID.randomUUID();
         Document document = Document.newDocument();
         document.set("networkId",uuid);
-        DocumentFileType.JSON.getWriter().write(new File("plugins/McNative/lib/runtime.dat"),document,false);
+        file.getParentFile().mkdirs();
+        DocumentFileType.JSON.getWriter().write(file,document,false);
         return uuid;
     }
 

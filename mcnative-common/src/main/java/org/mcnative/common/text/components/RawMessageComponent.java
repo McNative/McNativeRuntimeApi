@@ -24,6 +24,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 import java.util.Collection;
 
@@ -60,13 +61,17 @@ public class RawMessageComponent implements MessageComponent<RawMessageComponent
     }
 
     @Override
-    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
-        builder.append(compileLegacyText);
+    public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        return compile;
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        return compile;
+    public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
+            builder.append(compileLegacyText);
+        }else{
+            builder.append(compile(null,connection,version,variables,language));
+        }
     }
 
     @Override

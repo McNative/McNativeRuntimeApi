@@ -23,6 +23,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -59,21 +60,19 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
     }
 
     @Override
-    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
-        super.compileToLegacy(builder, connection, variables, language);
-        builder.append(text);
-        super.compileToLegacyPost(builder, connection, variables, language);
-    }
-
-    @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         builder.append(variables.replace(text));
         super.toPlainText(builder, variables,language);
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        return super.compile(key, connection,variables,language).add("text",variables.replace(text));
+    public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        return super.compile(key, connection,version,variables,language).add("text",variables.replace(text));
+    }
+
+    @Override
+    void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        builder.append(text);
     }
 
     @Override

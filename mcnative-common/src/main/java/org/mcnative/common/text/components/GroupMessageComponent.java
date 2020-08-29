@@ -22,10 +22,12 @@ package org.mcnative.common.text.components;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.entry.ArrayEntry;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.Text;
 
 import java.util.Collection;
@@ -73,24 +75,32 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
     }
 
     @Override
-    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
-        for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {
-            entry.getKey().compileToLegacy(builder,connection,entry.getValue(),language);
-            builder.append("\n");
-        }
-        builder.setLength(builder.length()-1);
-    }
-
-    @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variablesUnused, Language language) {
+    public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables0, Language language) {
         ArrayEntry result = DocumentRegistry.getFactory().newArrayEntry(key);
         boolean first = true;
         for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {
             if(first) first = false;
-            else result.entries().add(Text.NEW_LINE.compile());
-            result.entries().add(entry.getKey().compile(entry.getValue(),language));
+            else result.entries().add(Text.NEW_LINE.compile(version));
+            VariableSet variables = entry.getValue() != null ? entry.getValue() : variables0;
+            result.entries().add(entry.getKey().compile(null,connection,version,variables,language));
         }
         return result;
+    }
+
+    @Override
+    public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables0, Language language) {
+        if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
+            boolean first = true;
+            for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {
+                if(first) first = false;
+                else builder.append("\n");
+                VariableSet variables = entry.getValue() != null ? entry.getValue() : variables0;
+                entry.getKey().compileToString(builder,connection,version,variables,language);
+            }
+        }else{
+            Document result = compile(null,connection,version,variables0,language);
+            builder.append(DocumentFileType.JSON.getWriter().write(result,false));
+        }
     }
 
     @Override

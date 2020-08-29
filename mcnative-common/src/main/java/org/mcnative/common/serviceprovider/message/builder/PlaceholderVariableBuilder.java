@@ -23,6 +23,7 @@ package org.mcnative.common.serviceprovider.message.builder;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import org.mcnative.common.McNative;
+import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
 import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 
 //@Todo implement

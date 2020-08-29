@@ -23,11 +23,16 @@ import org.mcnative.common.text.components.ChatComponent;
 
 import java.util.Set;
 
-public interface MessageFormatAble<T extends MessageFormatAble> {
+public interface MessageFormatAble<T extends MessageFormatAble<?>> {
 
     TextColor getColor();
 
     T setColor(TextColor color);
+
+    TextFont getFont();
+
+    T setFont(TextFont font);
+
 
     Set<TextStyle> getStyling();
 
@@ -53,6 +58,7 @@ public interface MessageFormatAble<T extends MessageFormatAble> {
     default boolean isObfuscated(){
         return getStyling().contains(TextStyle.OBFUSCATED);
     }
+
 
     default T setBold(boolean bold){
         if(bold) getStyling().add(TextStyle.BOLD);

@@ -21,6 +21,8 @@ package org.mcnative.common.protocol.packet.type;
 
 import io.netty.buffer.ByteBuf;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.language.Language;
+import net.pretronic.libraries.message.language.LanguageAble;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -78,6 +80,9 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
 
     @Override
     public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeString(buffer,this.reason.compileToString(variables!=null?variables: VariableSet.newEmptySet()));
+        Language language = null;
+        if(connection instanceof LanguageAble) language = ((LanguageAble) connection).getLanguage();
+        VariableSet variables0 = variables!=null?variables: VariableSet.newEmptySet();
+        MinecraftProtocolUtil.writeString(buffer,this.reason.compileToString(connection,variables0,language));
     }
 }

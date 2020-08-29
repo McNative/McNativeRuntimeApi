@@ -125,7 +125,7 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
         MinecraftProtocolUtil.writeUUID(buffer,barId);
         MinecraftProtocolUtil.writeVarInt(buffer,action.ordinal());
         if(action == Action.ADD){
-            MinecraftProtocolUtil.writeString(buffer,title.compileToString(titleVariables));
+            MinecraftProtocolUtil.writeString(buffer,title.compileToString(connection.getProtocolVersion(),titleVariables));
             buffer.writeFloat(health);
             MinecraftProtocolUtil.writeVarInt(buffer,color.ordinal());
             MinecraftProtocolUtil.writeVarInt(buffer,style.ordinal());
@@ -133,7 +133,7 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
         }else if(action == Action.UPDATE_HEALTH){
             buffer.writeFloat(health);
         }else if(action == Action.UPDATE_TITLE){
-            MinecraftProtocolUtil.writeString(buffer,title.compileToString(titleVariables));
+            MinecraftProtocolUtil.writeString(buffer,title.compileToString(connection.getProtocolVersion(),titleVariables));
         }else if(action == Action.UPDATE_STYLE){
             MinecraftProtocolUtil.writeVarInt(buffer,color.ordinal());
             MinecraftProtocolUtil.writeVarInt(buffer,style.ordinal());

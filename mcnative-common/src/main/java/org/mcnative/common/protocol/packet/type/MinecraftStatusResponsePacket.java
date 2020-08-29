@@ -57,6 +57,6 @@ public class MinecraftStatusResponsePacket implements MinecraftPacket {
 
     @Override
     public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        MinecraftProtocolUtil.writeString(buffer,response.compileToString());
+        MinecraftProtocolUtil.writeString(buffer,response.compileToString(connection.getProtocolVersion()));
     }
 }

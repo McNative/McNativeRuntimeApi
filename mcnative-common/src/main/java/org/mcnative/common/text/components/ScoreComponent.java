@@ -23,6 +23,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -87,12 +88,19 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
+    public Document compile(String key, MinecraftConnection connection,MinecraftProtocolVersion version, VariableSet variables, Language language) {
         Document score = Document.newDocument();
         score.add("name",entityName);
         score.add("objective", objective);
         score.add("value",value);
-        return super.compile(key,connection,variables,language).add("score",score);
+        Document result =  super.compile(key,connection,version,variables,language);
+        result.addEntry(score);
+        return result;
+    }
+
+    @Override
+    void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        //Empty and not supported
     }
 
     @Override

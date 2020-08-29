@@ -128,7 +128,7 @@ public class McNativeHandshakeDecoder extends MessageToMessageDecoder<ByteBuf> {
         McNative.getInstance().getLocal().getEventBus().callEvents(ServerListPingEvent.class,bukkitEvent,mcnativeEvent);
 
         MinecraftProtocolUtil.writeVarInt(resultBuffer,HANDSHAKE_PACKET_ID);
-        MinecraftProtocolUtil.writeString(resultBuffer,response.compileToString());
+        MinecraftProtocolUtil.writeString(resultBuffer,response.compileToString(clientVersion));
         connection.getChannel().writeAndFlush(resultBuffer);
     }
 }

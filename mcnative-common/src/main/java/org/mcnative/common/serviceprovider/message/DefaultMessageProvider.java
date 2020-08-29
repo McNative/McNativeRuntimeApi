@@ -46,6 +46,8 @@ import net.pretronic.libraries.utility.parser.ParserException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.serviceprovider.message.builder.*;
+import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -130,7 +132,6 @@ public class DefaultMessageProvider implements MessageProvider {
     @Override
     public void addPack(MessagePack pack) {
         if(getPack(pack.getMeta().getName()) != null) throw new IllegalArgumentException("A pack with the name "+pack.getMeta().getName()+" is already available");
-
         this.packs.add(pack);
     }
 

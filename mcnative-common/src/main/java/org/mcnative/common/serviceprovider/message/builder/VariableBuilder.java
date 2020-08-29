@@ -22,31 +22,31 @@ package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
 
 public class VariableBuilder implements BasicMessageBuilder {
 
     public VariableBuilder(){}
 
     @Override
-    public Object build(BuildContext context, boolean requiresString,Object[] parameters, Object next) {
-        Object result = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
+    public Object build(BuildContext context, boolean requiresUnformatted,Object[] parameters, Object next) {
+        Object value = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
 
-        if (!requiresString) {
-            if (context instanceof MinecraftBuildContext) {
-                if (((MinecraftBuildContext) context).getType() == TextBuildType.COMPILE) {
-                    if (next != null) {
-                        return new Object[]{TextBuilder.buildCompileText(context,result != null ? result : "null", next)};
-                    }else {
-                        return new Object[]{TextBuilder.buildCompileText(context,result != null ? result : "null", null) != null ? result : "null"};
-                    }
-                }else if (((MinecraftBuildContext) context).getType() == TextBuildType.LEGACY) {
-                    return TextBuilder.buildLegacyCompileText(result != null ? result.toString() : "null", next);
-                }
-            }
+        if(requiresUnformatted){
+            return TextBuildUtil.buildUnformattedText(value,next);
         }
 
-        if(next != null) return result+next.toString();
-        else return result;
+        if(context instanceof MinecraftBuildContext){
+            MinecraftBuildContext minecraftContext = context.getAs(MinecraftBuildContext.class);
+            if(minecraftContext.getType() == TextBuildType.COMPILE){
+                return TextBuildUtil.buildCompileText(minecraftContext,value,next);
+            }else if(minecraftContext.getType() == TextBuildType.LEGACY){
+                //@Todo implement legacy
+                throw new UnsupportedOperationException();
+            }
+        }
+        return TextBuildUtil.buildPlainText(value,next);
     }
 
     @Override

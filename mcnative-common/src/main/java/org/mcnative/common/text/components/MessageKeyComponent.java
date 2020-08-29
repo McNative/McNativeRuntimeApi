@@ -20,6 +20,7 @@
 package org.mcnative.common.text.components;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.MessageProvider;
 import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
@@ -29,8 +30,9 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.connection.PendingConnection;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
-import org.mcnative.common.serviceprovider.message.builder.MinecraftBuildContext;
-import org.mcnative.common.serviceprovider.message.builder.TextBuildType;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
+import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
 import org.mcnative.common.text.format.TextColor;
 
 import java.util.Collection;
@@ -82,23 +84,31 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     }
 
     @Override
-    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
-        try{
-            OnlineMinecraftPlayer player = getPlayer(connection, language);
-            builder.append(message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.LEGACY)).toString());
-        }catch (Exception e){
-            e.printStackTrace();
-            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed building BML message");
-            McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+e.getMessage());
-            builder.append("$4Internal Server Error");
+    public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
+            throw new UnsupportedOperationException("Use compileToString for version 1.7.9 or lower");
         }
+        OnlineMinecraftPlayer player = getPlayer(connection, language);
+        return compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        OnlineMinecraftPlayer player = getPlayer(connection, language);
-
-        return compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
+    public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
+            try{
+                OnlineMinecraftPlayer player = getPlayer(connection, language);
+                builder.append(message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.LEGACY)).toString());
+            }catch (Exception e){
+                e.printStackTrace();
+                McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed building BML message");
+                McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Error: "+e.getMessage());
+                builder.append("$4Internal Server Error");
+            }
+        }else{
+            OnlineMinecraftPlayer player = getPlayer(connection, language);
+            Document result = compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
+            builder.append(DocumentFileType.JSON.getWriter().write(result,true));
+        }
     }
 
     public Document compile(BuildContext context){

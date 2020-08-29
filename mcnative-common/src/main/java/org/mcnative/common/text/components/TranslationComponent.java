@@ -23,6 +23,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -75,8 +76,15 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        return super.compile(key,variables,language).add("translate",translation).add("with",with.compile(variables,language));
+    void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        //Empty and not supported
+    }
+
+    @Override
+    public Document compile(String key, MinecraftConnection connection,MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        Document result = super.compile(key,connection,version,variables,language).add("translate",translation);
+        result.addEntry(with.compile("with",connection,version,variables,language));
+        return result;
     }
 
     @Override

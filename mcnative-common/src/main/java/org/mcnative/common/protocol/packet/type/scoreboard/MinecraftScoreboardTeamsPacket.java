@@ -174,7 +174,7 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
             if(action == Action.CREATE || action == Action.UPDATE){
                 if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_13)) {
-                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString(version,getVariables()));
                     buffer.writeByte(friendlyFlag.getCode());
 
                     MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibilityName());
@@ -183,15 +183,15 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
                     MinecraftProtocolUtil.writeVarInt(buffer, 0);
 
-                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(getVariables()));
-                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(version,getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(version,getVariables()));
 
                 } else {
-                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.compileToLegacy(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));
 
-                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.compileToLegacy(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));
 
-                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.compileToLegacy(getVariables()));
+                    MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));
 
                     if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_10)) {
                         buffer.writeByte(friendlyFlag.getCode());

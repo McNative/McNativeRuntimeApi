@@ -20,14 +20,17 @@
 package org.mcnative.common.text.components;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
 import org.mcnative.common.text.event.TextEvent;
 import org.mcnative.common.text.format.TextColor;
+import org.mcnative.common.text.format.TextFont;
 import org.mcnative.common.text.format.TextStyle;
 
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import java.util.Set;
 public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> implements ChatComponent<T>{
 
     private TextColor color;
+    private TextFont font;
     private Set<TextStyle> styling;
 
     private TextEvent<ClickAction> clickEvent;
@@ -123,6 +127,17 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     }
 
     @Override
+    public TextFont getFont() {
+        return font;
+    }
+
+    @Override
+    public T setFont(TextFont font) {
+        this.font = font;
+        return (T) this;
+    }
+
+    @Override
     public Set<TextStyle> getStyling() {
         return styling;
     }
@@ -141,64 +156,77 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
     }
 
     @Override
-    public void compileToLegacy(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language) {
-        if(color != null) builder.append(Text.FORMAT_CHAR).append(color.getCode());
-        if(isBold()) builder.append(Text.FORMAT_CHAR).append(TextStyle.BOLD.getCode());
-        if(isItalic()) builder.append(Text.FORMAT_CHAR).append(TextStyle.ITALIC.getCode());
-        if(isUnderlined()) builder.append(Text.FORMAT_CHAR).append(TextStyle.UNDERLINE.getCode());
-        if(isStrikeThrough()) builder.append(Text.FORMAT_CHAR).append(TextStyle.STRIKETHROUGH.getCode());
-        if(isObfuscated()) builder.append(Text.FORMAT_CHAR).append(TextStyle.OBFUSCATED.getCode());
-    }
-    public void compileToLegacyPost(StringBuilder builder, MinecraftConnection connection, VariableSet variables, Language language){
-        for (MessageComponent<?> extra : extras) {
-            extra.compileToLegacy(builder, connection, variables, language);
+    public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
+            throw new UnsupportedOperationException("Use compileToString for version 1.7.9 or lower");
         }
-    }
-
-    @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
         if(variables == null) variables = VariableSet.createEmpty();
         Document document = Document.newDocument(key);
-        if(isBold()) document.add("bold",true);
-        if(isItalic()) document.add("italic",true);
-        if(isUnderlined()) document.add("underlined",true);
-        if(isStrikeThrough()) document.add("strikethrough",true);
-        if(isObfuscated()) document.add("obfuscated",true);
-        if(this.color != null) document.add("color",color.getName());
-        if(insertion != null) document.add("insertion",variables.replace(insertion));
+        if(isBold()) document.set("bold",true);
+        if(isItalic()) document.set("italic",true);
+        if(isUnderlined()) document.set("underlined",true);
+        if(isStrikeThrough()) document.set("strikethrough",true);
+        if(isObfuscated()) document.set("obfuscated",true);
+        if(this.color != null) document.set("color",color.compileColor(version));
+        if(this.font != null && version.isNewerOrSame(MinecraftProtocolVersion.JE_1_16)) document.set("font",font);
+        if(insertion != null) document.set("insertion",variables.replace(insertion));
         if(this.clickEvent != null){
             Document event = Document.newDocument();
             if(clickEvent.getAction().isDirectEvent()){
-                event.add("action",clickEvent.getAction().getName().toLowerCase());
-                event.add("value",clickEvent.getValue().toString());
+                event.set("action",clickEvent.getAction().getName().toLowerCase());
+                event.set("value",clickEvent.getValue().toString());
             }else{
-                event.add("action","run_command");
-                event.add("value","mcnOnTextClick");//@Todo add custom event managing / Todo Register temp command
+                event.set("action","run_command");
+                event.set("value","mcnOnTextClick");//@Todo add custom event managing / Todo Register temp command
             }
-            document.add("clickEvent",event);
+            document.set("clickEvent",event);
         }
         if(this.hoverEvent != null){
             Document event = Document.newDocument();
-            event.add("action",hoverEvent.getAction().getName().toLowerCase());
+            event.set("action",hoverEvent.getAction().getName().toLowerCase());
 
             ChatComponent<?> value;
             if(hoverEvent.getValue() instanceof ChatComponent) value = ((ChatComponent<?>) hoverEvent.getValue());
             else value = new TextComponent(hoverEvent.getValue().toString());
-            event.add("value",value.compile(variables));
+            event.entries().add(value.compile("value",connection,version, variables,language));
+            //event.add("value",value.compile(connection, variables, language,variables,language));
 
-            document.add("hoverEvent",event);
+            document.set("hoverEvent",event);
         }
         if(extras != null && !extras.isEmpty()){
             Document[] extras = new Document[this.extras.size()];
             int index = 0;
             for (MessageComponent<?> extra : this.extras) {
-                extras[index] = extra.compile(variables);
+                extras[index] = extra.compile("value",connection,version, variables,language);
                 index++;
             }
-            document.add("extra",extras);
+            document.set("extra",extras);
         }
         return document;
     }
+
+    @Override
+    public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+            Document document = compile(null,connection,version,variables,language);
+            builder.append(DocumentFileType.JSON.getWriter().write(document,false));
+        }else{
+            if(color != null) builder.append(Text.FORMAT_CHAR).append(color.getCode());
+            if(isBold()) builder.append(Text.FORMAT_CHAR).append(TextStyle.BOLD.getCode());
+            if(isItalic()) builder.append(Text.FORMAT_CHAR).append(TextStyle.ITALIC.getCode());
+            if(isUnderlined()) builder.append(Text.FORMAT_CHAR).append(TextStyle.UNDERLINE.getCode());
+            if(isStrikeThrough()) builder.append(Text.FORMAT_CHAR).append(TextStyle.STRIKETHROUGH.getCode());
+            if(isObfuscated()) builder.append(Text.FORMAT_CHAR).append(TextStyle.OBFUSCATED.getCode());
+
+            compileLegacyText(builder,connection,version,variables,language);
+
+            for (MessageComponent<?> extra : extras) {
+                extra.compileToString(builder, connection,version, variables, language);
+            }
+        }
+    }
+
+    abstract void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
 
     @Override
     public void decompile(Document data) {
@@ -221,7 +249,7 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
 
         Document hoverEvent = data.getDocument("hoverEvent");
         if(hoverEvent != null){
-            this.hoverEvent = new TextEvent<>(HoverAction.of(hoverEvent.getString("action")),clickEvent.getString("value"));
+            this.hoverEvent = new TextEvent<>(HoverAction.of(hoverEvent.getString("action")),hoverEvent.getString("value"));
         }
         Document extra = data.getDocument("extra");
         if(extra != null){

@@ -102,16 +102,20 @@ public class MinecraftChatPacket implements MinecraftPacket {
     public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         Language language = null;
         if(connection instanceof LanguageAble) language = ((LanguageAble) connection).getLanguage();
-        
+
         if(direction == PacketDirection.OUTGOING){
-            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
-                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
-                buffer.writeByte(position.getId());
-            }else{
-                MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));
-            }
+            MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
+            buffer.writeByte(position.getId());
         }else if(direction == PacketDirection.INCOMING){
             MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));
         }
     }
 }
+/*
+if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+                MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
+                buffer.writeByte(position.getId());
+            }else{
+                MinecraftProtocolUtil.writeString(buffer,this.message.toPlainText(variables!=null?variables:VariableSet.newEmptySet(),language));
+            }
+ */

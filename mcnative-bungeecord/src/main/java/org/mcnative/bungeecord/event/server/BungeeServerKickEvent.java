@@ -26,6 +26,7 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.event.server.MinecraftPlayerServerKickEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.text.Text;
@@ -35,9 +36,9 @@ public class BungeeServerKickEvent implements MinecraftPlayerServerKickEvent {
 
     private final BungeeCordServerMap serverMap;
     private final ServerKickEvent original;
-    private final OnlineMinecraftPlayer player;
+    private final ConnectedMinecraftPlayer player;
 
-    public BungeeServerKickEvent(BungeeCordServerMap serverMap, ServerKickEvent original, OnlineMinecraftPlayer player) {
+    public BungeeServerKickEvent(BungeeCordServerMap serverMap, ServerKickEvent original, ConnectedMinecraftPlayer player) {
         this.serverMap = serverMap;
         this.original = original;
         this.player = player;
@@ -71,7 +72,7 @@ public class BungeeServerKickEvent implements MinecraftPlayerServerKickEvent {
 
     @Override
     public void setKickReason(MessageComponent<?> cancelReason, VariableSet variables) {
-        original.setKickReasonComponent(ComponentSerializer.parse(cancelReason.compileToString(variables)));
+        original.setKickReasonComponent(ComponentSerializer.parse(cancelReason.compileToString(player.getProtocolVersion(),variables)));
     }
 
     @Override

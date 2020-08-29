@@ -23,6 +23,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.format.TextColor;
 import org.mcnative.common.text.format.TextStyle;
 
@@ -63,8 +64,13 @@ public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
     }
 
     @Override
-    public Document compile(String key, MinecraftConnection connection, VariableSet variables, Language language) {
-        return super.compile(key,variables,language).add("keybind",keybind);
+    public Document compile(String key, MinecraftConnection connection,MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        return super.compile(key,connection,version,variables,language).add("keybind",keybind);
+    }
+
+    @Override
+    void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        //Empty and not supported
     }
 
     @Override
