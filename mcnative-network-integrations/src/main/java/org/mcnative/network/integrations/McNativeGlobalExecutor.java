@@ -24,27 +24,28 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.NetworkIdentifier;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;
 
 public class McNativeGlobalExecutor {
 
     public static void broadcast(MessageComponent<?> component, VariableSet variables) {
         execute(Document.newDocument()
-                .set("action","broadcast")
-                .set("message",component.compile(variables)));
+                .set("action","broadcast")//@Todo find solution for sending raw compiled components (Currently forced to 1.8)
+                .set("message",component.compile(MinecraftProtocolVersion.JE_1_8,variables)));
     }
 
     public static void broadcast(String permission, MessageComponent<?> component, VariableSet variables) {
         execute(Document.newDocument()
                 .set("action","broadcast")
                 .set("permission",permission)
-                .set("message",component.compile(variables)));
+                .set("message",component.compile(MinecraftProtocolVersion.JE_1_8,variables)));
     }
 
     public static void kickAll(MessageComponent<?> component, VariableSet variables) {
         execute(Document.newDocument()
                 .set("action","kickAll")
-                .set("message",component.compile(variables)));
+                .set("message",component.compile(MinecraftProtocolVersion.JE_1_8,variables)));
     }
 
     private static void execute(Document data){

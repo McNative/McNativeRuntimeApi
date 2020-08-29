@@ -34,6 +34,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     private final Set<ServerEntry> servers;
 
     public BungeeCordServerMap() {
+        System.out.println("Created Server Map");
         this.servers = new HashSet<>();
     }
 
@@ -98,13 +99,10 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     public MinecraftServer getMappedServer(ServerInfo info){
         Validate.notNull(info);
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
-        System.out.println("[Debug] Searching "+info.getName()+" -> ");
 
-        System.out.println("------------------");
         for (ServerEntry server : this.servers) {
             System.out.println(server.bungeeCord.getName()+" | "+server.mcNative.getName());
         }
-        System.out.println("------------------");
 
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.getName().equalsIgnoreCase(info.getName()));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");

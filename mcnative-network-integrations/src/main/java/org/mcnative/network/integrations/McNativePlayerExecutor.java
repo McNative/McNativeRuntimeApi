@@ -29,6 +29,7 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.player.chat.ChatPosition;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.util.UUID;
@@ -74,8 +75,8 @@ public class McNativePlayerExecutor {
 
     public static void kick(UUID uniqueId,MessageComponent<?> message, VariableSet variables) {
         executePlayerBased(uniqueId,Document.newDocument()
-                .set("action","kick")
-                .set("message",message.compile(variables)));
+                .set("action","kick")//@Todo force compile to 1.8
+                .set("message",message.compile(MinecraftProtocolVersion.JE_1_8,variables)));
     }
 
     public static void performCommand(UUID uniqueId,String command) {
@@ -93,8 +94,8 @@ public class McNativePlayerExecutor {
     public static void sendMessage(UUID uniqueId,ChatPosition position, MessageComponent<?> component, VariableSet variables) {
         executePlayerBased(uniqueId,Document.newDocument()
                 .set("action","sendMessage")
-                .set("position",position.getId())
-                .set("text",component.compile(variables)));
+                .set("position",position.getId())//@Todo force compile to 1.8
+                .set("text",component.compile(MinecraftProtocolVersion.JE_1_8,variables)));
     }
 
     private static void executePlayerBased(UUID uniqueId, Document data){
