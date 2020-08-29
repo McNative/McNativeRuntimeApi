@@ -29,6 +29,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.event.EventBus;
+import net.pretronic.libraries.utility.SystemUtil;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.bungeecord.event.player.*;
 import org.mcnative.bungeecord.event.server.BungeeServerConnectEvent;
@@ -250,7 +251,7 @@ public final class McNativeBridgeEventHandler {
     }
 
     private void handleServerKick(ServerKickEvent event){
-        OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
+        ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftPlayerServerKickEvent mcNativeEvent = new BungeeServerKickEvent(serverMap,event,player);
         ServerConnectHandler handler = McNative.getInstance().getRegistry().getServiceOrDefault(ServerConnectHandler.class);
         if(handler != null){
@@ -267,8 +268,9 @@ public final class McNativeBridgeEventHandler {
         OnlineMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         if(player instanceof BungeeProxiedPlayer) ((BungeeProxiedPlayer) player).handleLogout();
         MinecraftPlayerLogoutEvent mcNativeEvent = new BungeeMinecraftLogoutEvent(player);
-        playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
         eventBus.callEvents(PlayerDisconnectEvent.class,event,mcNativeEvent);
+        SystemUtil.sleepUninterruptible(700);//Sleep for security reasons
+        playerManager.unregisterPlayer(event.getPlayer().getUniqueId());
     }
 
     private void handleChatEvent(ChatEvent event) {
