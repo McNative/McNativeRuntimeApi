@@ -19,6 +19,10 @@
 
 package org.mcnative.bungeecord.server;
 
+import gnu.trove.function.TObjectFunction;
+import gnu.trove.map.TMap;
+import gnu.trove.procedure.TObjectObjectProcedure;
+import gnu.trove.procedure.TObjectProcedure;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
@@ -29,7 +33,7 @@ import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class BungeeCordServerMap implements Map<String, ServerInfo> {
+public class BungeeCordServerMap implements TMap<String, ServerInfo> {
 
     private final Set<ServerEntry> servers;
 
@@ -159,6 +163,36 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     @Override
     public Set<Entry<String, ServerInfo>> entrySet() {
         return new HashSet<>(servers);
+    }
+
+    @Override
+    public ServerInfo putIfAbsent(String s, ServerInfo serverInfo) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean forEachKey(TObjectProcedure<? super String> tObjectProcedure) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean forEachValue(TObjectProcedure<? super ServerInfo> tObjectProcedure) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean forEachEntry(TObjectObjectProcedure<? super String, ? super ServerInfo> tObjectObjectProcedure) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean retainEntries(TObjectObjectProcedure<? super String, ? super ServerInfo> tObjectObjectProcedure) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void transformValues(TObjectFunction<ServerInfo, ServerInfo> tObjectFunction) {
+        throw new UnsupportedOperationException();
     }
 
     private static class ServerEntry implements Entry<String, ServerInfo>{
