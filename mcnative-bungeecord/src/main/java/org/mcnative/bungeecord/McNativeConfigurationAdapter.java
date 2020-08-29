@@ -38,11 +38,13 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
         this.original = original;
         this.serverMap = serverMap;
 
-        if(original != null && original.getServers() != null && !original.getServers().isEmpty()){
-            this.serverMap.clear();
-            this.serverMap.putAll(original.getServers());
-            this.original.getServers().clear();
-        }
+        try{//If configuration is not loaded, a NUllPointException can occur
+            if(original != null && original.getServers() != null && !original.getServers().isEmpty()){
+                this.serverMap.clear();
+                this.serverMap.putAll(original.getServers());
+                this.original.getServers().clear();
+            }
+        }catch (NullPointerException ignored){}
     }
 
     @Override
