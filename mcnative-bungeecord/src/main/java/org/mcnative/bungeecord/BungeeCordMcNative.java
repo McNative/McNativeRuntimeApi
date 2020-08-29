@@ -228,7 +228,7 @@ public class BungeeCordMcNative implements McNative {
     }
 
     protected void registerDefaultCommands() {
-        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
+        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this,"p","proxy"));
     }
 
     protected void registerDefaultDescribers(){

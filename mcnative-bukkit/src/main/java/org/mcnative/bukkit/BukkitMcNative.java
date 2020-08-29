@@ -231,7 +231,7 @@ public class BukkitMcNative implements McNative {
     }
 
     protected void registerDefaultCommands() {
-        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this));
+        getLocal().getCommandManager().registerCommand(new org.mcnative.common.commands.McNativeCommand(this,"s","server"));
     }
 
     protected void registerDefaultDescribers(){
@@ -249,3 +249,4 @@ public class BukkitMcNative implements McNative {
     }
 
 }
+

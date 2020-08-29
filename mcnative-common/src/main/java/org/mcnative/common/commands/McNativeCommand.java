@@ -36,10 +36,10 @@ import org.mcnative.common.utils.Messages;
 
 public class McNativeCommand extends MainCommand implements NotFindable, NoPermissionHandler {
 
-    public McNativeCommand(ObjectOwner owner) {
+    public McNativeCommand(ObjectOwner owner,String suffix,String suffix1) {
         super(owner, CommandConfiguration.newBuilder()
                 .name("mcnative")
-                .aliases("mcn")
+                .aliases("mcn","mcnative"+suffix,"mcn"+suffix,"mcnative"+suffix1,"mcn"+suffix1)
                 .permission("mcnative.manage.manage")
                 .create());
         registerCommand(new McNativeInfoCommand(owner));

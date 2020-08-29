@@ -50,6 +50,7 @@ import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.event.NetworkEventHandler;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
+import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
 import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
@@ -127,6 +128,8 @@ public class McNativeLauncher {
         instance.setReady(true);
         STATISTIC_SERVICE = new McNativeStatisticService();
 
+        ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
+
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
@@ -151,7 +154,7 @@ public class McNativeLauncher {
         if(McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT_ENABLED){
             ChatChannel serverChat = ChatChannel.newChatChannel();
             serverChat.setName("ServerChat");
-            serverChat.setMessageFormatter((player, variables, message) -> McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT);
+            //serverChat.setMessageFormatter((player, variables, message) -> McNativeBungeeCordConfiguration.PLAYER_GLOBAL_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);
         }
 

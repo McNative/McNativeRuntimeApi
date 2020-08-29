@@ -98,6 +98,13 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     public MinecraftServer getMappedServer(ServerInfo info){
         Validate.notNull(info);
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
+        System.out.println("[Debug] Searching "+info.getName()+" -> ");
+
+        System.out.println("------------------");
+        for (ServerEntry server : this.servers) {
+            System.out.println(server.bungeeCord.getName()+" | "+server.mcNative.getName());
+        }
+        System.out.println("------------------");
 
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.getName().equalsIgnoreCase(info.getName()));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
@@ -115,6 +122,7 @@ public class BungeeCordServerMap implements Map<String, ServerInfo> {
     @Override
     public ServerInfo put(String unused, ServerInfo value) {
         if(unused != null && !unused.equalsIgnoreCase(value.getName())) throw new IllegalArgumentException("Key does not match with the server name");
+        System.out.println("-> Registered Server "+value.getName());
         MinecraftServer server = value instanceof MinecraftServer ? (MinecraftServer) value : new WrappedBungeeMinecraftServer(value);
         Iterators.removeOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(value.getName()));
         this.servers.add(new ServerEntry(server,value));

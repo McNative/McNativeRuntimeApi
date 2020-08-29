@@ -220,7 +220,7 @@ public class McNativeLauncher {
         if(McNativeBukkitConfiguration.PLAYER_CHAT_ENABLED){
             ChatChannel serverChat = ChatChannel.newChatChannel();
             serverChat.setName("ServerChat");
-            serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
+          //  serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);
         }
 

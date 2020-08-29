@@ -37,11 +37,17 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
     public McNativeConfigurationAdapter(BungeeCordServerMap serverMap, ConfigurationAdapter original) {
         this.original = original;
         this.serverMap = serverMap;
+
+        if(original != null && original.getServers() != null && !original.getServers().isEmpty()){
+            this.serverMap.clear();
+            this.serverMap.putAll(original.getServers());
+            this.original.getServers().clear();
+        }
     }
 
     @Override
     public void load() {
-        original.load();
+        this.original.load();
         this.serverMap.clear();
         this.serverMap.putAll(original.getServers());
         this.original.getServers().clear();
