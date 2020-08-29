@@ -50,9 +50,14 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
     @Override
     public void load() {
         this.original.load();
+        System.out.println("Loading and cleared servers: "+this.serverMap.size());
         this.serverMap.clear();
         this.serverMap.putAll(original.getServers());
         this.original.getServers().clear();
+
+        for (ServerInfo value : this.original.getServers().values()) {
+            System.out.println(value.getName());
+        }
 
         McNativeBungeeCordConfiguration.SERVER_SERVERS.forEach((name, config) -> {
             MinecraftServer server = ProxyService.getInstance().registerServer(name,config.getAddress());
