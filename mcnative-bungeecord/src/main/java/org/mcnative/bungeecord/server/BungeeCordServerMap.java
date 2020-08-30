@@ -63,7 +63,7 @@ public class BungeeCordServerMap implements TMap<String, ServerInfo> {
 
     @Override
     public ServerInfo get(Object name) {
-        Validate.notNull(name);
+        if(name == null) return null;
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(name.toString()));
         if(result != null) return result.bungeeCord;
         else return null;
