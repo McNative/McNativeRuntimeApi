@@ -28,6 +28,8 @@ import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.description.dependency.Dependency;
 import net.pretronic.libraries.plugin.description.mainclass.MainClass;
 import net.pretronic.libraries.plugin.description.mainclass.SingleMainClass;
+import org.mcnative.bungeecord.BungeeCordMcNativeBootstrap;
+import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.MinecraftPlugin;
 
@@ -41,12 +43,22 @@ public class MappedPlugin extends MinecraftPlugin {
 
     public MappedPlugin(Plugin plugin) {
         this.plugin = plugin;
-        initialize(new Description(plugin.getDescription()),null
+        String messageModule = isMcNative() ? "McNative" : null;
+        initialize(new Description(plugin.getDescription(),messageModule),null
                 ,new JdkPretronicLogger(plugin.getLogger()), McNative.getInstance());
+    }
+
+    private boolean isMcNative(){
+        return plugin instanceof BungeeCordMcNativeBootstrap || plugin instanceof McNativeLauncher.DummyPlugin;
     }
 
     public Plugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public McNative getRuntime() {
+        return McNative.getInstance();
     }
 
     @Override
@@ -70,9 +82,11 @@ public class MappedPlugin extends MinecraftPlugin {
     public static class Description implements PluginDescription {
 
         private final net.md_5.bungee.api.plugin.PluginDescription original;
+        private final String messageModule;
 
-        public Description(net.md_5.bungee.api.plugin.PluginDescription original) {
+        public Description(net.md_5.bungee.api.plugin.PluginDescription original,String messageModule) {
             this.original = original;
+            this.messageModule = messageModule;
         }
 
         @Override
@@ -122,7 +136,7 @@ public class MappedPlugin extends MinecraftPlugin {
 
         @Override
         public String getMessageModule() {
-            return null;
+            return messageModule;
         }
 
         @Override

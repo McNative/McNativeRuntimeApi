@@ -180,7 +180,6 @@ public class McNativeStatisticService {
     private void submitReport(String endpoint, Document document){
         try {
             URL url = new URL(REPORTING_SERVICE_URL+endpoint);
-            System.out.println(REPORTING_SERVICE_URL+endpoint);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setConnectTimeout(2000);
             connection.setReadTimeout(2000);
@@ -194,21 +193,13 @@ public class McNativeStatisticService {
             DocumentFileType.JSON.getWriter().write(connection.getOutputStream(),document,false);
             connection.connect();
 
-            System.out.println("----------------");
-            System.out.println(DocumentFileType.JSON.getWriter().write(document,true));
-            System.out.println("----------------");
-
-            System.out.println(connection.getResponseCode());
-
             InputStream stream = connection.getErrorStream();
             if (stream == null) {
                 stream = connection.getInputStream();
             }
             try (Scanner scanner = new Scanner(stream)) {
                 scanner.useDelimiter("\\Z");
-                System.out.println(scanner.next());
             }
-            System.out.println("-----------------------");
 
         }catch (Exception ignored) {
             ignored.printStackTrace();

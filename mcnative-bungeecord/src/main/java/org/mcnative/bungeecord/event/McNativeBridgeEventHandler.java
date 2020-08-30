@@ -217,7 +217,6 @@ public final class McNativeBridgeEventHandler {
     }
 
     private void handleServerConnect(ServerConnectEvent event){
-        System.out.println("Registered Map: "+ProxyServer.getInstance().getServers().getClass());
         ConnectedMinecraftPlayer player = playerManager.getMappedPlayer(event.getPlayer());
         MinecraftServer server = serverMap.getMappedServer(event.getTarget());
         if(server.getPermission() != null && !player.hasPermission(server.getPermission())) event.setCancelled(true);

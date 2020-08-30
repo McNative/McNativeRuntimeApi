@@ -34,9 +34,11 @@ import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import net.pretronic.libraries.utility.map.callback.CallbackMap;
 import net.pretronic.libraries.utility.map.callback.LinkedHashCallbackMap;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.bungeecord.BungeeCordMcNativeBootstrap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.event.service.ServiceRegisterEvent;
 import org.mcnative.common.event.service.ServiceUnregisterEvent;
+import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 
 import java.io.File;
@@ -45,8 +47,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class BungeeCordPluginManager implements PluginManager {
-
-    private final static String LOADER_CLASS_NAME = "org.mcnative.loader.bootstrap.BungeeCordMcNativePluginBootstrap";
 
     private final Collection<ServiceEntry> services;
     private final Map<String, BiConsumer<Plugin<?>,LifecycleState>> stateListeners;
@@ -265,7 +265,7 @@ public class BungeeCordPluginManager implements PluginManager {
 
         CallbackMap<String, net.md_5.bungee.api.plugin.Plugin> newMap = new LinkedHashCallbackMap<>();
         newMap.setPutCallback((s, plugin) ->{
-            if(!plugin.getClass().getName().equals(LOADER_CLASS_NAME)) plugins.add(new MappedPlugin(plugin));
+            plugins.add(new MappedPlugin(plugin));
         });
         newMap.setRemoveCallback((s, plugin) -> plugins.remove(plugin));
 

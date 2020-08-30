@@ -31,6 +31,7 @@ import net.pretronic.libraries.event.DefaultEventBus;
 import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectException;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.bungeecord.event.McNativeBridgeEventHandler;
@@ -51,6 +52,7 @@ import org.mcnative.common.network.event.NetworkEventHandler;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.chat.GroupChatFormatter;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
+import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
 import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
@@ -60,6 +62,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class McNativeLauncher {
@@ -89,6 +92,7 @@ public class McNativeLauncher {
         if(!McNativeBungeeCordConfiguration.load(new JdkPretronicLogger(logger),new File("plugins/McNative/"))) return;
 
         BungeeCordServerMap serverMap = new BungeeCordServerMap();
+        tryInjectServersToNewConfiguration(serverMap);
         logger.info(McNative.CONSOLE_PREFIX+"McNative initialised and injected server map.");
 
         BungeeCordPluginManager pluginManager = new BungeeCordPluginManager();
@@ -128,7 +132,7 @@ public class McNativeLauncher {
         instance.setReady(true);
         STATISTIC_SERVICE = new McNativeStatisticService();
 
-        //ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
+        ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
@@ -167,6 +171,13 @@ public class McNativeLauncher {
         }
     }
 
+    private static void tryInjectServersToNewConfiguration(BungeeCordServerMap serverMap){
+        try{
+            Object config = ProxyServer.getInstance().getConfig();
+            ReflectionUtil.changeFieldValue(config,"servers",serverMap);
+        }catch (ReflectException ignored){}
+    }
+
     protected static void shutdown(){
         if(!McNative.isAvailable()) return;
         Logger logger = ProxyServer.getInstance().getLogger();
@@ -202,7 +213,7 @@ public class McNativeLauncher {
         return plugin;
     }
 
-    private static class DummyPlugin extends Plugin{
+    public static class DummyPlugin extends Plugin{
 
         @Override
         public void onDisable() {

@@ -38,7 +38,6 @@ public class BungeeCordServerMap implements TMap<String, ServerInfo> {
     private final Set<ServerEntry> servers;
 
     public BungeeCordServerMap() {
-        System.out.println("Created Server Map");
         this.servers = new HashSet<>();
     }
 
@@ -104,10 +103,6 @@ public class BungeeCordServerMap implements TMap<String, ServerInfo> {
         Validate.notNull(info);
         if(info instanceof MinecraftServer) return (MinecraftServer) info;
 
-        for (ServerEntry server : this.servers) {
-            System.out.println(server.bungeeCord.getName()+" | "+server.mcNative.getName());
-        }
-
         ServerEntry result = Iterators.findOne(this.servers, entry -> entry.bungeeCord.getName().equalsIgnoreCase(info.getName()));
         if(result == null) throw new IllegalArgumentException("McNative mapping error (BungeeCord -> McNative)");
          return result.mcNative;
@@ -124,7 +119,6 @@ public class BungeeCordServerMap implements TMap<String, ServerInfo> {
     @Override
     public ServerInfo put(String unused, ServerInfo value) {
         if(unused != null && !unused.equalsIgnoreCase(value.getName())) throw new IllegalArgumentException("Key does not match with the server name");
-        System.out.println("-> Registered Server "+value.getName());
         MinecraftServer server = value instanceof MinecraftServer ? (MinecraftServer) value : new WrappedBungeeMinecraftServer(value);
         Iterators.removeOne(this.servers, entry -> entry.getKey().equalsIgnoreCase(value.getName()));
         this.servers.add(new ServerEntry(server,value));
