@@ -22,7 +22,6 @@ package org.mcnative.loader;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.VersionInfo;
-import org.mcnative.common.McNative;
 import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.io.File;
@@ -57,7 +56,7 @@ public class McNativeLoader extends ResourceLoader {
         McNativeConfigAdapter.load();
         if(McNativeConfigAdapter.getId() != null){
             MCNATIVE.setAuthenticator(httpURLConnection -> {
-                httpURLConnection.setRequestProperty("serverName",McNative.getInstance().getName());
+                httpURLConnection.setRequestProperty("serverName","");
                 httpURLConnection.setRequestProperty("serverId",McNativeConfigAdapter.getId());
                 httpURLConnection.setRequestProperty("serverSecret",McNativeConfigAdapter.getSecret());
             });
