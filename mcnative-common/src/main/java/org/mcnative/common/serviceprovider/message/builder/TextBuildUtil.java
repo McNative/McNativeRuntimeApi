@@ -131,6 +131,28 @@ public class TextBuildUtil {
         }
     }
 
+    protected static String buildLegacyText(Object input,Object nextComp){
+        StringBuilder builder = new StringBuilder();
+        buildLegacyText(builder,input,nextComp);
+        return builder.toString();
+    }
+
+    private static void buildLegacyText(StringBuilder builder,Object input,Object nextComp){
+        if(input instanceof ColoredString){
+            for(int i = 0; i < builder.length()-1; i++) {
+                if(builder.charAt(i) == '&' && Text.ALL_CODES.indexOf(builder.charAt(i+1)) > -1){
+                    builder.setCharAt(i,Text.FORMAT_CHAR);
+                }
+            }
+        }else{
+            builder.append(input.toString());
+        }
+        if(nextComp != null){
+            buildLegacyText(builder, nextComp, null);
+            builder.append(nextComp instanceof String ? nextComp : nextComp.toString());
+        }
+    }
+
     private static Document buildCompileText(MinecraftBuildContext context,Document document,Object nextComp){
         if(nextComp != null){
             Document root = Document.newDocument();
@@ -152,5 +174,39 @@ public class TextBuildUtil {
             return root;
         }
         return document;
+    }
+
+    protected static Object buildTextData(Object input, Object input2){
+        if(input2 == null && input == null){
+            return null;
+        }else if(input == null){
+            if(input2.getClass().isArray()) return Array.getLength(input2) > 0 ? input2 : null;
+            else return new Object[]{input2};
+        }else if(input2 == null){
+            if(input.getClass().isArray()) return Array.getLength(input) > 0 ? input : null;
+            else return new Object[]{input};
+        }
+        if(input.getClass().isArray() && input2.getClass().isArray() ){
+            int input2Length = Array.getLength(input);
+            int input3Length = Array.getLength(input2);
+            Object[] result = Arrays.copyOf((Object[])input,input2Length+input3Length);
+            int index = input2Length+1;
+            for (int i = 0; i < input3Length; i++) {
+                result[index] = Array.get(input2,i);
+            }
+            return result;
+        }else if(input.getClass().isArray()){
+            Object[] result = Arrays.copyOf((Object[])input,Array.getLength(input)+1);
+            result[result.length-1] = input2;
+            return result;
+        }else if(input2.getClass().isArray()){
+            Object[] result = Arrays.copyOf((Object[])input2,Array.getLength(input2)+1);
+            result[result.length-1] = input;
+            return result;
+        }else{
+            return new Object[]{
+                    input instanceof DocumentEntry ? input : input.toString()
+                    ,input2 instanceof DocumentEntry ? input2 : input2.toString()};
+        }
     }
 }

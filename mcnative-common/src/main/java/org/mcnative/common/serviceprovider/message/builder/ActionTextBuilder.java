@@ -24,11 +24,11 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.Module;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
+import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
 import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
 import org.mcnative.common.text.event.HoverAction;
 
-//@Todo implement legacy
 public class ActionTextBuilder implements MessageBuilder {
 
     @Override
@@ -57,7 +57,7 @@ public class ActionTextBuilder implements MessageBuilder {
 
         StringBuilder builder = new StringBuilder();
         String text = parameters[0].toString();
-        builder.append(text);
+        builder.append(TextBuildUtil.buildLegacyText(new ColoredString(text),null));
 
         if(extension != null && !text.equals(extension)){
             builder.append('(');

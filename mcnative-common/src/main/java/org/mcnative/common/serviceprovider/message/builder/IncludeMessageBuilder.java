@@ -52,7 +52,7 @@ public class IncludeMessageBuilder implements BasicMessageBuilder {
                     if (next != null) return new Object[]{result, next};
                     else return new Object[]{result};
                 }else if(minecraftContext.getType() == TextBuildType.LEGACY){
-                    throw new UnsupportedOperationException();
+                    return TextBuildUtil.buildLegacyText(result, next);
                 }
             }
             return TextBuildUtil.buildPlainText(result,next);

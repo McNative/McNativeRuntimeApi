@@ -62,7 +62,7 @@ public class FunctionFactory implements MessageBuilderFactory {
                 if(next != null) return ""+result+next;
                 else return result;
             }else{
-                return TextBuilder.buildTextData(result,next);
+                return TextBuildUtil.buildTextData(result,next);
             }
         }
     }

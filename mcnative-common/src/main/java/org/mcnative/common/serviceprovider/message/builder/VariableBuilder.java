@@ -42,8 +42,7 @@ public class VariableBuilder implements BasicMessageBuilder {
             if(minecraftContext.getType() == TextBuildType.COMPILE){
                 return TextBuildUtil.buildCompileText(minecraftContext,value,next);
             }else if(minecraftContext.getType() == TextBuildType.LEGACY){
-                //@Todo implement legacy
-                throw new UnsupportedOperationException();
+                return TextBuildUtil.buildLegacyText(value,next);
             }
         }
         return TextBuildUtil.buildPlainText(value,next);
