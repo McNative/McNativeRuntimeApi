@@ -18,10 +18,9 @@ import java.util.Arrays;
 
 public class TextBuildUtil {
 
-    public static String buildUnformattedText(Object input,Object next) {
-        String content = input.toString();
-        if(next == null) return content;
-        else return content+next;
+    public static Object buildUnformattedText(Object input,Object next) {
+        if(next == null) return input;
+        else return input.toString()+next;
     }
 
     public static String buildPlainText(Object input,Object nextComp){
