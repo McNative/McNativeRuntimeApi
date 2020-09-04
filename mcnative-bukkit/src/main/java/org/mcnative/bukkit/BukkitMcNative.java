@@ -33,6 +33,7 @@ import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.logging.level.DebugLevel;
 import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.variable.describer.VariableDescriber;
 import net.pretronic.libraries.message.bml.variable.describer.VariableDescriberRegistry;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
@@ -58,6 +59,7 @@ import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
+import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.placeholder.McNativePlaceholderProvider;
@@ -238,7 +240,6 @@ public class BukkitMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
         VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
-        VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
         VariableDescriberRegistry.registerDescriber(PluginDescription.class);
         VariableDescriberRegistry.registerDescriber(DefaultPluginDescription.class);
@@ -246,6 +247,9 @@ public class BukkitMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(DefaultPluginLoader.class);
         VariableDescriberRegistry.registerDescriber(BukkitPluginLoader.class);
         VariableDescriberRegistry.registerDescriber(PluginVersion.class);
+
+        VariableDescriber<?> designDescriber = VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
+        ColoredString.makeDescriberColored(designDescriber);
     }
 
 }

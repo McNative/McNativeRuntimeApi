@@ -1,6 +1,11 @@
 package org.mcnative.common.serviceprovider.message;
 
+import net.pretronic.libraries.message.bml.variable.describer.VariableDescriber;
 import net.pretronic.libraries.utility.Validate;
+
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ColoredString {
 
@@ -27,5 +32,9 @@ public class ColoredString {
     @Override
     public String toString() {
         return data.toString();
+    }
+
+    public static <T> void makeDescriberColored(VariableDescriber<T> describer){
+        describer.getFunctions().replaceAll((name, function) -> o -> new ColoredString(function.apply(o)));
     }
 }

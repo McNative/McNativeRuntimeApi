@@ -140,10 +140,6 @@ public interface Inventory extends Iterable<ItemStack> {
 
     void addListener();//InventoryListener
 
-    void addAnimation(InventoryAnimation animation);
-
-    void addAnimation(int startIndex, int endIndex, InventoryAnimation animation);
-
 
 
     static int toIndex(int x, int y){

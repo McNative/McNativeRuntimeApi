@@ -22,6 +22,7 @@ package org.mcnative.common.protocol.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.mcnative.common.McNative;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -57,14 +58,18 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
 
     @Override
     protected void encode(ChannelHandlerContext context, MinecraftPacket packet0, ByteBuf buffer){
-        MinecraftPacket packet = packet0;
-        List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
-        if(listeners != null && !listeners.isEmpty()){
-            MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
-            listeners.forEach(listener -> listener.handle(event));
-            packet = event.getPacket();
+        try {
+            MinecraftPacket packet = packet0;
+            List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
+            if(listeners != null && !listeners.isEmpty()){
+                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+                listeners.forEach(listener -> listener.handle(event));
+                packet = event.getPacket();
+            }
+            MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));
+            packet.write(connection,direction,this.version,buffer);
+        } catch (Exception exception) {
+            McNative.getInstance().getLogger().error("An error occurred in McNative:", exception.getMessage());
         }
-        MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));
-        packet.write(connection,direction,this.version,buffer);
     }
 }

@@ -139,7 +139,9 @@ public class TextBuildUtil {
 
     private static void buildLegacyText(StringBuilder builder,Object input,Object nextComp){
         if(input instanceof ColoredString){
-            for(int i = 0; i < builder.length()-1; i++) {
+            int start = builder.length();
+            builder.append(input.toString());
+            for(int i = start; i < builder.length()-1; i++) {
                 if(builder.charAt(i) == '&' && Text.ALL_CODES.indexOf(builder.charAt(i+1)) > -1){
                     builder.setCharAt(i,Text.FORMAT_CHAR);
                 }
@@ -149,7 +151,6 @@ public class TextBuildUtil {
         }
         if(nextComp != null){
             buildLegacyText(builder, nextComp, null);
-            builder.append(nextComp instanceof String ? nextComp : nextComp.toString());
         }
     }
 

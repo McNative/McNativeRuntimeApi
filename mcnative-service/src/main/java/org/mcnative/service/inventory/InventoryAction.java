@@ -41,6 +41,5 @@ public enum InventoryAction {
     HOTBAR_SWAP,
     CLONE_STACK,
     COLLECT_TO_CURSOR,
-    UNKNOWN,
-    ;
+    UNKNOWN;
 }

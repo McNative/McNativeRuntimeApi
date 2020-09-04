@@ -375,16 +375,6 @@ public class BukkitInventory<I extends org.bukkit.inventory.Inventory> implement
     }
 
     @Override
-    public void addAnimation(InventoryAnimation animation) {
-
-    }
-
-    @Override
-    public void addAnimation(int startIndex, int endIndex, InventoryAnimation animation) {
-
-    }
-
-    @Override
     public Iterator<ItemStack> iterator() {
         Iterator<org.bukkit.inventory.ItemStack> bukkitIterator = this.original.iterator();
         return new Iterator<ItemStack>() {

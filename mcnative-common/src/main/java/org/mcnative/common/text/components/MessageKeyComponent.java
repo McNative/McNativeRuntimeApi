@@ -107,7 +107,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         }else{
             OnlineMinecraftPlayer player = getPlayer(connection, language);
             Document result = compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
-            builder.append(DocumentFileType.JSON.getWriter().write(result,true));
+            builder.append(DocumentFileType.JSON.getWriter().write(result,false));
         }
     }
 

@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet.type.scoreboard;
 
 import io.netty.buffer.ByteBuf;
+import net.pretronic.libraries.message.bml.variable.Variable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -188,7 +189,6 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
                 } else {
                     MinecraftProtocolUtil.writeString(buffer, displayName == null ? "" : displayName.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));
-
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "" : prefix.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));
 
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "" : suffix.compileToString(MinecraftProtocolVersion.JE_1_7,getVariables()));

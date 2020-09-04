@@ -55,7 +55,9 @@ import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.component.server.ServerVersion;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
+import org.mcnative.common.player.chat.GroupChatFormatter;
 import org.mcnative.common.player.tablist.Tablist;
 import org.mcnative.common.player.tablist.TablistEntry;
 import org.mcnative.common.player.tablist.TablistFormatter;
@@ -220,7 +222,7 @@ public class McNativeLauncher {
         if(McNativeBukkitConfiguration.PLAYER_CHAT_ENABLED){
             ChatChannel serverChat = ChatChannel.newChatChannel();
             serverChat.setName("ServerChat");
-          //  serverChat.setMessageFormatter((player, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
+            serverChat.setMessageFormatter((GroupChatFormatter) (sender, variables, message) -> McNativeBukkitConfiguration.PLAYER_CHAT);
             McNative.getInstance().getLocal().setServerChat(serverChat);
         }
 
