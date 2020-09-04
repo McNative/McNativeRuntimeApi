@@ -53,6 +53,15 @@ public class BungeeCordPermissionHandler implements PermissionHandler {
     }
 
     @Override
+    public String getPrimaryGroup() {
+        if(player.getOriginal().getGroups().size() > 0){
+            return player.getOriginal().getGroups().iterator().next();
+        }else {
+            return null;
+        }
+    }
+
+    @Override
     public Collection<String> getGroups() {
         return player.getOriginal().getGroups();
     }
