@@ -60,6 +60,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.protocol.packet.type.MinecraftTitlePacket;
+import org.mcnative.common.protocol.packet.type.player.PlayerNamedSoundEffectPacket;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.text.components.MessageComponent;
@@ -313,7 +314,9 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void playSound(Sound sound, SoundCategory category, float volume, float pitch) {
-        throw new UnsupportedOperationException("Currently not supported");
+        PlayerNamedSoundEffectPacket packet = new PlayerNamedSoundEffectPacket(sound, category, getLocation().getBlockX(),
+                getLocation().getBlockY(), getLocation().getBlockZ(), volume, pitch);
+        sendPacket(packet);
     }
 
     @Override

@@ -55,7 +55,6 @@ import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.component.server.ServerVersion;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
-import org.mcnative.common.player.OnlineMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.chat.GroupChatFormatter;
 import org.mcnative.common.player.tablist.Tablist;
