@@ -63,6 +63,11 @@ public class VaultPermissionHandler implements PermissionHandler {
     }
 
     @Override
+    public String getPrimaryGroup() {
+        return this.permission.getPrimaryGroup(Bukkit.getPlayer(this.playerId));
+    }
+
+    @Override
     public Collection<String> getGroups() {
         return Arrays.asList(permission.getPlayerGroups(Bukkit.getPlayer(this.playerId)));
     }

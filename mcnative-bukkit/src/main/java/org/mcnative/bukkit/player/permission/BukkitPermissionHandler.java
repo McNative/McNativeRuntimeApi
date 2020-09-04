@@ -42,6 +42,11 @@ public class BukkitPermissionHandler implements PermissionHandler {
     }
 
     @Override
+    public String getPrimaryGroup() {
+        return "default";
+    }
+
+    @Override
     public Collection<String> getGroups() {
         return Collections.emptyList();
     }

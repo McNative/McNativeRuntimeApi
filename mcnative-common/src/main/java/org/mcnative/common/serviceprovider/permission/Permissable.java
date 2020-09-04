@@ -28,6 +28,8 @@ public interface Permissable {
 
     PermissionHandler getPermissionHandler();
 
+    String getPrimaryGroup();
+
     Collection<String> getGroups();
 
     Collection<String> getPermissions();

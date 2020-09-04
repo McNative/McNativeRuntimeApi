@@ -231,6 +231,11 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
         return permissionHandler;
     }
 
+    @Override
+    public String getPrimaryGroup() {
+        return getPermissionHandlerExcepted().getPrimaryGroup();
+    }
+
     private PermissionHandler getPermissionHandlerExcepted() {
         PermissionHandler handler = getPermissionHandler();
         if(handler == null) throw new UnsupportedOperationException("No permission handler available");

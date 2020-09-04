@@ -260,7 +260,7 @@ public class VaultPermissionHook {
 
         @Override
         public String getPrimaryGroup(String world, String player) {
-            throw new UnsupportedOperationException();
+            return permissionProvider.getPlayerHandler(getPlayer(player)).getPrimaryGroup();
         }
 
         @Override
