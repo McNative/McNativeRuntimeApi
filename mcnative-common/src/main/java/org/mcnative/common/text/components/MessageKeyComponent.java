@@ -80,7 +80,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         String result = McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
-        builder.append(result.replace("\\n","\n"));
+        builder.append(result);
     }
 
     @Override

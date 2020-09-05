@@ -2,8 +2,6 @@ package org.mcnative.common.serviceprovider.message.builder;
 
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.entry.DocumentEntry;
-import net.pretronic.libraries.document.type.DocumentFileType;
-import net.pretronic.libraries.message.bml.builder.BuildContext;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
@@ -39,6 +37,16 @@ public class TextBuildUtil {
             if(nextComp != null)builder.append(buildPlainText(nextComp,null));
 
             return builder.toString();
+        }else if(input == null){
+            if(nextComp != null) return buildPlainText(nextComp,null);
+            return "";
+        }else if(input.getClass().isArray()){
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < Array.getLength(input); i++) {
+                builder.append(Array.get(input,i));
+            }
+            builder.append(buildPlainText(nextComp,null));
+            return builder.toString();
         }else{
             String content = input.toString();
             if(nextComp != null) content += buildPlainText(nextComp,null);
@@ -63,7 +71,7 @@ public class TextBuildUtil {
             return buildCompileText(context, result, nextComp);
         }else if(input instanceof Document){
             return buildCompileText(context, (Document)input, nextComp);
-        }else {
+        }else{
             Document root = Document.newDocument();
             Document current = root;
             if(input instanceof ColoredString){
@@ -111,7 +119,7 @@ public class TextBuildUtil {
                     current.set("text",new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
                 }
             }else{
-                String content = input.toString();
+                String content = input != null ? input.toString() : "null";
                 root.set("text",content);
             }
             if(nextComp != null){
@@ -119,6 +127,7 @@ public class TextBuildUtil {
                     current.set("extra",new Object[]{nextComp});
                 }else if(nextComp.getClass().isArray()){
                     int length = Array.getLength(nextComp);
+                    System.out.println(Arrays.toString((Object[]) nextComp));
                     if(length >= 0){
                         current.set("extra",nextComp);
                     }

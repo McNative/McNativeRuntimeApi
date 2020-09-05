@@ -20,7 +20,6 @@
 
 package org.mcnative.common.serviceprovider.message.builder;
 
-import net.pretronic.libraries.document.entry.DocumentEntry;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.builder.MessageBuilder;
@@ -28,17 +27,13 @@ import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
 import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
 import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType;
-import org.mcnative.common.text.Text;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 public class TextBuilder implements BasicMessageBuilder {
 
     private final ColoredString input;
 
     public TextBuilder(String input) {
-        this.input = new ColoredString(input);
+        this.input = new ColoredString(input.replace("\\n","\n"));
     }
 
     @Override
