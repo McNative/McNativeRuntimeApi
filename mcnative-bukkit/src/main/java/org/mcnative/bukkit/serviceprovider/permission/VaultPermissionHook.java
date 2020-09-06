@@ -64,7 +64,7 @@ public class VaultPermissionHook {
 
         @Override
         public String getPlayerPrefix(String world, String player) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).getDesign().getPrefix();
+            return getPlayer(player).getPermissionHandler().getDesign().getPrefix();
         }
 
         @Override
@@ -74,7 +74,7 @@ public class VaultPermissionHook {
 
         @Override
         public String getPlayerSuffix(String world, String player) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).getDesign().getSuffix();
+            return getPlayer(player).getPermissionHandler().getDesign().getSuffix();
         }
 
         @Override
@@ -202,19 +202,19 @@ public class VaultPermissionHook {
 
         @Override
         public boolean playerHas(String world, String player, String permission) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).hasPermission(permission);
+            return getPlayer(player).getPermissionHandler().hasPermission(permission);
         }
 
         @Override
         public boolean playerAdd(String world, String player, String permission) {
             boolean allowed = permission.startsWith("-");
-            permissionProvider.getPlayerHandler(getPlayer(player)).setPermission(permission, allowed);
+            getPlayer(player).getPermissionHandler().setPermission(permission, allowed);
             return true;
         }
 
         @Override
         public boolean playerRemove(String world, String player, String permission) {
-            permissionProvider.getPlayerHandler(getPlayer(player)).unsetPermission(permission);
+            getPlayer(player).getPermissionHandler().unsetPermission(permission);
             return true;
         }
 
@@ -238,29 +238,29 @@ public class VaultPermissionHook {
 
         @Override
         public boolean playerInGroup(String world, String player, String group) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).getGroups().contains(group);
+            return getPlayer(player).getPermissionHandler().getGroups().contains(group);
         }
 
         @Override
         public boolean playerAddGroup(String world, String player, String group) {
-            permissionProvider.getPlayerHandler(getPlayer(player)).addGroup(group);
+            getPlayer(player).getPermissionHandler().addGroup(group);
             return true;
         }
 
         @Override
         public boolean playerRemoveGroup(String world, String player, String group) {
-            permissionProvider.getPlayerHandler(getPlayer(player)).removeGroup(group);
+            getPlayer(player).getPermissionHandler().removeGroup(group);
             return true;
         }
 
         @Override
         public String[] getPlayerGroups(String world, String player) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).getGroups().toArray(new String[0]);
+            return getPlayer(player).getPermissionHandler().getGroups().toArray(new String[0]);
         }
 
         @Override
         public String getPrimaryGroup(String world, String player) {
-            return permissionProvider.getPlayerHandler(getPlayer(player)).getPrimaryGroup();
+            return getPlayer(player).getPermissionHandler().getPrimaryGroup();
         }
 
         @Override
