@@ -127,7 +127,6 @@ public class TextBuildUtil {
                     current.set("extra",new Object[]{nextComp});
                 }else if(nextComp.getClass().isArray()){
                     int length = Array.getLength(nextComp);
-                    System.out.println(Arrays.toString((Object[]) nextComp));
                     if(length >= 0){
                         current.set("extra",nextComp);
                     }
