@@ -15,7 +15,7 @@ public class McNativeConfigAdapter {
     private static String ID = null;
     private static String SECRET = null;
 
-    public static File FILE = new File("plugins/Mcnative/config.yml");
+    public static File FILE = new File("plugins/McNative/config.yml");
     public static Yaml YAML;
 
     static {
