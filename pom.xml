@@ -67,7 +67,7 @@
         <dependency.pretronic.databasequery>1.2.42.69-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
-        <dependency.slf4j>1.8.0-beta4</dependency.slf4j>
+        <dependency.slf4j>1.7.25</dependency.slf4j>
 
         <!-- Test dependencies -->
         <test.junit.jupiter>5.5.2</test.junit.jupiter>
