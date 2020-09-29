@@ -84,6 +84,7 @@ public class BukkitService implements MinecraftService, MinecraftServer {
         this.eventBus = eventBus;
         this.objectCreator = new BukkitObjectCreator();
         initVaultHook();
+        registerDefaultPackets();
     }
 
     @Override

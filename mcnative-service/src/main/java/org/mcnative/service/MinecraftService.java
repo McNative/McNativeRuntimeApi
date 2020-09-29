@@ -22,6 +22,8 @@ package org.mcnative.service;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
+import org.mcnative.service.protocol.packet.type.player.inventory.InventoryOpenWindowPacket;
+import org.mcnative.service.protocol.packet.type.player.inventory.InventorySetSlotPacket;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
@@ -46,5 +48,10 @@ public interface MinecraftService extends LocalService, MinecraftServer {
 
     static MinecraftService getInstance(){
         return (MinecraftService) McNative.getInstance().getLocal();
+    }
+
+    default void registerDefaultPackets() {
+        getPacketManager().registerPacket(InventoryOpenWindowPacket.IDENTIFIER);
+        getPacketManager().registerPacket(InventorySetSlotPacket.IDENTIFIER);
     }
 }
