@@ -151,7 +151,7 @@ public class BungeeCordServerMap implements TMap<String, ServerInfo> {
 
     @Override
     public Collection<ServerInfo> values() {
-        return Iterators.map(this.servers, server -> server instanceof ServerInfo? (ServerInfo) server :null);
+        return Iterators.map(this.servers, entry -> entry.bungeeCord);
     }
 
     @Override
