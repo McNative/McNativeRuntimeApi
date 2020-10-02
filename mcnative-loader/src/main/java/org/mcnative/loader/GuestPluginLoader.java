@@ -20,23 +20,34 @@
 
 package org.mcnative.loader;
 
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
+import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.plugin.exception.PluginLoadException;
 import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.PluginClassLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
+import org.mcnative.loader.bridged.bukkit.BukkitHelper;
+import org.mcnative.loader.bridged.bungeecord.BungeeCordHelper;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class GuestPluginLoader extends DefaultPluginLoader {
 
+    private final RuntimeEnvironment<?> environment;
     private final PlatformExecutor executor;
+    private String pluginType;
 
     public GuestPluginLoader(PlatformExecutor executor,PluginManager pluginManager, RuntimeEnvironment<?> environment, PretronicLogger logger, PluginClassLoader classLoader, File location, PluginDescription description, boolean lifecycleLogging) {
         super(pluginManager, environment, logger, classLoader, location, description, lifecycleLogging);
+        this.environment = environment;
         this.executor = executor;
+        this.pluginType = "mcnative";
     }
 
     @Override
@@ -72,5 +83,48 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     @Override
     public Plugin<?> enable() {
         return super.enable();
+    }
+
+    @Override
+    public PluginDescription loadDescription() {
+        InputStream stream = getClassLoader().getResourceAsStream("mcnative.json");
+        PluginDescription result = null;
+
+        if(stream != null){
+            result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
+        }else{
+            if(this.environment.getName().equals(EnvironmentNames.BUKKIT)){
+                stream = getClassLoader().getResourceAsStream("plugin.yml");
+                if(stream == null) throw new IllegalArgumentException("No plugin description found");
+                this.pluginType = "bukkit";
+                return BukkitHelper.readPluginDescription(stream);
+            }else if(this.environment.getName().equals(EnvironmentNames.BUNGEECORD)){
+                stream = getClassLoader().getResourceAsStream("plugin.yml");
+                if(stream == null){
+                    stream = getClassLoader().getResourceAsStream("bungee.yml");
+                    if(stream == null) throw new IllegalArgumentException("No plugin description found");
+                }
+                this.pluginType = "bungeecord";
+                return BungeeCordHelper.readPluginDescription(stream);
+            }else throw new IllegalArgumentException("McNative loader is not supporting the "+this.environment.getName()+" environment");
+
+        }
+
+        try { stream.close(); } catch (IOException ignored) {}
+
+        return result;
+    }
+
+    @Override
+    public Plugin<?> construct() {
+        if (this.isInstanceAvailable()) {
+            throw new PluginLoadException("Plugin is already constructed.");
+        }else if(this.pluginType.equals("bukkit")){
+            return BukkitHelper.constructPlugin(this,getDescription());
+        }else if(this.pluginType.equals("bungeecord")){
+            return BungeeCordHelper.constructPlugin(this,getDescription());
+        }else{
+            return super.construct();
+        }
     }
 }

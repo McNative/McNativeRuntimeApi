@@ -74,8 +74,7 @@ public class GuestPluginExecutor {
                 try{
                     Document loaderInfo = DocumentFileType.JSON.getReader().read(streamLoader);
                     if(downloadResource(loaderInfo)){
-                        stream = getClass().getClassLoader().getResourceAsStream("mcnative.json");
-                        setupLoader(stream);
+                        setupLoader(null);
                     }else return false;
                 }catch (Exception exception){
                     logger.log(Level.SEVERE,String.format("Could not install plugin %s",exception.getMessage()));
@@ -102,9 +101,11 @@ public class GuestPluginExecutor {
     }
 
     private void setupLoader(InputStream descriptionStream){
-        PluginDescription description = DefaultPluginDescription.create(
-                McNative.getInstance().getPluginManager()
-                , DocumentFileType.JSON.getReader().read(descriptionStream));
+        PluginDescription description = null;
+        if(descriptionStream != null){
+            description = DefaultPluginDescription.create(McNative.getInstance().getPluginManager()
+                    ,DocumentFileType.JSON.getReader().read(descriptionStream));
+        }
         this.loader = new GuestPluginLoader(executor,McNative.getInstance().getPluginManager(),environment
                 ,new JdkPretronicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
                 ,location,description,false);

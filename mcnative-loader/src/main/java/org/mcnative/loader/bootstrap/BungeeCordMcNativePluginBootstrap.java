@@ -22,10 +22,7 @@ package org.mcnative.loader.bootstrap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
-import org.mcnative.loader.CertificateValidation;
-import org.mcnative.loader.GuestPluginExecutor;
-import org.mcnative.loader.McNativeLoader;
-import org.mcnative.loader.PlatformExecutor;
+import org.mcnative.loader.*;
 import org.mcnative.loader.rollout.RolloutConfiguration;
 import org.mcnative.loader.rollout.RolloutProfile;
 
@@ -33,7 +30,6 @@ import java.util.logging.Level;
 
 public class BungeeCordMcNativePluginBootstrap extends Plugin implements PlatformExecutor {
 
-    private static final String ENVIRONMENT_NAME = "BungeeCord";
     private GuestPluginExecutor executor;
 
     @Override
@@ -46,8 +42,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
 
             CertificateValidation.disable();
 
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME, mcnative)) return;
-            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),ENVIRONMENT_NAME,resource);
+            if(!McNativeLoader.install(getLogger(), EnvironmentNames.BUNGEECORD, mcnative)) return;
+            this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),EnvironmentNames.BUNGEECORD,resource);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;

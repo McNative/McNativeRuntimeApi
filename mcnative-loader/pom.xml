@@ -85,7 +85,6 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-
     </repositories>
 
     <dependencies>
@@ -97,6 +96,21 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mcnative</groupId>
+            <artifactId>mcnative-bukkit</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mcnative</groupId>
+            <artifactId>mcnative-bungeecord</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>net.pretronic.libraries</groupId>
@@ -136,9 +150,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.26</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.26.Final</version>
             <scope>compile</scope>
         </dependency>
 

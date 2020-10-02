@@ -31,10 +31,7 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.mcnative.common.McNative;
-import org.mcnative.loader.CertificateValidation;
-import org.mcnative.loader.GuestPluginExecutor;
-import org.mcnative.loader.McNativeLoader;
-import org.mcnative.loader.PlatformExecutor;
+import org.mcnative.loader.*;
 import org.mcnative.loader.rollout.RolloutConfiguration;
 import org.mcnative.loader.rollout.RolloutProfile;
 
@@ -47,7 +44,6 @@ import java.util.regex.Pattern;
 
 public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener, PlatformExecutor {
 
-    private static final String ENVIRONMENT_NAME = "Bukkit";
     private GuestPluginExecutor executor;
 
     @Override
@@ -60,12 +56,12 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
             CertificateValidation.disable();
 
-            if(!McNativeLoader.install(getLogger(),ENVIRONMENT_NAME,mcnative)){
+            if(!McNativeLoader.install(getLogger(), EnvironmentNames.BUKKIT,mcnative)){
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
 
-            this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),ENVIRONMENT_NAME,resource);
+            this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),EnvironmentNames.BUKKIT,resource);
 
             if(!this.executor.install() || !this.executor.installDependencies()){
                 this.executor = null;
