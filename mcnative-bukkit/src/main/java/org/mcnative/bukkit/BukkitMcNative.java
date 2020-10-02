@@ -59,6 +59,7 @@ import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
+import org.mcnative.common.rollout.RolloutConfiguration;
 import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
@@ -76,6 +77,7 @@ public class BukkitMcNative implements McNative {
     private final PretronicLogger logger;
     private final TaskScheduler scheduler;
     private final CommandSender consoleSender;
+    private final RolloutConfiguration rolloutConfiguration;
 
     private final PluginManager pluginManager;
     private final DependencyManager dependencyManager;
@@ -112,6 +114,7 @@ public class BukkitMcNative implements McNative {
 
         this.serverProperties = DocumentFileType.PROPERTIES.getReader().read(new File("server.properties"));
 
+        this.rolloutConfiguration = RolloutConfiguration.load();
         SLF4JStaticBridge.trySetLogger(logger);
     }
 
@@ -121,8 +124,8 @@ public class BukkitMcNative implements McNative {
     }
 
     @Override
-    public String getUserId() {
-        return McNativeBukkitConfiguration.USER_ID;
+    public RolloutConfiguration getRolloutConfiguration() {
+        return this.rolloutConfiguration;
     }
 
     @Override

@@ -59,6 +59,7 @@ import org.mcnative.common.player.data.PlayerDataProvider;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
+import org.mcnative.common.rollout.RolloutConfiguration;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.placeholder.McNativePlaceholderProvider;
@@ -77,6 +78,7 @@ public class BungeeCordMcNative implements McNative {
     private final TaskScheduler scheduler;
     private final CommandSender consoleSender;
     private final ObjectCreator creator;
+    private final RolloutConfiguration rolloutConfiguration;
 
     private final PluginManager pluginManager;
     private final DependencyManager dependencyManager;
@@ -111,6 +113,7 @@ public class BungeeCordMcNative implements McNative {
         this.network = network;
         this.local = local;
 
+        this.rolloutConfiguration = RolloutConfiguration.load();
         SLF4JStaticBridge.trySetLogger(logger);
     }
 
@@ -120,8 +123,8 @@ public class BungeeCordMcNative implements McNative {
     }
 
     @Override
-    public String getUserId() {
-        return McNativeBungeeCordConfiguration.USER_ID;
+    public RolloutConfiguration getRolloutConfiguration() {
+        return this.rolloutConfiguration;
     }
 
     @Override

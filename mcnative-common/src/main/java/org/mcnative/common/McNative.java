@@ -31,6 +31,7 @@ import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.player.PlayerManager;
 import org.mcnative.common.protocol.support.ProtocolCheck;
+import org.mcnative.common.rollout.RolloutConfiguration;
 
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
@@ -42,10 +43,7 @@ public interface McNative extends ObjectOwner {
 
     String getServiceName();
 
-    @Deprecated
-    @SuppressWarnings("This is only a temporary solution")
-    String getUserId();
-
+    RolloutConfiguration getRolloutConfiguration();
 
     McNativeServerIdentifier getMcNativeServerId();
 

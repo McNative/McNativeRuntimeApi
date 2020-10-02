@@ -53,9 +53,6 @@ public class McNativeBungeeCordConfiguration {
     @DocumentKey("debug")
     public static boolean DEBUG = false;
 
-    @DocumentKey("userId")
-    public static String USER_ID = "00000";
-
     public static String SERVER_ID = "00000-00000-00000";
     public static String SERVER_SECRET = "00000-00000-00000";
 
