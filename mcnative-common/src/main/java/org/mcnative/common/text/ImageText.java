@@ -119,6 +119,10 @@ public class ImageText {
         return components;
     }
 
+    public static ImageText compile(BufferedImage image, int height){
+        return new ImageText(image,height,0,'█');
+    }
+
     public static ImageText compile(BufferedImage image, int height, char imgChar){
         return new ImageText(image,height,0,imgChar);
     }
@@ -126,4 +130,5 @@ public class ImageText {
     public static ImageText compile(BufferedImage image, int height,int padding, char imgChar){
         return new ImageText(image,height,padding,imgChar);
     }
+
 }
