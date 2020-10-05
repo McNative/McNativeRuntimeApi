@@ -51,6 +51,7 @@ import org.mcnative.bukkit.plugin.mapped.BukkitPluginDescription;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
 import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.player.DefaultPlayerDesign;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
@@ -250,6 +251,7 @@ public class BukkitMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(DefaultPluginLoader.class);
         VariableDescriberRegistry.registerDescriber(BukkitPluginLoader.class);
         VariableDescriberRegistry.registerDescriber(PluginVersion.class);
+        VariableDescriberRegistry.registerDescriber(DefaultPlayerDesign.class);
 
         VariableDescriber<?> designDescriber = VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
         ColoredString.makeDescriberColored(designDescriber);

@@ -37,12 +37,14 @@ public class ImageText {
 
     private final char imageCharacter;
     private final TextColor[][] colors;
-    private final MessageComponent<?>[] lineExtensions;
+    private final Object[] lineExtensions;
+    private final int padding;
 
-    private ImageText(BufferedImage image, int height, char imageCharacter) {
+    private ImageText(BufferedImage image, int height, int padding, char imageCharacter) {
         this.imageCharacter = imageCharacter;
         this.colors = toTextColorArray(image, height);
-        this.lineExtensions = new TextComponent[colors.length];
+        this.lineExtensions = new Object[colors.length+(padding*2)];
+        this.padding = padding;
     }
 
     private TextColor[][] toTextColorArray(BufferedImage image, int height) {
@@ -72,10 +74,6 @@ public class ImageText {
         return colors.length;
     }
 
-    public MessageComponent<?>[] getLineExtensions() {
-        return this.lineExtensions;
-    }
-
     public ImageText addTextExtension(int line,MessageComponent<?> text){
         Validate.notNull(text);
         this.lineExtensions[line] = text;
@@ -96,26 +94,36 @@ public class ImageText {
 
     public MessageComponent<?>[] buildLines() {
         String character = String.valueOf(imageCharacter);
-        MessageComponent<?>[] components = new MessageComponent<?>[colors.length];
+        MessageComponent<?>[] components = new MessageComponent<?>[lineExtensions.length];
 
+        int end = colors.length+padding;
         for (int i = 0; i < components.length; i++) {
-            TextColor[] colors = this.colors[i];
-
-            MessageComponentSet imageLine = new MessageComponentSet();
-
-            for (TextColor color : colors) imageLine.add(Text.of(character,color));
-            MessageComponent<?> lineExtension = lineExtensions[i];
-            if(lineExtension != null){
-                imageLine.add(Text.of(" ",TextColor.WHITE));
-                imageLine.add(lineExtension);
+            Object lineExtension = lineExtensions[i];
+            if(i < this.padding || i >= end){
+                components[i] = (MessageComponent<?>) lineExtension;
+            }else{
+                TextColor[] colors = this.colors[i-padding];
+                MessageComponentSet imageLine = new MessageComponentSet();
+                int position = i-padding;
+                for (TextColor[] color : this.colors) {
+                    imageLine.add(Text.of(character, color[position]));
+                }
+               // for (TextColor color : colors) imageLine.add(Text.of(character,color));
+                if(lineExtension != null){
+                    imageLine.add(Text.of(" ",TextColor.WHITE));
+                    imageLine.add((MessageComponent<?>) lineExtension);
+                }
+                components[i] = imageLine;
             }
-
-            components[i] = imageLine;
         }
         return components;
     }
 
     public static ImageText compile(BufferedImage image, int height, char imgChar){
-        return new ImageText(image,height,imgChar);
+        return new ImageText(image,height,0,imgChar);
+    }
+
+    public static ImageText compile(BufferedImage image, int height,int padding, char imgChar){
+        return new ImageText(image,height,padding,imgChar);
     }
 }

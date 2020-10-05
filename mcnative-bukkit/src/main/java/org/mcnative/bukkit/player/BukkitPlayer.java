@@ -148,7 +148,7 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public InetSocketAddress getAddress() {
-        return original.getAddress();
+        return connection.getAddress();
     }
 
     @Override

@@ -22,6 +22,7 @@ package org.mcnative.common.text.components;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.DocumentRegistry;
 import net.pretronic.libraries.document.entry.ArrayEntry;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.connection.MinecraftConnection;
@@ -95,7 +96,13 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
 
     @Override
     public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
-        components.forEach(component -> component.compileToString(builder, connection,version,variables,language));
+        if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+            System.out.println("json array compile");
+            Document result = compile(null,connection,version,variables,language);
+            builder.append(DocumentFileType.JSON.getWriter().write(result,false));
+        }else{
+            components.forEach(component -> component.compileToString(builder, connection,version,variables,language));
+        }
     }
 
     @Override

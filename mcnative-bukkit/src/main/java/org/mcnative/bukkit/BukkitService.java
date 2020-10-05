@@ -26,6 +26,7 @@ import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import net.pretronic.libraries.plugin.service.ServicePriority;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
@@ -63,7 +64,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class BukkitService implements MinecraftService, MinecraftServer {
+public class BukkitService implements MinecraftService, MinecraftServer, VariableObjectToString {
 
     private final static NetworkIdentifier NO_NETWORK_IDENTIFIER = new NetworkIdentifier(Bukkit.getName(),new UUID(0,0));
 
@@ -379,5 +380,10 @@ public class BukkitService implements MinecraftService, MinecraftServer {
                         vaultPermissionProvider, ServicePriority.LOWEST);
             }
         }
+    }
+
+    @Override
+    public String toStringVariable() {
+        return getName();
     }
 }
