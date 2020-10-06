@@ -5,7 +5,6 @@ import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.mcnative.bukkit.plugin.mapped.BukkitPluginDescription;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.loader.GuestPluginLoader;
 
@@ -17,7 +16,7 @@ public class BukkitHelper {
     public static PluginDescription readPluginDescription(InputStream stream){
         try {
             PluginDescriptionFile description = new PluginDescriptionFile(stream);
-            return new BukkitPluginDescription(description);
+            return new BukkitHybridPluginDescription(description);
         } catch (InvalidDescriptionException e) {
             throw new OperationFailedException(e);
         }

@@ -2,7 +2,6 @@ package org.mcnative.loader.bridged.bungeecord;
 
 import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
-import org.mcnative.bungeecord.plugin.MappedPlugin;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.loader.GuestPluginLoader;
 import org.yaml.snakeyaml.Yaml;
@@ -27,7 +26,7 @@ public class BungeeCordHelper {
 
     public static PluginDescription readPluginDescription(InputStream stream){
         net.md_5.bungee.api.plugin.PluginDescription desc = YAML.loadAs( stream, net.md_5.bungee.api.plugin.PluginDescription.class );
-        return new MappedPlugin.Description(desc,null);
+        return new BungeeCordHybridPluginDescription(desc,null);
     }
 
     public static MinecraftPlugin constructPlugin(GuestPluginLoader loader,PluginDescription description){

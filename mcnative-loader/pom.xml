@@ -98,21 +98,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mcnative</groupId>
-            <artifactId>mcnative-bukkit</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mcnative</groupId>
-            <artifactId>mcnative-bungeecord</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
             <groupId>net.pretronic.libraries</groupId>
             <artifactId>pretroniclibraries-plugin</artifactId>
             <version>${dependency.pretronic.libraries.plugin}</version>
