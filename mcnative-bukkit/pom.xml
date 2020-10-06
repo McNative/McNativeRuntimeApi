@@ -97,10 +97,6 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>mvdw-software</id>
-            <url>http://repo.mvdw-software.be/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>cloudnet</id>
             <url>https://cloudnetservice.eu/repositories/</url>
         </repository>
