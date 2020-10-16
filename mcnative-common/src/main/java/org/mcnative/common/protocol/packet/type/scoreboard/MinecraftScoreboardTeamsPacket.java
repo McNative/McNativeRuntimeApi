@@ -200,6 +200,10 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
                     }
 
                     MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibilityName());
+                    if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_9)) {
+                        MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
+                    }
+
                     buffer.writeByte(color.getClientCode());
                 }
                 if(action == Action.CREATE) {

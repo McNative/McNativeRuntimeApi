@@ -48,7 +48,6 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
             ,on(PacketDirection.OUTGOING, ConnectionState.LOGIN
                     ,map(MinecraftProtocolVersion.JE_1_7,0x00)));
 
-
     private MessageComponent<?> reason;
     private VariableSet variables;
 

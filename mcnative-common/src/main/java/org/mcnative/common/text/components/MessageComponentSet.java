@@ -97,7 +97,6 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     @Override
     public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
         if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
-            System.out.println("json array compile");
             Document result = compile(null,connection,version,variables,language);
             builder.append(DocumentFileType.JSON.getWriter().write(result,false));
         }else{

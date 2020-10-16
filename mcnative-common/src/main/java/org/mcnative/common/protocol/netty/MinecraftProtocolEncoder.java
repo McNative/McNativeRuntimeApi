@@ -28,10 +28,11 @@ import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.*;
+import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
+import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 
 import java.util.List;
 
-//@Todo implement cancellation
 public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPacket> {
 
     private final PacketManager packetManager;
@@ -64,6 +65,9 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
             if(listeners != null && !listeners.isEmpty()){
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
                 listeners.forEach(listener -> listener.handle(event));
+                if(event.isCancelled()){
+                    throw new PacketCanceledException();
+                }
                 packet = event.getPacket();
             }
             MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));
