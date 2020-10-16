@@ -22,8 +22,11 @@ package org.mcnative.service;
 import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
-import org.mcnative.service.protocol.packet.type.player.inventory.InventoryOpenWindowPacket;
-import org.mcnative.service.protocol.packet.type.player.inventory.InventorySetSlotPacket;
+import org.mcnative.common.protocol.Endpoint;
+import org.mcnative.common.protocol.packet.*;
+import org.mcnative.service.protocol.packet.type.player.inventory.*;
+import org.mcnative.service.protocol.packet.type.player.inventory.packetlisteners.InventoryClickWindowPacketListener;
+import org.mcnative.service.protocol.packet.type.player.inventory.packetlisteners.InventoryCloseWindowPacketListener;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
 
@@ -53,5 +56,14 @@ public interface MinecraftService extends LocalService, MinecraftServer {
     default void registerDefaultPackets() {
         getPacketManager().registerPacket(InventoryOpenWindowPacket.IDENTIFIER);
         getPacketManager().registerPacket(InventorySetSlotPacket.IDENTIFIER);
+        getPacketManager().registerPacket(InventoryWindowItemsPacket.IDENTIFIER);
+        getPacketManager().registerPacket(InventoryWindowPropertyPacket.IDENTIFIER);
+        getPacketManager().registerPacket(InventoryClickWindowPacket.IDENTIFIER);
+        getPacketManager().registerPacket(InventoryCloseWindowPacket.IDENTIFIER);
+        getPacketManager().registerPacket(ConfirmTransactionPacket.IDENTIFIER);
+
+
+        getPacketManager().registerPacketListener(Endpoint.UPSTREAM, PacketDirection.INCOMING, InventoryClickWindowPacket.class, new InventoryClickWindowPacketListener());
+        getPacketManager().registerPacketListener(Endpoint.UPSTREAM, PacketDirection.INCOMING, InventoryCloseWindowPacket.class, new InventoryCloseWindowPacketListener());
     }
 }

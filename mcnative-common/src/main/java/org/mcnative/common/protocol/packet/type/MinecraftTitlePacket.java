@@ -34,7 +34,7 @@ import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftTitlePacket implements MinecraftPacket {
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftChatPacket.class
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftTitlePacket.class
             ,on(PacketDirection.OUTGOING
                     ,map(MinecraftProtocolVersion.JE_1_8,0x45)
                     ,map(MinecraftProtocolVersion.JE_1_12,0x47)

@@ -34,7 +34,7 @@ import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftClientSettingsPacket implements MinecraftPacket {
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftDisconnectPacket.class
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftClientSettingsPacket.class
             ,on(PacketDirection.INCOMING
                     ,map(MinecraftProtocolVersion.JE_1_7,0x15)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x04)

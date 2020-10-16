@@ -20,9 +20,12 @@
 package org.mcnative.bukkit.player;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -35,6 +38,7 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.netty.MinecraftProtocolEncoder;
 import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteDecoder;
 import org.mcnative.common.protocol.netty.rewrite.MinecraftProtocolRewriteEncoder;
+import org.mcnative.common.protocol.netty.wrapper.McNativeMessageDecoderIgnoreWrapper;
 import org.mcnative.common.protocol.netty.wrapper.McNativeMessageEncoderIgnoreWrapper;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
@@ -42,7 +46,9 @@ import org.mcnative.common.protocol.packet.type.MinecraftDisconnectPacket;
 import org.mcnative.common.text.components.MessageComponent;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class BukkitPendingConnection implements PendingConnection {
 
@@ -66,7 +72,6 @@ public class BukkitPendingConnection implements PendingConnection {
         this.virtualHost = virtualHost;
         this.version = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,protocolVersion);
         this.state = ConnectionState.LOGIN;
-
         injectPacketCoders();
     }
 
@@ -205,7 +210,7 @@ public class BukkitPendingConnection implements PendingConnection {
                 original = ((McNativeMessageEncoderIgnoreWrapper) encoder).getOriginal();
             }else if(encoder instanceof MessageToByteEncoder){
                 original = (MessageToByteEncoder<Object>) encoder;
-            }else throw new IllegalArgumentException("Invalid handler,contact the McNative developer team");
+            }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team");
 
             channel.pipeline().replace("encoder","encoder"
                     ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
@@ -228,10 +233,20 @@ public class BukkitPendingConnection implements PendingConnection {
 
         }
 
-        //Check with decompress on reload
-        this.channel.pipeline().addBefore("decoder","mcnative-packet-rewrite-decoder"
+
+        Object decoder = channel.pipeline().get("decoder");;
+        ByteToMessageDecoder original;
+        if(decoder instanceof McNativeMessageDecoderIgnoreWrapper){
+            original = ((McNativeMessageDecoderIgnoreWrapper) decoder).getOriginal();
+        }else if(decoder instanceof ByteToMessageDecoder){
+            original = (ByteToMessageDecoder) decoder;
+        }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team");
+
+
+        this.channel.pipeline().replace("decoder","decoder"
                 ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
                         ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
 
+        channel.pipeline().addAfter("decoder","minecraft-decoder",new McNativeMessageDecoderIgnoreWrapper(original));
     }
 }

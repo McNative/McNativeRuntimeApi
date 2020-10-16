@@ -30,11 +30,16 @@ import org.mcnative.bukkit.inventory.type.*;
 import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.service.ObjectCreator;
+import org.mcnative.service.event.player.inventory.InventoryRegistry;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
 import org.mcnative.service.inventory.type.*;
+import org.mcnative.service.inventory.type.implementation.DefaultAnvilInventory;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class BukkitObjectCreator implements ObjectCreator {
 
@@ -43,9 +48,9 @@ public class BukkitObjectCreator implements ObjectCreator {
     public <T extends Inventory> T newInventory(InventoryOwner owner, Class<T> inventoryClass, int size, String title) {
         InventoryHolder holder = new BukkitInventoryHolder(owner);
         if(inventoryClass == AnvilInventory.class) {
-            org.bukkit.inventory.Inventory inventory = Bukkit.createInventory(holder, InventoryType.ANVIL);
-            org.bukkit.inventory.AnvilInventory anvilInventory = (org.bukkit.inventory.AnvilInventory) inventory;
-            return (T) new BukkitAnvilInventory(owner, anvilInventory);
+            DefaultAnvilInventory anvilInventory = new DefaultAnvilInventory(owner);
+            InventoryRegistry.registerInventory(anvilInventory);
+            return (T) anvilInventory;
         } else if(inventoryClass == BeaconInventory.class) {
             return (T) new BukkitBeaconInventory(owner, (org.bukkit.inventory.BeaconInventory)
                     Bukkit.createInventory(holder, InventoryType.BEACON));
@@ -105,7 +110,14 @@ public class BukkitObjectCreator implements ObjectCreator {
 
     @Override
     public ItemStack newItemStack(Material material) {
-        org.bukkit.Material bukkitMaterial = org.bukkit.Material.getMaterial(material.getName());
+        org.bukkit.Material bukkitMaterial = null;
+        for (org.bukkit.Material value : org.bukkit.Material.values()) {
+            if(value.toString().equalsIgnoreCase(material.getName())) {
+                bukkitMaterial = value;
+                break;
+            }
+        }
+
         Validate.notNull(bukkitMaterial, "Can't create itemstack for " + material + ".");
         return new BukkitItemStack(new org.bukkit.inventory.ItemStack(bukkitMaterial));
     }

@@ -62,7 +62,7 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
             MinecraftPacket packet = packet0;
             List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
             if(listeners != null && !listeners.isEmpty()){
-                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
                 listeners.forEach(listener -> listener.handle(event));
                 packet = event.getPacket();
             }

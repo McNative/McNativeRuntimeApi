@@ -57,7 +57,7 @@ public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
                 packet.read(connection,direction,version,in);
                 List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,packet.getClass());
                 if(listeners != null && !listeners.isEmpty()){
-                    MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
+                    MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
                     listeners.forEach(listener -> listener.handle(event));
                     if(event.isCancelled()) return;
                     packet = event.getPacket();

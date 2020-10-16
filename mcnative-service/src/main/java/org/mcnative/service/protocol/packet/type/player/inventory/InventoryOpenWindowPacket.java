@@ -40,7 +40,7 @@ import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class InventoryOpenWindowPacket implements MinecraftPacket {
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(PlayerListHeaderAndFooterPacket.class
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(InventoryOpenWindowPacket.class
             ,on(PacketDirection.OUTGOING
                     ,map(MinecraftProtocolVersion.JE_1_8,0x2D)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x13)

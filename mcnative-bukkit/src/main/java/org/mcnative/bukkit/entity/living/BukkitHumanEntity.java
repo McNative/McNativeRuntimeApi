@@ -25,6 +25,8 @@ import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.type.PlayerInventory;
+import org.mcnative.service.inventory.type.implementation.DefaultAnvilInventory;
+import org.mcnative.service.protocol.packet.type.player.inventory.InventoryOpenWindowPacket;
 
 public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> extends BukkitLivingEntity<E>, HumanEntity {
 
@@ -51,11 +53,6 @@ public interface BukkitHumanEntity<E extends org.bukkit.entity.HumanEntity> exte
     @Override
     default boolean isSleeping() {
         return getOriginal().isSleeping();
-    }
-
-    @Override
-    default void openInventory(Inventory inventory) {
-        getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal());
     }
 
     @Override

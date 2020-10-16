@@ -36,7 +36,7 @@ import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftChatPacket.class
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(MinecraftScoreboardTeamsPacket.class
             ,on(PacketDirection.OUTGOING
                     ,map(MinecraftProtocolVersion.JE_1_7,0x3E)
                     ,map(MinecraftProtocolVersion.JE_1_9,0x41)

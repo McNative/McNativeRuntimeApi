@@ -31,6 +31,8 @@ import java.util.Map;
 
 public interface ItemStack {
 
+    ItemStack[] EMPTY = new ItemStack[0];
+
     Material getMaterial();
 
     ItemData getData();
@@ -65,7 +67,7 @@ public interface ItemStack {
 
     void setData(ItemData data);
 
-    void setAmount(int amount);
+    ItemStack setAmount(int amount);
 
     void setDurability(int durability);
 

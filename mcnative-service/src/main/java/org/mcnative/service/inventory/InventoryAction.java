@@ -32,6 +32,7 @@ public enum InventoryAction {
     PLACE_SOME,
     PLACE_ONE,
     SWAP_WITH_CURSOR,
+
     DROP_ALL_CURSOR,
     DROP_ONE_CURSOR,
     DROP_ALL_SLOT,

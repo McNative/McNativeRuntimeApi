@@ -22,7 +22,6 @@ package org.mcnative.service.inventory;
 
 import org.mcnative.service.MinecraftService;
 import org.mcnative.service.entity.living.HumanEntity;
-import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
 

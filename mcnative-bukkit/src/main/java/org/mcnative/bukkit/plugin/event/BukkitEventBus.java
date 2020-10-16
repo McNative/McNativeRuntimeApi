@@ -178,7 +178,10 @@ public class BukkitEventBus implements EventBus {
     }
 
     @Override
-    public <T> void callEvents(EventOrigin origin,Class<T> event, Object... objects) {
+    public <T> void callEvents(EventOrigin origin,Class<T> original, Object... objects) {
+        Class<?> event = getMappedClass(original);
+        if(event == null) event = original;
+
         Validate.notNull(event,objects);
         if(Event.class.isAssignableFrom(event)){
             McNativeHandlerList handlerList = getHandlerList(event);

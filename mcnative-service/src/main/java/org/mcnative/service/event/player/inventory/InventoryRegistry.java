@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 21.03.20, 13:56
+ * @since 10.10.20, 16:06
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -20,32 +20,20 @@
 
 package org.mcnative.service.event.player.inventory;
 
-import org.mcnative.service.inventory.ClickType;
 import org.mcnative.service.inventory.Inventory;
-import org.mcnative.service.inventory.InventoryAction;
-import org.mcnative.service.inventory.item.ItemStack;
 
-public interface MinecraftPlayerInventoryClickEvent extends MinecraftPlayerInventoryInteractEvent {
+import java.util.ArrayList;
+import java.util.Collection;
 
-    InventoryAction getAction();
+public class InventoryRegistry {
 
-    ClickType getClickType();
+    private static final Collection<Inventory> INVENTORIES = new ArrayList<>();
 
-    ItemStack getClickedItem();
+    public static void registerInventory(Inventory inventory) {
+        INVENTORIES.add(inventory);
+    }
 
-    ItemStack getCursor();
-
-    int getHotbarButton();
-
-    int getRawSlot();
-
-    int getSlot();
-
-    Inventory.SlotType getSlotType();
-
-    boolean isLeftClick();
-
-    boolean isRightClick();
-
-    boolean isShiftClick();
+    public static Collection<Inventory> getInventories() {
+        return INVENTORIES;
+    }
 }

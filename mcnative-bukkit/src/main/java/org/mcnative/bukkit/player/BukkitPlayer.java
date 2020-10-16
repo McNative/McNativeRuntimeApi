@@ -72,7 +72,10 @@ import org.mcnative.service.entity.Entity;
 import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.type.implementation.DefaultAnvilInventory;
 import org.mcnative.service.location.Location;
+import org.mcnative.service.protocol.packet.type.player.inventory.InventoryOpenWindowPacket;
+import org.mcnative.service.protocol.packet.type.player.inventory.InventoryWindowItemsPacket;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
@@ -683,9 +686,18 @@ public class BukkitPlayer extends OfflineMinecraftPlayer implements Player, Bukk
 
     @Override
     public void openInventory(Inventory inventory) {
+
         if(isJoining()) {
-            Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), ()->
-                    getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal()));
+            Bukkit.getScheduler().runTask(McNativeLauncher.getPlugin(), () -> openInventory(inventory));
+            return;
+        }
+
+        if(inventory instanceof DefaultAnvilInventory) {
+            DefaultAnvilInventory anvilInventory = ((DefaultAnvilInventory) inventory);
+            byte windowId = (byte) BukkitReflectionUtil.getNextPlayerContainerId(getOriginal());
+            anvilInventory.addViewer(this, windowId);
+            sendPacket(new InventoryOpenWindowPacket(windowId, "AnvilInventory", "Unused"));
+            sendPacket(new InventoryWindowItemsPacket(windowId, anvilInventory.getItems()));
         } else {
             getOriginal().openInventory(((BukkitInventory<?>)inventory).getOriginal());
         }

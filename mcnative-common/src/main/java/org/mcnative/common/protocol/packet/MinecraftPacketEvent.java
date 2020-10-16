@@ -20,6 +20,7 @@
 package org.mcnative.common.protocol.packet;
 
 import net.pretronic.libraries.event.Cancellable;
+import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -28,16 +29,16 @@ public class MinecraftPacketEvent implements MinecraftEvent, Cancellable {
 
     private final Endpoint endpoint;
     private final PacketDirection direction;
-    private final MinecraftProtocolVersion version;
+    private final MinecraftConnection connection;
 
     private MinecraftPacket packet;
     private boolean rewrite;
     private boolean cancelled;
 
-    public MinecraftPacketEvent(Endpoint endpoint, PacketDirection direction, MinecraftProtocolVersion version, MinecraftPacket packet) {
+    public MinecraftPacketEvent(Endpoint endpoint, PacketDirection direction, MinecraftConnection connection, MinecraftPacket packet) {
         this.endpoint = endpoint;
         this.direction = direction;
-        this.version = version;
+        this.connection = connection;
         this.packet = packet;
 
         this.rewrite = false;
@@ -52,8 +53,12 @@ public class MinecraftPacketEvent implements MinecraftEvent, Cancellable {
         return direction;
     }
 
+    public MinecraftConnection getConnection() {
+        return connection;
+    }
+
     public MinecraftProtocolVersion getVersion() {
-        return version;
+        return connection.getProtocolVersion();
     }
 
     public MinecraftPacket getPacket() {

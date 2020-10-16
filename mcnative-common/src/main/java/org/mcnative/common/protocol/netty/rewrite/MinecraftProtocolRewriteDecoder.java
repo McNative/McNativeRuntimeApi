@@ -22,6 +22,7 @@ package org.mcnative.common.protocol.netty.rewrite;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -52,21 +53,26 @@ public class MinecraftProtocolRewriteDecoder extends MessageToMessageDecoder<Byt
         int packetId = MinecraftProtocolUtil.readVarInt(in);
         PacketIdentifier identifier = packetManager.getPacketIdentifier(connection.getState(),direction,version,packetId);
         if(identifier != null){
-            List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,identifier.getPacketClass());
-            if(listeners != null && !listeners.isEmpty()){
-                MinecraftPacket packet = identifier.newPacketInstance();
-                packet.read(connection,direction,version,in);
+            try {
+                List<MinecraftPacketListener> listeners = packetManager.getPacketListeners(endpoint,direction,identifier.getPacketClass());
+                if(listeners != null && !listeners.isEmpty()){
+                    MinecraftPacket packet = identifier.newPacketInstance();
+                    packet.read(connection,direction,version,in);
 
-                MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,version,packet);
-                listeners.forEach(listener -> listener.handle(event));
+                    MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
+                    listeners.forEach(listener -> listener.handle(event));
 
-                if(event.isCancelled()) return;
-                else if(event.isRewrite()){
-                    packet = event.getPacket();
-                    out.clear();
-                    MinecraftProtocolUtil.writeVarInt(out,packetId);
-                    packet.write(connection,direction,version,out);
+                    if(event.isCancelled()) return;
+                    else if(event.isRewrite()){
+                        packet = event.getPacket();
+                        out.clear();
+                        MinecraftProtocolUtil.writeVarInt(out,packetId);
+                        packet.write(connection,direction,version,out);
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Packet:" + packetId + ":" + identifier.getPacketClass());
+                e.printStackTrace();
             }
         }
         output.add(out);

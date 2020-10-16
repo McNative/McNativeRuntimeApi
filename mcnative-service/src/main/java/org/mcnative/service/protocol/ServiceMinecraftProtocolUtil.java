@@ -25,6 +25,7 @@ import org.mcnative.common.McNative;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.service.inventory.item.ItemStack;
+import org.mcnative.service.inventory.item.material.Material;
 import org.mcnative.service.inventory.item.material.networkid.DefaultMaterialProtocolId;
 import org.mcnative.service.inventory.item.material.networkid.LegacyMaterialProtocolId;
 import org.mcnative.service.inventory.item.material.networkid.MaterialProtocolId;
@@ -62,5 +63,26 @@ public class ServiceMinecraftProtocolUtil {
             buffer.writeShort(((LegacyMaterialProtocolId) protocolId).getSubId());
         }
         buffer.writeByte(0);//NBT
+    }
+
+    public static ItemStack readSlot(ByteBuf buffer, MinecraftProtocolVersion protocolVersion) {
+        if(protocolVersion.isNewerOrSame(MinecraftProtocolVersion.JE_1_13)) {
+            boolean present = buffer.readBoolean();
+            if(!present) return null;
+            int protocolId = MinecraftProtocolUtil.readVarInt(buffer);
+            Material material = Material.getMaterial(protocolVersion, protocolId);
+            byte amount = buffer.readByte();
+            //@Todo nbt parsing
+            return ItemStack.newItemStack(material).setAmount(amount);
+        } else {
+            short present = buffer.readShort();
+            if(present == -1) return null;
+            short id = buffer.readShort();
+            byte amount = buffer.readByte();
+            short subId = buffer.readShort();
+            Material material = Material.getMaterial(protocolVersion, id, subId);
+            //@Todo nbt parsing
+            return ItemStack.newItemStack(material).setAmount(amount);
+        }
     }
 }

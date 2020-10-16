@@ -68,7 +68,7 @@ public class BukkitPlayerInventoryClickEvent extends BukkitPlayerInventoryIntera
     }
 
     @Override
-    public int getHotbarButton​() {
+    public int getHotbarButton() {
         return getOriginal().getHotbarButton();
     }
 

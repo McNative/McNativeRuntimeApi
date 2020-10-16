@@ -120,4 +120,25 @@ public class BukkitReflectionUtil {
         return result != null ? result : MinecraftProtocolVersion.UNKNOWN;
     }
 
+    public static int getNextPlayerContainerId(Player player) {
+        try {
+            Object handle = handleCraftPlayer(player);
+            Class<?> handleClass = handle.getClass();
+            Method nextContainerCounter = handleClass.getDeclaredMethod("nextContainerCounter");
+            Object count = nextContainerCounter.invoke(handle);
+            return (Integer) count;
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    public static Object handleCraftPlayer(Player player) {
+        try {
+            Class<?> craftPlayerClass = getCraftClass("entity.CraftPlayer");
+            Method getHandle = craftPlayerClass.getDeclaredMethod("getHandle");
+            return getHandle.invoke(player);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 }

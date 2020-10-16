@@ -103,6 +103,16 @@ public class Enchantment implements NamespacedKey {
         return treasure;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o instanceof Enchantment) {
+            Enchantment other = ((Enchantment) o);
+            if(other.getName().equals(getName())) return true;
+        }
+        return false;
+    }
+
     public static Builder create(String name) {
         return new Builder(name);
     }

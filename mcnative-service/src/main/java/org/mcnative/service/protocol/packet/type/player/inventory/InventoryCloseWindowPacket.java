@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 27.09.20, 17:37
+ * @since 07.10.20, 17:29
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -26,49 +26,38 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
-import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
-import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.protocol.ServiceMinecraftProtocolUtil;
 
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
+public class InventoryCloseWindowPacket implements MinecraftPacket {
 
-public class InventorySetSlotPacket implements MinecraftPacket {
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(InventoryCloseWindowPacket.class
+            ,on(PacketDirection.INCOMING,
+                    map(MinecraftProtocolVersion.JE_1_8, 0x0D),
+                    map(MinecraftProtocolVersion.JE_1_9, 0x08),
+                    map(MinecraftProtocolVersion.JE_1_12, 0x09),
+                    map(MinecraftProtocolVersion.JE_1_12_1, 0x08),
+                    map(MinecraftProtocolVersion.JE_1_13, 0x09),
+                    map(MinecraftProtocolVersion.JE_1_14, 0x0A)));
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(InventorySetSlotPacket.class
-            ,on(PacketDirection.OUTGOING
-                    ,map(MinecraftProtocolVersion.JE_1_8, 0x2F)
-                    ,map(MinecraftProtocolVersion.JE_1_9, 0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_13, 0x17)
-                    ,map(MinecraftProtocolVersion.JE_1_14, 0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x17)
-                    ,map(MinecraftProtocolVersion.JE_1_16,0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_16_2,0x15)));
-
-    private final byte windowId;
-    private final short slot;
-    private final ItemStack itemStack;
-
-    public InventorySetSlotPacket(byte windowId, short slot, ItemStack itemStack) {
-        this.windowId = windowId;
-        this.slot = slot;
-        this.itemStack = itemStack;
-    }
+    private byte windowId;
 
     @Override
     public PacketIdentifier getIdentifier() {
         return IDENTIFIER;
     }
 
+    public byte getWindowId() {
+        return windowId;
+    }
+
     @Override
     public void read(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-
+        this.windowId = (byte) buffer.readUnsignedByte();
     }
 
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
-        buffer.writeByte(this.windowId);
-        buffer.writeShort(this.slot);
-        ServiceMinecraftProtocolUtil.writeSlot(buffer, version, this.itemStack);
+
     }
 }

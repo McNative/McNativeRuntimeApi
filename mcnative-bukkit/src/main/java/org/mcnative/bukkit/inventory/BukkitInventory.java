@@ -35,7 +35,6 @@ import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.entity.living.Player;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryOwner;
-import org.mcnative.service.inventory.animation.InventoryAnimation;
 import org.mcnative.service.inventory.item.ItemStack;
 import org.mcnative.service.inventory.item.material.Material;
 

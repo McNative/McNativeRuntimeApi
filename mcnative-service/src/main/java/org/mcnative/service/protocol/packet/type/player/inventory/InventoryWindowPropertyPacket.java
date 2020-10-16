@@ -2,7 +2,7 @@
  * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Philipp Elvin Friedhoff
- * @since 27.09.20, 17:37
+ * @since 07.10.20, 16:33
  * @web %web%
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
@@ -27,32 +27,30 @@ import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
 import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
-import org.mcnative.service.inventory.item.ItemStack;
-import org.mcnative.service.protocol.ServiceMinecraftProtocolUtil;
 
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 
 
-public class InventorySetSlotPacket implements MinecraftPacket {
+public class InventoryWindowPropertyPacket implements MinecraftPacket {
 
-    public final static PacketIdentifier IDENTIFIER = newIdentifier(InventorySetSlotPacket.class
+    public final static PacketIdentifier IDENTIFIER = newIdentifier(InventoryWindowPropertyPacket.class
             ,on(PacketDirection.OUTGOING
-                    ,map(MinecraftProtocolVersion.JE_1_8, 0x2F)
-                    ,map(MinecraftProtocolVersion.JE_1_9, 0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_13, 0x17)
-                    ,map(MinecraftProtocolVersion.JE_1_14, 0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_15,0x17)
-                    ,map(MinecraftProtocolVersion.JE_1_16,0x16)
-                    ,map(MinecraftProtocolVersion.JE_1_16_2,0x15)));
+                    ,map(MinecraftProtocolVersion.JE_1_8, 0x31)
+                    ,map(MinecraftProtocolVersion.JE_1_9, 0x15)
+                    ,map(MinecraftProtocolVersion.JE_1_13, 0x16)
+                    ,map(MinecraftProtocolVersion.JE_1_14, 0x15)
+                    ,map(MinecraftProtocolVersion.JE_1_15, 0x16)
+                    ,map(MinecraftProtocolVersion.JE_1_16, 0x15)
+                    ,map(MinecraftProtocolVersion.JE_1_16_2, 0x14)));
 
     private final byte windowId;
-    private final short slot;
-    private final ItemStack itemStack;
+    private final short property;
+    private final short value;
 
-    public InventorySetSlotPacket(byte windowId, short slot, ItemStack itemStack) {
+    public InventoryWindowPropertyPacket(byte windowId, short property, short value) {
         this.windowId = windowId;
-        this.slot = slot;
-        this.itemStack = itemStack;
+        this.property = property;
+        this.value = value;
     }
 
     @Override
@@ -68,7 +66,7 @@ public class InventorySetSlotPacket implements MinecraftPacket {
     @Override
     public void write(MinecraftConnection connection, PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         buffer.writeByte(this.windowId);
-        buffer.writeShort(this.slot);
-        ServiceMinecraftProtocolUtil.writeSlot(buffer, version, this.itemStack);
+        buffer.writeShort(this.property);
+        buffer.writeShort(this.value);
     }
 }

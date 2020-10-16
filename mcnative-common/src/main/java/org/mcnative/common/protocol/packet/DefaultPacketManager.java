@@ -64,9 +64,10 @@ public class DefaultPacketManager implements PacketManager {
                     PacketIdentifier.IdMapping mapping = condition.getMappings()[i];
                     if(version.isNewerOrSame(mapping.getVersion()) && mapping.getId() == packetId) return identifier;
                 }
-                for (PacketIdentifier.IdMapping mapping : condition.getMappings()) {
+                /*for (PacketIdentifier.IdMapping mapping : condition.getMappings()) {
                     if(mapping.getVersion().equals(version) && mapping.getId() == packetId) return identifier;
-                }
+                }*/
+
             }
         }
         return null;

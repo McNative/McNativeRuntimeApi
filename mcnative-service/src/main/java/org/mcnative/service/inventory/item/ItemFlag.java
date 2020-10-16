@@ -53,6 +53,15 @@ public class ItemFlag {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o instanceof ItemFlag) {
+            ItemFlag other = ((ItemFlag) o);
+            return other.getName().equals(getName());
+        }
+        return false;
+    }
 
     public static ItemFlag create(String name) {
         return new ItemFlag(McNative.getInstance(), name);

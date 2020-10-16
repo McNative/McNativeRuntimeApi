@@ -21,6 +21,7 @@ package org.mcnative.bukkit.inventory.item;
 
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mcnative.service.NBTTag;
@@ -46,6 +47,7 @@ public class BukkitItemStack implements ItemStack {
 
     @Override
     public Material getMaterial() {
+        if(this.original == null || this.original.getType() == org.bukkit.Material.AIR) return Material.AIR;
         return Iterators.findOne(Material.MATERIALS, material -> material.getName().equals(this.original.getType().name()));
     }
 
@@ -139,8 +141,9 @@ public class BukkitItemStack implements ItemStack {
     }
 
     @Override
-    public void setAmount(int amount) {
+    public ItemStack setAmount(int amount) {
         this.original.setAmount(amount);
+        return this;
     }
 
     @Override
@@ -252,5 +255,57 @@ public class BukkitItemStack implements ItemStack {
             }
             this.original.setItemMeta(meta);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o instanceof ItemStack) {
+            if(o instanceof BukkitItemStack) {
+                return ((BukkitItemStack) o).original.equals(this.original);
+            }
+            ItemStack itemStack = (ItemStack) o;
+            return isSimilar(itemStack);
+        }
+        return false;
+    }
+
+    public boolean isSimilar(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        } else if (stack == this) {
+            return true;
+        } else {//@Todo compare nbt tag
+            Material comparisonType = getMaterial();
+            return comparisonType.equals(stack.getMaterial())
+                    && this.getDurability() == stack.getDurability()
+                    && getAmount() == stack.getAmount()
+                    && (!hasDurability() || getDurability() == stack.getDurability())
+                    && (!hasDisplayName() || getDisplayName().equals(stack.getDisplayName()))
+                    && (!hasLore() || getLore().equals(stack.getLore()))
+                    && hasSameFlags(stack)
+                    && hasSameEnchantments(stack);
+        }
+    }
+
+    public boolean hasSameEnchantments(ItemStack stack) {
+        if(getEnchantments().size() != stack.getEnchantments().size()) return false;
+        for (Map.Entry<Enchantment, Integer> entry : getEnchantments().entrySet()) {
+            if(stack.getEnchantments().containsKey(entry.getKey())) {
+                int level = stack.getEnchantments().get(entry.getKey());
+                if(entry.getValue() != level) return false;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean hasSameFlags(ItemStack stack) {
+        if(stack.getFlags().size() != getFlags().size()) return false;
+        for (int i = 0; i < getFlags().size(); i++) {
+            if(!getFlags().get(i).equals(stack.getFlags().get(i))) return false;
+        }
+        return true;
     }
 }
