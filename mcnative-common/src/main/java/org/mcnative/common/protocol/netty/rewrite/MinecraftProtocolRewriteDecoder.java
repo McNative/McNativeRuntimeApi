@@ -31,6 +31,9 @@ import org.mcnative.common.protocol.packet.*;
 
 import java.util.List;
 
+/**
+ * This is an implementation into the Netty framework for reading and modifying an incoming Minecraft package from the pipeline.
+ */
 public class MinecraftProtocolRewriteDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private final PacketManager packetManager;

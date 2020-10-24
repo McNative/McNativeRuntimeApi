@@ -19,15 +19,15 @@
 
 package org.mcnative.common.protocol;
 
+/**
+ * Each Minecraft edition has several versions. This enumeration is used to separate the different versions provide
+ * support for old and new implementations
+ */
 public enum MinecraftProtocolVersion {
 
     UNKNOWN(-1,"Unknown (Maybe not supported)",MinecraftEdition.UNKNOWN),
 
-    BE_1_12(361,"1.12",MinecraftEdition.BEDROCK),
-    BE_1_10(-1,"1.10",MinecraftEdition.BEDROCK),
-    BE_1_9(-1,"1.9",MinecraftEdition.BEDROCK),
-    BE_1_2(-1,"1.2",MinecraftEdition.BEDROCK),
-    BE_1_1(-1,"1.1",MinecraftEdition.BEDROCK),
+    /** Java Edition */
 
     JE_1_16_3(753,"1.16.3",MinecraftEdition.JAVA),
     JE_1_16_2(751,"1.16.2",MinecraftEdition.JAVA),
@@ -57,7 +57,15 @@ public enum MinecraftProtocolVersion {
     JE_1_8(47,"1.8",MinecraftEdition.JAVA),
     JE_1_7_10(5,"1.7.10",MinecraftEdition.JAVA),
     JE_1_7_5(4,"1.7.5",MinecraftEdition.JAVA),
-    JE_1_7(3,"1.7",MinecraftEdition.JAVA);
+    JE_1_7(3,"1.7",MinecraftEdition.JAVA),
+
+    /** Bedrock Edition */
+
+    BE_1_12(361,"1.12",MinecraftEdition.BEDROCK),
+    BE_1_10(-1,"1.10",MinecraftEdition.BEDROCK),
+    BE_1_9(-1,"1.9",MinecraftEdition.BEDROCK),
+    BE_1_2(-1,"1.2",MinecraftEdition.BEDROCK),
+    BE_1_1(-1,"1.1",MinecraftEdition.BEDROCK);
 
     private final int number;
     private final String name;
@@ -68,6 +76,7 @@ public enum MinecraftProtocolVersion {
         this.name = name;
         this.edition = edition;
     }
+
 
     public int getNumber() {
         return number;

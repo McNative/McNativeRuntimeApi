@@ -25,6 +25,10 @@ import org.mcnative.common.event.MinecraftEvent;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
+/**
+ * A @{@link MinecraftPacketListener} is always called with this event, it contains all information about
+ * the received packet and connection.
+ */
 public class MinecraftPacketEvent implements MinecraftEvent, Cancellable {
 
     private final Endpoint endpoint;
@@ -86,6 +90,9 @@ public class MinecraftPacketEvent implements MinecraftEvent, Cancellable {
         this.rewrite = rewrite;
     }
 
+    /**
+     * Mark the packet to be written back to the buffer
+     */
     public void rewrite(){
         setRewrite(true);
     }

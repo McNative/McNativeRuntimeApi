@@ -23,6 +23,10 @@ import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
+/**
+ * A Minecraft package has different @{@link org.mcnative.common.protocol.MinecraftEdition} and
+ * {@link MinecraftProtocolVersion}, this class is used to register and hold the different specifications.
+ */
 public class PacketIdentifier {
 
     private final Class<? extends MinecraftPacket> packetClass;
@@ -33,10 +37,20 @@ public class PacketIdentifier {
         this.conditions = conditions;
     }
 
+    /**
+     * The implementation of the packet class.
+     *
+     * @return The packet class
+     */
     public Class<? extends MinecraftPacket> getPacketClass() {
         return packetClass;
     }
 
+    /**
+     * A list of the different specifications.
+     *
+     * @return A list
+     */
     public PacketCondition[] getConditions() {
         return conditions;
     }
@@ -46,6 +60,14 @@ public class PacketIdentifier {
         return null;
     }
 
+    /**
+     * Get the protocol number of a packet.
+     *
+     * @param direction The packet sending direction
+     * @param state The state of the connection
+     * @param version The minecraft protocol version
+     * @return The protocol number of the packet
+     */
     public int getId(PacketDirection direction, ConnectionState state, MinecraftProtocolVersion version){
         PacketCondition condition = getCondition(direction, state);
         if(condition == null) throw new UnsupportedOperationException("This packet is not supported in state "+state+" -> "+direction);
@@ -55,10 +77,14 @@ public class PacketIdentifier {
         return id;
     }
 
+    /**
+     * Create a new package of the class template.
+     *
+     * @return The new created empty packet
+     */
     public MinecraftPacket newPacketInstance(){
         return UnsafeInstanceCreator.newInstance(packetClass);
     }
-
 
     public static class PacketCondition {
 

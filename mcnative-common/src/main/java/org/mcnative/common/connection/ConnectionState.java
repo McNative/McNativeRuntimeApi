@@ -19,6 +19,10 @@
 
 package org.mcnative.common.connection;
 
+/**
+ * This enumeration contains the different states of a Minecraft connection.
+ * More information: https://wiki.vg/Protocol
+ */
 public enum ConnectionState {
 
     HANDSHAKE(),

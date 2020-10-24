@@ -33,6 +33,9 @@ import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTe
 
 import java.util.List;
 
+/**
+ * This is a implementation into the netty framework to encode and write Minecraft packets.
+ */
 public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPacket> {
 
     private final PacketManager packetManager;
@@ -65,9 +68,7 @@ public class MinecraftProtocolEncoder extends MessageToByteEncoder<MinecraftPack
             if(listeners != null && !listeners.isEmpty()){
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
                 listeners.forEach(listener -> listener.handle(event));
-                if(event.isCancelled()){
-                    throw new PacketCanceledException();
-                }
+                if(event.isCancelled()) throw new PacketCanceledException();
                 packet = event.getPacket();
             }
             MinecraftProtocolUtil.writeVarInt(buffer,packet.getIdentifier().getId(direction,connection.getState(),version));

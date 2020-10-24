@@ -24,6 +24,9 @@ import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
+/**
+ * The interface for the packet implementations
+ */
 public interface MinecraftPacket {
 
     PacketIdentifier getIdentifier();
@@ -31,7 +34,6 @@ public interface MinecraftPacket {
     void read(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
 
     void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer);
-
 
 
     static PacketIdentifier newIdentifier(Class<? extends MinecraftPacket> packetClass, PacketIdentifier.PacketCondition... conditions){

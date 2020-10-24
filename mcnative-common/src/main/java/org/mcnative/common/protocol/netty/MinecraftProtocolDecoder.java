@@ -31,6 +31,9 @@ import org.mcnative.common.protocol.packet.*;
 
 import java.util.List;
 
+/**
+ * This is a implementation into the netty framework to decode and read Minecraft packets.
+ */
 public class MinecraftProtocolDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private final PacketManager packetManager;

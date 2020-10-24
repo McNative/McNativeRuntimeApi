@@ -19,8 +19,16 @@
 
 package org.mcnative.common.protocol.packet;
 
+/**
+ * A packet listener is used to intercept packets and modify them. Packet listeners are registered in the @{@link PacketManager}
+ */
 public interface MinecraftPacketListener {
 
+    /**
+     * Is called when a packet is received.
+     *
+     * @param event The event of the packet
+     */
     void handle(MinecraftPacketEvent event);
 
 }

@@ -19,9 +19,17 @@
 
 package org.mcnative.common.protocol;
 
+/**
+ * This class is only important on proxy servers. Packets are sent to an endpoint,
+ * the UPSTREAM endpoint receives packets from the Minecraft client and the DOWNSTREAM
+ * endpoint receives packets from an internal server.
+ *
+ * Server -> DOWNSTREAM | Proxy | -> UPSTREAM -> Client
+ * Server <- DOWNSTREAM | Proxy | <- UPSTREAM <- Client
+ */
 public enum Endpoint {
 
     UPSTREAM(),
-    DOWNSTREAM();
+    DOWNSTREAM()
 
 }

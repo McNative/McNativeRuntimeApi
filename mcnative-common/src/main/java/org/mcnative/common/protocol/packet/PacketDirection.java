@@ -20,8 +20,6 @@
 package org.mcnative.common.protocol.packet;
 
 /**
- *
- *
  * Server -> OUTGOING | Proxy | -> OUTGOING -> Client
  * Server <- INCOMING | Proxy | <- INCOMING <- Client
  *

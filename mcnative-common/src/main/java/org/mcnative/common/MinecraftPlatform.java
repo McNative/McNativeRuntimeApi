@@ -26,20 +26,55 @@ import java.io.File;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+/**
+ * McNative is running on different platforms and servers like Bukkit and BungeeCord. this interface is used
+ * to get information about the actual platform, type and supported Minecraft versions.
+ */
 public interface MinecraftPlatform {
 
+    /**
+     * Get the name of the current platform (e.g. Bukkit).
+     *
+     * @return The name of the platform
+     */
     String getName();
 
+    /**
+     * Get the version of the platform.
+     *
+     * @return The version of the platform
+     */
     String getVersion();
 
+    /**
+     * Get the Minecraft protocol version on which the server is originally operating.
+     *
+     * @return The base version
+     */
     MinecraftProtocolVersion getProtocolVersion();
 
+    /**
+     * Get a list of all joinable Minecraft versions.
+     *
+     * @return A list with all joinable versions
+     */
     Collection<MinecraftProtocolVersion> getJoinableProtocolVersions();
 
+    /**
+     * Check if a protocol version is supported by the server.
+     *
+     * @param protocolVersion The version to check
+     * @return True if this version is supported
+     */
     default boolean canJoin(MinecraftProtocolVersion protocolVersion){
         return getJoinableProtocolVersions().contains(protocolVersion);
     }
 
+    /**
+     * Get the minimum supported protocol version.
+     *
+     * @return The minimum version
+     */
     default MinecraftProtocolVersion getMinVersion(){
         MinecraftProtocolVersion result = getProtocolVersion();
         for (MinecraftProtocolVersion version : getJoinableProtocolVersions()) {
@@ -48,6 +83,11 @@ public interface MinecraftPlatform {
         return result;
     }
 
+    /**
+     * Get the maximum supported protocol version.
+     *
+     * @return The maximum version
+     */
     default MinecraftProtocolVersion getMaxVersion(){
         MinecraftProtocolVersion result = getProtocolVersion();
         for (MinecraftProtocolVersion version : getJoinableProtocolVersions()) {
@@ -56,10 +96,23 @@ public interface MinecraftPlatform {
         return result;
     }
 
+    /**
+     * Check if the current platform operates as a proxy.
+     *
+     * @return True if the platform is a Proxy server
+     */
     boolean isProxy();
 
+    /**
+     * Check if the current platform operates as a normal Minecraft server.
+     * @return True if the platform is a Minecraft server
+     */
     boolean isService();
 
+    /**
+     * Get the location of the log files.
+     * @return The file location
+     */
     File getLatestLogLocation();
 
     void check(Consumer<ProtocolCheck> checker);

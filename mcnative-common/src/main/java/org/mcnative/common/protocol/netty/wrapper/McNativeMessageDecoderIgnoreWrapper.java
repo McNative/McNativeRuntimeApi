@@ -34,7 +34,6 @@ import java.util.Map;
 
 public class McNativeMessageDecoderIgnoreWrapper extends ChannelInboundHandlerAdapter {
 
-    //  protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> output) {
     private final static Method DECODE_METHOD = ReflectionUtil.getMethod(ByteToMessageDecoder.class,"decode"
             ,new Class[]{ChannelHandlerContext.class,ByteBuf.class, List.class});
 

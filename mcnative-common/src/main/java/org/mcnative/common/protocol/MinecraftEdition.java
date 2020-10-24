@@ -19,10 +19,27 @@
 
 package org.mcnative.common.protocol;
 
+/**
+ *
+ * Minecraft has several editions with different protocol implementations and capabilities.
+ * This enumeration is intended to separate these editions and provide support for the different protocol specifications.
+ *
+ * More information about editions:
+ * https://help.minecraft.net/hc/en-us/articles/360034753992-Different-Minecraft-Editions
+ *
+ */
 public enum MinecraftEdition {
 
     UNKNOWN("Unknown (Maybe not supported)"),
+
+    /**
+     * The minecraft class version written in Java
+     */
     JAVA("Java"),
+
+    /**
+    The minecraft bedrock edition for mobile, XBox One, Nintendo Switch and Windows 10
+     */
     BEDROCK("Bedrock");
 
     private final String name;

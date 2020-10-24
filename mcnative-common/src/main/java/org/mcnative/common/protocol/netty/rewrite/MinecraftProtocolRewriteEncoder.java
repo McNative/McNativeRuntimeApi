@@ -26,11 +26,14 @@ import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
+import org.mcnative.common.protocol.netty.PacketCanceledException;
 import org.mcnative.common.protocol.packet.*;
 
 import java.util.List;
 
-//@Todo implement cancellation
+/**
+ * This is an implementation into the Netty framework for reading and modifying an outgoing Minecraft package from the pipeline.
+ */
 public class MinecraftProtocolRewriteEncoder extends MessageToByteEncoder<ByteBuf> {
 
     private final PacketManager packetManager;
@@ -61,6 +64,7 @@ public class MinecraftProtocolRewriteEncoder extends MessageToByteEncoder<ByteBu
 
                 MinecraftPacketEvent event = new MinecraftPacketEvent(endpoint,direction,connection,packet);
                 listeners.forEach(listener -> listener.handle(event));
+                if(event.isCancelled()) throw new PacketCanceledException();
 
                 if(event.isRewrite()){
                     packet = event.getPacket();

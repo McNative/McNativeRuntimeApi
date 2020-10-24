@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * This class contains various utilities for writing and reading Minecraft packages.
+ * More information and documentation: https://wiki.vg/Protocol
+ */
 public class MinecraftProtocolUtil {
 
     public static void writeString(ByteBuf buffer, String message) {
@@ -140,7 +144,6 @@ public class MinecraftProtocolUtil {
         return data;
     }
 
-
     public static int[] readVarIntArray(ByteBuf buffer) {
         int length = readVarInt(buffer);
         int[] data = new int[length];
@@ -149,7 +152,6 @@ public class MinecraftProtocolUtil {
 
         return data;
     }
-
 
     public static List<String> readStringArray(ByteBuf buffer) {
         int length = readVarInt(buffer);

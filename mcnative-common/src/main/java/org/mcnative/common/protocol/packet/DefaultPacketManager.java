@@ -27,9 +27,12 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * A default implementation of the packet manager
+ */
 public class DefaultPacketManager implements PacketManager {
 
-    private static Function<Class<?>, List<MinecraftPacketListener>> COMPUTE_FUNCTION = class0 -> new ArrayList<>();
+    private static final Function<Class<?>, List<MinecraftPacketListener>> COMPUTE_FUNCTION = class0 -> new ArrayList<>();
 
     private final Collection<PacketIdentifier> identifiers;
     private final Map<Class<?>, List<MinecraftPacketListener>> upstreamOutgoingListeners;
@@ -64,10 +67,6 @@ public class DefaultPacketManager implements PacketManager {
                     PacketIdentifier.IdMapping mapping = condition.getMappings()[i];
                     if(version.isNewerOrSame(mapping.getVersion()) && mapping.getId() == packetId) return identifier;
                 }
-                /*for (PacketIdentifier.IdMapping mapping : condition.getMappings()) {
-                    if(mapping.getVersion().equals(version) && mapping.getId() == packetId) return identifier;
-                }*/
-
             }
         }
         return null;
