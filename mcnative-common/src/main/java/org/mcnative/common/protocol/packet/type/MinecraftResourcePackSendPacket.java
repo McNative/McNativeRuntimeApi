@@ -39,7 +39,8 @@ public class MinecraftResourcePackSendPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_13,0x37)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x39)
                     ,map(MinecraftProtocolVersion.JE_1_15,0x3A)
-                    ,map(MinecraftProtocolVersion.JE_1_16,0x39)));
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x39)
+                    ,map(MinecraftProtocolVersion.JE_1_16_3,0x38)));
 
     private String url;
     private String hash;

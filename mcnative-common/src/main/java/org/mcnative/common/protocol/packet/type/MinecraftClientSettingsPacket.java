@@ -41,7 +41,8 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
                     ,map(MinecraftProtocolVersion.JE_1_12,0x05)
                     ,map(MinecraftProtocolVersion.JE_1_12_1,0x04)
                     ,map(MinecraftProtocolVersion.JE_1_14,0x05)
-                    ,map(MinecraftProtocolVersion.JE_1_16,0x04)));
+                    ,map(MinecraftProtocolVersion.JE_1_16,0x04)
+                    ,map(MinecraftProtocolVersion.JE_1_16_3,0x05)));
 
     private String languageTag;
     private PlayerClientSettings settings;
