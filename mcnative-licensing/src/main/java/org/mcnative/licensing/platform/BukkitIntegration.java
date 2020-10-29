@@ -1,31 +1,31 @@
 package org.mcnative.licensing.platform;
 
-import net.md_5.bungee.api.plugin.Plugin;
 import org.mcnative.licensing.*;
+import org.bukkit.plugin.Plugin;
 import org.mcnative.licensing.utils.McNativeServerInfoUtil;
 
 /**
- * McNative licensing integration into BungeeCord
+ * McNative licensing integration into Bukkit
  *
  * See @{@link LicenseVerifier} and @{@link ReportingService} for the method documentations
  */
-public class BungeeLicenseVerifier {
+public class BukkitIntegration {
 
-    public static License verify(Plugin plugin, String resourceId, String publicKey){
+    public static License verifyLicense(Plugin plugin, String resourceId, String publicKey){
         checkMcNativeAvailable();
-        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getDescription().getName());
+        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getName());
         return LicenseVerifier.verify(resourceId,publicKey,serverInfo);
     }
 
-    public static License verifyOrCheckout(Plugin plugin, String resourceId, String publicKey){
+    public static License verifyOrCheckoutLicense(Plugin plugin, String resourceId, String publicKey){
         checkMcNativeAvailable();
-        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getDescription().getName());
+        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getName());
         return LicenseVerifier.verifyOrCheckout(resourceId,publicKey,serverInfo);
     }
 
     public static void startReportingService(Plugin plugin, String resourceId){
         checkMcNativeAvailable();
-        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getDescription().getName());
+        ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getName());
         ReportingService.start(plugin.getClass(),resourceId,serverInfo);
     }
 
@@ -38,5 +38,4 @@ public class BungeeLicenseVerifier {
             throw new IllegalArgumentException("McNative is not available (To run the plugin without McNative use the LicenseVerifier class)");
         }
     }
-
 }

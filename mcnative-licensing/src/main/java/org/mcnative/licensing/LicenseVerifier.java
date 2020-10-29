@@ -12,6 +12,14 @@ import java.net.URLConnection;
 
 public class LicenseVerifier {
 
+    /**
+     * Read and verify a license.
+     *
+     * @param resourceId The id of the resource for witch the license was issued
+     * @param publicKey The public key to validate the signature
+     * @param info The server data
+     * @return The verified license details
+     */
     public static License verify(String resourceId, String publicKey,ServerInfo info){
         Validate.notNull(info.getLicenseLocation());
         try{
@@ -23,6 +31,14 @@ public class LicenseVerifier {
         }
     }
 
+    /**
+     * Read and check a license, if the license is not available, a new license is fetched from the license server.
+     *
+     * @param resourceId The id of the resource for witch the license was issued
+     * @param publicKey The public key to validate the signature
+     * @param info The server data
+     * @return The verified license details
+     */
     public static License verifyOrCheckout(String resourceId, String publicKey,ServerInfo info){
         try{
             License license = null;

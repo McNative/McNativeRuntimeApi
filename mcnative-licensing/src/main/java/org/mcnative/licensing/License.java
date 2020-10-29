@@ -35,6 +35,9 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Properties;
 
+/**
+ * The license objects contains the extracted data from a license file.
+ */
 public class License {
 
     private final String raw;
@@ -85,15 +88,33 @@ public class License {
         return Long.parseLong(this.properties.getProperty("PreferredRefreshTime"));
     }
 
+    /**
+     * Check if the license is expired
+     *
+     * @return True if the license is expired
+     */
     public boolean isExpired(){
         return getExpiry() < System.currentTimeMillis();
     }
 
+    /**
+     * Check if the license should be refreshed
+     *
+     * @return True if the license should be refreshed
+     */
     public boolean shouldRefresh(){
         return getPreferredRefreshTime() < System.currentTimeMillis();
     }
 
-    public boolean verify(String resourceId,String publicKey) throws Exception{
+    /**
+     * Verify if this license is valid
+     *
+     * @param resourceId The id of the resource for witch the license was issued
+     * @param publicKey The public key to validate the signature
+     * @return True if the license is valid
+     * @throws GeneralSecurityException If the signature validation process fails
+     */
+    public boolean verify(String resourceId,String publicKey) throws GeneralSecurityException {
         Signature signatureTool = Signature.getInstance("SHA512WithRSA");
         signatureTool.initVerify(getPublicKeyFromString(publicKey));
         signatureTool.update(this.rawContent);
@@ -104,14 +125,34 @@ public class License {
                 && signatureTool.verify(this.signature);
     }
 
+    /**
+     * Save the raw data of the license to a file
+     *
+     * @param file The destination file
+     * @throws IOException If the file could not be written
+     */
     public void save(File file) throws IOException{
         Files.write(file.toPath(), raw.getBytes(), StandardOpenOption.CREATE);
     }
 
+    /**
+     * Read the license from a file
+     *
+     * @param file The license source file
+     * @return The license object
+     * @throws IOException If the license could not be read
+     */
     public static License read(File file) throws IOException{
         return read(FileUtil.readContent(file));
     }
 
+    /**
+     * Read the license from a string (BASE-64)
+     *
+     * @param content The base 64 string
+     * @return The license object
+     * @throws IOException If the license could not be read
+     */
     public static License read(String content) throws IOException{
         String[] parts = content.split(";");
         if(parts.length != 2) throw new IllegalArgumentException("Invalid license content");
@@ -125,7 +166,7 @@ public class License {
         return new License(content,rawContent,signature,properties);
     }
 
-    public static RSAPublicKey getPublicKeyFromString(String key) throws GeneralSecurityException {
+    private static RSAPublicKey getPublicKeyFromString(String key) throws GeneralSecurityException {
         byte[] encoded = Base64.getDecoder().decode(key);
         KeyFactory factory = KeyFactory.getInstance("RSA");
         return (RSAPublicKey) factory.generatePublic(new X509EncodedKeySpec(encoded));

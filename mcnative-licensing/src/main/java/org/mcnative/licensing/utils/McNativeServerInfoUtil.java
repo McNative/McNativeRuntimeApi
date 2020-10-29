@@ -15,7 +15,7 @@ public class McNativeServerInfoUtil {
         RolloutProfile profile = configuration.getProfile(name);
         McNativeServerIdentifier identifier = McNative.getInstance().getMcNativeServerId();
         return new ServerInfo(new File(basePath,"license.dat")
-                ,"https://"+profile.getServer()+"/license/{resourceId}/checkout"
+                ,"https://"+profile.getServer()+"/v1/license/{resourceId}/checkout"
                 ,identifier.getId(),identifier.getSecret());
     }
 

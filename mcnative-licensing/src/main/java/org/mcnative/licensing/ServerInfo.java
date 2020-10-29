@@ -2,6 +2,9 @@ package org.mcnative.licensing;
 
 import java.io.File;
 
+/**
+ * This object contains information about the server credentials (Id and secret) and license location (local and remove location).
+ */
 public class ServerInfo {
 
     private final File licenseLocation;

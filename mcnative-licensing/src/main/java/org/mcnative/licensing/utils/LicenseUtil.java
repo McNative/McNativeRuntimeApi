@@ -10,6 +10,11 @@ import java.util.Enumeration;
 
 public class LicenseUtil {
 
+    /**
+     * Returns a unique hardware id for this device.
+     *
+     * @return The id
+     */
     public static String getDeviceId(){
         try{
             ByteBuf buffer = Unpooled.directBuffer();
