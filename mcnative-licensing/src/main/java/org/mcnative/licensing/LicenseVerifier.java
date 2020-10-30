@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class LicenseVerifier {
 
@@ -66,7 +68,12 @@ public class LicenseVerifier {
 
             InputStream response = connection.getInputStream();
 
-            License license = License.read(FileUtil.readContent(response));
+            String content;
+            try (Scanner scanner = new Scanner(response)) {
+                content = scanner.useDelimiter("\\A").next();
+            }
+
+            License license = License.read(content);
             license.save(info.getLicenseLocation());
             response.close();
             return license;

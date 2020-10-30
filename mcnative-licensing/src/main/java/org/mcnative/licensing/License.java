@@ -161,7 +161,7 @@ public class License {
         byte[] signature = Base64.getDecoder().decode(parts[1].getBytes(StandardCharsets.UTF_8));
 
         Properties properties = new Properties();
-        properties.load(new StringReader(new String(Base64.getDecoder().decode(parts[0]))));
+        properties.load(new StringReader(new String(rawContent)));
 
         return new License(content,rawContent,signature,properties);
     }
