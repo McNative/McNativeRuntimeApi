@@ -10,6 +10,6 @@ public class LicenseNotValidException extends RuntimeException{
     }
 
     public LicenseNotValidException(Exception exception) {
-        super("Resource license is not valid",exception);
+        super(exception.getMessage(),exception);
     }
 }
