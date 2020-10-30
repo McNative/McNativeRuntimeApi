@@ -50,14 +50,14 @@
             <groupId>net.pretronic.libraries</groupId>
             <artifactId>pretroniclibraries-utility</artifactId>
             <version>${dependency.pretronic.libraries.utility}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.26.Final</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!-- External dependencies -->
