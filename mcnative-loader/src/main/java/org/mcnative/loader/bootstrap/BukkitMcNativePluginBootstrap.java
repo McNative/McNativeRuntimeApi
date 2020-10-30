@@ -97,6 +97,9 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
             exception.printStackTrace();
             getLogger().log(Level.SEVERE,String.format("Could not enable plugin (%s)",exception.getMessage()));
             getServer().getPluginManager().disablePlugin(this);
+            try {
+                JavaPlugin.class.getDeclaredField("isEnabled").set(this,false);
+            } catch (IllegalAccessException | NoSuchFieldException ignored) { }
         }
     }
 

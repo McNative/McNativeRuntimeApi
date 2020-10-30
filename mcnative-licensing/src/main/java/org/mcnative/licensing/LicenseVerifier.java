@@ -1,16 +1,14 @@
 package org.mcnative.licensing;
 
 import net.pretronic.libraries.utility.Validate;
-import net.pretronic.libraries.utility.io.FileUtil;
 import net.pretronic.libraries.utility.io.IORuntimeException;
 import org.mcnative.licensing.utils.LicenseUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Scanner;
 
 public class LicenseVerifier {
 
@@ -58,13 +56,22 @@ public class LicenseVerifier {
 
     private static License checkout(String resourceId, ServerInfo info){
         try {
-            URLConnection connection = new URL(info.getLicenseServer().replace("{resourceId}",resourceId)).openConnection();
+            HttpURLConnection connection = (HttpURLConnection)new URL(info.getLicenseServer().replace("{resourceId}",resourceId)).openConnection();
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept-Charset", "UTF-8");
 
             connection.setRequestProperty("DeviceId", LicenseUtil.getDeviceId());
             connection.setRequestProperty("ServerId",info.getServerId());
             connection.setRequestProperty("serverSecret",info.getServerSecret());
+
+            if(connection.getResponseCode() != 200){
+                InputStream response = connection.getErrorStream();
+                String content;
+                try (Scanner scanner = new Scanner(response)) {
+                    content = scanner.useDelimiter("\\A").next();
+                }
+                throw new IllegalArgumentException("("+connection.getResponseCode()+")"+content);
+            }
 
             InputStream response = connection.getInputStream();
 
