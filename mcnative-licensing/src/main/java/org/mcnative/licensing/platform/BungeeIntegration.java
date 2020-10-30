@@ -9,7 +9,7 @@ import org.mcnative.licensing.utils.McNativeServerInfoUtil;
  *
  * See @{@link LicenseVerifier} and @{@link ReportingService} for the method documentations
  */
-public class BungeeLicenseVerifier {
+public class BungeeIntegration {
 
     public static License verify(Plugin plugin, String resourceId, String publicKey){
         checkMcNativeAvailable();

@@ -12,7 +12,7 @@ import org.mcnative.licensing.utils.McNativeServerInfoUtil;
  *
  * See @{@link LicenseVerifier} and @{@link ReportingService} for the method documentations
  */
-public class McNativeLicenseVerifier {
+public class McNativeIntegration {
 
     public static License verify(MinecraftPlugin plugin, String resourceId, String publicKey){
         ServerInfo serverInfo = McNativeServerInfoUtil.getDefaultServerInfo(plugin.getDataFolder(),plugin.getName());
