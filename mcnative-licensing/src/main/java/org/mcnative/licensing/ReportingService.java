@@ -33,10 +33,10 @@ public class ReportingService {
      */
     public static void start(Class<?> ownerClass,String resourceId,ServerInfo serverInfo){
         Objects.requireNonNull(ownerClass);
+        ATTACHED_SERVICES.put(ownerClass,new ServiceConfiguration(resourceId, serverInfo));
         if(!SERVICE_THREAD.isAlive()){
             SERVICE_THREAD.start();
         }
-        ATTACHED_SERVICES.put(ownerClass,new ServiceConfiguration(resourceId, serverInfo));
     }
 
     /**
@@ -72,9 +72,7 @@ public class ReportingService {
 
             InputStream response = connection.getInputStream();
             response.close();
-        } catch (IOException e) {//@Todo remove and ignore failed requests
-            e.printStackTrace();
-        }
+        } catch (IOException ignored) {}
     }
 
     private static class ServiceThread extends Thread{
@@ -86,7 +84,7 @@ public class ReportingService {
 
         @Override
         public void run() {
-            if(!isInterrupted()){
+            while (!isInterrupted()) {
                 for (ServiceConfiguration configuration : ATTACHED_SERVICES.values()) {
                     ReportingService.sendLifetimeRequest(configuration.getResourceId(),configuration.getServerInfo());
                 }
