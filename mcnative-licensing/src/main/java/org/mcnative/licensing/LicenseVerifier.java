@@ -2,6 +2,8 @@ package org.mcnative.licensing;
 
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.io.IORuntimeException;
+import org.mcnative.licensing.exceptions.CloudNotCheckoutLicenseException;
+import org.mcnative.licensing.exceptions.LicenseNotValidException;
 import org.mcnative.licensing.utils.LicenseUtil;
 
 import java.io.IOException;
@@ -44,7 +46,11 @@ public class LicenseVerifier {
             License license = null;
             if(info.getLicenseLocation().exists()){
                 license = License.read(info.getLicenseLocation());
-                if(license.shouldRefresh()) license = null;
+                if(license.shouldRefresh()){
+                    try {
+                        license = checkout(resourceId,info);
+                    }catch (IllegalArgumentException | IORuntimeException ignored){}
+                }
             }
             if(license == null) license = checkout(resourceId,info);
             if(!license.verify(resourceId,publicKey)) throw new LicenseNotValidException();
@@ -70,7 +76,11 @@ public class LicenseVerifier {
                 try (Scanner scanner = new Scanner(response)) {
                     content = scanner.useDelimiter("\\A").next();
                 }
-                throw new IllegalArgumentException("("+connection.getResponseCode()+")"+content);
+                if(connection.getResponseCode() == 500){
+                    throw new IllegalArgumentException("("+connection.getResponseCode()+")"+content);
+                }else{
+                    throw new CloudNotCheckoutLicenseException("("+connection.getResponseCode()+")"+content);
+                }
             }
 
             InputStream response = connection.getInputStream();
