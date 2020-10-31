@@ -68,6 +68,10 @@ public class License {
         return properties;
     }
 
+    public String getId(){
+        return this.properties.getProperty("Id");
+    }
+
     public String getIssuer(){
         return this.properties.getProperty("Issuer");
     }
