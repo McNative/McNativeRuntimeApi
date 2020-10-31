@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ReportingService {
 
-    private static final String REPORTING_ENDPOINT = "https://mirror.mcnative.org/v1/license/{resourceId}/alive";
+    private static final String REPORTING_ENDPOINT = "https://mirror.mcnative.org/v1/licenses/{resourceId}/alive";
     private static final Thread SERVICE_THREAD = new ServiceThread();
     private static final long THREAD_SLEEP_TIME = TimeUnit.MINUTES.toMillis(10);
     private static final Map<Class<?>,ServiceConfiguration> ATTACHED_SERVICES = new ConcurrentHashMap<>();
