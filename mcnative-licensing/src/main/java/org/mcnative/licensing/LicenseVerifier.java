@@ -61,6 +61,7 @@ public class LicenseVerifier {
     }
 
     private static License checkout(String resourceId, ServerInfo info){
+        CertificateValidation.disable();
         try {
             HttpURLConnection connection = (HttpURLConnection)new URL(info.getLicenseServer().replace("{resourceId}",resourceId)).openConnection();
             connection.setDoOutput(true);
@@ -77,9 +78,9 @@ public class LicenseVerifier {
                     content = scanner.useDelimiter("\\A").next();
                 }
                 if(connection.getResponseCode() == 500){
-                    throw new IllegalArgumentException("("+connection.getResponseCode()+")"+content);
+                    throw new IllegalArgumentException("("+connection.getResponseCode()+") "+content);
                 }else{
-                    throw new CloudNotCheckoutLicenseException("("+connection.getResponseCode()+")"+content);
+                    throw new CloudNotCheckoutLicenseException("("+connection.getResponseCode()+") "+content);
                 }
             }
 
@@ -96,6 +97,8 @@ public class LicenseVerifier {
             return license;
         } catch (IOException e) {
             throw new IORuntimeException(e);
+        }finally {
+            CertificateValidation.reset();
         }
     }
 }
