@@ -20,7 +20,10 @@
 package org.mcnative.bukkit.serviceprovider.placeholder;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.clip.placeholderapi.expansion.manager.LocalExpansionManager;
+import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import net.pretronic.libraries.utility.interfaces.OwnerUnregisterAble;
 import org.bukkit.Bukkit;
@@ -37,16 +40,21 @@ import org.mcnative.common.serviceprovider.placeholder.PlaceholderProvider;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.TextComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregisterAble {
 
     private final BukkitPlayerManager playerManager;
     private final BukkitPluginManager pluginManager;
+    private final Collection<McNativePlaceHolderExpansion> expansions;
 
     public PlaceHolderApiProvider(BukkitPlayerManager playerManager, BukkitPluginManager pluginManager) {
         this.playerManager = playerManager;
         this.pluginManager = pluginManager;
+        this.expansions = new ArrayList<>();
     }
 
     @Override
@@ -61,21 +69,23 @@ public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregis
 
     @Override
     public void registerPlaceHolders(ObjectOwner owner, String identifier, PlaceholderHook hook) {
-        PlaceholderAPI.registerExpansion(new McNativePlaceHolderExpansion(getPlugin(owner),identifier,hook));
+        this.expansions.add(new McNativePlaceHolderExpansion(getPlugin(owner),identifier,hook,owner));
     }
 
     @Override
     public void unregisterPlaceHolders(String identifier) {
-        PlaceholderAPI.unregisterPlaceholderHook(identifier);
+        PlaceholderExpansion expansion = Iterators.findOne(this.expansions, expansion1 -> expansion1.getIdentifier().equalsIgnoreCase(identifier));
+        if(expansion != null){
+            expansion.unregister();
+            this.expansions.remove(expansion);
+        }
     }
 
     @Override
     public void unregisterPlaceHolders(ObjectOwner owner) {
-        Plugin plugin = getPlugin(owner);
-        for (PlaceholderExpansion expansion : PlaceholderAPI.getExpansions()) {
-            if(expansion.getRequiredPlugin().equals(plugin.getName())){
-                PlaceholderAPI.unregisterExpansion(expansion);
-            }
+        Collection<McNativePlaceHolderExpansion> expansions = Iterators.remove(this.expansions, expansion -> expansion.getOwner().equals(owner));
+        for (PlaceholderExpansion expansion : expansions) {
+            expansion.unregister();
         }
     }
 
@@ -95,7 +105,8 @@ public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregis
 
     @Override
     public String translate(MinecraftPlayer player, String identifier, String parameter) {
-        me.clip.placeholderapi.PlaceholderHook hook = PlaceholderAPI.getPlaceholders().get(identifier);
+        LocalExpansionManager manager = PlaceholderAPIPlugin.getInstance().getLocalExpansionManager();
+        PlaceholderExpansion hook = manager.getExpansion(identifier);
         if(hook != null){
             OfflinePlayer mapped;
             if(player instanceof BukkitPlayer) mapped = ((BukkitPlayer) player).getOriginal();
@@ -142,11 +153,18 @@ public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregis
         private final Plugin plugin;
         private final String identifier;
         private final PlaceholderHook hook;
+        private final ObjectOwner owner;
 
-        public McNativePlaceHolderExpansion(Plugin plugin, String identifier, PlaceholderHook hook) {
+        public McNativePlaceHolderExpansion(Plugin plugin, String identifier, PlaceholderHook hook,ObjectOwner owner) {
             this.plugin = plugin;
             this.identifier = identifier;
             this.hook = hook;
+            this.owner = owner;
+            register();
+        }
+
+        public ObjectOwner getOwner() {
+            return owner;
         }
 
         @Override
