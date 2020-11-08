@@ -39,7 +39,6 @@ public class McNativeInfoCommand extends BasicCommand {
                 .permission("mcnative.manage.info")
                 .create());
     }
-
     @Override
     public void execute(CommandSender sender, String[] args) {
         String javaVersion = SystemUtil.getJavaVersion();
