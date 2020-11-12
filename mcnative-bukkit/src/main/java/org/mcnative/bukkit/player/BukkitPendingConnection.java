@@ -21,11 +21,14 @@ package org.mcnative.bukkit.player;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.DefaultChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.annonations.Internal;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
@@ -192,6 +195,7 @@ public class BukkitPendingConnection implements PendingConnection {
     @SuppressWarnings("unchecked")
     private void injectPacketCoders(){
         if(PROTOCOL_LIB) {
+            //Encoder
             MessageToByteEncoder<Object> original = (MessageToByteEncoder<Object>) channel.pipeline().get("protocol_lib_encoder");
 
             channel.pipeline().replace("protocol_lib_encoder","protocol_lib_encoder",new McNativeMessageEncoderIgnoreWrapper(original));
@@ -203,8 +207,18 @@ public class BukkitPendingConnection implements PendingConnection {
             this.channel.pipeline().addAfter("protocol_lib_encoder","mcnative-packet-rewrite-encoder"
                     ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
                             ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+            //Decoder
+            ByteToMessageDecoder decoderOriginal = extractDecoder(channel.pipeline().get("protocol_lib_decoder"));
+            ReflectionUtil.changeFieldValue(ChannelHandlerAdapter.class,decoderOriginal,"added",false);
+            this.channel.pipeline().replace("protocol_lib_decoder","protocol_lib_decoder"
+                    ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
+                            ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
+
+            channel.pipeline().addAfter("protocol_lib_decoder","protocol_lib_decoder-original",decoderOriginal);
         }else if(VIA_VERSION){
-            Object encoder = channel.pipeline().get("encoder");;
+            //Encoder
+            Object encoder = channel.pipeline().get("encoder");
             MessageToByteEncoder<Object> original;
             if(encoder instanceof McNativeMessageEncoderIgnoreWrapper){
                 original = ((McNativeMessageEncoderIgnoreWrapper) encoder).getOriginal();
@@ -222,7 +236,18 @@ public class BukkitPendingConnection implements PendingConnection {
             this.channel.pipeline().addAfter("via-encoder","mcnative-packet-rewrite-encoder"
                     ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
                             ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
+
+            //Decoder
+            ByteToMessageDecoder originalDecoder = extractDecoder(channel.pipeline().get("decoder"));
+            this.channel.pipeline().replace("decoder","decoder"
+                    ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
+                            ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
+
+            ReflectionUtil.changeFieldValue(ChannelHandlerAdapter.class,originalDecoder,"added",false);
+            this.channel.pipeline().addAfter("decoder","via-decoder",originalDecoder);
+
         }else{
+            //Encoder
             this.channel.pipeline().addAfter("encoder","mcnative-packet-encoder"
                     ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
                             , Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
@@ -231,22 +256,23 @@ public class BukkitPendingConnection implements PendingConnection {
                     ,new MinecraftProtocolRewriteEncoder(McNative.getInstance().getLocal().getPacketManager()
                             ,Endpoint.UPSTREAM, PacketDirection.OUTGOING,this));
 
+            //Decoder
+            ByteToMessageDecoder original = extractDecoder(channel.pipeline().get("decoder"));
+            this.channel.pipeline().replace("decoder","decoder"
+                    ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
+                            ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
+
+            channel.pipeline().addAfter("decoder","minecraft-decoder",new McNativeMessageDecoderIgnoreWrapper(original));
         }
+    }
 
-
-        Object decoder = channel.pipeline().get("decoder");;
+    private ByteToMessageDecoder extractDecoder(Object decoder){
         ByteToMessageDecoder original;
         if(decoder instanceof McNativeMessageDecoderIgnoreWrapper){
             original = ((McNativeMessageDecoderIgnoreWrapper) decoder).getOriginal();
         }else if(decoder instanceof ByteToMessageDecoder){
             original = (ByteToMessageDecoder) decoder;
         }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team");
-
-
-        this.channel.pipeline().replace("decoder","decoder"
-                ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
-                        ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
-
-        channel.pipeline().addAfter("decoder","minecraft-decoder",new McNativeMessageDecoderIgnoreWrapper(original));
+        return original;
     }
 }
