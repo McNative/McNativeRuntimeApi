@@ -46,10 +46,10 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Parameter( name = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
     private String mcnativeLoaderLocation;
 
-    @Parameter( name = "mcnative-loader-version",readonly = true,required = true)
+    @Parameter( name = "mcnative-loader-version",readonly = true)
     private String mcnativeLoaderVersion;
 
-    @Parameter( name = "resource-loader-version",readonly = true,required = true)
+    @Parameter( name = "resource-loader-version",readonly = true)
     private String resourceLoaderVersion;
 
     @Parameter( name = "template-generator" ,readonly = true,defaultValue = "false")
