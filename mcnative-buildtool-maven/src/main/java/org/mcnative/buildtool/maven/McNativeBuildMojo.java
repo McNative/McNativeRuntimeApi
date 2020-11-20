@@ -43,13 +43,13 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
-    @Parameter( name = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
+    @Parameter( property = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
     private String mcnativeLoaderLocation;
 
-    @Parameter( name = "mcnative-loader-version",required = true)
+    @Parameter( property = "mcnative-loader-version",required = true)
     private String mcnativeLoaderVersion;
 
-    @Parameter( name = "resource-loader-version",required = true)
+    @Parameter( property = "resource-loader-version",required = true)
     private String resourceLoaderVersion;
 
     @Parameter( name = "template-generator" ,readonly = true,defaultValue = "false")
