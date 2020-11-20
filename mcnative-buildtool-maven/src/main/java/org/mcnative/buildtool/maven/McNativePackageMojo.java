@@ -38,6 +38,12 @@ public class McNativePackageMojo extends AbstractMojo {
     @Parameter( defaultValue = "${session}", readonly = true, required = true )
     private MavenSession session;
 
+    @Parameter( name = "template-generator" ,readonly = true,defaultValue = "false")
+    private boolean templateGenerator;
+
+    @Parameter( property = "manifest",readonly = true,required = true)
+    private McNativePluginManifest manifest;
+
     @Component
     private Map<String, Archiver> archivers;
 
@@ -50,8 +56,9 @@ public class McNativePackageMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         try{
-            String basePath = project.getGroupId().replace(".","/")+"/loader";
-            String name = project.getArtifact().getArtifactId()+"-"+project.getArtifact().getVersion()+"-loader.jar";
+            String basePackage = templateGenerator ? "org.mcnative.resource."+BuildUtil.transformUUIDtoStringId(manifest.getId()) : project.getGroupId()+".loader";
+            String basePath = basePackage.replace(".","/");
+            String name = templateGenerator ? "loader.jar" : project.getArtifact().getArtifactId()+"-"+project.getArtifact().getVersion()+"-loader.jar";
 
             MavenArchiver archiver = new MavenArchiver();
             archiver.setArchiver((JarArchiver) archivers.get("jar"));

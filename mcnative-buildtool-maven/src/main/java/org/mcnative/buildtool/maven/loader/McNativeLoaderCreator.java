@@ -138,7 +138,10 @@ public class McNativeLoaderCreator {
         info.set("website",manifest.getWebsite());
         info.set("author",manifest.getAuthor());
 
-        DocumentFileType.JSON.getWriter().write(new File(resourceDirectory,"mcnative-loader.json"),info);
+        Document root = Document.newDocument();
+        root.set("plugin",info);
+
+        DocumentFileType.JSON.getWriter().write(new File(resourceDirectory,"mcnative-loader.json"),root);
     }
 
 }

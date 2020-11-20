@@ -74,7 +74,7 @@ public class McNativeBuildMojo extends AbstractMojo {
 
         this.manifest.createManifestFile(manifestFile);
 
-        String basePackage = templateGenerator ? "org.mcnative.resource."+transformUUIDtoStringId(manifest.getId()) : project.getGroupId()+".loader";
+        String basePackage = templateGenerator ? "org.mcnative.resource."+BuildUtil.transformUUIDtoStringId(manifest.getId()) : project.getGroupId()+".loader";
 
         ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
                 ,new File(mcnativeLoaderLocation),sourceDirectory);
@@ -98,16 +98,5 @@ public class McNativeBuildMojo extends AbstractMojo {
             e.printStackTrace();
             throw new MojoFailureException(e.getMessage());
         }
-    }
-
-    private static String transformUUIDtoStringId(String uuid){
-        StringBuilder builder = new StringBuilder();
-        for (char c : uuid.toCharArray()) {
-            if(Character.isDigit(c)){
-                char cNew = (char)(Integer.parseInt(String.valueOf(c))+65);
-                builder.append(cNew);
-            }
-        }
-        return builder.toString().replace("_","");
     }
 }
