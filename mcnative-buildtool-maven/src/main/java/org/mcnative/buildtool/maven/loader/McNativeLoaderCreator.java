@@ -110,40 +110,36 @@ public class McNativeLoaderCreator {
         });
     }
 
-    public void createManifests(LoaderConfiguration loaderConfiguration, McNativePluginManifest manifest){
+    public void createManifests(McNativePluginManifest manifest){
         Document document = Document.newDocument(manifest);
-        String loaderVersion;
 
-        if(loaderConfiguration != null && loaderConfiguration.getVersion() != null) loaderVersion = "Loader "+loaderConfiguration.getVersion();
-        else loaderVersion = "L#"+manifest.getVersion();
-
-        createBungeeCordManifest(document.copy(null),loaderVersion);
-        createBukkitManifest(document.copy(null),loaderVersion);
-
-        if(loaderConfiguration != null){
-            if(loaderConfiguration.getVersion() == null) loaderConfiguration.setVersion(manifest.getVersion());
-            loaderConfiguration.setPlugin(manifest);
-            createLoaderInfo(loaderConfiguration);
-        }
+        createBungeeCordManifest(document.copy(null));
+        createBukkitManifest(document.copy(null));
+        createLoaderInfo(manifest);
     }
 
-    private void createBungeeCordManifest(Document document,String loaderVersion){
+    private void createBungeeCordManifest(Document document){
         document.set("main",basePackage+".bootstrap.BungeeCordMcNativePluginBootstrap");
-        document.set("version",loaderVersion);
+        document.set("version","McNative loader ("+version+")");
         DocumentFileType.YAML.getWriter().write(new File(resourceDirectory,"bungee.yml"),document);
     }
 
-    private void createBukkitManifest(Document document,String loaderVersion){
+    private void createBukkitManifest(Document document){
         document.set("main",basePackage+".bootstrap.BukkitMcNativePluginBootstrap");
-        document.set("version",loaderVersion);
+        document.set("version","McNative loader ("+version+")");
         document.rename("softDepends","softdepend");
         DocumentFileType.YAML.getWriter().write(new File(resourceDirectory,"plugin.yml"),document);
     }
 
-    private void createLoaderInfo(LoaderConfiguration loaderConfiguration){
-        DocumentFileType.JSON.getWriter()
-                .write(new File(resourceDirectory,"mcnative-loader.json")
-                ,Document.newDocument(loaderConfiguration));
+    private void createLoaderInfo(McNativePluginManifest manifest){
+        Document info = Document.newDocument();
+        info.set("name",manifest.getName());
+        info.set("id",manifest.getId());
+        info.set("description",manifest.getDescription());
+        info.set("website",manifest.getWebsite());
+        info.set("author",manifest.getAuthor());
+
+        DocumentFileType.JSON.getWriter().write(new File(resourceDirectory,"mcnative-loader.json"),info);
     }
 
 }

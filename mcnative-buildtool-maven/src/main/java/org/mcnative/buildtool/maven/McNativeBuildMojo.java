@@ -27,7 +27,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
-import org.mcnative.buildtool.maven.loader.LoaderConfiguration;
 import org.mcnative.buildtool.maven.loader.McNativeLoaderCreator;
 import org.mcnative.buildtool.maven.loader.ResourceLoaderInstaller;
 
@@ -47,17 +46,17 @@ public class McNativeBuildMojo extends AbstractMojo {
     @Parameter( name = "mcnative-loader-location",defaultValue = "${project.basedir}/lib/")
     private String mcnativeLoaderLocation;
 
-    @Parameter( name = "mcnative-loader-version" ,defaultValue = "v1.0.69-SNAPSHOT")
+    @Parameter( name = "mcnative-loader-version",required = true)
     private String mcnativeLoaderVersion;
 
-    @Parameter( name = "resource-loader-version" ,defaultValue = "1.0.33-SNAPSHOT")
+    @Parameter( name = "resource-loader-version",required = true)
     private String resourceLoaderVersion;
 
-    @Parameter( property = "manifest",readonly = true,required =true)
-    private McNativePluginManifest manifest;
+    @Parameter( name = "template-generator" ,readonly = true,defaultValue = "false")
+    private boolean templateGenerator;
 
-    @Parameter( property = "loader",readonly = true,required =true)
-    private LoaderConfiguration loader;
+    @Parameter( property = "manifest",readonly = true,required = true)
+    private McNativePluginManifest manifest;
 
     @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
@@ -75,7 +74,8 @@ public class McNativeBuildMojo extends AbstractMojo {
 
         this.manifest.createManifestFile(manifestFile);
 
-        String basePackage = project.getGroupId()+".loader";
+        String basePackage = templateGenerator ? "org.mcnative.loader."+manifest.getId().replace("-","") : project.getGroupId()+".loader";
+
         ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
                 ,new File(mcnativeLoaderLocation),sourceDirectory);
 
@@ -90,7 +90,7 @@ public class McNativeBuildMojo extends AbstractMojo {
 
         creator.renamePackages();
 
-        creator.createManifests(loader,manifest);
+        creator.createManifests(manifest);
 
         try {
             FileUtils.copyDirectoryStructure(resourceDirectory,new File(project.getBuild().getOutputDirectory()));
