@@ -84,7 +84,14 @@ public class TextBuildUtil {
                 for (int i = 0; i < chars.length; i++) {
                     char char0 = chars[i];
                     if((char0 == Text.FORMAT_CHAR || char0 == Text.DEFAULT_ALTERNATE_COLOR_CHAR) && chars.length > ++i){
-                        TextColor color = TextColor.of(chars[i]);
+                        TextColor color;
+
+                        int skip = 1;
+                        if(chars[i] == '#' && chars.length>(i+6)){
+                            color = TextColor.make(new String(Arrays.copyOfRange(chars,i,i+6)));
+                            skip = 6;
+                        } else color = TextColor.of(chars[i]);
+
                         if(color != null){
                             Document next = Document.newDocument();
                             current.set("extra",new Document[]{next});
@@ -95,7 +102,7 @@ public class TextBuildUtil {
                                 current.set("text",new String(Arrays.copyOfRange(chars,textIndex,i-1)));
                             }
                             current = next;
-                            textIndex = i+1;
+                            textIndex = i+skip;
                             lastColor = i;
                         }
 
