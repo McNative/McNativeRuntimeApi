@@ -88,9 +88,9 @@ public class TextBuildUtil {
 
                         int skip = 1;
                         if(chars[i] == '#' && chars.length>(i+6)){
-                            System.out.println("RGB: "+new String(Arrays.copyOfRange(chars,i+1,i+6)));
-                            color = TextColor.make(new String(Arrays.copyOfRange(chars,i+1,i+6)));
-                            skip = 6;
+                            System.out.println("RGB: "+new String(Arrays.copyOfRange(chars,i+1,i+7)));
+                            color = TextColor.make(new String(Arrays.copyOfRange(chars,i+1,i+7)));
+                            skip = 7;
                         } else color = TextColor.of(chars[i]);
 
                         if(color != null){
