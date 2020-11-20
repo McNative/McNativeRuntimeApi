@@ -74,7 +74,7 @@ public class McNativeBuildMojo extends AbstractMojo {
 
         this.manifest.createManifestFile(manifestFile);
 
-        String basePackage = templateGenerator ? "org.mcnative.loader."+transformUUIDtoStringId(manifest.getId()) : project.getGroupId()+".loader";
+        String basePackage = templateGenerator ? "org.mcnative.resource."+transformUUIDtoStringId(manifest.getId()) : project.getGroupId()+".loader";
 
         ResourceLoaderInstaller installer = new ResourceLoaderInstaller(getLog(),resourceLoaderVersion
                 ,new File(mcnativeLoaderLocation),sourceDirectory);

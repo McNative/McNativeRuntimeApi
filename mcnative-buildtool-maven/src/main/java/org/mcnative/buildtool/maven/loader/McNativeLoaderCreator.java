@@ -112,7 +112,6 @@ public class McNativeLoaderCreator {
 
     public void createManifests(McNativePluginManifest manifest){
         Document document = Document.newDocument(manifest);
-
         createBungeeCordManifest(document.copy(null));
         createBukkitManifest(document.copy(null));
         createLoaderInfo(manifest);
