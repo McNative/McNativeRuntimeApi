@@ -50,10 +50,6 @@ public class GuestPluginLoader extends DefaultPluginLoader {
         this.pluginType = "mcnative";
     }
 
-    public boolean allowDependencyLoading(){
-        return this.pluginType.equals("mcnative");
-    }
-
     @Override
     public boolean isEnabled() {
         return executor.isEnabled();
@@ -91,16 +87,20 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public PluginDescription loadDescription() {
+        System.out.println(" ------ Loading Description ------ ");
         InputStream stream = getClassLoader().getResourceAsStream("mcnative.json");
         PluginDescription result;
 
         if(stream != null){
             result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
         }else{
+            System.out.println("No mcnative.json");
+            System.out.println("Environment: "+this.environment.getName());
             if(this.environment.getName().equals(EnvironmentNames.BUKKIT)){
                 stream = getClassLoader().getResourceAsStream("plugin.yml");
                 if(stream == null) throw new IllegalArgumentException("No plugin description found");
                 this.pluginType = "bukkit";
+                System.out.println("Found bukkit plugin");
                 return BukkitHelper.readPluginDescription(stream);
             }else if(this.environment.getName().equals(EnvironmentNames.BUNGEECORD)){
                 stream = getClassLoader().getResourceAsStream("plugin.yml");
