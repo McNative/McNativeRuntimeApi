@@ -107,7 +107,7 @@ public class GuestPluginExecutor {
             this.loader = new McNativeGuestPluginLoader(executor,this.environment,this.logger,this.location,description);
             return true;
         }else if(environment.getName().equals(EnvironmentNames.BUKKIT)){
-            this.loader = new BukkitGuestPluginLoader(location);
+            this.loader = new BukkitGuestPluginLoader(location,this.location);
             return true;
         }else if(environment.getName().equals(EnvironmentNames.BUNGEECORD)){
             return true;
