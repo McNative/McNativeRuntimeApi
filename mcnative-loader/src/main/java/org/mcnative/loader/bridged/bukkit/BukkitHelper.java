@@ -26,7 +26,6 @@ public class BukkitHelper {
         try {
             Class<?> pluginClass = loader.getClassLoader().loadClass(description.getMain().getMainClass("bukkit"));
             Object plugin = pluginClass.getDeclaredConstructor().newInstance();
-
             return new BukkitMinecraftPluginWrapper((Plugin) plugin);
         }catch (ClassNotFoundException e){
             throw new IllegalArgumentException("Main class not found");

@@ -33,7 +33,6 @@ public class BungeeCordHelper {
         try {
             Class<?> pluginClass = loader.getClassLoader().loadClass(description.getMain().getMainClass("bungeecord"));
             Object plugin = pluginClass.getDeclaredConstructor().newInstance();
-
             return new BungeeCordMinecraftPluginWrapper((Plugin) plugin);
         }catch (ClassNotFoundException e){
             throw new IllegalArgumentException("Main class not found");

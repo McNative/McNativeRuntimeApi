@@ -46,7 +46,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     public GuestPluginLoader(PlatformExecutor executor,PluginManager pluginManager, RuntimeEnvironment<?> environment, PretronicLogger logger, PluginClassLoader classLoader, File location, PluginDescription description, boolean lifecycleLogging) {
         super(pluginManager, environment, logger, classLoader, location, description, lifecycleLogging);
         this.executor = executor;
-        this.pluginType = "mcnative";
+        if(this.pluginType == null) this.pluginType = "mcnative";
     }
 
     private RuntimeEnvironment<?> getEnvironment(){
@@ -118,6 +118,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public Plugin<?> construct() {
+        System.out.println(this.pluginType);
         if (this.isInstanceAvailable()) {
             throw new PluginLoadException("Plugin is already constructed.");
         }else if(this.pluginType.equals("bukkit")){
