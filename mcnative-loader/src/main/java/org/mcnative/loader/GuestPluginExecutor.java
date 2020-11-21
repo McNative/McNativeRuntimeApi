@@ -24,11 +24,13 @@ import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
+import net.pretronic.libraries.resourceloader.ResourceException;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.VersionInfo;
 import net.pretronic.libraries.utility.io.IORuntimeException;
 import org.mcnative.common.McNative;
+import org.mcnative.loader.loaders.BukkitGuestPluginLoader;
 import org.mcnative.loader.loaders.GuestPluginLoader;
 import org.mcnative.loader.loaders.mcnative.McNativeGuestPluginLoader;
 import org.mcnative.loader.rollout.RolloutProfile;
@@ -54,6 +56,7 @@ public class GuestPluginExecutor {
     private final RuntimeEnvironment<McNative> environment;
     private final RolloutProfile profile;
     private GuestPluginLoader loader;
+    private ResourceLoader resourceLoader;
 
     public GuestPluginExecutor(PlatformExecutor executor,File location, Logger logger, String runtimeName,RolloutProfile profile) {
         this.executor = executor;
@@ -88,21 +91,29 @@ public class GuestPluginExecutor {
         return true;
     }
 
-    private void setupLoader(InputStream descriptionStream){
+    private boolean setupLoader(InputStream descriptionStream){
         PluginDescription description = null;
         if(descriptionStream != null){
             description = DefaultPluginDescription.create(McNative.getInstance().getPluginManager()
                     ,DocumentFileType.JSON.getReader().read(descriptionStream));
         }
+        if (resourceLoader.getCurrentVersion() == null) {
+            throw new ResourceException("No installed version found");
+        }
 
         if(description != null || isMcNativePlugin()){
+            ClassLoader classLoader = getClass().getClassLoader();
+            resourceLoader.loadReflected((URLClassLoader) classLoader);
             this.loader = new McNativeGuestPluginLoader(executor,this.environment,this.logger,this.location,description);
+            return true;
         }else if(environment.getName().equals(EnvironmentNames.BUKKIT)){
-
+            this.loader = new BukkitGuestPluginLoader(resourceLoader.getLocalFile(resourceLoader.getCurrentVersion()));
+            return true;
         }else if(environment.getName().equals(EnvironmentNames.BUNGEECORD)){
-
+            return true;
         }else{
-            throw new UnsupportedOperationException("No valid plugin manifest found");
+            logger.log(Level.SEVERE,"(Resource-Loader) No valid plugin manifest found");
+            return false;
         }
     }
 
@@ -162,14 +173,6 @@ public class GuestPluginExecutor {
         }else{
             logger.info("(Resource-Loader) automatically updating is disabled");
             logger.info("(Resource-Loader) Latest Version: "+latest.getName());
-        }
-
-        try{
-            ClassLoader classLoader = getClass().getClassLoader();
-            resourceLoader.loadReflected((URLClassLoader) classLoader);
-        }catch (Exception exception){
-            logger.log(Level.SEVERE,"(Resource-Loader) Could not load "+name+" ("+exception.getMessage()+")");
-            return false;
         }
 
         return true;

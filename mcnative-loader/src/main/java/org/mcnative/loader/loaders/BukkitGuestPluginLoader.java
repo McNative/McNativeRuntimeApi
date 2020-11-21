@@ -14,7 +14,7 @@ public class BukkitGuestPluginLoader implements GuestPluginLoader {
     private final File location;
     private Plugin plugin;
 
-    private BukkitGuestPluginLoader(File location){
+    public BukkitGuestPluginLoader(File location){
         this.location = location;
     }
 
