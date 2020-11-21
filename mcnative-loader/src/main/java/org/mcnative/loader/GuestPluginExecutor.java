@@ -107,7 +107,6 @@ public class GuestPluginExecutor {
             description = DefaultPluginDescription.create(McNative.getInstance().getPluginManager()
                     ,DocumentFileType.JSON.getReader().read(descriptionStream));
         }
-        System.out.println("e: "+environment);
         this.loader = new GuestPluginLoader(executor,McNative.getInstance().getPluginManager(),environment
                 ,new JdkPretronicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
                 ,location,description,false);
