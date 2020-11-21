@@ -274,7 +274,7 @@ public class DefaultMessageProvider implements MessageProvider {
     @Override
     public String buildMessage(String key, VariableSet variables, Language language) {
         return getMessage(key,language)
-                .build(new MinecraftBuildContext(language,variables,null, TextBuildType.PLAIN))
+                .build(new MinecraftBuildContext(language,variables,McNative.getInstance().getPlatform().getProtocolVersion(),null, TextBuildType.PLAIN))
                 .toString();
     }
 

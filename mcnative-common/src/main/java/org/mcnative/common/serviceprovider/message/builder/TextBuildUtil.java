@@ -88,15 +88,14 @@ public class TextBuildUtil {
 
                         int skip = 1;
                         if(chars[i] == '#' && chars.length>(i+6)){
-                            System.out.println("RGB: "+new String(Arrays.copyOfRange(chars,i+1,i+7)));
-                            color = TextColor.make(new String(Arrays.copyOfRange(chars,i+1,i+7)));
+                            color = TextColor.make(new String(Arrays.copyOfRange(chars,i,i+7)));
                             skip = 7;
                         } else color = TextColor.of(chars[i]);
 
                         if(color != null){
                             Document next = Document.newDocument();
                             current.set("extra",new Document[]{next});
-                            next.set("color",color.getName());
+                            next.set("color",color.compileColor(context.getVersion()));
                             next.set("text","");
                             resetDocument(next);
                             if(textIndex < i){

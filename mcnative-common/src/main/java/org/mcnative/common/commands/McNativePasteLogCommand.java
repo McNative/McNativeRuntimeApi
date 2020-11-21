@@ -87,6 +87,7 @@ public class McNativePasteLogCommand extends BasicCommand {
             builder.append("- ")
                     .append(plugin.getName())
                     .append(" v").append(plugin.getDescription().getVersion().getName())
+                    .append(" ")
                     .append(plugin.getDescription().getAuthor())
                     .append(" [Databases: ");
             AtomicBoolean first = new AtomicBoolean(true);

@@ -22,6 +22,7 @@ package org.mcnative.common.plugin.configuration;
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
+import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Iterators;
@@ -38,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class DefaultConfigurationProvider implements ConfigurationProvider, ShutdownAble {
 
@@ -116,7 +118,14 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
 
     @Override
     public Collection<String> getDatabaseTypes(Plugin<?> plugin) {
-        Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), entry -> storageConfig.getDriverConfig(entry.name).getDriverClass().getSimpleName());
+        Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), new Function<StorageConfig.DatabaseEntry, String>() {
+            @Override
+            public String apply(StorageConfig.DatabaseEntry entry) {
+                String subType = "";
+                DatabaseDriverConfig<?> config = storageConfig.getDriverConfig(entry.name);
+                return config.getDriverClass().getSimpleName()+" ("+config.getName()+")";
+            }
+        });
         if(types.isEmpty()) return Collections.emptyList();
         return types;
     }

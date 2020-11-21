@@ -89,7 +89,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
             throw new UnsupportedOperationException("Use compileToString for version 1.7.9 or lower");
         }
         OnlineMinecraftPlayer player = getPlayer(connection, language);
-        return compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
+        return compile(new MinecraftBuildContext(language, variables,version, player, TextBuildType.COMPILE));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
             try{
                 OnlineMinecraftPlayer player = getPlayer(connection, language);
-                builder.append(message.build(new MinecraftBuildContext(language,variables,player, TextBuildType.LEGACY)).toString());
+                builder.append(message.build(new MinecraftBuildContext(language,variables,version,player, TextBuildType.LEGACY)).toString());
             }catch (Exception e){
                 e.printStackTrace();
                 McNative.getInstance().getLogger().error("[McNative] (Message-Provider) Failed building BML message");
@@ -106,7 +106,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
             }
         }else{
             OnlineMinecraftPlayer player = getPlayer(connection, language);
-            Document result = compile(new MinecraftBuildContext(language, variables, player, TextBuildType.COMPILE));
+            Document result = compile(new MinecraftBuildContext(language, variables,version, player, TextBuildType.COMPILE));
             builder.append(DocumentFileType.JSON.getWriter().write(result,false));
         }
     }

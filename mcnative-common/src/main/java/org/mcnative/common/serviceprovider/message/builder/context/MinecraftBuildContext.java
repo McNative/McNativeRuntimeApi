@@ -26,18 +26,23 @@ import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.common.player.MinecraftPlayer;
+import org.mcnative.common.protocol.MinecraftProtocolVersion;
 
 public class MinecraftBuildContext extends BuildContext {
 
+    private final MinecraftProtocolVersion version;
     private final CommandSender sender;
     private final TextBuildType type;
 
-    private final Document compileRoot = null;
-
-    public MinecraftBuildContext(Language language, VariableSet variables, CommandSender sender,TextBuildType type) {
+    public MinecraftBuildContext(Language language, VariableSet variables,MinecraftProtocolVersion version, CommandSender sender,TextBuildType type) {
         super(language, variables);
+        this.version = version;
         this.sender = sender;
         this.type = type;
+    }
+
+    public MinecraftProtocolVersion getVersion() {
+        return version;
     }
 
     public CommandSender getSender() {
@@ -50,14 +55,6 @@ public class MinecraftBuildContext extends BuildContext {
 
     public MinecraftPlayer getPlayer(){
         if(sender instanceof  MinecraftPlayer) return (MinecraftPlayer) getSender();
-        return null;
-    }
-
-    public Document getCompileBase() {
-        return compileRoot;
-    }
-
-    public Document getLastTextEndpoint(){
         return null;
     }
 
