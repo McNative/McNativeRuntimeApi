@@ -100,14 +100,14 @@ public class GuestPluginExecutor {
         if (resourceLoader.getCurrentVersion() == null) {
             throw new ResourceException("No installed version found");
         }
-
-        if(description != null || isMcNativePlugin()){
+        File location = resourceLoader.getLocalFile(resourceLoader.getCurrentVersion());
+        if(description != null || isMcNativePlugin(location)){
             ClassLoader classLoader = getClass().getClassLoader();
             resourceLoader.loadReflected((URLClassLoader) classLoader);
             this.loader = new McNativeGuestPluginLoader(executor,this.environment,this.logger,this.location,description);
             return true;
         }else if(environment.getName().equals(EnvironmentNames.BUKKIT)){
-            this.loader = new BukkitGuestPluginLoader(resourceLoader.getLocalFile(resourceLoader.getCurrentVersion()));
+            this.loader = new BukkitGuestPluginLoader(location);
             return true;
         }else if(environment.getName().equals(EnvironmentNames.BUNGEECORD)){
             return true;
@@ -122,7 +122,7 @@ public class GuestPluginExecutor {
 
         ResourceInfo info = new ResourceInfo(name,new File("plugins/McNative/lib/resources/"+name.toLowerCase()));
         info.setVersionUrl(replaceLoaderVariables(loader,VERSION_URL));
-        ResourceLoader resourceLoader = new ResourceLoader(info);
+        resourceLoader = new ResourceLoader(info);
 
         if(McNative.getInstance().getMcNativeServerId() != null){
             info.setAuthenticator(httpURLConnection -> {
@@ -202,7 +202,7 @@ public class GuestPluginExecutor {
         loader.handlePluginDisable();
     }
 
-    private boolean isMcNativePlugin(){
+    private boolean isMcNativePlugin(File location){
         try {
             InputStream fileInput = Files.newInputStream(location.toPath());
 
