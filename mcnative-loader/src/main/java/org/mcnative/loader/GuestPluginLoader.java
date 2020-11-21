@@ -45,6 +45,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     public GuestPluginLoader(PlatformExecutor executor,PluginManager pluginManager, RuntimeEnvironment<?> environment, PretronicLogger logger, PluginClassLoader classLoader, File location, PluginDescription description, boolean lifecycleLogging) {
         super(pluginManager, environment, logger, classLoader, location, description, lifecycleLogging);
+        System.out.println("Environment: "+environment);
         this.environment = environment;
         this.executor = executor;
         this.pluginType = "mcnative";
@@ -111,11 +112,8 @@ public class GuestPluginLoader extends DefaultPluginLoader {
                 this.pluginType = "bungeecord";
                 return BungeeCordHelper.readPluginDescription(stream);
             }else throw new IllegalArgumentException("McNative loader is not supporting the "+this.environment.getName()+" environment");
-
         }
-
         try { stream.close(); } catch (IOException ignored) {}
-
         return result;
     }
 
