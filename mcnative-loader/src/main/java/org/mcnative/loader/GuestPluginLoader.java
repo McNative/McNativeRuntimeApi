@@ -50,6 +50,10 @@ public class GuestPluginLoader extends DefaultPluginLoader {
         this.pluginType = "mcnative";
     }
 
+    public boolean allowDependencyLoading(){
+        return this.pluginType.equals("mcnative");
+    }
+
     @Override
     public boolean isEnabled() {
         return executor.isEnabled();

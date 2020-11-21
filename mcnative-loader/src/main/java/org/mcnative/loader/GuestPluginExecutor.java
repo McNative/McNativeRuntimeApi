@@ -87,6 +87,7 @@ public class GuestPluginExecutor {
     }
 
     public boolean installDependencies(){
+        if(!loader.allowDependencyLoading()) return true;
         InputStream stream = loader.getClassLoader().getResourceAsStream("dependencies.json");
         if(stream == null) return true;
         Document data = DocumentFileType.JSON.getReader().read(stream);
