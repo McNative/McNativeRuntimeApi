@@ -19,7 +19,6 @@
 
 package org.mcnative.loader.bootstrap;
 
-import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
@@ -44,10 +43,12 @@ import java.util.regex.Pattern;
 
 public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listener, PlatformExecutor {
 
+    public static BukkitMcNativePluginBootstrap INSTANCE;
     private GuestPluginExecutor executor;
 
     @Override
     public void onLoad() {
+        INSTANCE = this;
         try{
             RolloutConfiguration configuration = RolloutConfiguration.load();
 
@@ -63,7 +64,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
             this.executor = new GuestPluginExecutor(this,getFile(),getLogger(),EnvironmentNames.BUKKIT,resource);
 
-            if(!this.executor.install() || !this.executor.installDependencies()){
+            if(!this.executor.install()){
                 this.executor = null;
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -73,8 +74,8 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
 
             this.executor.loadGuestPlugin();
 
-            PluginVersion version = this.executor.getLoader().getDescription().getVersion();
-            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
+            String version = this.executor.getLoader().getLoadedVersion();
+            ReflectionUtil.changeFieldValue(getDescription(),"version",version);
 
             RolloutConfiguration.save(configuration);
         }catch (Exception exception){
@@ -117,7 +118,7 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
     @EventHandler
     public void handleMcNativeShutdown(PluginDisableEvent event){
         if(event.getPlugin().getName().equalsIgnoreCase("McNative")){
-            getLogger().info("(McNative-Loader) McNative is shutting down, thus plugins depends on McNative and is now also shutting down.");
+            getLogger().info("(McNative-Loader) McNative is shutting down, this plugins depends on McNative and is now also shutting down.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }

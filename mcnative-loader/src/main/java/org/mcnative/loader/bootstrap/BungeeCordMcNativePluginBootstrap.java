@@ -45,7 +45,7 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
             if(!McNativeLoader.install(getLogger(), EnvironmentNames.BUNGEECORD, mcnative)) return;
             this.executor = new GuestPluginExecutor(this,getDescription().getFile(),getLogger(),EnvironmentNames.BUNGEECORD,resource);
 
-            if(!this.executor.install() || !this.executor.installDependencies()){
+            if(!this.executor.install()){
                 this.executor = null;
                 return;
             }
@@ -54,8 +54,8 @@ public class BungeeCordMcNativePluginBootstrap extends Plugin implements Platfor
 
             this.executor.loadGuestPlugin();
 
-            PluginVersion version = this.executor.getLoader().getDescription().getVersion();
-            ReflectionUtil.changeFieldValue(getDescription(),"version",version.getName());
+            String version = this.executor.getLoader().getLoadedVersion();
+            ReflectionUtil.changeFieldValue(getDescription(),"version",version);
 
             RolloutConfiguration.save(configuration);
         }catch (Exception exception){

@@ -18,7 +18,7 @@
  * under the License.
  */
 
-package org.mcnative.loader;
+package org.mcnative.loader.loaders.mcnative;
 
 import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.logging.PretronicLogger;
@@ -31,6 +31,8 @@ import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.PluginClassLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
+import org.mcnative.loader.EnvironmentNames;
+import org.mcnative.loader.PlatformExecutor;
 import org.mcnative.loader.bridged.bukkit.BukkitHelper;
 import org.mcnative.loader.bridged.bungeecord.BungeeCordHelper;
 
@@ -38,12 +40,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GuestPluginLoader extends DefaultPluginLoader {
+public class McNativePluginLoader extends DefaultPluginLoader {
 
     private final PlatformExecutor executor;
     private String pluginType;
 
-    public GuestPluginLoader(PlatformExecutor executor,PluginManager pluginManager, RuntimeEnvironment<?> environment, PretronicLogger logger, PluginClassLoader classLoader, File location, PluginDescription description, boolean lifecycleLogging) {
+    public McNativePluginLoader(PlatformExecutor executor, PluginManager pluginManager, RuntimeEnvironment<?> environment, PretronicLogger logger, PluginClassLoader classLoader, File location, PluginDescription description, boolean lifecycleLogging) {
         super(pluginManager, environment, logger, classLoader, location, description, lifecycleLogging);
         this.executor = executor;
         if(this.pluginType == null) this.pluginType = "mcnative";

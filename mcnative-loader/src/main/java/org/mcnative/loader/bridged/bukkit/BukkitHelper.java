@@ -6,26 +6,27 @@ import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.common.plugin.MinecraftPlugin;
-import org.mcnative.loader.GuestPluginLoader;
+import org.mcnative.loader.loaders.mcnative.McNativePluginLoader;
 
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 
 public class BukkitHelper {
 
     public static PluginDescription readPluginDescription(InputStream stream){
         try {
             PluginDescriptionFile description = new PluginDescriptionFile(stream);
+            System.out.println(description.getName());
+            System.out.println(description.getMain());
             return new BukkitHybridPluginDescription(description);
         } catch (InvalidDescriptionException e) {
             throw new OperationFailedException(e);
         }
     }
 
-    public static MinecraftPlugin constructPlugin(GuestPluginLoader loader,PluginDescription description){
+    public static MinecraftPlugin constructPlugin(McNativePluginLoader loader, PluginDescription description){
         try {
+            System.out.println(description.getMain().getMainClass("bukkit"));
             Class<?> pluginClass = loader.getClassLoader().loadClass(description.getMain().getMainClass("bukkit"));
             System.out.println(pluginClass);
             Object plugin = UnsafeInstanceCreator.newInstance(pluginClass);

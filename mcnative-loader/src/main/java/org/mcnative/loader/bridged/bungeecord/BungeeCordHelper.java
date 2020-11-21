@@ -3,7 +3,7 @@ package org.mcnative.loader.bridged.bungeecord;
 import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.plugin.MinecraftPlugin;
-import org.mcnative.loader.GuestPluginLoader;
+import org.mcnative.loader.loaders.mcnative.McNativePluginLoader;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
@@ -29,7 +29,7 @@ public class BungeeCordHelper {
         return new BungeeCordHybridPluginDescription(desc,null);
     }
 
-    public static MinecraftPlugin constructPlugin(GuestPluginLoader loader,PluginDescription description){
+    public static MinecraftPlugin constructPlugin(McNativePluginLoader loader, PluginDescription description){
         try {
             Class<?> pluginClass = loader.getClassLoader().loadClass(description.getMain().getMainClass("bungeecord"));
             Object plugin = pluginClass.getDeclaredConstructor().newInstance();

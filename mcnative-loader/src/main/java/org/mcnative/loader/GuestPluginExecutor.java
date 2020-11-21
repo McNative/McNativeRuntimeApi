@@ -19,27 +19,29 @@
 
 package org.mcnative.loader;
 
-import net.pretronic.libraries.dependency.DependencyGroup;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.type.DocumentFileType;
-import net.pretronic.libraries.logging.bridge.JdkPretronicLogger;
-import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
-import net.pretronic.libraries.plugin.loader.PluginLoader;
-import net.pretronic.libraries.plugin.loader.classloader.BridgedPluginClassLoader;
 import net.pretronic.libraries.resourceloader.ResourceInfo;
 import net.pretronic.libraries.resourceloader.ResourceLoader;
 import net.pretronic.libraries.resourceloader.VersionInfo;
+import net.pretronic.libraries.utility.io.IORuntimeException;
 import org.mcnative.common.McNative;
+import org.mcnative.loader.loaders.GuestPluginLoader;
+import org.mcnative.loader.loaders.mcnative.McNativeGuestPluginLoader;
 import org.mcnative.loader.rollout.RolloutProfile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class GuestPluginExecutor {
 
@@ -86,30 +88,22 @@ public class GuestPluginExecutor {
         return true;
     }
 
-    public boolean installDependencies(){
-        InputStream stream = loader.getClassLoader().getResourceAsStream("dependencies.json");
-        if(stream == null) return true;
-        Document data = DocumentFileType.JSON.getReader().read(stream);
-        try{
-            DependencyGroup dependencies = McNative.getInstance().getDependencyManager().load(data);
-            dependencies.install();
-            dependencies.loadReflected((URLClassLoader) loader.getClassLoader().asJVMLoader());
-        }catch (Exception exception){
-            logger.log(Level.SEVERE,String.format("Could not install dependencies %s",exception.getMessage()));
-            return false;
-        }
-        return true;
-    }
-
     private void setupLoader(InputStream descriptionStream){
         PluginDescription description = null;
         if(descriptionStream != null){
             description = DefaultPluginDescription.create(McNative.getInstance().getPluginManager()
                     ,DocumentFileType.JSON.getReader().read(descriptionStream));
         }
-        this.loader = new GuestPluginLoader(executor,McNative.getInstance().getPluginManager(),environment
-                ,new JdkPretronicLogger(logger),new BridgedPluginClassLoader(getClass().getClassLoader())
-                ,location,description,false);
+
+        if(description != null || isMcNativePlugin()){
+            this.loader = new McNativeGuestPluginLoader(executor,this.environment,this.logger,this.location,description);
+        }else if(environment.getName().equals(EnvironmentNames.BUKKIT)){
+
+        }else if(environment.getName().equals(EnvironmentNames.BUNGEECORD)){
+
+        }else{
+            throw new UnsupportedOperationException("No valid plugin manifest found");
+        }
     }
 
     private boolean downloadResource(Document loader){
@@ -189,31 +183,36 @@ public class GuestPluginExecutor {
                 .replace("{profile.qualifier}",profile.getQualifier());
     }
 
-    public PluginLoader getLoader() {
+    public GuestPluginLoader getLoader() {
         return loader;
     }
 
     public void loadGuestPlugin(){
-        McNative.getInstance().getPluginManager().provideLoader(loader);
-        loader.construct();
-        loader.initialize();
-        loader.load();
+        loader.handlePluginLoad();
     }
 
     public void enableGuestPlugin(){
-        loader.bootstrapInternal();
+        loader.handlePluginEnable();
     }
 
     public void disableGuestPlugin(){
-        Plugin<?> owner = loader.getInstance();
-        loader.shutdownInternal();
-        McNative instance = McNative.getInstance();
-        instance.getRegistry().unregisterService(owner);
-        instance.getScheduler().unregister(owner);
-        instance.getLocal().getEventBus().unsubscribe(owner);
-        instance.getLocal().getCommandManager().unregisterCommand(owner);
-        if(instance.isNetworkAvailable()){
-            instance.getNetwork().getMessenger().unregisterChannels(owner);
+        loader.handlePluginDisable();
+    }
+
+    private boolean isMcNativePlugin(){
+        try {
+            InputStream fileInput = Files.newInputStream(location.toPath());
+
+            try (ZipInputStream input = new ZipInputStream(fileInput)) {
+                ZipEntry entry = input.getNextEntry();
+                while (entry != null) {
+                    if (entry.getName().equals("mcnative.json")) return true;
+                    entry = input.getNextEntry();
+                }
+                return false;
+            }
+        } catch (IOException exception) {
+            throw new IORuntimeException(exception);
         }
     }
 
