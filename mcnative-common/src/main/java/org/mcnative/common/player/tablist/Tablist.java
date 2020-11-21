@@ -51,6 +51,8 @@ public interface Tablist {
 
     void removeEntry(TablistEntry entry);
 
+    void reloadEntry(TablistEntry entry);
+
 
     TablistOverviewFormatter getOverviewFormatter();
 

@@ -106,6 +106,14 @@ public class BukkitTablist implements Tablist {
     }
 
     @Override
+    public void reloadEntry(TablistEntry entry) {
+        Validate.notNull(entry);
+        if(this.entries.contains(entry)){
+            for (ConnectedMinecraftPlayer receiver : this.receivers) sendEntry(receiver,entry);
+        }
+    }
+
+    @Override
     public TablistOverviewFormatter getOverviewFormatter() {
         return this.overviewFormatter;
     }

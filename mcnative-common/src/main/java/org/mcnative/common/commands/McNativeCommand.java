@@ -28,6 +28,7 @@ import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.commands.plugin.McNativePluginCommand;
+import org.mcnative.common.commands.util.McNativeUtilityCommand;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.event.ClickAction;
 import org.mcnative.common.text.event.HoverAction;
@@ -47,6 +48,7 @@ public class McNativeCommand extends MainCommand implements NotFindable, NoPermi
         registerCommand(new McNativePluginCommand(owner));
         registerCommand(new McNativePasteLogCommand(owner));
         registerCommand(new McNativeVersionCommand(owner));
+        registerCommand(new McNativeUtilityCommand(owner));
     }
 
     @Override
