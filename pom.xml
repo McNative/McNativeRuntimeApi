@@ -26,7 +26,7 @@
     <groupId>org.mcnative</groupId>
     <artifactId>McNative</artifactId>
     <packaging>pom</packaging>
-    <version>1.7.22.433-SNAPSHOT</version>
+    <version>1.7.24.435-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -62,9 +62,9 @@
         <dependency.pretronic.libraries.synchronisation>${dependency.pretronic.libraries}</dependency.pretronic.libraries.synchronisation>
         <dependency.pretronic.libraries.logging>${dependency.pretronic.libraries}</dependency.pretronic.libraries.logging>
         <dependency.pretronic.libraries.message>${dependency.pretronic.libraries}</dependency.pretronic.libraries.message>
-        <dependency.pretronic.libraries>1.2.25.163-SNAPSHOT</dependency.pretronic.libraries>
+        <dependency.pretronic.libraries>1.2.26.164-SNAPSHOT</dependency.pretronic.libraries>
 
-        <dependency.pretronic.databasequery>1.2.43.70-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.databasequery>1.2.44.71-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
         <dependency.slf4j>1.7.25</dependency.slf4j>
