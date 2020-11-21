@@ -91,7 +91,9 @@ public class BukkitMcNativePluginBootstrap extends JavaPlugin implements Listene
         try{
             if(this.executor != null){
                 this.executor.enableGuestPlugin();
-                Bukkit.getPluginManager().registerEvents(this,this);
+                if(isEnabled()){
+                    Bukkit.getPluginManager().registerEvents(this,this);
+                }
             }
         }catch (Exception exception){
             this.executor = null;
