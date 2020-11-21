@@ -78,6 +78,7 @@ public class GuestPluginExecutor {
                     }else return false;
                 }catch (Exception exception){
                     logger.log(Level.SEVERE,String.format("Could not install plugin %s",exception.getMessage()));
+                    exception.printStackTrace();
                     return false;
                 }
             }

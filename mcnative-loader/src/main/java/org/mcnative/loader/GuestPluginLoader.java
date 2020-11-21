@@ -88,7 +88,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
     @Override
     public PluginDescription loadDescription() {
         InputStream stream = getClassLoader().getResourceAsStream("mcnative.json");
-        PluginDescription result = null;
+        PluginDescription result;
 
         if(stream != null){
             result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
