@@ -2,9 +2,11 @@ package org.mcnative.loader.bridged.bukkit;
 
 import net.pretronic.libraries.plugin.description.PluginDescription;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
+import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.loader.GuestPluginLoader;
 
@@ -25,12 +27,12 @@ public class BukkitHelper {
     public static MinecraftPlugin constructPlugin(GuestPluginLoader loader,PluginDescription description){
         try {
             Class<?> pluginClass = loader.getClassLoader().loadClass(description.getMain().getMainClass("bukkit"));
-            Object plugin = pluginClass.getDeclaredConstructor().newInstance();
+            System.out.println(pluginClass);
+            Object plugin = UnsafeInstanceCreator.newInstance(pluginClass);
+            System.out.println(plugin);
             return new BukkitMinecraftPluginWrapper((Plugin) plugin);
         }catch (ClassNotFoundException e){
             throw new IllegalArgumentException("Main class not found");
-        }catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new OperationFailedException(e);
         }
     }
 

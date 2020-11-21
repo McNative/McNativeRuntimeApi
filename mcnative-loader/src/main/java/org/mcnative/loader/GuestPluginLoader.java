@@ -118,7 +118,6 @@ public class GuestPluginLoader extends DefaultPluginLoader {
 
     @Override
     public Plugin<?> construct() {
-        System.out.println(this.pluginType);
         if (this.isInstanceAvailable()) {
             throw new PluginLoadException("Plugin is already constructed.");
         }else if(this.pluginType.equals("bukkit")){
