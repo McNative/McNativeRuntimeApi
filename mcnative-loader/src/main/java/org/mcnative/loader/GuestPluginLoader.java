@@ -96,6 +96,7 @@ public class GuestPluginLoader extends DefaultPluginLoader {
             result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
         }else{
             System.out.println("No mcnative.json");
+            System.out.println("Environment: "+this.environment);
             System.out.println("Environment: "+this.environment.getName());
             if(this.environment.getName().equals(EnvironmentNames.BUKKIT)){
                 stream = getClassLoader().getResourceAsStream("plugin.yml");
