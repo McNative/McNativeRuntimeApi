@@ -33,8 +33,6 @@ import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.EnvironmentNames;
 import org.mcnative.loader.PlatformExecutor;
-import org.mcnative.loader.bridged.bukkit.BukkitHelper;
-import org.mcnative.loader.bridged.bungeecord.BungeeCordHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,41 +91,9 @@ public class McNativePluginLoader extends DefaultPluginLoader {
     @Override
     public PluginDescription loadDescription() {
         InputStream stream = getClassLoader().getResourceAsStream("mcnative.json");
-        PluginDescription result;
-
-        if(stream != null){
-            result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
-        }else{
-            RuntimeEnvironment<?> environment = getEnvironment();
-            if(environment.getName().equals(EnvironmentNames.BUKKIT)){
-                stream = getClassLoader().getResourceAsStream("plugin.yml");
-                if(stream == null) throw new IllegalArgumentException("No plugin description found");
-                this.pluginType = "bukkit";
-                return BukkitHelper.readPluginDescription(stream);
-            }else if(environment.getName().equals(EnvironmentNames.BUNGEECORD)){
-                stream = getClassLoader().getResourceAsStream("plugin.yml");
-                if(stream == null){
-                    stream = getClassLoader().getResourceAsStream("bungee.yml");
-                    if(stream == null) throw new IllegalArgumentException("No plugin description found");
-                }
-                this.pluginType = "bungeecord";
-                return BungeeCordHelper.readPluginDescription(stream);
-            }else throw new IllegalArgumentException("McNative loader is not supporting the "+environment.getName()+" environment");
-        }
+        if(stream == null) throw new IllegalArgumentException("No mcnative.json available");
+        PluginDescription result = DefaultPluginDescription.create(getPluginManager(), DocumentFileType.JSON.getReader().read(stream));
         try { stream.close(); } catch (IOException ignored) {}
         return result;
-    }
-
-    @Override
-    public Plugin<?> construct() {
-        if (this.isInstanceAvailable()) {
-            throw new PluginLoadException("Plugin is already constructed.");
-        }else if(this.pluginType.equals("bukkit")){
-            return BukkitHelper.constructPlugin(this,getDescription());
-        }else if(this.pluginType.equals("bungeecord")){
-            return BungeeCordHelper.constructPlugin(this,getDescription());
-        }else{
-            return super.construct();
-        }
     }
 }

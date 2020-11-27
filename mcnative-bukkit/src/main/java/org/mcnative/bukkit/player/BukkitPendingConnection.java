@@ -224,7 +224,7 @@ public class BukkitPendingConnection implements PendingConnection {
                 original = ((McNativeMessageEncoderIgnoreWrapper) encoder).getOriginal();
             }else if(encoder instanceof MessageToByteEncoder){
                 original = (MessageToByteEncoder<Object>) encoder;
-            }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team");
+            }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team ("+encoder.getClass()+")");
 
             channel.pipeline().replace("encoder","encoder"
                     ,new MinecraftProtocolEncoder(McNative.getInstance().getLocal().getPacketManager()
@@ -262,7 +262,9 @@ public class BukkitPendingConnection implements PendingConnection {
                     ,new MinecraftProtocolRewriteDecoder(McNative.getInstance().getLocal().getPacketManager()
                             ,Endpoint.UPSTREAM, PacketDirection.INCOMING,this));
 
-            channel.pipeline().addAfter("decoder","minecraft-decoder",new McNativeMessageDecoderIgnoreWrapper(original));
+            if(original != null){
+                channel.pipeline().addAfter("decoder","minecraft-decoder",new McNativeMessageDecoderIgnoreWrapper(original));
+            }
         }
     }
 
@@ -272,7 +274,9 @@ public class BukkitPendingConnection implements PendingConnection {
             original = ((McNativeMessageDecoderIgnoreWrapper) decoder).getOriginal();
         }else if(decoder instanceof ByteToMessageDecoder){
             original = (ByteToMessageDecoder) decoder;
-        }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team");
+        }else if(decoder.getClass().getName().equals(MinecraftProtocolRewriteDecoder.class.getName())){
+            original = null;
+        }else throw new IllegalArgumentException("Invalid handler, contact the McNative developer team ("+decoder.getClass()+")");
         return original;
     }
 }
