@@ -63,7 +63,6 @@ public class McNativePackageMojo extends AbstractMojo {
             MavenArchiver archiver = new MavenArchiver();
             archiver.setArchiver((JarArchiver) archivers.get("jar"));
             archiver.setOutputFile(new File(project.getBuild().getDirectory(),name));
-            archiver.setBuildJdkSpecDefaultEntry(false);
             archiver.getArchiver().addDirectory(new File(project.getBuild().getOutputDirectory())
                     ,new String[]{
                             "**/net/pretronic/libraries/resourceloader/**"
@@ -71,7 +70,7 @@ public class McNativePackageMojo extends AbstractMojo {
                             ,"**/mcnative-loader.json"
                             ,"**/plugin.yml"
                             ,"**/bungee.yml"
-                    },new String[]{});
+                    },new String[]{"META-INF/maven/**"});
 
             archiver.createArchive(session,project,archive);
         }catch (Exception exception){
