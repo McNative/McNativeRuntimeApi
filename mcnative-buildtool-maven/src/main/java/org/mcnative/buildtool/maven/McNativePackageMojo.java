@@ -63,6 +63,7 @@ public class McNativePackageMojo extends AbstractMojo {
             MavenArchiver archiver = new MavenArchiver();
             archiver.setArchiver((JarArchiver) archivers.get("jar"));
             archiver.setOutputFile(new File(project.getBuild().getDirectory(),name));
+            archiver.setBuildJdkSpecDefaultEntry(false);
             archiver.getArchiver().addDirectory(new File(project.getBuild().getOutputDirectory())
                     ,new String[]{
                             "**/net/pretronic/libraries/resourceloader/**"
