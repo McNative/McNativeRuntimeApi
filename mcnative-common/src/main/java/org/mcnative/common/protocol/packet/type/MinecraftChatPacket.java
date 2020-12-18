@@ -106,7 +106,7 @@ public class MinecraftChatPacket implements MinecraftPacket {
         if(direction == PacketDirection.OUTGOING){
             MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
             buffer.writeByte(position.getId());
-            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_15)){
+            if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_16)){
                 buffer.writeLong(0);//@Todo implement with correct sender id (Temporary fix)
                 buffer.writeLong(0);
             }
