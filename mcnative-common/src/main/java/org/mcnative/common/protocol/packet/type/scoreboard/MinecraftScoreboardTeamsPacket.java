@@ -176,13 +176,14 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
             if(action == Action.CREATE || action == Action.UPDATE){
                 if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_13)) {
                     MinecraftProtocolUtil.writeString(buffer, displayName == null ? "{}" : displayName.compileToString(version,getVariables()));
+
                     buffer.writeByte(friendlyFlag.getCode());
 
                     MinecraftProtocolUtil.writeString(buffer,nameTagVisibility.getNameTagVisibilityName());
 
                     MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
 
-                    MinecraftProtocolUtil.writeVarInt(buffer, 0);
+                    MinecraftProtocolUtil.writeVarInt(buffer, color.getClientCode());
 
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(version,getVariables()));
