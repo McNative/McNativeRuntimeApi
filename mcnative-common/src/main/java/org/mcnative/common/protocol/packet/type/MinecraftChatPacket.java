@@ -101,9 +101,11 @@ public class MinecraftChatPacket implements MinecraftPacket {
     @Override
     public void write(MinecraftConnection connection,PacketDirection direction, MinecraftProtocolVersion version, ByteBuf buffer) {
         Language language = null;
-        if(connection instanceof LanguageAble) language = ((LanguageAble) connection).getLanguage();
-
+        if(connection instanceof LanguageAble){
+            language = ((LanguageAble) connection).getLanguage();
+        }
         if(direction == PacketDirection.OUTGOING){
+            System.out.println(this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
             MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
             buffer.writeByte(position.getId());
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_16)){
