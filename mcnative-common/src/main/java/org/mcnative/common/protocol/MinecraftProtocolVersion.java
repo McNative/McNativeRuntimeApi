@@ -48,7 +48,7 @@ public enum MinecraftProtocolVersion {
     JE_1_12_2(340,"1.12.2",MinecraftEdition.JAVA),
     JE_1_12_1(338,"1.12.1",MinecraftEdition.JAVA),
     JE_1_12(335,"1.12",MinecraftEdition.JAVA),
-    JE_1_11_2(315,"1.11.2",MinecraftEdition.JAVA),
+    JE_1_11_2(316,"1.11.2",MinecraftEdition.JAVA),
     JE_1_11(315,"1.11",MinecraftEdition.JAVA),
     JE_1_10(210,"1.10",MinecraftEdition.JAVA),
     JE_1_9_4(110,"1.9.4",MinecraftEdition.JAVA),
