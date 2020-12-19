@@ -105,7 +105,6 @@ public class MinecraftChatPacket implements MinecraftPacket {
             language = ((LanguageAble) connection).getLanguage();
         }
         if(direction == PacketDirection.OUTGOING){
-            System.out.println(this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
             MinecraftProtocolUtil.writeString(buffer,this.message.compileToString(connection,variables!=null?variables:VariableSet.newEmptySet(),language));
             buffer.writeByte(position.getId());
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_16)){
