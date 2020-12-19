@@ -29,7 +29,7 @@ public enum MinecraftProtocolVersion {
 
     /** Java Edition */
 
-    JE_1_16_4(754,"1.16.3",MinecraftEdition.JAVA),
+    JE_1_16_4(754,"1.16.4",MinecraftEdition.JAVA),
     JE_1_16_3(753,"1.16.3",MinecraftEdition.JAVA),
     JE_1_16_2(751,"1.16.2",MinecraftEdition.JAVA),
     JE_1_16_1(736,"1.16.1",MinecraftEdition.JAVA),
@@ -78,7 +78,6 @@ public enum MinecraftProtocolVersion {
         this.edition = edition;
     }
 
-
     public int getNumber() {
         return number;
     }
@@ -114,5 +113,13 @@ public enum MinecraftProtocolVersion {
     public static MinecraftProtocolVersion of(MinecraftEdition edition, int number){
         for (MinecraftProtocolVersion value : values()) if(value.getEdition() == edition && value.getNumber() == number) return value;
         throw new UnsupportedOperationException("This protocol version is not supported.");
+    }
+
+    public static MinecraftProtocolVersion getLatest(MinecraftEdition edition){
+         if(edition == MinecraftEdition.JAVA){
+             return JE_1_16_4;
+         }else{
+             return BE_1_12;
+         }
     }
 }

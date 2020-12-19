@@ -29,6 +29,8 @@ import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.chat.ChatPosition;
+import org.mcnative.common.text.Text;
+import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.RawMessageComponent;
 import org.mcnative.proxy.ProxyService;
 
@@ -72,7 +74,8 @@ public class McNativePlayerActionListener implements MessagingChannelListener {
             }else if(action.equalsIgnoreCase("sendMessage")){
                 Document jsonText = request.getDocument("text");
                 ChatPosition position = ChatPosition.of(request.getByte("position"));
-                player.sendMessage(position,new RawMessageComponent("Pre compiled","Pre compiled",jsonText));
+                MessageComponent<?> text = Text.decompile(jsonText);
+                player.sendMessage(position,text);
             }
         }
         return null;

@@ -29,6 +29,7 @@ import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.player.chat.ChatPosition;
+import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.text.components.MessageComponent;
 
@@ -94,8 +95,8 @@ public class McNativePlayerExecutor {
     public static void sendMessage(UUID uniqueId,ChatPosition position, MessageComponent<?> component, VariableSet variables) {
         executePlayerBased(uniqueId,Document.newDocument()
                 .set("action","sendMessage")
-                .set("position",position.getId())//@Todo force compile to 1.8
-                .set("text",component.compile(MinecraftProtocolVersion.JE_1_8,variables)));
+                .set("position",position.getId())
+                .set("text",component.compile(MinecraftProtocolVersion.getLatest(MinecraftEdition.JAVA),variables)));
     }
 
     private static void executePlayerBased(UUID uniqueId, Document data){
