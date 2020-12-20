@@ -20,12 +20,23 @@
 
 package org.mcnative.bungeecord.network.cloudnet;
 
+import de.dytanic.cloudnet.ext.bridge.BridgeHelper;
+import de.dytanic.cloudnet.ext.bridge.BridgeServiceProperty;
+import de.dytanic.cloudnet.ext.bridge.bungee.BungeeCloudNetHelper;
 import de.dytanic.cloudnet.ext.bridge.bungee.event.BungeeChannelMessageReceiveEvent;
+import de.dytanic.cloudnet.ext.bridge.proxy.BridgeProxyHelper;
+import de.dytanic.cloudnet.ext.bridge.proxy.PlayerFallback;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import org.mcnative.bungeecord.McNativeLauncher;
 import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Messenger;
+
+import java.util.concurrent.TimeUnit;
 
 public class CloudNetV3PlatformListener implements Listener {
 
@@ -39,5 +50,22 @@ public class CloudNetV3PlatformListener implements Listener {
     @EventHandler
     public void onMessageReceive(BungeeChannelMessageReceiveEvent event){
         this.messenger.handleMessageEvent(event.getChannel(),event.getMessage(),event.getData());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerPostLogin(PostLoginEvent event){
+        if(event.getPlayer().getServer() == null){
+            ProxiedPlayer player = event.getPlayer();
+            boolean available = BridgeProxyHelper.getNextFallback(player.getUniqueId(), "null", player::hasPermission).isPresent();
+            if(!available){
+                event.getPlayer().disconnect(ProxyServer.getInstance().getTranslation("fallback_kick"));
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void handle(PlayerDisconnectEvent event) {
+        BridgeHelper.sendChannelMessageProxyDisconnect(BungeeCloudNetHelper.createNetworkConnectionInfo(event.getPlayer().getPendingConnection()));
+        BridgeProxyHelper.clearFallbackProfile(event.getPlayer().getUniqueId());
+        ProxyServer.getInstance().getScheduler().schedule(McNativeLauncher.getPlugin(), BridgeHelper::updateServiceInfo, 150, TimeUnit.MILLISECONDS);
     }
 }
