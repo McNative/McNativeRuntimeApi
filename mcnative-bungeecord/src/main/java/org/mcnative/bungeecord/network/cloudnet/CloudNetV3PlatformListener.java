@@ -52,6 +52,7 @@ public class CloudNetV3PlatformListener implements Listener {
         this.messenger.handleMessageEvent(event.getChannel(),event.getMessage(),event.getData());
     }
 
+    /*
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPostLogin(PostLoginEvent event){
         if(event.getPlayer().getServer() == null){
@@ -62,6 +63,8 @@ public class CloudNetV3PlatformListener implements Listener {
             }
         }
     }
+     */
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(PlayerDisconnectEvent event) {
         BridgeHelper.sendChannelMessageProxyDisconnect(BungeeCloudNetHelper.createNetworkConnectionInfo(event.getPlayer().getPendingConnection()));
