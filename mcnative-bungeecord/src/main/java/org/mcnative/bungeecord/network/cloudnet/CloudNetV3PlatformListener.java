@@ -63,7 +63,7 @@ public class CloudNetV3PlatformListener implements Listener {
                     BridgeHelper.sendChannelMessageProxyDisconnect(BungeeCloudNetHelper.createNetworkConnectionInfo(event.getPlayer().getPendingConnection()));
                     BridgeProxyHelper.clearFallbackProfile(event.getPlayer().getUniqueId());
                     ProxyServer.getInstance().getScheduler().schedule(McNativeLauncher.getPlugin(), BridgeHelper::updateServiceInfo, 50, TimeUnit.MILLISECONDS);
-                }, 350, TimeUnit.MILLISECONDS);
+                }, 550L, TimeUnit.MILLISECONDS);
             }
         }
     }
