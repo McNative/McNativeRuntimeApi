@@ -97,10 +97,9 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>cloudnet</id>
-            <url>https://cloudnetservice.eu/repositories/</url>
+            <id>releases</id>
+            <url>https://repo.cloudnetservice.eu/repository/releases/</url>
         </repository>
-
         <repository>
             <id>viaversion-repo</id>
             <url>https://repo.viaversion.com</url>
@@ -145,14 +144,14 @@
         <dependency>
             <groupId>de.dytanic.cloudnet</groupId>
             <artifactId>cloudnet-wrapper-jvm</artifactId>
-            <version>3.2.0-RELEASE</version>
+            <version>3.3.0-RELEASE</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>de.dytanic.cloudnet</groupId>
             <artifactId>cloudnet-bridge</artifactId>
-            <version>3.2.0-RELEASE</version>
+            <version>3.3.0-RELEASE</version>
             <scope>provided</scope>
         </dependency>
 

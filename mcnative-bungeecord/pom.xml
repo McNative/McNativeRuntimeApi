@@ -89,8 +89,8 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <repository>
-            <id>cloudnet</id>
-            <url>https://cloudnetservice.eu/repositories/</url>
+            <id>releases</id>
+            <url>https://repo.cloudnetservice.eu/repository/releases/</url>
         </repository>
     </repositories>
 
@@ -139,7 +139,7 @@
         <dependency>
             <groupId>de.dytanic.cloudnet</groupId>
             <artifactId>cloudnet-wrapper-jvm</artifactId>
-            <version>3.2.0-RELEASE</version>
+            <version>3.3.0-RELEASE</version>
             <scope>provided</scope>
         </dependency>
 
