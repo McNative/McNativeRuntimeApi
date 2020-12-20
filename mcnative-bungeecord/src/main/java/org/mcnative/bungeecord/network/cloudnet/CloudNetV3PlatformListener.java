@@ -59,9 +59,11 @@ public class CloudNetV3PlatformListener implements Listener {
             boolean available = BridgeProxyHelper.getNextFallback(player.getUniqueId(), "null", player::hasPermission).isPresent();
             if(!available){
                 event.getPlayer().disconnect(ProxyServer.getInstance().getTranslation("fallback_kick"));
-                BridgeHelper.sendChannelMessageProxyDisconnect(BungeeCloudNetHelper.createNetworkConnectionInfo(event.getPlayer().getPendingConnection()));
-                BridgeProxyHelper.clearFallbackProfile(event.getPlayer().getUniqueId());
-                ProxyServer.getInstance().getScheduler().schedule(McNativeLauncher.getPlugin(), BridgeHelper::updateServiceInfo, 50, TimeUnit.MILLISECONDS);
+                ProxyServer.getInstance().getScheduler().schedule(McNativeLauncher.getPlugin(), () -> {
+                    BridgeHelper.sendChannelMessageProxyDisconnect(BungeeCloudNetHelper.createNetworkConnectionInfo(event.getPlayer().getPendingConnection()));
+                    BridgeProxyHelper.clearFallbackProfile(event.getPlayer().getUniqueId());
+                    ProxyServer.getInstance().getScheduler().schedule(McNativeLauncher.getPlugin(), BridgeHelper::updateServiceInfo, 50, TimeUnit.MILLISECONDS);
+                }, 350, TimeUnit.MILLISECONDS);
             }
         }
     }
