@@ -33,6 +33,7 @@ import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServerType;
+import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.plugin.configuration.FileConfiguration;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.MessageKeyComponent;
@@ -82,6 +83,8 @@ public class McNativeBungeeCordConfiguration {
     public static boolean NETWORK_PACKET_MANIPULATION_DOWNSTREAM_ENABLED = false;
 
     public static boolean load(PretronicLogger logger, File location){
+        OfflineMinecraftPlayer.DISPLAY_NAME_FORMAT = PLAYER_DISPLAY_NAME_FORMAT;
+
         logger.info(McNative.CONSOLE_PREFIX+"Searching configuration file");
         Pair<File,DocumentFileType> configSpec = Document.findExistingType(location,"config");
         File configFile;
