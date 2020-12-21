@@ -23,6 +23,7 @@ import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
+import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfig;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.GeneralUtil;
 import net.pretronic.libraries.utility.Iterators;
@@ -118,13 +119,15 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
 
     @Override
     public Collection<String> getDatabaseTypes(Plugin<?> plugin) {
-        Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), new Function<StorageConfig.DatabaseEntry, String>() {
-            @Override
-            public String apply(StorageConfig.DatabaseEntry entry) {
-                String subType = "";
-                DatabaseDriverConfig<?> config = storageConfig.getDriverConfig(entry.name);
-                return config.getDriverClass().getSimpleName()+" ("+config.getName()+")";
+        Collection<String> types = Iterators.map(storageConfig.getDatabaseEntries(plugin), entry -> {
+            String dialect = "";
+            DatabaseDriverConfig<?> config = storageConfig.getDriverConfig(entry.name);
+
+            if(config instanceof SQLDatabaseDriverConfig) {
+                dialect = "-"+((SQLDatabaseDriverConfig<?>)config).getDialect().getName();
             }
+
+            return config.getDriverClass().getSimpleName()+dialect+" ("+config.getName()+")";
         });
         if(types.isEmpty()) return Collections.emptyList();
         return types;
