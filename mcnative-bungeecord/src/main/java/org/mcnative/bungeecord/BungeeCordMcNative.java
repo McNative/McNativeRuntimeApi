@@ -33,6 +33,7 @@ import net.pretronic.libraries.logging.bridge.slf4j.SLF4JStaticBridge;
 import net.pretronic.libraries.logging.level.DebugLevel;
 import net.pretronic.libraries.logging.level.LogLevel;
 import net.pretronic.libraries.message.MessageProvider;
+import net.pretronic.libraries.message.bml.variable.describer.VariableDescriber;
 import net.pretronic.libraries.message.bml.variable.describer.VariableDescriberRegistry;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
@@ -52,6 +53,7 @@ import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
+import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;
@@ -61,6 +63,7 @@ import org.mcnative.common.plugin.MinecraftPlugin;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 import org.mcnative.common.plugin.configuration.DefaultConfigurationProvider;
 import org.mcnative.common.rollout.RolloutConfiguration;
+import org.mcnative.common.serviceprovider.message.ColoredString;
 import org.mcnative.common.serviceprovider.message.DefaultMessageProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.placeholder.McNativePlaceholderProvider;
@@ -239,7 +242,6 @@ public class BungeeCordMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(BungeeProxiedPlayer.class);
         VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
-        VariableDescriberRegistry.registerDescriber(BungeeCordPlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
         VariableDescriberRegistry.registerDescriber(PluginDescription.class);
         VariableDescriberRegistry.registerDescriber(DefaultPluginDescription.class);
@@ -248,6 +250,12 @@ public class BungeeCordMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(WrappedBungeeMinecraftServer.class);
         VariableDescriberRegistry.registerDescriber(MinecraftServer.class);
         VariableDescriberRegistry.registerDescriber(ProxyServer.class);
+
+        VariableDescriber<?> designDescriber = VariableDescriberRegistry.registerDescriber(BungeeCordPlayerDesign.class);
+        ColoredString.makeDescriberColored(designDescriber);
+
+        VariableDescriber<OfflineMinecraftPlayer> playerDescriber = VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
+        ColoredString.makeFunctionColored(playerDescriber,"displayName");
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{

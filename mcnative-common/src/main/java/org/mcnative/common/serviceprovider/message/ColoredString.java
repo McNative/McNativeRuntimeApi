@@ -37,4 +37,9 @@ public class ColoredString {
     public static <T> void makeDescriberColored(VariableDescriber<T> describer){
         describer.getFunctions().replaceAll((name, function) -> o -> new ColoredString(function.apply(o)));
     }
+
+    public static <T> void makeFunctionColored(VariableDescriber<T> describer, String functionName){
+        Function<T, ?> inner = describer.getFunctions().get(functionName);
+        describer.getFunctions().put(functionName,object -> new ColoredString(inner.apply(object)));
+    }
 }
