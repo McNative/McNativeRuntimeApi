@@ -81,7 +81,7 @@ public class McNativePasteLogCommand extends BasicCommand {
         logger.info("Allocated memory: " + Math.round(((double)SystemInfo.getAllocatedMemory()/(double) (1024 * 1024))));
         logger.info("Total free memory: " + Math.round(((double)SystemInfo.getTotalFreeMemory()/(double) (1024 * 1024))));
         logger.info(" ");
-        logger.info("Plugins:");
+        logger.info("Plugins: ["+McNative.getInstance().getPluginManager().getPlugins().size()+"]");
         for (Plugin<?> plugin : McNative.getInstance().getPluginManager().getPlugins()) {
             StringBuilder builder = new StringBuilder();
             builder.append("- ")
