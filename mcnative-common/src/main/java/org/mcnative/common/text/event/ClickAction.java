@@ -80,7 +80,7 @@ public abstract class ClickAction {
     }
 
     public static ClickAction of(String name){
-        ClickAction action = REGISTRY.get(name);
+        ClickAction action = REGISTRY.get(name.toUpperCase());
         if(action == null) throw new IllegalArgumentException("Action "+name+" not found");
         return action;
     }
