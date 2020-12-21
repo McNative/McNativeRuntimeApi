@@ -50,6 +50,7 @@ import org.mcnative.bungeecord.server.BungeeCordServerStatusResponse;
 import org.mcnative.bungeecord.server.WrappedBungeeMinecraftServer;
 import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
+import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
@@ -245,6 +246,8 @@ public class BungeeCordMcNative implements McNative {
         VariableDescriberRegistry.registerDescriber(DefaultPluginLoader.class);
         VariableDescriberRegistry.registerDescriber(PluginVersion.class);
         VariableDescriberRegistry.registerDescriber(WrappedBungeeMinecraftServer.class);
+        VariableDescriberRegistry.registerDescriber(MinecraftServer.class);
+        VariableDescriberRegistry.registerDescriber(ProxyServer.class);
     }
 
     private static class BungeeObjectCreator implements ObjectCreator{
