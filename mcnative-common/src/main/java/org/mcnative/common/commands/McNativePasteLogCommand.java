@@ -41,6 +41,7 @@ import org.mcnative.common.utils.Messages;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -88,14 +89,17 @@ public class McNativePasteLogCommand extends BasicCommand {
                     .append(plugin.getName())
                     .append(" v").append(plugin.getDescription().getVersion().getName())
                     .append(" ")
-                    .append(plugin.getDescription().getAuthor())
-                    .append(" [Databases: ");
-            AtomicBoolean first = new AtomicBoolean(true);
-            McNative.getInstance().getPluginManager()
-                    .getService(ConfigurationProvider.class)
-                    .getDatabaseTypes(plugin)
-                    .forEach(type -> builder.append(first.get() ? "" : ",").append(type));
-            builder.append("]");
+                    .append(plugin.getDescription().getAuthor());
+
+            Collection<String> databases = McNative.getInstance().getPluginManager().getService(ConfigurationProvider.class).getDatabaseTypes(plugin);
+
+            if(!databases.isEmpty()) {
+                AtomicBoolean first = new AtomicBoolean(true);
+                builder.append(" [Databases: ");
+                databases.forEach(type -> builder.append(first.get() ? "" : ",").append(type));
+                builder.append("]");
+            }
+
             logger.info(builder.toString());
         }
         logger.info("----------------------------------------");

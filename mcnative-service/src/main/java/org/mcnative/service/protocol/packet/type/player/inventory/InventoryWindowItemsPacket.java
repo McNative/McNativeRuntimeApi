@@ -37,7 +37,13 @@ public class InventoryWindowItemsPacket implements MinecraftPacket {
 
     public final static PacketIdentifier IDENTIFIER = newIdentifier(InventoryWindowItemsPacket.class
             ,on(PacketDirection.OUTGOING,
-                    map(MinecraftProtocolVersion.JE_1_13_2, 0x15)));//@Todo other protocol ids
+                    map(MinecraftProtocolVersion.JE_1_8, 0x30),
+                    map(MinecraftProtocolVersion.JE_1_9, 0x14),
+                    map(MinecraftProtocolVersion.JE_1_13, 0x15),
+                    map(MinecraftProtocolVersion.JE_1_14, 0x14),
+                    map(MinecraftProtocolVersion.JE_1_15, 0x15),
+                    map(MinecraftProtocolVersion.JE_1_16, 0x14),
+                    map(MinecraftProtocolVersion.JE_1_16_2, 0x13)));
 
     private final byte windowId;
     private final Collection<ItemStack> items;
