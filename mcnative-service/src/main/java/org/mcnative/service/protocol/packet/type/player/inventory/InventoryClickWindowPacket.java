@@ -44,13 +44,12 @@ public class InventoryClickWindowPacket implements MinecraftPacket {
 
     public final static PacketIdentifier IDENTIFIER = newIdentifier(InventoryClickWindowPacket.class
             ,on(PacketDirection.INCOMING,
-                    //map(MinecraftProtocolVersion.JE_1_8, 0x0E),
+                    map(MinecraftProtocolVersion.JE_1_8, 0x0E),
                     map(MinecraftProtocolVersion.JE_1_9, 0x07),
                     map(MinecraftProtocolVersion.JE_1_12, 0x08),
                     map(MinecraftProtocolVersion.JE_1_12_1, 0x07),
                     map(MinecraftProtocolVersion.JE_1_13, 0x08),
-                    map(MinecraftProtocolVersion.JE_1_14, 0x09),
-                    map(MinecraftProtocolVersion.JE_1_15_2, 0x08)));
+                    map(MinecraftProtocolVersion.JE_1_14, 0x09)));
 
     private byte windowId;
     private short slot;

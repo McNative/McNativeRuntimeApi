@@ -33,9 +33,12 @@ public class ConfirmTransactionPacket implements MinecraftPacket {
 
     public final static PacketIdentifier IDENTIFIER = newIdentifier(ConfirmTransactionPacket.class
             ,on(PacketDirection.OUTGOING,
-                    map(MinecraftProtocolVersion.JE_1_13_2, 0x12)),
-            on(PacketDirection.INCOMING,
-                    map(MinecraftProtocolVersion.JE_1_13_2, 0x06)));
+                    map(MinecraftProtocolVersion.JE_1_8, 0x32),
+                    map(MinecraftProtocolVersion.JE_1_9, 0x11),
+                    map(MinecraftProtocolVersion.JE_1_13, 0x12),
+                    map(MinecraftProtocolVersion.JE_1_15, 0x13),
+                    map(MinecraftProtocolVersion.JE_1_16, 0x12),
+                    map(MinecraftProtocolVersion.JE_1_16_2, 0x11)));
 
     private final byte windowId;
     private final short actionNumber;
