@@ -20,6 +20,7 @@
 
 package org.mcnative.common.serviceprovider.message.builder;
 
+import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.builder.BasicMessageBuilder;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import org.mcnative.common.serviceprovider.message.builder.context.MinecraftBuildContext;
@@ -27,11 +28,16 @@ import org.mcnative.common.serviceprovider.message.builder.context.TextBuildType
 
 public class VariableBuilder implements BasicMessageBuilder {
 
-    public VariableBuilder(){}
+    public VariableBuilder(){ }
 
     @Override
     public Object build(BuildContext context, boolean requiresUnformatted,Object[] parameters, Object next) {
         Object value = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
+
+        if(value instanceof Message){
+            return IncludeMessageBuilder.BuildMessage(context, (Message) value,requiresUnformatted,next);
+        }
+
         if(requiresUnformatted){
             return TextBuildUtil.buildUnformattedText(value,next);
         }

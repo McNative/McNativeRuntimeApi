@@ -42,6 +42,10 @@ public class IncludeMessageBuilder implements BasicMessageBuilder {
             message = provider.getMessage((String)parameters[0],context.getLanguage());
             if(message == null) message = Message.ofStaticText("{MESSAGE NOT FOUND}");
         }
+        return BuildMessage(context,message,requiresUnformatted,next);
+    }
+
+    public static Object BuildMessage(BuildContext context,Message message, boolean requiresUnformatted, Object next){
         Object result = message.build(context);
         if(requiresUnformatted){
             return TextBuildUtil.buildUnformattedText(result,next);
