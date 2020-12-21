@@ -61,7 +61,7 @@ public class McNativeBungeeCordConfiguration {
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 
     @DocumentKey("player.displayName.format")
-    public static String PLAYER_DISPLAY_NAME_FORMAT = "{color}{name}";
+    public static String PLAYER_DISPLAY_NAME_FORMAT = "{design.color}{name}";
 
     public static Map<String,String> PLAYER_COLORS_COLORS = new LinkedHashMap<>();
     public static String PLAYER_COLORS_DEFAULT = "&7";
