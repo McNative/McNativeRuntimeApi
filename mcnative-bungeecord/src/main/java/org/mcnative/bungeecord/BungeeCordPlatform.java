@@ -87,7 +87,7 @@ public class BungeeCordPlatform implements MinecraftPlatform {
     }
 
     private File detectLatestLogLocation() {
-        if ("Waterfall".equals(ProxyServer.getInstance().getName().toLowerCase())) {
+        if ("Waterfall".equalsIgnoreCase(ProxyServer.getInstance().getName())) {
             return new File("logs/latest.log");
         }
         return new File("proxy.log.0");
@@ -99,7 +99,7 @@ public class BungeeCordPlatform implements MinecraftPlatform {
             try{
                 MinecraftProtocolVersion version = MinecraftProtocolVersion.of(MinecraftEdition.JAVA,supportedVersionId);
                 versions.add(version);
-                if(version.isNewer(newest)) newest = version;
+                if(newest.isNewer(version)) newest = version;
             }catch (Exception exception){
                 System.out.println("Protocol version "+supportedVersionId+" not found");
                 exception.printStackTrace();
