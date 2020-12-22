@@ -240,7 +240,6 @@ public class BungeeCordMcNative implements McNative {
 
     protected void registerDefaultDescribers(){
         VariableDescriberRegistry.registerDescriber(BungeeProxiedPlayer.class);
-        VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
         VariableDescriberRegistry.registerDescriber(PluginDescription.class);
