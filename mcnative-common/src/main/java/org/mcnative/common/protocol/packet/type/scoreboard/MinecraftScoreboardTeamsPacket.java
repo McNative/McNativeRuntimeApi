@@ -181,13 +181,7 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
                     MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
 
-                    TextColor color = TextColor.make("#34a1eb");
-                    int rgb = color.getColor().getRed();
-                    rgb = (rgb << 8) + color.getColor().getGreen();
-                    rgb = (rgb << 8) + color.getColor().getBlue();
-
-
-                    MinecraftProtocolUtil.writeVarInt(buffer,color.getColor().getRGB());//;color.getClientCode());//#34a1eb
+                    MinecraftProtocolUtil.writeVarInt(buffer,color.getClientCode());
 
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(version,getVariables()));
