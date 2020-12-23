@@ -34,12 +34,12 @@ public class VariableBuilder implements BasicMessageBuilder {
     public Object build(BuildContext context, boolean requiresUnformatted,Object[] parameters, Object next) {
         Object value = parameters.length > 0 ? context.getVariables().getValue((String) parameters[0]) : "[VAR NOT FOUND]";
 
-        if(value instanceof Message){
-            return IncludeMessageBuilder.BuildMessage(context, (Message) value,requiresUnformatted,next);
-        }
-
         if(requiresUnformatted){
             return TextBuildUtil.buildUnformattedText(value,next);
+        }
+
+        if(value instanceof Message){
+            return IncludeMessageBuilder.BuildMessage(context, (Message) value,requiresUnformatted,next);
         }
 
         if(context instanceof MinecraftBuildContext){

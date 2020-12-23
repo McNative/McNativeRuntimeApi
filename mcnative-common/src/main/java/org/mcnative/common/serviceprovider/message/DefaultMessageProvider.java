@@ -29,6 +29,7 @@ import net.pretronic.libraries.message.bml.Message;
 import net.pretronic.libraries.message.bml.MessageProcessor;
 import net.pretronic.libraries.message.bml.function.defaults.math.RandomNumberFunction;
 import net.pretronic.libraries.message.bml.function.defaults.math.SumFunction;
+import net.pretronic.libraries.message.bml.function.defaults.operation.ConditionFunction;
 import net.pretronic.libraries.message.bml.function.defaults.operation.LoopFunction;
 import net.pretronic.libraries.message.bml.function.defaults.text.RandomTextFunction;
 import net.pretronic.libraries.message.bml.indicate.IndicateBuilder;
@@ -308,7 +309,6 @@ public class DefaultMessageProvider implements MessageProvider {
         processor.addIgnoredChar('\t');
         processor.addIgnoredChar('\r');
 
-
         processor.registerIndicate(ObjectOwner.SYSTEM, IndicateBuilder.newBuilder()
                 .define('{','}')
                 .builder(new VariableBuilder())
@@ -351,10 +351,10 @@ public class DefaultMessageProvider implements MessageProvider {
     public void registerDefaultFunctions(){
         processor.registerFunction(ObjectOwner.SYSTEM,"for",new LoopFunction());
         processor.registerFunction(ObjectOwner.SYSTEM,"foreach",new LoopFunction());
+        processor.registerFunction(ObjectOwner.SYSTEM,"if",new ConditionFunction());
 
         processor.registerFunction(ObjectOwner.SYSTEM,"random",new RandomNumberFunction());
         processor.registerFunction(ObjectOwner.SYSTEM,"randomText",new RandomTextFunction());
-
         processor.registerFunction(ObjectOwner.SYSTEM,"sum",new SumFunction());
     }
 }

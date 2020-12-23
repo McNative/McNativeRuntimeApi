@@ -198,7 +198,10 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
 
     @Override
     public OnlineMinecraftPlayer getAsOnlinePlayer() {
-        if(McNative.getInstance().isNetworkAvailable()){
+        ConnectedMinecraftPlayer player = getAsConnectedPlayer();
+        if(player != null){
+            return player;
+        }else if(McNative.getInstance().isNetworkAvailable()){
             return McNative.getInstance().getNetwork().getOnlinePlayer(getUniqueId());
         }
         return null;
