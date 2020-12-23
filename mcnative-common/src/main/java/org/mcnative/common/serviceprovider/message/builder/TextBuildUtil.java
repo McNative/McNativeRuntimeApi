@@ -18,6 +18,7 @@ public class TextBuildUtil {
 
     public static Object buildUnformattedText(Object input,Object next) {
         if(next == null) return input;
+        else if(input == null) return "null";
         else return input.toString()+next;
     }
 
