@@ -181,9 +181,8 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
                     MinecraftProtocolUtil.writeString(buffer,collisionRule.getCollisionRuleName());
 
-                    MinecraftProtocolUtil.writeVarInt(buffer, color.getClientCode());
+                    MinecraftProtocolUtil.writeVarInt(buffer, Integer.parseInt("34a1eb",16));//;color.getClientCode());//#34a1eb
 
-                    System.out.println("Compiled Prefix: "+prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(version,getVariables()));
 

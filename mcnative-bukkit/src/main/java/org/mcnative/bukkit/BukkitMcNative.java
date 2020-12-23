@@ -241,7 +241,6 @@ public class BukkitMcNative implements McNative {
     }
 
     protected void registerDefaultDescribers(){
-        VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
         VariableDescriberRegistry.registerDescriber(PlayerDesign.class);
         VariableDescriberRegistry.registerDescriber(MinecraftPlugin.class);
         VariableDescriberRegistry.registerDescriber(PluginDescription.class);
@@ -254,6 +253,9 @@ public class BukkitMcNative implements McNative {
 
         VariableDescriber<?> designDescriber = VariableDescriberRegistry.registerDescriber(BukkitPlayerDesign.class);
         ColoredString.makeDescriberColored(designDescriber);
+
+        VariableDescriber<BukkitPlayer> oPlayerDescriber = VariableDescriberRegistry.registerDescriber(BukkitPlayer.class);
+        ColoredString.makeFunctionColored(oPlayerDescriber,"displayName");
 
         VariableDescriber<OfflineMinecraftPlayer> playerDescriber = VariableDescriberRegistry.registerDescriber(OfflineMinecraftPlayer.class);
         ColoredString.makeFunctionColored(playerDescriber,"displayName");
