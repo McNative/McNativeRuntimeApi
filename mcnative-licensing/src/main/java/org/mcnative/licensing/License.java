@@ -23,7 +23,9 @@ package org.mcnative.licensing;
 import net.pretronic.libraries.utility.io.FileUtil;
 import org.mcnative.licensing.utils.LicenseUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;

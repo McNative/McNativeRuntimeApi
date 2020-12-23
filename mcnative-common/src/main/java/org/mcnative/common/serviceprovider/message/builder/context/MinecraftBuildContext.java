@@ -21,7 +21,6 @@
 package org.mcnative.common.serviceprovider.message.builder.context;
 
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.builder.BuildContext;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;

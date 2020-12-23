@@ -2,7 +2,6 @@ package org.mcnative.service.inventory.gui;
 
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
-import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.service.inventory.gui.components.controls.listview.ItemProvider;
 import org.mcnative.service.inventory.gui.components.controls.listview.ListView;
 

@@ -23,7 +23,7 @@ import org.mcnative.common.LocalService;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.protocol.Endpoint;
-import org.mcnative.common.protocol.packet.*;
+import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.service.protocol.packet.type.player.inventory.*;
 import org.mcnative.service.protocol.packet.type.player.inventory.packetlisteners.InventoryClickWindowPacketListener;
 import org.mcnative.service.protocol.packet.type.player.inventory.packetlisteners.InventoryCloseWindowPacketListener;

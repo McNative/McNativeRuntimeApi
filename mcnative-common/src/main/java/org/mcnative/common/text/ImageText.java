@@ -23,9 +23,7 @@ package org.mcnative.common.text;
 import net.pretronic.libraries.utility.Validate;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.components.MessageComponentSet;
-import org.mcnative.common.text.components.TextComponent;
 import org.mcnative.common.text.format.TextColor;
-import org.mcnative.common.text.format.TextStyle;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

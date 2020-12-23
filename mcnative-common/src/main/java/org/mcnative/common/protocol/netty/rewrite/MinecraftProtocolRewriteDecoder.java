@@ -22,7 +22,6 @@ package org.mcnative.common.protocol.netty.rewrite;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;

@@ -21,7 +21,6 @@
 package org.mcnative.common.protocol.netty.wrapper;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -30,7 +29,6 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class McNativeMessageDecoderIgnoreWrapper extends ChannelInboundHandlerAdapter {
 

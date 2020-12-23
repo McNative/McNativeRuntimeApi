@@ -22,15 +22,11 @@ package org.mcnative.common.plugin;
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.libraries.plugin.Plugin;
-import net.pretronic.libraries.utility.exception.OperationFailedException;
 import org.mcnative.common.McNative;
 import org.mcnative.common.plugin.configuration.Configuration;
 import org.mcnative.common.plugin.configuration.ConfigurationProvider;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class MinecraftPlugin extends Plugin<McNative> {
 

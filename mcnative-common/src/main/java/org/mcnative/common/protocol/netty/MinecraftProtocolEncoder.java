@@ -28,8 +28,6 @@ import org.mcnative.common.protocol.Endpoint;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.*;
-import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
-import org.mcnative.common.protocol.packet.type.scoreboard.MinecraftScoreboardTeamsPacket;
 
 import java.util.List;
 

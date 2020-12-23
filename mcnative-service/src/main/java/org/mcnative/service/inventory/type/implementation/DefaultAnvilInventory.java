@@ -20,7 +20,6 @@
 
 package org.mcnative.service.inventory.type.implementation;
 
-import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.annonations.Internal;
 import org.mcnative.service.entity.living.HumanEntity;
 import org.mcnative.service.entity.living.Player;

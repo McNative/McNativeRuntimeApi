@@ -21,7 +21,6 @@ package org.mcnative.bukkit.inventory.item;
 
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.mcnative.service.NBTTag;

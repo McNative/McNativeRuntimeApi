@@ -20,7 +20,6 @@
 package org.mcnative.common.protocol.packet.type.scoreboard;
 
 import io.netty.buffer.ByteBuf;
-import net.pretronic.libraries.message.bml.variable.Variable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.connection.MinecraftConnection;
 import org.mcnative.common.protocol.MinecraftProtocolUtil;
@@ -28,7 +27,6 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
-import org.mcnative.common.protocol.packet.type.MinecraftChatPacket;
 import org.mcnative.common.text.components.MessageComponent;
 import org.mcnative.common.text.format.TextColor;
 

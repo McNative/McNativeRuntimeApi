@@ -38,9 +38,6 @@ import org.mcnative.service.inventory.item.material.Material;
 import org.mcnative.service.inventory.type.*;
 import org.mcnative.service.inventory.type.implementation.DefaultAnvilInventory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class BukkitObjectCreator implements ObjectCreator {
 
     @SuppressWarnings("unchecked")

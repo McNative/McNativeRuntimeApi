@@ -26,7 +26,6 @@ import org.mcnative.common.protocol.MinecraftProtocolVersion;
 import org.mcnative.common.protocol.packet.MinecraftPacket;
 import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
-import org.mcnative.common.protocol.packet.type.player.PlayerListHeaderAndFooterPacket;
 
 import static org.mcnative.common.protocol.packet.MinecraftPacket.*;
 

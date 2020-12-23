@@ -29,7 +29,6 @@ import org.mcnative.common.protocol.packet.PacketDirection;
 import org.mcnative.common.protocol.packet.PacketIdentifier;
 import org.mcnative.service.GameMode;
 import org.mcnative.service.entity.living.Player;
-import org.mcnative.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.service.inventory.ClickType;
 import org.mcnative.service.inventory.Inventory;
 import org.mcnative.service.inventory.InventoryAction;

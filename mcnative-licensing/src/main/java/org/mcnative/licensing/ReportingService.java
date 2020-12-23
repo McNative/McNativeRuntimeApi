@@ -1,6 +1,5 @@
 package org.mcnative.licensing;
 
-import net.pretronic.libraries.utility.io.FileUtil;
 import org.mcnative.licensing.utils.LicenseUtil;
 
 import java.io.IOException;

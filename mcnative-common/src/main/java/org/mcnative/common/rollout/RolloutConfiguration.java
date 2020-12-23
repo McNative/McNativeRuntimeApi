@@ -23,7 +23,10 @@ package org.mcnative.common.rollout;
 import net.pretronic.libraries.document.type.DocumentFileType;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RolloutConfiguration {
 

@@ -1,7 +1,7 @@
 package org.mcnative.licensing.platform;
 
-import org.mcnative.licensing.*;
 import org.bukkit.plugin.Plugin;
+import org.mcnative.licensing.*;
 import org.mcnative.licensing.utils.McNativeServerInfoUtil;
 
 /**

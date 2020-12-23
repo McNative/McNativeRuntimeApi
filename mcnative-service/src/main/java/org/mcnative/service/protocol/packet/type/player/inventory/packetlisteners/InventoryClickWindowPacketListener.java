@@ -37,10 +37,7 @@ import org.mcnative.service.protocol.packet.type.player.inventory.InventoryClick
 import org.mcnative.service.protocol.packet.type.player.inventory.InventorySetSlotPacket;
 import org.mcnative.service.protocol.packet.type.player.inventory.InventoryWindowItemsPacket;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class InventoryClickWindowPacketListener implements MinecraftPacketListener {
 

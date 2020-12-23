@@ -23,12 +23,10 @@ package org.mcnative.common.commands.util;
 import net.pretronic.libraries.command.command.BasicCommand;
 import net.pretronic.libraries.command.command.configuration.CommandConfiguration;
 import net.pretronic.libraries.command.sender.CommandSender;
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.common.McNative;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
 import org.mcnative.common.player.tablist.Tablist;
-import org.mcnative.common.utils.Messages;
 
 public class ReloadTablistCommand extends BasicCommand {
 

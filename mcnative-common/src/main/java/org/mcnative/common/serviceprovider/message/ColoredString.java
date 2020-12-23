@@ -3,8 +3,6 @@ package org.mcnative.common.serviceprovider.message;
 import net.pretronic.libraries.message.bml.variable.describer.VariableDescriber;
 import net.pretronic.libraries.utility.Validate;
 
-import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ColoredString {

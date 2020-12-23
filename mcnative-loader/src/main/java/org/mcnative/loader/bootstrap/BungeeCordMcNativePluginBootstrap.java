@@ -20,7 +20,6 @@
 package org.mcnative.loader.bootstrap;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.loader.*;
 import org.mcnative.loader.rollout.RolloutConfiguration;

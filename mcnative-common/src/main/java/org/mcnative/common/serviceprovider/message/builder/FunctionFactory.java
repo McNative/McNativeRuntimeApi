@@ -27,8 +27,6 @@ import net.pretronic.libraries.message.bml.builder.MessageBuilder;
 import net.pretronic.libraries.message.bml.builder.MessageBuilderFactory;
 import net.pretronic.libraries.message.bml.function.Function;
 
-import java.util.Arrays;
-
 public class FunctionFactory implements MessageBuilderFactory {
 
     private final MessageProcessor processor;

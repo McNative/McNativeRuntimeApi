@@ -42,8 +42,6 @@ import org.mcnative.common.text.components.TextComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class PlaceHolderApiProvider implements PlaceholderProvider, OwnerUnregisterAble {
 

@@ -53,7 +53,6 @@ import org.mcnative.common.*;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
-import org.mcnative.common.player.MinecraftPlayer;
 import org.mcnative.common.player.OfflineMinecraftPlayer;
 import org.mcnative.common.player.PlayerDesign;
 import org.mcnative.common.player.PlayerManager;

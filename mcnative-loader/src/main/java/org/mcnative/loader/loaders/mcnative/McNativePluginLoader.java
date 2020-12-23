@@ -26,12 +26,10 @@ import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.RuntimeEnvironment;
 import net.pretronic.libraries.plugin.description.DefaultPluginDescription;
 import net.pretronic.libraries.plugin.description.PluginDescription;
-import net.pretronic.libraries.plugin.exception.PluginLoadException;
 import net.pretronic.libraries.plugin.loader.DefaultPluginLoader;
 import net.pretronic.libraries.plugin.loader.classloader.PluginClassLoader;
 import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
-import org.mcnative.loader.EnvironmentNames;
 import org.mcnative.loader.PlatformExecutor;
 
 import java.io.File;
