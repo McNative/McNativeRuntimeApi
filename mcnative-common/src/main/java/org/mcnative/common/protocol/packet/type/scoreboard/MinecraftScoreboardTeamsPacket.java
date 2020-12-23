@@ -183,6 +183,7 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
                     MinecraftProtocolUtil.writeVarInt(buffer, color.getClientCode());
 
+                    System.out.println("Compiled Prefix: "+prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, prefix == null ? "{}" : prefix.compileToString(version,getVariables()));
                     MinecraftProtocolUtil.writeString(buffer, suffix == null ? "{}" : suffix.compileToString(version,getVariables()));
 
