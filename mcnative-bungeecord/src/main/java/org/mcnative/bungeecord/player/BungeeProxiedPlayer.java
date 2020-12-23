@@ -325,15 +325,18 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
         long timeout = System.currentTimeMillis()+TimeUnit.SECONDS.toMillis(staySeconds);
         sendActionbar(message, variables);
-        final Task task = McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
-                .async().interval(3,TimeUnit.SECONDS).delay(1,TimeUnit.SECONDS).create();
-        task.append(() -> {
-            if(System.currentTimeMillis() <= timeout){
-                task.destroy();
-            }else{
-                sendActionbar(message, variables);
-            }
-        });
+
+        if(staySeconds > 0){
+            final Task task = McNative.getInstance().getScheduler().createTask(ObjectOwner.SYSTEM)
+                    .async().interval(3,TimeUnit.SECONDS).delay(1,TimeUnit.SECONDS).create();
+            task.append(() -> {
+                if(System.currentTimeMillis() <= timeout){
+                    task.destroy();
+                }else{
+                    sendActionbar(message, variables);
+                }
+            });
+        }
     }
 
     @Override

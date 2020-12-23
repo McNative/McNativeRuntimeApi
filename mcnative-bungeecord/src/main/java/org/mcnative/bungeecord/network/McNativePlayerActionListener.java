@@ -21,6 +21,7 @@
 package org.mcnative.bungeecord.network;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.common.McNative;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
@@ -28,6 +29,7 @@ import org.mcnative.common.network.component.server.ServerConnectResult;
 import org.mcnative.common.network.messaging.MessageReceiver;
 import org.mcnative.common.network.messaging.MessagingChannelListener;
 import org.mcnative.common.player.ConnectedMinecraftPlayer;
+import org.mcnative.common.player.Title;
 import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.text.Text;
 import org.mcnative.common.text.components.MessageComponent;
@@ -76,6 +78,26 @@ public class McNativePlayerActionListener implements MessagingChannelListener {
                 ChatPosition position = ChatPosition.of(request.getByte("position"));
                 MessageComponent<?> text = Text.decompile(jsonText);
                 player.sendMessage(position,text);
+            }else if(action.equalsIgnoreCase("sendActionbar")){
+                Document jsonText = request.getDocument("text");
+                int staySeconds = request.getInt("staySeconds");
+                MessageComponent<?> text = Text.decompile(jsonText);
+                player.sendActionbar(text, VariableSet.createEmpty(),staySeconds);
+            }else if(action.equalsIgnoreCase("sendTitle")){
+                Title title = new Title();
+
+                int[] timing = request.getArray("timing",new int[]{});
+                title.setTiming(timing);
+
+                Document jsonTitle = request.getDocument("title");
+                if(jsonTitle != null) title.title(Text.decompile(jsonTitle));
+
+                Document jsonSubTitle = request.getDocument("subTitle");
+                if(jsonSubTitle != null) title.subTitle(Text.decompile(jsonSubTitle));
+
+                player.sendTitle(title);
+            }else if(action.equalsIgnoreCase("resetTitle")){
+                player.resetTitle();
             }
         }
         return null;

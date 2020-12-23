@@ -28,6 +28,7 @@ import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
 import org.mcnative.common.network.component.server.ServerConnectResult;
+import org.mcnative.common.player.Title;
 import org.mcnative.common.player.chat.ChatPosition;
 import org.mcnative.common.protocol.MinecraftEdition;
 import org.mcnative.common.protocol.MinecraftProtocolVersion;
@@ -97,6 +98,25 @@ public class McNativePlayerExecutor {
                 .set("action","sendMessage")
                 .set("position",position.getId())
                 .set("text",component.compile(MinecraftProtocolVersion.getLatest(MinecraftEdition.JAVA),variables)));
+    }
+
+    public static void sendActionbar(UUID uniqueId,MessageComponent<?> message, VariableSet variables, long staySeconds) {
+        executePlayerBased(uniqueId,Document.newDocument()
+                .set("action","sendActionbar")
+                .set("staySeconds",staySeconds)
+                .set("text",message.compile(MinecraftProtocolVersion.getLatest(MinecraftEdition.JAVA),variables)));
+    }
+
+    public static void sendTitle(UUID uniqueId, Title title) {
+        executePlayerBased(uniqueId,Document.newDocument()
+                .set("action","sendTitle")
+                .set("timing",title.getTiming())
+                .set("title",title.getTitle() != null ? title.getTitle().compile(MinecraftProtocolVersion.getLatest(MinecraftEdition.JAVA),title.getVariables()) : null)
+                .set("subTitle",title.getTitle() != null ? title.getSubTitle().compile(MinecraftProtocolVersion.getLatest(MinecraftEdition.JAVA),title.getVariables()) : null));
+    }
+
+    public static void resetTitle(UUID uniqueId) {
+        executePlayerBased(uniqueId,Document.newDocument().set("action","resetTitle"));
     }
 
     private static void executePlayerBased(UUID uniqueId, Document data){

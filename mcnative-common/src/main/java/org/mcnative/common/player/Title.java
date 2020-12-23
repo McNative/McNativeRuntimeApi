@@ -50,6 +50,11 @@ public class Title {
         return timing;
     }
 
+    public void setTiming(int[] timing) {
+        if(timing.length != 3) throw new IllegalArgumentException("Invalid array length");
+        this.timing = timing;
+    }
+
     public Title title(String text){
         return title(Text.of(text));
     }

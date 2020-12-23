@@ -57,7 +57,7 @@ public class BungeePendingConnection implements PendingConnection {
         PENDING_CONNECTION_HANDLER_CLASS = pending;
     }
 
-    private net.md_5.bungee.api.connection.PendingConnection original;
+    private final net.md_5.bungee.api.connection.PendingConnection original;
     private final Channel channel;
     private final Object channelWrapper;
     private final GameProfile gameProfile;

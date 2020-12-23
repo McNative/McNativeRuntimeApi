@@ -20,12 +20,9 @@
 
 package org.mcnative.bukkit.network.bungeecord;
 
-import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.annonations.Internal;
-import org.mcnative.common.McNative;
-import org.mcnative.common.network.NetworkIdentifier;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.common.network.component.server.ProxyServer;
 import org.mcnative.common.network.component.server.ServerConnectReason;
@@ -153,22 +150,22 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        sendActionbar(message,variables,-1);
     }
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        McNativePlayerExecutor.sendActionbar(uniqueId,message,variables,staySeconds);
     }
 
     @Override
     public void sendTitle(Title title) {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        McNativePlayerExecutor.sendTitle(uniqueId,title);
     }
 
     @Override
     public void resetTitle() {
-        throw new UnsupportedOperationException("Currently not supported, implementation in progress");
+        McNativePlayerExecutor.resetTitle(uniqueId);
     }
 
     @Override
@@ -200,17 +197,5 @@ public class BungeeCordOnlinePlayer extends OfflineMinecraftPlayer implements On
     public void setServer(MinecraftServer server){
         Validate.notNull(server);
         this.server = server;
-    }
-
-    private void executePlayerBased(Document data){
-        data.set("uniqueId",uniqueId);
-        McNative.getInstance().getNetwork().getMessenger()
-                .sendMessage(NetworkIdentifier.BROADCAST_PROXY,"mcnative_player",data);
-    }
-
-    private CompletableFuture<Document> executePlayerBasedFuture(Document data){
-        data.set("uniqueId",uniqueId);
-        return McNative.getInstance().getNetwork().getMessenger()
-                .sendQueryMessageAsync(NetworkIdentifier.BROADCAST_PROXY,"mcnative_player",data);
     }
 }

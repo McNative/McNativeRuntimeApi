@@ -140,22 +140,22 @@ public class CloudNetOnlinePlayer extends OfflineMinecraftPlayer implements Onli
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables) {
-        throw new UnsupportedOperationException();
+        sendActionbar(message,variables,-1);
     }
 
     @Override
     public void sendActionbar(MessageComponent<?> message, VariableSet variables, long staySeconds) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.sendActionbar(player.getUniqueId(),message,variables,staySeconds);
     }
 
     @Override
     public void sendTitle(Title title) {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.sendTitle(player.getUniqueId(),title);
     }
 
     @Override
     public void resetTitle() {
-        throw new UnsupportedOperationException();
+        McNativePlayerExecutor.resetTitle(player.getUniqueId());
     }
 
     @Override
