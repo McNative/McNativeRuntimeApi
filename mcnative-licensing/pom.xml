@@ -5,7 +5,7 @@
     <parent>
         <artifactId>McNative</artifactId>
         <groupId>org.mcnative</groupId>
-        <version>1.7.64.478-SNAPSHOT</version>
+        <version>1.7.65.479-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
