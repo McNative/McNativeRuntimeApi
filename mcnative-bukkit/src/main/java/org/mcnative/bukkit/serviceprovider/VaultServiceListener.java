@@ -35,8 +35,8 @@ import org.mcnative.bukkit.serviceprovider.economy.VaultEconomyProvider;
 import org.mcnative.bukkit.serviceprovider.permission.VaultPermissionHook;
 import org.mcnative.bukkit.serviceprovider.permission.VaultPermissionProvider;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.service.ServiceRegisterEvent;
-import org.mcnative.common.event.service.ServiceUnregisterEvent;
+import org.mcnative.common.event.service.registry.ServiceRegisterEvent;
+import org.mcnative.common.event.service.registry.ServiceUnregisterEvent;
 import org.mcnative.common.serviceprovider.economy.EconomyProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 

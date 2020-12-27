@@ -46,6 +46,9 @@ import org.mcnative.bungeecord.plugin.McNativeEventBus;
 import org.mcnative.bungeecord.plugin.command.BungeeCordCommandManager;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
+import org.mcnative.common.actionframework.MAFService;
+import org.mcnative.common.event.service.local.LocalServiceShutdownEvent;
+import org.mcnative.common.event.service.local.LocalServiceStartupEvent;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.event.NetworkEventHandler;
@@ -133,6 +136,11 @@ public class McNativeLauncher {
 
         ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
 
+        if(McNativeBungeeCordConfiguration.MAF_ENABLED && !McNativeBungeeCordConfiguration.SERVER_ID.equals("00000-00000-00000")){
+            MAFService.start();
+        }
+        localService.getEventBus().callEvent(new LocalServiceStartupEvent());
+
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }
 
@@ -184,6 +192,7 @@ public class McNativeLauncher {
         McNative instance = McNative.getInstance();
 
         if(instance != null){
+            instance.getLocal().getEventBus().callEvent(new LocalServiceShutdownEvent());
             if(STATISTIC_SERVICE != null) STATISTIC_SERVICE.shutdown();
 
             instance.getLogger().shutdown();

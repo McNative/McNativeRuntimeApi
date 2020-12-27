@@ -54,6 +54,8 @@ public class McNativeBungeeCordConfiguration {
     public static String SERVER_ID = "00000-00000-00000";
     public static String SERVER_SECRET = "00000-00000-00000";
 
+    public static boolean MAF_ENABLED = true;
+
     @DocumentIgnored
     public static Map<String,ConfiguredServer> SERVER_SERVERS = new HashMap<>();
 

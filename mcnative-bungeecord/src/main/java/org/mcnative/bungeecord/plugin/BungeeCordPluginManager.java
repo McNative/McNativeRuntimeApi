@@ -35,8 +35,8 @@ import net.pretronic.libraries.utility.map.callback.CallbackMap;
 import net.pretronic.libraries.utility.map.callback.LinkedHashCallbackMap;
 import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.service.ServiceRegisterEvent;
-import org.mcnative.common.event.service.ServiceUnregisterEvent;
+import org.mcnative.common.event.service.registry.ServiceRegisterEvent;
+import org.mcnative.common.event.service.registry.ServiceUnregisterEvent;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 
 import java.io.File;

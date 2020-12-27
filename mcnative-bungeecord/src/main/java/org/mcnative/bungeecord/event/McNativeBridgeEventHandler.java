@@ -46,7 +46,7 @@ import org.mcnative.bungeecord.server.BungeeCordServerMap;
 import org.mcnative.common.McNative;
 import org.mcnative.common.connection.ConnectionState;
 import org.mcnative.common.event.ServerListPingEvent;
-import org.mcnative.common.event.ServiceReloadedEvent;
+import org.mcnative.common.event.service.local.LocalServiceReloadEvent;
 import org.mcnative.common.event.player.*;
 import org.mcnative.common.event.player.login.MinecraftPlayerLoginEvent;
 import org.mcnative.common.event.player.login.MinecraftPlayerPendingLoginEvent;
@@ -152,7 +152,7 @@ public final class McNativeBridgeEventHandler {
         pluginManager.registerMangedEvent(SettingsChangedEvent.class,this::handleSettingsChange);
 
         //Reload
-        eventBus.registerMappedClass(ServiceReloadedEvent.class, ProxyReloadEvent.class);
+        eventBus.registerMappedClass(LocalServiceReloadEvent.class, ProxyReloadEvent.class);
         pluginManager.registerMangedEvent(ProxyReloadEvent.class,this::handleProxyReload);
     }
 
@@ -341,7 +341,7 @@ public final class McNativeBridgeEventHandler {
     }
 
     private void handleProxyReload(ProxyReloadEvent event){
-        ServiceReloadedEvent mcNativeEvent = new BungeeServiceReloadedEvent();
+        LocalServiceReloadEvent mcNativeEvent = new LocalServiceReloadEvent();
         eventBus.callEvents(ProxyReloadEvent.class,event,mcNativeEvent);
     }
 

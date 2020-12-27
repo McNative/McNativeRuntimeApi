@@ -48,6 +48,8 @@ public class McNativeBukkitConfiguration {
     public static String SERVER_ID = "00000-00000-00000";
     public static String SERVER_SECRET = "00000-00000-00000";
 
+    public static boolean MAF_ENABLED = true;
+
     @DocumentKey("player.displayName.format")
     public static String PLAYER_DISPLAY_NAME_FORMAT = "{design.color}{name}";
 

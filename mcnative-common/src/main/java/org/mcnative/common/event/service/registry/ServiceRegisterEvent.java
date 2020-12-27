@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.common.event.service;
+package org.mcnative.common.event.service.registry;
 
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 

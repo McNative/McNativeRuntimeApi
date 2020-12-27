@@ -1,6 +1,6 @@
 package org.mcnative.licensing;
 
-import org.mcnative.licensing.utils.LicenseUtil;
+import net.pretronic.libraries.utility.SystemInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +65,7 @@ public class ReportingService {
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept-Charset", "UTF-8");
 
-            connection.setRequestProperty("DeviceId", LicenseUtil.getDeviceId());
+            connection.setRequestProperty("DeviceId", SystemInfo.getDeviceId());
             connection.setRequestProperty("ServerId",serverInfo.getServerId());
             connection.setRequestProperty("serverSecret",serverInfo.getServerSecret());
 

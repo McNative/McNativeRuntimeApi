@@ -47,8 +47,8 @@ import org.mcnative.bukkit.McNativeLauncher;
 import org.mcnative.bukkit.plugin.mapped.BukkitPlugin;
 import org.mcnative.bukkit.plugin.mapped.BukkitPluginLoader;
 import org.mcnative.common.McNative;
-import org.mcnative.common.event.service.ServiceRegisterEvent;
-import org.mcnative.common.event.service.ServiceUnregisterEvent;
+import org.mcnative.common.event.service.registry.ServiceRegisterEvent;
+import org.mcnative.common.event.service.registry.ServiceUnregisterEvent;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
 
 import java.io.File;

@@ -35,6 +35,7 @@ import net.pretronic.libraries.utility.reflect.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnative.actionframework.sdk.client.MAFClient;
 import org.mcnative.bukkit.event.McNativeBridgeEventHandler;
 import org.mcnative.bukkit.network.bungeecord.BungeeCordProxyNetwork;
 import org.mcnative.bukkit.network.cloudnet.CloudNetV2PlatformListener;
@@ -50,7 +51,10 @@ import org.mcnative.bukkit.serviceprovider.VaultServiceListener;
 import org.mcnative.bukkit.serviceprovider.placeholder.PlaceHolderApiProvider;
 import org.mcnative.common.McNative;
 import org.mcnative.common.MinecraftPlatform;
+import org.mcnative.common.actionframework.MAFService;
 import org.mcnative.common.event.player.design.MinecraftPlayerDesignUpdateEvent;
+import org.mcnative.common.event.service.local.LocalServiceShutdownEvent;
+import org.mcnative.common.event.service.local.LocalServiceStartupEvent;
 import org.mcnative.common.network.Network;
 import org.mcnative.common.network.component.server.ServerStatusResponse;
 import org.mcnative.common.network.component.server.ServerVersion;
@@ -183,6 +187,11 @@ public class McNativeLauncher {
         setupConfiguredServices();
 
         ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
+
+        if(McNativeBukkitConfiguration.MAF_ENABLED && !McNativeBukkitConfiguration.SERVER_ID.equals("00000-00000-00000")){
+            MAFService.start();
+        }
+        eventBus.callEvent(new LocalServiceStartupEvent());
     }
 
     public static void shutdown(){
@@ -192,6 +201,7 @@ public class McNativeLauncher {
         McNative instance = McNative.getInstance();
 
         if(instance != null){
+            EVENT_BUS.callEvent(new LocalServiceShutdownEvent());
             if(STATISTIC_SERVICE != null) STATISTIC_SERVICE.shutdown();
 
             instance.getLogger().shutdown();

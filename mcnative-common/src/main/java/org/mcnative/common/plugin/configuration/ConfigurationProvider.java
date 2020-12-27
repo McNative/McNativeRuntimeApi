@@ -48,5 +48,7 @@ public interface ConfigurationProvider {
 
     DatabaseDriver getDatabaseDriver(String name);
 
+    Collection<String> getDatabaseTypes();
+
     Collection<String> getDatabaseTypes(Plugin<?> plugin);
 }

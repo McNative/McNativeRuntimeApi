@@ -19,6 +19,7 @@
 
 package org.mcnative.common.plugin.configuration;
 
+import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
 import net.pretronic.databasequery.driverloader.PretronicDependencyDriverLoader;
@@ -78,7 +79,6 @@ public class StorageConfig {
         }
         return databaseEntry;
     }
-
     public Collection<DatabaseEntry> getDatabaseEntries(Plugin<?> plugin) {
         return Iterators.filter(this.databaseEntries, entry ->
                 entry.pluginName.equalsIgnoreCase(plugin.getName()));

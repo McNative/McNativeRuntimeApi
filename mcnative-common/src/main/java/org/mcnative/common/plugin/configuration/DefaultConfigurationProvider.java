@@ -23,6 +23,7 @@ import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.databasequery.api.driver.DatabaseDriverFactory;
 import net.pretronic.databasequery.api.driver.config.DatabaseDriverConfig;
+import net.pretronic.databasequery.sql.driver.SQLDatabaseDriver;
 import net.pretronic.databasequery.sql.driver.config.SQLDatabaseDriverConfig;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.GeneralUtil;
@@ -36,10 +37,7 @@ import net.pretronic.libraries.utility.map.caseintensive.CaseIntensiveMap;
 import org.mcnative.common.McNative;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DefaultConfigurationProvider implements ConfigurationProvider, ShutdownAble {
 
@@ -114,6 +112,20 @@ public class DefaultConfigurationProvider implements ConfigurationProvider, Shut
             this.databaseDrivers.put(name, driver);
         }
         return this.databaseDrivers.get(name);
+    }
+
+    @Override
+    public Collection<String> getDatabaseTypes() {
+        Collection<String> types = new ArrayList<>();
+        for (DatabaseDriver value : this.databaseDrivers.values()) {
+            String dialect = "";
+            if(value instanceof SQLDatabaseDriver) {
+                dialect = "-"+((SQLDatabaseDriver)value).getDialect().getName();
+            }
+
+            types.add(value.getConfig().getDriverClass().getSimpleName()+dialect);
+        }
+        return types;
     }
 
     @Override

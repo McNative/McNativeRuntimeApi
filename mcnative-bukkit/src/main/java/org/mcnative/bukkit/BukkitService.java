@@ -24,6 +24,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import net.pretronic.libraries.command.manager.CommandManager;
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.document.type.DocumentFileType;
 import net.pretronic.libraries.event.EventBus;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
@@ -57,6 +58,7 @@ import org.mcnative.service.MinecraftService;
 import org.mcnative.service.ObjectCreator;
 import org.mcnative.service.world.World;
 import org.mcnative.service.world.WorldCreator;
+import sun.nio.ch.Net;
 
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -65,9 +67,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class BukkitService implements MinecraftService, MinecraftServer, VariableObjectToString {
-
-    private final static NetworkIdentifier NO_NETWORK_IDENTIFIER = new NetworkIdentifier(Bukkit.getName(),new UUID(0,0));
-
     private final PacketManager packetManager;
     private final BukkitPlayerManager playerManager;
     private final CommandManager commandManager;
@@ -78,6 +77,8 @@ public class BukkitService implements MinecraftService, MinecraftServer, Variabl
     private ServerStatusResponse statusResponse;
     private final ObjectCreator objectCreator;
 
+    private final NetworkIdentifier fallbackIdentifier;
+
     protected BukkitService(CommandManager commandManager,BukkitPlayerManager playerManager, EventBus eventBus) {
         this.packetManager = new DefaultPacketManager();
         this.commandManager = commandManager;
@@ -86,6 +87,22 @@ public class BukkitService implements MinecraftService, MinecraftServer, Variabl
         this.objectCreator = new BukkitObjectCreator();
         initVaultHook();
         registerDefaultPackets();
+
+        fallbackIdentifier = loadReportingId();
+    }
+
+    private NetworkIdentifier loadReportingId(){
+        File file = new File("plugins/McNative/lib/runtime.dat");
+        if(file.exists()){
+            Document document = DocumentFileType.JSON.getReader().read(new File("plugins/McNative/lib/runtime.dat"));
+            UUID uuid =  document.getObject("reportingId",UUID.class);
+            if(uuid != null) return  new NetworkIdentifier(Bukkit.getName(),uuid);
+        }
+        UUID uuid = UUID.randomUUID();
+        Document document = Document.newDocument();
+        document.set("reportingId",uuid);
+        DocumentFileType.JSON.getWriter().write(new File("plugins/McNative/lib/runtime.dat"),document,false);
+        return  new NetworkIdentifier(Bukkit.getName(),uuid);
     }
 
     @Override
@@ -344,7 +361,7 @@ public class BukkitService implements MinecraftService, MinecraftServer, Variabl
                 return McNative.getInstance().getNetwork().getLocalIdentifier();
             }catch (Exception ignored){}
         }
-        return NO_NETWORK_IDENTIFIER;
+        return fallbackIdentifier;
     }
 
     @Override

@@ -17,6 +17,8 @@
  * under the License.
  */
 
-package org.mcnative.common.event;
+package org.mcnative.common.event.service.local;
 
-public interface ServiceReloadedEvent extends MinecraftEvent {}
+import org.mcnative.common.event.MinecraftEvent;
+
+public class LocalServiceReloadEvent implements MinecraftEvent {}

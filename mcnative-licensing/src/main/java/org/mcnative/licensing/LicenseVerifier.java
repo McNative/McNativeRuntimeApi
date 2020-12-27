@@ -1,10 +1,10 @@
 package org.mcnative.licensing;
 
+import net.pretronic.libraries.utility.SystemInfo;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.io.IORuntimeException;
 import org.mcnative.licensing.exceptions.CloudNotCheckoutLicenseException;
 import org.mcnative.licensing.exceptions.LicenseNotValidException;
-import org.mcnative.licensing.utils.LicenseUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +67,7 @@ public class LicenseVerifier {
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept-Charset", "UTF-8");
 
-            connection.setRequestProperty("DeviceId", LicenseUtil.getDeviceId());
+            connection.setRequestProperty("DeviceId", SystemInfo.getDeviceId());
             connection.setRequestProperty("ServerId",info.getServerId());
             connection.setRequestProperty("serverSecret",info.getServerSecret());
 
