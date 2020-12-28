@@ -139,7 +139,6 @@ public class McNativeLauncher {
         if(McNativeBungeeCordConfiguration.MAF_ENABLED && !McNativeBungeeCordConfiguration.SERVER_ID.equals("00000-00000-00000")){
             MAFService.start();
         }
-        localService.getEventBus().callEvent(new LocalServiceStartupEvent());
 
         logger.info(McNative.CONSOLE_PREFIX+"McNative successfully started.");
     }

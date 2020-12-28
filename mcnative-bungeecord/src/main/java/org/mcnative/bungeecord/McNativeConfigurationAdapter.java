@@ -19,11 +19,12 @@
 
 package org.mcnative.bungeecord;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ConfigurationAdapter;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
 import org.mcnative.bungeecord.server.BungeeCordServerMap;
+import org.mcnative.common.McNative;
+import org.mcnative.common.event.service.local.LocalServiceStartupEvent;
 import org.mcnative.common.network.component.server.MinecraftServer;
 import org.mcnative.proxy.ProxyService;
 
@@ -60,6 +61,9 @@ public class McNativeConfigurationAdapter implements ConfigurationAdapter {
             if(config.getPermission() != null) server.setPermission(config.getPermission());
             if(config.getType() != null) server.setType(config.getType());
         });
+
+        //Config loaded and service is ready
+        McNative.getInstance().getLocal().getEventBus().callEvent(new LocalServiceStartupEvent());
     }
 
     @Override
