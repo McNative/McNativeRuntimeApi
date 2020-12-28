@@ -56,7 +56,6 @@ import org.mcnative.common.player.chat.ChatChannel;
 import org.mcnative.common.player.chat.GroupChatFormatter;
 import org.mcnative.common.protocol.packet.DefaultPacketManager;
 import org.mcnative.common.serviceprovider.message.ResourceMessageExtractor;
-import org.mcnative.common.serviceprovider.statistics.McNativeStatisticService;
 import org.mcnative.network.integrations.cloudnet.v2.CloudNetV2Network;
 import org.mcnative.network.integrations.cloudnet.v3.CloudNetV3Network;
 import org.mcnative.proxy.ProxyService;
@@ -70,7 +69,6 @@ import java.util.logging.Logger;
 public class McNativeLauncher {
 
     private static Plugin PLUGIN;
-    private static McNativeStatisticService STATISTIC_SERVICE;
 
     public static Plugin getPlugin() {
         return PLUGIN;
@@ -132,7 +130,6 @@ public class McNativeLauncher {
         setupConfiguredServices();
 
         instance.setReady(true);
-        STATISTIC_SERVICE = new McNativeStatisticService();
 
         ResourceMessageExtractor.extractMessages(McNativeLauncher.class.getClassLoader(),"system-messages/","McNative");
 
@@ -192,7 +189,6 @@ public class McNativeLauncher {
 
         if(instance != null){
             instance.getLocal().getEventBus().callEvent(new LocalServiceShutdownEvent());
-            if(STATISTIC_SERVICE != null) STATISTIC_SERVICE.shutdown();
 
             instance.getLogger().shutdown();
             instance.getScheduler().shutdown();

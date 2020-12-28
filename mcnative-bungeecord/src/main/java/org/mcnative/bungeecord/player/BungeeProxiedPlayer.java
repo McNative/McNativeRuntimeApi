@@ -394,11 +394,6 @@ public class BungeeProxiedPlayer extends OfflineMinecraftPlayer implements Conne
     }
 
     @Override
-    public InetSocketAddress getVirtualHost() {
-        return original.getPendingConnection().getVirtualHost();
-    }
-
-    @Override
     public InetSocketAddress getAddress() {
         return connection.getAddress();
     }

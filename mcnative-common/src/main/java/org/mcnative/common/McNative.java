@@ -40,7 +40,6 @@ public interface McNative extends ObjectOwner {
 
     String CONSOLE_PREFIX = "[McNative] ";
 
-
     String getServiceName();
 
     RolloutConfiguration getRolloutConfiguration();

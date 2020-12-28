@@ -126,32 +126,6 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
         return getFirstPlayed() != 0 || getFirstPlayed() == getLastPlayed();
     }
 
-    //@Todo per server integration? -> global / Server
-    boolean isWhitelisted();
-
-    void setWhitelisted(boolean whitelisted);
-
-    boolean isBanned();
-
-    String getBanReason();
-
-    void ban(String reason);
-
-    void ban(String reason, long time, TimeUnit unit);
-
-    void unban();
-
-
-    boolean isMuted();
-
-    String getMuteReason();
-
-    void mute(String reason);
-
-    void mute(String reason, long time, TimeUnit unit);
-
-    void unmute();
-
     @Override
     default String toStringVariable() {
         return getDisplayName();

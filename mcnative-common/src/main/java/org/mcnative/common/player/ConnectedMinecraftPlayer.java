@@ -35,8 +35,6 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     PendingConnection getConnection();
 
-    InetSocketAddress getVirtualHost();
-
     PlayerClientSettings getClientSettings();
 
 

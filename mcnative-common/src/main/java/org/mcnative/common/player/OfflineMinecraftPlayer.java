@@ -32,8 +32,6 @@ import org.mcnative.common.player.profile.GameProfile;
 import org.mcnative.common.serviceprovider.permission.PermissionHandler;
 import org.mcnative.common.serviceprovider.permission.PermissionProvider;
 import org.mcnative.common.serviceprovider.permission.PermissionResult;
-import org.mcnative.common.serviceprovider.punishment.PunishmentProvider;
-import org.mcnative.common.serviceprovider.whitelist.WhitelistProvider;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -218,16 +216,6 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public boolean isWhitelisted() {
-        return McNative.getInstance().getRegistry().getService(WhitelistProvider.class).isWhitelisted(this);
-    }
-
-    @Override
-    public void setWhitelisted(boolean whitelisted) {
-        McNative.getInstance().getRegistry().getService(WhitelistProvider.class).set(this,whitelisted);
-    }
-
-    @Override
     public PermissionHandler getPermissionHandler() {
         if(permissionHandler == null){
             permissionHandler = McNative.getInstance().getRegistry().getService(PermissionProvider.class).getPlayerHandler(this);
@@ -311,56 +299,6 @@ public class OfflineMinecraftPlayer implements MinecraftPlayer {
     @Override
     public void removeGroup(String name) {
         getPermissionHandlerExcepted().removeGroup(name);
-    }
-
-    @Override
-    public boolean isBanned() {
-        return McNative.getInstance().getRegistry().getService(PunishmentProvider.class).isBanned(this);
-    }
-
-    @Override
-    public String getBanReason() {
-        return McNative.getInstance().getRegistry().getService(PunishmentProvider.class).getBanReason(this);
-    }
-
-    @Override
-    public void ban(String reason) {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).ban(this,reason);
-    }
-
-    @Override
-    public void ban(String reason, long time, TimeUnit unit) {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).ban(this,reason,time,unit);
-    }
-
-    @Override
-    public void unban() {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).unban(this);
-    }
-
-    @Override
-    public boolean isMuted() {
-        return McNative.getInstance().getRegistry().getService(PunishmentProvider.class).isMuted(this);
-    }
-
-    @Override
-    public String getMuteReason() {
-        return McNative.getInstance().getRegistry().getService(PunishmentProvider.class).getMuteReason(this);
-    }
-
-    @Override
-    public void mute(String reason) {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).mute(this,reason);
-    }
-
-    @Override
-    public void mute(String reason, long time, TimeUnit unit) {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).mute(this,reason,time,unit);
-    }
-
-    @Override
-    public void unmute() {
-        McNative.getInstance().getRegistry().getService(PunishmentProvider.class).unmute(this);
     }
 
     @Override
