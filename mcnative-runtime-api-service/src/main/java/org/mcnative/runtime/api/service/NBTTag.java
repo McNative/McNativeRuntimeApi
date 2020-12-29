@@ -19,6 +19,8 @@
 
 package org.mcnative.runtime.api.service;
 
+import org.mcnative.runtime.api.McNative;
+
 public interface NBTTag {
 
     byte getByte(String key);
@@ -64,6 +66,7 @@ public interface NBTTag {
     void setIntArray(String key, int[] value);
 
     static NBTTag newTag(){
-        return null;
+        return McNative.getInstance().getObjectFactory().createObject(NBTTag.class);
     }
+
 }
