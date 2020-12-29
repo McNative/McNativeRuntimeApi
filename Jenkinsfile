@@ -1,4 +1,3 @@
-#!groovy
 
 //Configuration
 //Set BRANCH_BETA to null, if you don't have it
@@ -9,19 +8,16 @@ final String COMMIT_MESSAGE = "Version change %version%"
 final String RESOURCE_ID = "e5b65750-4dcc-4631-b275-06113b31a416"
 
 final String BRANCH_DEVELOPMENT = "development"
-final String BRANCH_BETA = "beta"
+final String BRANCH_BETA = null
 final String BRANCH_MASTER = "master"
 
-String PROJECT_NAME = "McNative"
+String PROJECT_NAME = "McNativeRuntimeAPI"
 
 boolean JAVADOCS_ENABLED = true
 String JAVADOCS_NAME = "mcnative"
-String JAVADOCS_MODULES = ":McNative,:mcnative-common,:mcnative-service,:mcnative-proxy,:mcnative-licensing"
+String JAVADOCS_MODULES = ":McNativeRuntimeAPI,:mcnative-runtime-api,:mcnative-runtime-api-proxy,:mcnative-runtime-api-service"
 
-def MIRROR_SERVER_PUBLISHING = [
-        "mcnative-bungeecord/target/mcnative-bungeecord-%version%.jar": "bungeecord",
-        "mcnative-bukkit/target/mcnative-bukkit-%version%.jar": "bukkit",
-]
+def MIRROR_SERVER_PUBLISHING = []
 
 String MAVEN_SETTINGS_FILE_ID = "afe25550-309e-40c1-80ad-59da7989fb4e"
 String MIRROR_SERVER_TOKEN_CREDENTIAL_ID = "120a9a64-81a7-4557-80bf-161e3ab8b976"
@@ -260,7 +256,7 @@ pipeline {
                                 mkdir tempDevelopment
                                 cd tempDevelopment/
                                 git clone --single-branch --branch $BRANCH_DEVELOPMENT $PROJECT_SSH
-                                
+
                                 cd $PROJECT_NAME/
                                 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$version
                                 git add . -v
