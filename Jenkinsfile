@@ -14,7 +14,7 @@ final String BRANCH_MASTER = "master"
 String PROJECT_NAME = "McNativeRuntimeApi"
 
 boolean JAVADOCS_ENABLED = true
-String JAVADOCS_NAME = "mcnative"
+String JAVADOCS_NAME = "mcnative-runtime-api"
 String JAVADOCS_MODULES = ":McNativeRuntimeApi,:mcnative-runtime-api,:mcnative-runtime-api-proxy,:mcnative-runtime-api-service"
 
 def MIRROR_SERVER_PUBLISHING = []
