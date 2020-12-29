@@ -11,11 +11,11 @@ final String BRANCH_DEVELOPMENT = "development"
 final String BRANCH_BETA = null
 final String BRANCH_MASTER = "master"
 
-String PROJECT_NAME = "McNativeRuntimeAPI"
+String PROJECT_NAME = "McNativeRuntimeApi"
 
 boolean JAVADOCS_ENABLED = true
-String JAVADOCS_NAME = "mcnative"
-String JAVADOCS_MODULES = ":McNativeRuntimeAPI,:mcnative-runtime-api,:mcnative-runtime-api-proxy,:mcnative-runtime-api-service"
+String JAVADOCS_NAME = "mcnative-runtime-api"
+String JAVADOCS_MODULES = ":McNativeRuntimeApi,:mcnative-runtime-api,:mcnative-runtime-api-proxy,:mcnative-runtime-api-service"
 
 def MIRROR_SERVER_PUBLISHING = []
 
