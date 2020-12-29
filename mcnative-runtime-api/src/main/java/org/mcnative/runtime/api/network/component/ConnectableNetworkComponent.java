@@ -28,6 +28,10 @@ import java.util.UUID;
 
 public interface ConnectableNetworkComponent extends NetworkComponent {
 
+    String getGroup();
+
+    String getStatus();
+
     int getMaxPlayerCount();
 
     int getOnlineCount();

@@ -25,10 +25,6 @@ import org.mcnative.runtime.api.network.messaging.MessageReceiver;
 
 public interface NetworkComponent extends MessageReceiver {
 
-    String getGroup();
-
-    String getStatus();
-
     EventBus getEventBus();
 
     CommandManager getCommandManager();
