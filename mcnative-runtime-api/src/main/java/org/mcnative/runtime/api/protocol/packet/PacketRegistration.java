@@ -60,23 +60,23 @@ public class PacketRegistration {
         return UnsafeInstanceCreator.newInstance(packetClass);
     }
 
-    static PacketRegistration create(Class<? extends MinecraftPacket> packetClass, PacketRegistration.PacketCondition... conditions){
+    public static PacketRegistration create(Class<? extends MinecraftPacket> packetClass, PacketRegistration.PacketCondition... conditions){
         return new PacketRegistration(packetClass, conditions);
     }
 
-    static PacketRegistration.IdMapping map(MinecraftProtocolVersion version, int identifier){
+    public static PacketRegistration.IdMapping map(MinecraftProtocolVersion version, int identifier){
         return new PacketRegistration.IdMapping(version,identifier,null);
     }
 
-    static PacketRegistration.IdMapping map(MinecraftProtocolVersion version, int identifier,MinecraftPacketCodec<?> codec){
+    public static PacketRegistration.IdMapping map(MinecraftProtocolVersion version, int identifier,MinecraftPacketCodec<?> codec){
         return new PacketRegistration.IdMapping(version,identifier,codec);
     }
 
-    static PacketRegistration.PacketCondition on(PacketDirection direction, PacketRegistration.IdMapping... mappings){
+    public static PacketRegistration.PacketCondition on(PacketDirection direction, PacketRegistration.IdMapping... mappings){
         return new PacketRegistration.PacketCondition(direction,ConnectionState.GAME,mappings);
     }
 
-    static PacketRegistration.PacketCondition on(PacketDirection direction, ConnectionState state, PacketRegistration.IdMapping... mappings){
+    public static PacketRegistration.PacketCondition on(PacketDirection direction, ConnectionState state, PacketRegistration.IdMapping... mappings){
         return new PacketRegistration.PacketCondition(direction,state,mappings);
     }
 
