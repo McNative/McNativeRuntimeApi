@@ -48,7 +48,7 @@ public interface LocalService extends ConnectableNetworkComponent {
     PacketManager getPacketManager();
 
 
-    void setStatus();
+    void setStatus(String status);
 
 
     ChatChannel getServerChat();

@@ -19,8 +19,11 @@
 
 package org.mcnative.runtime.api.protocol.packet;
 
+import org.mcnative.runtime.api.connection.ConnectionState;
 import org.mcnative.runtime.api.protocol.Endpoint;
+import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,6 +31,15 @@ import java.util.List;
  * contains listeners to intercept and manipulate packets.
  */
 public interface PacketManager {
+
+    Collection<PacketRegistration> getPacketRegistrations();
+
+    PacketRegistration getPacketRegistration(Class<?> packetClass);
+
+    PacketRegistration getPacketRegistration(ConnectionState state, PacketDirection direction, MinecraftProtocolVersion version, int packetId);
+
+    void registerPacket(PacketRegistration registration);
+
 
     /**
      * Get registered packet listeners
