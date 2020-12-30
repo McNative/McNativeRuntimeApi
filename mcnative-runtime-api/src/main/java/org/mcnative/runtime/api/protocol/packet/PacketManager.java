@@ -19,6 +19,7 @@
 
 package org.mcnative.runtime.api.protocol.packet;
 
+import net.pretronic.libraries.utility.map.Pair;
 import org.mcnative.runtime.api.connection.ConnectionState;
 import org.mcnative.runtime.api.protocol.Endpoint;
 import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
@@ -39,6 +40,11 @@ public interface PacketManager {
     PacketRegistration getPacketRegistration(ConnectionState state, PacketDirection direction, MinecraftProtocolVersion version, int packetId);
 
     void registerPacket(PacketRegistration registration);
+
+
+    Pair<PacketRegistration,MinecraftPacketCodec<?>> getPacketCodecData(Class<?> packetClass);
+
+    Pair<PacketRegistration,MinecraftPacketCodec<?>> getPacketCodecData(ConnectionState state, PacketDirection direction, MinecraftProtocolVersion version, int packetId);
 
 
     /**
