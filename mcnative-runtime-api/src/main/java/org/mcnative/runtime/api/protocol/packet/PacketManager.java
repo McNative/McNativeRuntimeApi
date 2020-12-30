@@ -42,8 +42,6 @@ public interface PacketManager {
     void registerPacket(PacketRegistration registration);
 
 
-    Pair<PacketRegistration,MinecraftPacketCodec<?>> getPacketCodecData(Class<?> packetClass);
-
     Pair<PacketRegistration,MinecraftPacketCodec<?>> getPacketCodecData(ConnectionState state, PacketDirection direction, MinecraftProtocolVersion version, int packetId);
 
 

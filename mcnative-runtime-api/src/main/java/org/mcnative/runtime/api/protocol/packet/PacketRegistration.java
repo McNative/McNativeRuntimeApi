@@ -19,6 +19,7 @@
 
 package org.mcnative.runtime.api.protocol.packet;
 
+import net.pretronic.libraries.utility.map.Pair;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
 import org.mcnative.runtime.api.connection.ConnectionState;
 import org.mcnative.runtime.api.protocol.MinecraftEdition;
@@ -54,6 +55,55 @@ public class PacketRegistration {
      */
     public PacketCondition[] getConditions() {
         return conditions;
+    }
+
+    public PacketCondition getCondition(PacketDirection direction, ConnectionState state){
+        for (PacketCondition condition : conditions) if(condition.getDirection().equals(direction) && condition.getState().equals(state)) return condition;
+        return null;
+    }
+
+    public Pair<Integer,MinecraftPacketCodec> getCodecData(PacketDirection direction, ConnectionState state, MinecraftProtocolVersion version){
+        PacketCondition condition = getCondition(direction, state);
+        if(condition == null) throw new UnsupportedOperationException("This packet is not supported in state "+state+" -> "+direction);
+        MinecraftPacketCodec<?> codec = null;
+        int id = -1;
+        for (IdMapping mapping : condition.getMappings()){
+            if(mapping.getVersion().isNewer(version)) break;
+            if(mapping.getCodec() != null) {
+                codec = mapping.getCodec();
+            }
+            id = mapping.getId();
+        }
+        if(codec == null || id == -1) throw new IllegalArgumentException("This packet is not supported for version "+version.getEdition().getName()+" "+version.getName());
+        return new Pair<>(id, codec);
+    }
+
+    public MinecraftPacketCodec<?> getCodec(PacketDirection direction,ConnectionState state, MinecraftProtocolVersion version){
+        PacketCondition condition = getCondition(direction, state);
+        if(condition == null) throw new UnsupportedOperationException("This packet is not supported in state "+state+" -> "+direction);
+        MinecraftPacketCodec<?> codec = null;
+        for (IdMapping mapping : condition.getMappings()){
+            if(mapping.getVersion().isNewer(version)) break;
+            if(mapping.getCodec() != null) {
+                codec = mapping.getCodec();
+            }
+
+        }
+        if(codec == null) throw new IllegalArgumentException("This packet is not supported for version "+version.getEdition().getName()+" "+version.getName());
+        return codec;
+    }
+
+    public int getId(PacketDirection direction, ConnectionState state, MinecraftProtocolVersion version){
+        PacketCondition condition = getCondition(direction, state);
+        if(condition == null) throw new UnsupportedOperationException("This packet is not supported in state "+state+" -> "+direction);
+        int id = -1;
+        for (IdMapping mapping : condition.getMappings()){
+            if(version.isNewerOrSame(mapping.version)){
+                id = mapping.id;
+            }
+        }
+        if(id == -1) throw new IllegalArgumentException("This packet is not supported for version "+version.getEdition().getName()+" "+version.getName());
+        return id;
     }
 
     public MinecraftPacket newPacketInstance(){
