@@ -5,7 +5,7 @@ import org.mcnative.runtime.api.connection.MinecraftConnection;
 
 public interface MinecraftPacketCodec<T extends MinecraftPacket> {
 
-    T read(MinecraftConnection connection, PacketDirection direction, ByteBuf buffer);
+    void read(T packet,MinecraftConnection connection, PacketDirection direction, ByteBuf buffer);
 
     void write(T packet,MinecraftConnection connection,PacketDirection direction, ByteBuf buffer);
 
