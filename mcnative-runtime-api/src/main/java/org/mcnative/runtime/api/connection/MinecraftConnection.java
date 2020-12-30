@@ -21,6 +21,7 @@ package org.mcnative.runtime.api.connection;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
+import org.mcnative.runtime.api.protocol.definition.MinecraftProtocolStateDefinition;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.text.Text;
 import org.mcnative.runtime.api.text.components.MessageComponent;
@@ -35,6 +36,8 @@ public interface MinecraftConnection {
     MinecraftProtocolVersion getProtocolVersion();
 
     ConnectionState getState();
+
+    MinecraftProtocolStateDefinition getProtocolDefinition();
 
     InetSocketAddress getAddress();
 

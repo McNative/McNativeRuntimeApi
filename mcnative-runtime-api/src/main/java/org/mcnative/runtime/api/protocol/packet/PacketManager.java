@@ -37,7 +37,7 @@ public interface PacketManager {
      * @param packetClass The class of the packet implementation
      * @return A list of all listeners
      */
-    <T extends MinecraftPacket> List<MinecraftPacketListener<T>> getPacketListeners(Endpoint endpoint, PacketDirection direction,Class<T> packetClass);
+    <T extends MinecraftPacket> List<MinecraftPacketListener> getPacketListeners(Endpoint endpoint, PacketDirection direction,Class<T> packetClass);
 
     /**
      *
@@ -46,12 +46,12 @@ public interface PacketManager {
      * @param packetClass The class of the packet implementation
      * @param listener The listener to register
      */
-    <T extends MinecraftPacket> void registerPacketListener(Endpoint endpoint, PacketDirection direction, Class<T> packetClass, MinecraftPacketListener<T> listener);
+    <T extends MinecraftPacket> void registerPacketListener(Endpoint endpoint, PacketDirection direction, Class<T> packetClass, MinecraftPacketListener listener);
 
     /**
      * Unregister a packet listener.
      *
      * @param listener The listener to be unregistered
      */
-    void unregisterPacketListener(MinecraftPacketListener<?> listener);
+    void unregisterPacketListener(MinecraftPacketListener listener);
 }

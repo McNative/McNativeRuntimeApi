@@ -22,13 +22,13 @@ package org.mcnative.runtime.api.protocol.packet;
 /**
  * A packet listener is used to intercept packets and modify them. Packet listeners are registered in the @{@link PacketManager}
  */
-public interface MinecraftPacketListener<T extends MinecraftPacket> {
+public interface MinecraftPacketListener {
 
     /**
      * Is called when a packet is received.
      *
      * @param event The event of the packet
      */
-    void handle(T event);
+    void handle(MinecraftPacketEvent event);
 
 }

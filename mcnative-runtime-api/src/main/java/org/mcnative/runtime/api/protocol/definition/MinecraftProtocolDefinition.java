@@ -26,8 +26,12 @@ public class MinecraftProtocolDefinition {
     }
 
     public MinecraftProtocolStateDefinition getDefinition(ConnectionState state){
+        Validate.notNull(state);
         MinecraftProtocolStateDefinition definition = Iterators.findOne(stateDefinitions, definition1 -> definition1.getState() == state);
-        if(definition == null) throw new IllegalArgumentException("No state definition found for " + state);
+        if(definition == null){
+            definition = new MinecraftProtocolStateDefinition(state);
+            stateDefinitions.add(definition);
+        }
         return definition;
     }
 
