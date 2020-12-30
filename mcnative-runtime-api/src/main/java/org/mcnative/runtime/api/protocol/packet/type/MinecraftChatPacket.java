@@ -24,11 +24,14 @@ import org.mcnative.runtime.api.player.chat.ChatPosition;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
+import java.util.UUID;
+
 public class MinecraftChatPacket implements MinecraftPacket {
 
     private MessageComponent<?> message;
     private VariableSet variables;
     private ChatPosition position;
+    private UUID sender;
 
     public MessageComponent<?> getMessage() {
         return message;
@@ -54,4 +57,11 @@ public class MinecraftChatPacket implements MinecraftPacket {
         this.position = position;
     }
 
+    public UUID getSender() {
+        return sender;
+    }
+
+    public void setSender(UUID sender) {
+        this.sender = sender;
+    }
 }
