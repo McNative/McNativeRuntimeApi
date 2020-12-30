@@ -13,8 +13,8 @@ import java.util.Collection;
 public class MinecraftProtocolStateDefinition {
 
     private final ConnectionState state;
-    private final Collection<MinecraftProtocolEntry> incoming;
-    private final Collection<MinecraftProtocolEntry> outgoing;
+    private final Collection<MinecraftProtocolData> incoming;
+    private final Collection<MinecraftProtocolData> outgoing;
 
     public MinecraftProtocolStateDefinition(ConnectionState state) {
         this.state = state;
@@ -26,36 +26,36 @@ public class MinecraftProtocolStateDefinition {
         return state;
     }
 
-    public Collection<MinecraftProtocolEntry> getIncoming() {
+    public Collection<MinecraftProtocolData> getIncoming() {
         return incoming;
     }
 
-    public Collection<MinecraftProtocolEntry> getOutgoing() {
+    public Collection<MinecraftProtocolData> getOutgoing() {
         return outgoing;
     }
 
-    public MinecraftProtocolEntry getProtocolData(PacketDirection direction, Class<?> packetClass) {
+    public MinecraftProtocolData getProtocolData(PacketDirection direction, Class<?> packetClass) {
         Validate.notNull(direction);
         if(direction == PacketDirection.INCOMING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketClass().equals(packetClass));
+            MinecraftProtocolData entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketClass().equals(packetClass));
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return entry;
         } else if(direction == PacketDirection.OUTGOING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketClass().equals(packetClass));
+            MinecraftProtocolData entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketClass().equals(packetClass));
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return entry;
         }
         throw new IllegalArgumentException("Invalid packet direction " + direction);
     }
 
-    public MinecraftProtocolEntry getProtocolData(PacketDirection direction, int packetId) {
+    public MinecraftProtocolData getProtocolData(PacketDirection direction, int packetId) {
         Validate.notNull(direction);
         if(direction == PacketDirection.INCOMING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketId() == packetId);
+            MinecraftProtocolData entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketId() == packetId);
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return entry;
         } else if(direction == PacketDirection.OUTGOING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketId() == packetId);
+            MinecraftProtocolData entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketId() == packetId);
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return entry;
         }
@@ -66,11 +66,11 @@ public class MinecraftProtocolStateDefinition {
     public <T extends MinecraftPacket> MinecraftPacketCodec<T> getCodec(PacketDirection direction, Class<T> packetClass) {
         Validate.notNull(direction);
         if(direction == PacketDirection.INCOMING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketClass().equals(packetClass));
+            MinecraftProtocolData entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketClass().equals(packetClass));
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return (MinecraftPacketCodec<T>) entry.getCodec();
         } else if(direction == PacketDirection.OUTGOING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketClass().equals(packetClass));
+            MinecraftProtocolData entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketClass().equals(packetClass));
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return (MinecraftPacketCodec<T>) entry.getCodec();
         }
@@ -81,11 +81,11 @@ public class MinecraftProtocolStateDefinition {
     public <T extends MinecraftPacket> MinecraftPacketCodec<T> getCodec(PacketDirection direction, int packetId) {
         Validate.notNull(direction);
         if(direction == PacketDirection.INCOMING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketId() == packetId);
+            MinecraftProtocolData entry = Iterators.findOne(this.incoming, entry0 -> entry0.getPacketId() == packetId);
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return (MinecraftPacketCodec<T>) entry.getCodec();
         } else if(direction == PacketDirection.OUTGOING) {
-            MinecraftProtocolEntry entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketId() == packetId);
+            MinecraftProtocolData entry = Iterators.findOne(this.outgoing, entry0 -> entry0.getPacketId() == packetId);
             if(entry == null) throw new UnsupportedOperationException("packet not supported");
             return (MinecraftPacketCodec<T>) entry.getCodec();
         }
@@ -93,11 +93,11 @@ public class MinecraftProtocolStateDefinition {
     }
 
     public <T extends MinecraftPacket> void registerIncoming(Class<T> packetClass,int packetID, MinecraftPacketCodec<T> codec){
-        this.incoming.add(new MinecraftProtocolEntry(packetID,packetClass,codec));
+        this.incoming.add(new MinecraftProtocolData(packetID,packetClass,codec));
     }
 
     public <T extends MinecraftPacket> void registerOutgoing(Class<T> packetClass,int packetID, MinecraftPacketCodec<T> codec){
-        this.outgoing.add(new MinecraftProtocolEntry(packetID,packetClass,codec));
+        this.outgoing.add(new MinecraftProtocolData(packetID,packetClass,codec));
     }
 
 }
