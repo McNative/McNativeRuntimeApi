@@ -62,6 +62,10 @@ public class MinecraftTitlePacket implements MinecraftPacket {
         this.data = new int[]{fadeIn,stay,fadeOut};
     }
 
+    public Object getRawData() {
+        return data;
+    }
+
     public enum Action {
 
         SET_TITLE(0,0),
