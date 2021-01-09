@@ -65,5 +65,6 @@ public interface LocalService extends ConnectableNetworkComponent {
 
     void setStatusResponse(ServerStatusResponse status);
 
+    ServerPerformance getServerPerformance();
 
 }
