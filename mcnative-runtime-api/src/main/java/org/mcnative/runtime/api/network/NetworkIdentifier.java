@@ -23,6 +23,9 @@ import java.util.UUID;
 
 public class NetworkIdentifier {
 
+    public static String SERVER_GROUP_DELIMITER = "-";
+
+
     public static final NetworkIdentifier UNKNOWN = new NetworkIdentifier("Unknown",new UUID(-1,-1));
 
     public static final NetworkIdentifier BROADCAST = new NetworkIdentifier("Network Broadcast",new UUID(0,0));
@@ -35,10 +38,16 @@ public class NetworkIdentifier {
 
     private final String name;
     private final UUID uniqueId;
+    private final String group;
 
-    public NetworkIdentifier(String name, UUID uniqueId) {
+    public NetworkIdentifier(String name, UUID uniqueId, String group) {
         this.name = name;
         this.uniqueId = uniqueId;
+        this.group = group;
+    }
+
+    public NetworkIdentifier(String name, UUID uniqueId) {
+        this(name, uniqueId, parseGroup(name));
     }
 
     public String getName() {
@@ -47,5 +56,17 @@ public class NetworkIdentifier {
 
     public UUID getUniqueId() {
         return uniqueId;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    private static String parseGroup(String name) {
+        int index = name.lastIndexOf(SERVER_GROUP_DELIMITER);
+        if(index == -1) {
+            return name;
+        }
+        return name.substring(0, name.lastIndexOf(SERVER_GROUP_DELIMITER)-1);
     }
 }
