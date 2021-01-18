@@ -67,6 +67,6 @@ public class NetworkIdentifier {
         if(index == -1) {
             return name;
         }
-        return name.substring(0, name.lastIndexOf(SERVER_GROUP_DELIMITER)-1);
+        return name.substring(0, name.lastIndexOf(SERVER_GROUP_DELIMITER));
     }
 }
