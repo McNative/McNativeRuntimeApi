@@ -43,11 +43,11 @@ public class NetworkIdentifier {
     public NetworkIdentifier(String name, UUID uniqueId, String group) {
         this.name = name;
         this.uniqueId = uniqueId;
-        this.group = group;
+        this.group = group == null ? parseGroup(name) : group;
     }
 
     public NetworkIdentifier(String name, UUID uniqueId) {
-        this(name, uniqueId, parseGroup(name));
+        this(name, uniqueId, null);
     }
 
     public String getName() {
