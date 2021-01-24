@@ -28,10 +28,12 @@ import net.pretronic.libraries.plugin.manager.PluginManager;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.runtime.api.loader.LoaderConfiguration;
 import org.mcnative.runtime.api.network.Network;
 import org.mcnative.runtime.api.player.PlayerManager;
-import org.mcnative.runtime.api.rollout.RolloutConfiguration;
+import org.mcnative.runtime.api.utils.Env;
 
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
 public interface McNative extends ObjectOwner {
@@ -44,9 +46,18 @@ public interface McNative extends ObjectOwner {
     PluginVersion getImplementationVersion();
 
 
-    RolloutConfiguration getRolloutConfiguration();
+    LoaderConfiguration getRolloutConfiguration();
 
     McNativeConsoleCredentials getConsoleCredentials();
+
+
+    Collection<Env> getVariables();
+
+    Env getVariable(String name);
+
+    boolean hasVariable(String name);
+
+    void setVariable(String name, Object value);
 
 
     boolean isReady();
