@@ -22,6 +22,10 @@ public class Env {
         return value;
     }
 
+    public String getAsString(){
+        return Convert.toString(value);
+    }
+
     public int getAsInteger(){
         return Convert.toInteger(value);
     }
