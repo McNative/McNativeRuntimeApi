@@ -22,6 +22,7 @@ package org.mcnative.runtime.api.text;
 import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.document.entry.DocumentEntry;
 import net.pretronic.libraries.document.type.DocumentFileType;
+import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.text.components.*;
 import org.mcnative.runtime.api.text.format.TextColor;
 import org.mcnative.runtime.api.text.format.TextStyle;
@@ -35,7 +36,6 @@ public class Text {
     public static TextComponent SPACE = of(" ");
 
     public static TextComponent NEW_LINE = of("\n");
-
 
     public static final char FORMAT_CHAR = '\u00A7';
     public static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
@@ -104,7 +104,9 @@ public class Text {
         return new MessageKeyComponent(key);
     }
 
-
+    public static MessageKeyComponent ofMessageKey(String key, MinecraftConnection target){
+        return new TargetMessageKeyComponent(target,key);
+    }
 
     public static MessageComponent<?> parse(String text){
         return parse(text,true,DEFAULT_ALTERNATE_COLOR_CHAR);
