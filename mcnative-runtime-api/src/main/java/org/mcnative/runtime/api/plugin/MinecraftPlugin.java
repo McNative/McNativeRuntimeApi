@@ -22,7 +22,10 @@ package org.mcnative.runtime.api.plugin;
 import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.libraries.plugin.Plugin;
+import net.pretronic.libraries.plugin.service.ServiceRegistry;
+import org.mcnative.runtime.api.LocalService;
 import org.mcnative.runtime.api.McNative;
+import org.mcnative.runtime.api.network.Network;
 import org.mcnative.runtime.api.plugin.configuration.Configuration;
 import org.mcnative.runtime.api.plugin.configuration.ConfigurationProvider;
 
@@ -32,6 +35,18 @@ public class MinecraftPlugin extends Plugin<McNative> {
 
     public File getDataFolder(){
         return getConfigurationProvider().getPluginDataFolder(this);
+    }
+
+    public ServiceRegistry getRegistry(){
+        return getRuntime().getRegistry();
+    }
+
+    public Network getNetwork(){
+        return getRuntime().getNetwork();
+    }
+
+    public LocalService getLocal(){
+        return getRuntime().getLocal();
     }
 
     public Configuration getConfiguration(){
