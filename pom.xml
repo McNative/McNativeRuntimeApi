@@ -50,8 +50,8 @@
         <dependency.placeholderapi.version>2.10.9</dependency.placeholderapi.version>
         <dependency.cloudnet.v2.version>2.1.17</dependency.cloudnet.v2.version>
 
-        <dependency.pretronic.libraries>1.2.46.185-SNAPSHOT</dependency.pretronic.libraries>
-        <dependency.pretronic.databasequery>1.2.55.82-SNAPSHOT</dependency.pretronic.databasequery>
+        <dependency.pretronic.libraries>1.2.49.188-SNAPSHOT</dependency.pretronic.libraries>
+        <dependency.pretronic.databasequery>1.2.58.85-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
         <dependency.slf4j>1.7.25</dependency.slf4j>
