@@ -97,4 +97,5 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
         }
         super.decompile(data);
     }
+
 }

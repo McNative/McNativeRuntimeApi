@@ -85,6 +85,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
 
     @Override
     public Document compile(String key, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        connection = translateConnection(connection);
         if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
             throw new UnsupportedOperationException("Use compileToString for version 1.7.9 or lower");
         }
@@ -94,6 +95,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
 
     @Override
     public void compileToString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        connection = translateConnection(connection);
         if(version.isOlder(MinecraftProtocolVersion.JE_1_8)){
             try{
                 OnlineMinecraftPlayer player = getPlayer(connection, language);
@@ -138,6 +140,10 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void decompile(Document data) {
         this.key = data.getString("key");
+    }
+
+    protected MinecraftConnection translateConnection(MinecraftConnection connection){
+        return connection;//Unused
     }
 
     private OnlineMinecraftPlayer getPlayer(MinecraftConnection connection, Language language) {

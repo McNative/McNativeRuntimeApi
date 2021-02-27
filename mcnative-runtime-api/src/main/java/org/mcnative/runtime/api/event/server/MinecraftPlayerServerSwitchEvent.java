@@ -24,7 +24,7 @@ import net.pretronic.libraries.event.network.NetworkEventType;
 import org.mcnative.runtime.api.event.player.MinecraftOnlinePlayerEvent;
 import org.mcnative.runtime.api.network.component.server.MinecraftServer;
 
-@NetworkEvent(type = NetworkEventType.BROADCAST)
+@NetworkEvent(type = NetworkEventType.SELF_MANAGED,ignoreNetworkException = true)
 public interface MinecraftPlayerServerSwitchEvent extends MinecraftOnlinePlayerEvent {
 
     MinecraftServer getFrom();
