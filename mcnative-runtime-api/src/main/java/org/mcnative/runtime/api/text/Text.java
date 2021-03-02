@@ -117,36 +117,35 @@ public class Text {
         TextComponent current = root;
         root.setColor(TextColor.WHITE);
         root.setText("");
+
         char[] chars = text.toCharArray();
         int textIndex = 0;
-        int lastColour = -1;
+
         for (int i = 0; i < chars.length; i++) {
             char char0 = chars[i];
-            if((char0 == Text.FORMAT_CHAR || char0 == alternateChar) && chars.length > ++i){
-                TextColor color = TextColor.of(chars[i]);
+            if((char0 == Text.FORMAT_CHAR || char0 == Text.DEFAULT_ALTERNATE_COLOR_CHAR) && chars.length > ++i){
+                TextColor color;
+
+                int skip = 1;
+                if(chars[i] == '#' && chars.length>(i+6)){
+                    color = TextColor.make(new String(Arrays.copyOfRange(chars,i,i+7)));
+                    skip = 7;
+                } else color = TextColor.of(chars[i]);
+
                 if(color != null){
                     TextComponent next = new TextComponent();
                     current.addExtra(next);
                     next.setColor(color);
                     next.setText("");
-                    if(textIndex < i) current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                    if(textIndex < i){
+                        current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
+                    }
                     current = next;
-                    textIndex = i+1;
-                    lastColour = i;
-                }else {
-                    if(lastColour != i-2){
-                        TextComponent next = new TextComponent();
-                        current.addExtra(next);
-                        next.setText("");
-                        if(textIndex < i) current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
-                        current = next;
-                    }
-                    TextStyle style = TextStyle.of(char0);
-                    if(style != null){
-                        current.addStyle(style);
-                    }
-                    lastColour = i;
+                    textIndex = i+skip;
                 }
+
+                TextStyle style = TextStyle.of(char0);
+                if(style != null) current.addStyle(style);
             }
         }
         if(textIndex < chars.length){
