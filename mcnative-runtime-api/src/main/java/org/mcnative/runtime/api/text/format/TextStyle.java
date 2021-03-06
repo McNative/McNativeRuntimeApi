@@ -47,6 +47,10 @@ public enum TextStyle {
         return code;
     }
 
+    public String getLegacyMotdCode(){
+        return "\\u00A7"+code;
+    }
+
     public String getName() {
         return name;
     }

@@ -80,4 +80,11 @@ public class TextComponent extends AbstractChatComponent<TextComponent>{
         text = data.getString("text");
         super.decompile(data);
     }
+
+    @Override
+    public TextComponent copy() {
+        TextComponent component = new TextComponent();
+        component.setText(getText());
+        return copyRaw(component);
+    }
 }

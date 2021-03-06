@@ -42,6 +42,10 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
         this.components = new HashMap<>();
     }
 
+    public GroupMessageComponent(Map<MessageComponent<?>,VariableSet> components) {
+        this.components = components;
+    }
+
     @Override
     public Collection<MessageComponent<?>> getExtras() {
         return components.keySet();
@@ -108,5 +112,10 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
         for (MessageComponent<?> messageComponent : Text.decompileArray(data)) {
             this.components.put(messageComponent,VariableSet.newEmptySet());
         }
+    }
+
+    @Override
+    public GroupMessageComponent copy() {
+        return new GroupMessageComponent(components);
     }
 }

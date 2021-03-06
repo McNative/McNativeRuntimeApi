@@ -257,6 +257,14 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
         }
     }
 
+    protected T copyRaw(T component){
+        copyFormatting(component);
+        for (MessageComponent<?> extra : extras) component.addExtra(extra);
+        component.setClickEvent(clickEvent);
+        component.setHoverEvent(hoverEvent);
+        return component;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <N extends ChatComponent<?>> N getAs(Class<N> aClass) {

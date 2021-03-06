@@ -46,4 +46,9 @@ public class TargetMessageKeyComponent extends MessageKeyComponent {
     protected MinecraftConnection translateConnection(MinecraftConnection connection) {
         return target != null ? target : connection;
     }
+
+    @Override
+    public MessageKeyComponent copy() {
+        return new TargetMessageKeyComponent(target,getKey());
+    }
 }

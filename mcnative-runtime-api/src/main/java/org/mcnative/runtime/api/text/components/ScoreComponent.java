@@ -110,4 +110,9 @@ public class ScoreComponent extends AbstractChatComponent<ScoreComponent>{
         value = data.getString("value");
         super.decompile(data);
     }
+
+    @Override
+    public ScoreComponent copy() {
+        return copyRaw(new ScoreComponent(entityName,objective,value));
+    }
 }

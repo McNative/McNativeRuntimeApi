@@ -112,7 +112,7 @@ public enum MinecraftProtocolVersion {
 
     public static MinecraftProtocolVersion of(MinecraftEdition edition, int number){
         for (MinecraftProtocolVersion value : values()) if(value.getEdition() == edition && value.getNumber() == number) return value;
-        throw new UnsupportedOperationException("This protocol version is not supported.");
+        return UNKNOWN;
     }
 
     public static MinecraftProtocolVersion getLatest(MinecraftEdition edition){

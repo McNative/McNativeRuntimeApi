@@ -109,4 +109,9 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
         this.components.addAll(Text.decompileArray(data));
     }
 
+    @Override
+    public MessageComponentSet copy() {
+        return new MessageComponentSet(components);
+    }
+
 }
