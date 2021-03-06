@@ -113,10 +113,14 @@ public class Text {
     }
 
     public static MessageComponent<?> parse(String text){
-        return parse(text,true,DEFAULT_ALTERNATE_COLOR_CHAR);
+        return parse(text,TextColor.WHITE,DEFAULT_ALTERNATE_COLOR_CHAR);
     }
 
-    public static MessageComponent<?> parse(String text, boolean colors, char alternateChar){
+    public static MessageComponent<?> parse(String text,TextColor defaultColor){
+        return parse(text,defaultColor,DEFAULT_ALTERNATE_COLOR_CHAR);
+    }
+
+    public static MessageComponent<?> parse(String text,TextColor defaultColor, char alternateChar){
         ArrayList<MessageComponent<?>> components = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
         TextComponent component = new TextComponent();
@@ -126,7 +130,7 @@ public class Text {
         for ( int i = 0; i < chars.length; i++ )
         {
             char c = chars[i];
-            if ((c == Text.FORMAT_CHAR || c == Text.DEFAULT_ALTERNATE_COLOR_CHAR)) {
+            if ((c == Text.FORMAT_CHAR || c == alternateChar)) {
                 if ( ++i >= chars.length) break;
                 c = chars[i];
                 if (c >= 'A' && c <= 'Z' ) c += 32;
@@ -154,7 +158,7 @@ public class Text {
                 TextStyle style = TextStyle.of(c);
                 if (style == TextStyle.RESET ) {
                     component = new TextComponent();
-                    component.setColor(TextColor.WHITE);
+                    component.setColor(defaultColor);
                 } else if(style != null){
                     component.addStyle(style);
                 }
@@ -189,51 +193,6 @@ public class Text {
         components.add( component );
 
         return new MessageComponentSet(components);
-    }
-
-    public static MessageComponent<?> parseF(String text, boolean colors, char alternateChar){
-        TextComponent root = new TextComponent();
-        TextComponent current = root;
-        root.setColor(TextColor.WHITE);
-        root.setText("");
-
-        char[] chars = replaceLegacyMotdCodes(text).toCharArray();
-        int textIndex = 0;
-
-        for (int i = 0; i < chars.length; i++) {
-            char char0 = chars[i];
-            if((char0 == Text.FORMAT_CHAR || char0 == Text.DEFAULT_ALTERNATE_COLOR_CHAR) && chars.length > ++i){
-                TextColor color;
-
-                int skip = 1;
-                if(chars[i] == '#' && chars.length>(i+6)){
-                    color = TextColor.make(new String(Arrays.copyOfRange(chars,i,i+7)));
-                    skip = 7;
-                } else color = TextColor.of(chars[i]);
-
-                if(color != null){
-                    TextComponent next = new TextComponent();
-                    current.addExtra(next);
-                    next.setColor(color);
-                    next.setText("");
-                    if(textIndex < i){
-                        current.setText(new String(Arrays.copyOfRange(chars,textIndex,i-1)));
-                    }
-                    current = next;
-                    textIndex = i+skip;
-                }else{
-                    TextStyle style = TextStyle.of(chars[i]);
-                    System.out.println("style: "+chars[i]+" "+style);
-                    if(style != null){
-                        current.addStyle(style);
-                    }
-                }
-            }
-        }
-        if(textIndex < chars.length){
-            current.setText(new String(Arrays.copyOfRange(chars,textIndex,chars.length)));
-        }
-        return root;
     }
 
     public static String translateAlternateColorCodes(char alternateChar,String text){
