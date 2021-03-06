@@ -112,7 +112,11 @@ public interface ServerStatusResponse {
         versionEntry.set("protocol",getVersion().getProtocol().getNumber());
 
         result.addEntry(versionEntry);
-        result.set("description",getDescription() != null ? getDescription().compile(version) : "");
+        if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_8)){
+            result.set("description",getDescription() != null ? getDescription().compile(version) : "");
+        }else{
+            result.set("description",getDescription() != null ? getDescription().compileToString(version) : "");
+        }
         result.set("favicon",getFavicon());
 
         Document players = Document.newDocument("players");

@@ -89,6 +89,10 @@ public final class TextColor {
         return clientCode;
     }
 
+    public String getLegacyMotdCode(){
+        return "\\u00A7"+code;
+    }
+
     public String getName() {
         return name;
     }

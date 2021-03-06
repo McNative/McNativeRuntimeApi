@@ -142,6 +142,11 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
         this.key = data.getString("key");
     }
 
+    @Override
+    public MessageKeyComponent copy() {
+        return new MessageKeyComponent(key);
+    }
+
     protected MinecraftConnection translateConnection(MinecraftConnection connection){
         return connection;//Unused
     }

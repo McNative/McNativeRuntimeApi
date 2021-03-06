@@ -114,6 +114,8 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     void decompile(Document data);
 
+    T copy();
+
     default String toText(VariableSet variables){
         return toPlainText(variables);
     }

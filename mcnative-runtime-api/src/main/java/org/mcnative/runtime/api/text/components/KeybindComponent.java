@@ -78,4 +78,9 @@ public class KeybindComponent extends AbstractChatComponent<KeybindComponent>{
         keybind = data.getString("keybind");
         super.decompile(data);
     }
+
+    @Override
+    public KeybindComponent copy() {
+        return copyRaw(new KeybindComponent(keybind));
+    }
 }

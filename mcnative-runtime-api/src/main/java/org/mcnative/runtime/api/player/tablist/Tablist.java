@@ -21,6 +21,7 @@
 package org.mcnative.runtime.api.player.tablist;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.PlayerDesign;
 
@@ -82,6 +83,10 @@ public interface Tablist {
     default void update(ConnectedMinecraftPlayer player){
         updateOverview(player);
         updateEntries(player);
+    }
+
+    static Tablist newTablist(){
+        return McNative.getInstance().getObjectFactory().createObject(Tablist.class);
     }
 
 }

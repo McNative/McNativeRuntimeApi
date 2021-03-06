@@ -98,4 +98,9 @@ public class TranslationComponent extends AbstractChatComponent<TranslationCompo
         super.decompile(data);
     }
 
+    @Override
+    public TranslationComponent copy() {
+        return new TranslationComponent(translation);
+    }
+
 }
