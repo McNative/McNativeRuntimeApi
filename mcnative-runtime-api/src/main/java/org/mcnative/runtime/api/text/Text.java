@@ -136,7 +136,6 @@ public class Text {
                     color = TextColor.make(new String(Arrays.copyOfRange(chars,i,i+7)));
                     i += 7;
                 } else color = TextColor.of(chars[i]);
-                if(color != null) component.setColor(color);
 
                 if (builder.length() > 0 ){
                     TextComponent old = component;
@@ -146,12 +145,17 @@ public class Text {
                     components.add(old);
                 }
 
+                if(color != null){
+                    component = new TextComponent();
+                    component.setColor(color);
+                    continue;
+                }
+
                 TextStyle style = TextStyle.of(c);
                 if (style == TextStyle.RESET ) {
                     component = new TextComponent();
                     component.setColor(TextColor.WHITE);
                 } else if(style != null){
-                    component = new TextComponent();
                     component.addStyle(style);
                 }
                 continue;
