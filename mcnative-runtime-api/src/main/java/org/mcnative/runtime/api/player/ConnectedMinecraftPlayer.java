@@ -56,7 +56,6 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     void setBelowNameInfo(BelowNameInfo info);
 
-
     Collection<BossBar> getActiveBossBars();
 
     void addBossBar(BossBar bossBar);
