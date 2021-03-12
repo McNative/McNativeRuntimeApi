@@ -161,7 +161,7 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
 
     default void playNote(String instrument, SoundCategory category,Note note, float volume){
         float pitch = (float)Math.pow(2.0D, (note.getNote() - 12.0D) / 12.0D);
-        playSound("note."+instrument,category,volume,pitch);
+        playSound("block.note_block."+instrument,category,volume,pitch);
     }
 
     default void playSound(String soundName){

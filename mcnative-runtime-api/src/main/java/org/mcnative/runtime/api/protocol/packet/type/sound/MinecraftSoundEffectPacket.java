@@ -12,7 +12,7 @@ public class MinecraftSoundEffectPacket implements MinecraftPacket {
     private int positionY;
     private int positionZ;
     private float volume;
-    public byte pitch;
+    public float pitch;
 
     public String getSoundName() {
         return soundName;
@@ -62,7 +62,7 @@ public class MinecraftSoundEffectPacket implements MinecraftPacket {
         this.volume = volume;
     }
 
-    public byte getPitch() {
+    public float getPitch() {
         return pitch;
     }
 
