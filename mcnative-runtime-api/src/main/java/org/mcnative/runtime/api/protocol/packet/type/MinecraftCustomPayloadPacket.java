@@ -3,7 +3,7 @@ package org.mcnative.runtime.api.protocol.packet.type;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 
-public class CustomPayloadPacket implements MinecraftPacket {
+public class MinecraftCustomPayloadPacket implements MinecraftPacket {
 
     private String channel;
     private byte[] content;

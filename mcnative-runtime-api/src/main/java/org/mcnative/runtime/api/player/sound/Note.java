@@ -42,6 +42,10 @@ public class Note {
         this.note = (byte) (octave * Tone.TONES_COUNT + tone.getId(sharped));
     }
 
+    public byte getNote() {
+        return note;
+    }
+
     public static Note flat(int octave, Tone tone) {
         Validate.isTrue(octave != 2, "Octave cannot be 2 for flats");
         tone = tone == Tone.G ? Tone.F : Tone.values()[tone.ordinal() - 1];

@@ -19,61 +19,38 @@
 
 package org.mcnative.runtime.api.player.sound;
 
-import net.pretronic.libraries.utility.Iterators;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class Instrument {
 
-    private static final Collection<Instrument> INSTRUMENTS = new ArrayList<>();
 
-    public static final Instrument PIANO = createDefault("PIANO");
-    public static final Instrument BASS_DRUM = createDefault("BASS_DRUM");
-    public static final Instrument SNARE_DRUM = createDefault("SNARE_DRUM");
-    public static final Instrument STICKS = createDefault("STICKS");
-    public static final Instrument BASS_GUITAR = createDefault("BASS_GUITAR");
-    public static final Instrument FLUTE = createDefault("FLUTE");
-    public static final Instrument BELL = createDefault("BELL");
-    public static final Instrument GUITAR = createDefault("GUITAR");
-    public static final Instrument CHIME = createDefault("CHIME");
-    public static final Instrument XYLOPHONE = createDefault("XYLOPHONE");
-    public static final Instrument IRON_XYLOPHONE = createDefault("IRON_XYLOPHONE");
-    public static final Instrument COW_BELL = createDefault("COW_BELL");
-    public static final Instrument DIDGERIDOO = createDefault("DIDGERIDOO");
-    public static final Instrument BIT = createDefault("BIT");
-    public static final Instrument BANJO = createDefault("BANJO");
-    public static final Instrument PLING = createDefault("PLING");
+    public static String HARP = "harp";
 
-    private final String name;
+    public static String BASE_DRUM = "basedrum";
 
-    public Instrument(String name) {
-        this.name = name;
-    }
+    public static String BASS = "bass";
 
-    public String getName() {
-        return name;
-    }
+    public static String BELL = "bell";
 
-    public static Instrument byName(String name) {
-        return Iterators.findOne(INSTRUMENTS, instrument -> instrument.getName().equals(name));
-    }
+    public static String BIT = "bit";
 
-    public static void register(Instrument instrument) {
-        INSTRUMENTS.add(instrument);
-    }
+    public static String CHIME = "chime";
 
-    public static void unregister(Instrument instrument) {
-        INSTRUMENTS.remove(instrument);
-    }
+    public static String COW_BELL = "cow_bell";
 
-    public static void unregister(String instrumentName) {
-        Iterators.remove(INSTRUMENTS, instrument -> instrument.getName().equals(instrumentName));
-    }
+    public static String DIDGERIDOO = "didgeridoo";
 
-    private static Instrument createDefault(String name) {
-        Instrument instrument = new Instrument(name);
-        INSTRUMENTS.add(instrument);
-        return instrument;
-    }
+    public static String FLUTE = "flute";
+
+    public static String GUITAR = "guitar";
+
+    public static String HAT = "hat";
+
+    public static String IRON_XYLOPHONE = "iron_xylophone";
+
+    public static String XYLOPHONE = "xylophone";
+
+    public static String PLING = "pling";
+
+    public static String SNARE = "snare";
+
+    public static String PIANO = "piano";
 }

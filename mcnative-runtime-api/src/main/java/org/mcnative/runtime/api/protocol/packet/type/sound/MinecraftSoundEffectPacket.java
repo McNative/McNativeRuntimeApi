@@ -4,9 +4,9 @@ import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 
-public class SoundEffectPacket implements MinecraftPacket {
+public class MinecraftSoundEffectPacket implements MinecraftPacket {
 
-    private String name;
+    private String soundName;
     private SoundCategory category;
     private int positionX;
     private int positionY;
@@ -14,12 +14,12 @@ public class SoundEffectPacket implements MinecraftPacket {
     private float volume;
     public byte pitch;
 
-    public String getName() {
-        return name;
+    public String getSoundName() {
+        return soundName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSoundName(String name) {
+        this.soundName = name;
     }
 
     public SoundCategory getCategory() {
@@ -72,6 +72,6 @@ public class SoundEffectPacket implements MinecraftPacket {
 
     @Override
     public void validate() {
-        if(name == null) throw new MinecraftPacketValidationException("Sound name cannot be null");
+        if(soundName == null) throw new MinecraftPacketValidationException("Sound name cannot be null");
     }
 }
