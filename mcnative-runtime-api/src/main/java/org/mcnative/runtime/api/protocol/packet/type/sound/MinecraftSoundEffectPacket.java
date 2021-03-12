@@ -66,7 +66,7 @@ public class MinecraftSoundEffectPacket implements MinecraftPacket {
         return pitch;
     }
 
-    public void setPitch(byte pitch) {
+    public void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
