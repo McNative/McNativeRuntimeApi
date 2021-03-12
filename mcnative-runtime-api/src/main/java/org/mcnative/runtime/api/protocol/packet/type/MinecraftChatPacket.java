@@ -22,6 +22,7 @@ package org.mcnative.runtime.api.protocol.packet.type;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.player.chat.ChatPosition;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.UUID;
@@ -63,5 +64,11 @@ public class MinecraftChatPacket implements MinecraftPacket {
 
     public void setSender(UUID sender) {
         this.sender = sender;
+    }
+
+    @Override
+    public void validate() {
+        if(message == null) throw new MinecraftPacketValidationException("Message cannot be null");
+        if(position == null) throw new MinecraftPacketValidationException("Chat position cannot be null");
     }
 }

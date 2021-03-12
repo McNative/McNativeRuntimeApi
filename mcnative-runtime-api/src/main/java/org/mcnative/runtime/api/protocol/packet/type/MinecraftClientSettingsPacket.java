@@ -27,7 +27,6 @@ public class MinecraftClientSettingsPacket implements MinecraftPacket {
     private String languageTag;
     private PlayerClientSettings settings;
 
-
     public String getLanguageTag() {
         return languageTag;
     }

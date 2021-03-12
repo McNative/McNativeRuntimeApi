@@ -44,4 +44,5 @@ public class MinecraftDisconnectPacket implements MinecraftPacket {
         this.variables = variables;
     }
 
+
 }

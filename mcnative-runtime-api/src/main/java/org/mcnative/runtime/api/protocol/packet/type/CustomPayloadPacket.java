@@ -1,6 +1,7 @@
 package org.mcnative.runtime.api.protocol.packet.type;
 
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 
 public class CustomPayloadPacket implements MinecraftPacket {
 
@@ -21,5 +22,11 @@ public class CustomPayloadPacket implements MinecraftPacket {
 
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    @Override
+    public void validate() {
+        if(channel == null) throw new MinecraftPacketValidationException("Channel cannot be null");
+        if(content == null) throw new MinecraftPacketValidationException("Content cannot be null");
     }
 }

@@ -20,6 +20,7 @@
 package org.mcnative.runtime.api.protocol.packet.type;
 
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 
 public class MinecraftResourcePackSendPacket implements MinecraftPacket {
 
@@ -40,6 +41,11 @@ public class MinecraftResourcePackSendPacket implements MinecraftPacket {
 
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    @Override
+    public void validate() {
+        if(url == null) throw new MinecraftPacketValidationException("Url cannot be null");
     }
 
 }

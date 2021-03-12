@@ -70,4 +70,6 @@ public class MinecraftPlayerListHeaderAndFooterPacket implements MinecraftPacket
         this.footerVariables = footerVariables;
     }
 
+
+
 }
