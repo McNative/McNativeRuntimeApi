@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.world;
 
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.sound.Sound;
+import org.mcnative.runtime.api.player.sound.Note;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.entity.living.Player;
@@ -148,10 +148,11 @@ public interface WorldSequence {
 
     void playEffect(Location location, Effect effect, Vector offset);
 
+    //@Todo add note
 
-    void playSound(Vector point, Sound sound, float volume, float pitch);
+    void playSound(Vector point, String sound, float volume, float pitch);
 
-    void playSound(Vector point, Sound sound, SoundCategory category, float volume, float pitch);
+    void playSound(Vector point, String sound, SoundCategory category, float volume, float pitch);
 
 
     boolean generateTree(Vector location, TreeType treeType);
