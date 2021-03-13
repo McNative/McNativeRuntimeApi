@@ -37,7 +37,7 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
     private VariableSet titleVariables;
     private float health;
     private BarColor color;
-    private BarDivider style;
+    private BarDivider divider;
     private BarFlag flag;
 
     public UUID getBarId() {
@@ -88,12 +88,12 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
         this.color = color;
     }
 
-    public BarDivider getStyle() {
-        return style;
+    public BarDivider getDivider() {
+        return divider;
     }
 
-    public void setStyle(BarDivider style) {
-        this.style = style;
+    public void setDivider(BarDivider style) {
+        this.divider = style;
     }
 
     public BarFlag getFlag() {

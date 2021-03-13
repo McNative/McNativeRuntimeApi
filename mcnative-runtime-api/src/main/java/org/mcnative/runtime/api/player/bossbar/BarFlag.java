@@ -21,7 +21,7 @@ package org.mcnative.runtime.api.player.bossbar;
 
 public enum BarFlag {
 
+    CREATE_FOG,
     DARKEN_SKY,
     PLAY_BOSS_MUSIC,
-    CREATE_FOG,
 }
