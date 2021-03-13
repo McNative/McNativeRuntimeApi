@@ -19,8 +19,8 @@
 
 package org.mcnative.runtime.api.player.receiver;
 
-public interface ReceiveAble {
+public interface SendAble {
 
-    void execute(ReceiverChannel receivers);
+    void execute(LocalReceiverChannel receivers);
 
 }

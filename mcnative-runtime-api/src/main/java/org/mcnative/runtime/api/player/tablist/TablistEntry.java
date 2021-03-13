@@ -32,4 +32,12 @@ public interface TablistEntry {
     PlayerDesign getDesign(MinecraftPlayer player);
 
     boolean isPlayer();
+
+    default Object getHolder(){
+        return null;
+    }
+
+    default void setHolder(Object holder){
+        throw new UnsupportedOperationException("This entry implementation does not support holders");
+    }
 }

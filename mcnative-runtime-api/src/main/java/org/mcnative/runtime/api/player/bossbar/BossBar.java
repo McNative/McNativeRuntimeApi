@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.player.bossbar;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.runtime.api.player.receiver.ReceiverChannel;
+import org.mcnative.runtime.api.player.receiver.LocalReceiverChannel;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 public class BossBar {
@@ -35,7 +35,7 @@ public class BossBar {
     private int maximum;
     private int progress;
 
-    private ReceiverChannel receiver;
+    private LocalReceiverChannel receiver;
 
     public MessageComponent<?> getTitle() {
         return title;
@@ -100,11 +100,11 @@ public class BossBar {
         return this;
     }
 
-    public ReceiverChannel getReceiver() {
+    public LocalReceiverChannel getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(ReceiverChannel receiver) {
+    public void setReceiver(LocalReceiverChannel receiver) {
         this.receiver = receiver;
     }
 }

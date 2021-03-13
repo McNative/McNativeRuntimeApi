@@ -21,11 +21,12 @@
 package org.mcnative.runtime.api.player.chat;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 public interface ChatFormatter {
 
-    MessageComponent<?> format(OnlineMinecraftPlayer receiver, OnlineMinecraftPlayer sender, VariableSet variables, String message);
+    MessageComponent<?> format(ConnectedMinecraftPlayer receiver, OnlineMinecraftPlayer sender, VariableSet variables, String message);
 
 }

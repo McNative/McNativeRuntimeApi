@@ -23,9 +23,9 @@ package org.mcnative.runtime.api.player.chat;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.receiver.ReceiverChannel;
+import org.mcnative.runtime.api.player.receiver.LocalReceiverChannel;
 
-public interface ChatChannel extends ReceiverChannel {
+public interface ChatChannel extends LocalReceiverChannel {
 
     void setMessageFormatter(ChatFormatter formatter);
 

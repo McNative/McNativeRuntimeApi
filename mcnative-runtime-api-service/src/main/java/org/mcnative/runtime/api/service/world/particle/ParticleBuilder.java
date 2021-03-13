@@ -20,8 +20,8 @@
 package org.mcnative.runtime.api.service.world.particle;
 
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.receiver.ReceiveAble;
-import org.mcnative.runtime.api.player.receiver.ReceiverChannel;
+import org.mcnative.runtime.api.player.receiver.SendAble;
+import org.mcnative.runtime.api.player.receiver.LocalReceiverChannel;
 import org.mcnative.runtime.api.service.location.Location;
 import org.mcnative.runtime.api.service.location.Vector;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ParticleBuilder implements ReceiveAble {
+public class ParticleBuilder implements SendAble {
 
     private final List<Entry> entries;
     private Shape shape;
@@ -74,7 +74,7 @@ public class ParticleBuilder implements ReceiveAble {
     }
 
     @Override
-    public void execute(ReceiverChannel receivers) {
+    public void execute(LocalReceiverChannel receivers) {
         spawn(receivers);
     }
 
