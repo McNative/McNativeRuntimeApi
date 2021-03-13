@@ -48,7 +48,7 @@ public interface LocalReceiverChannel extends Iterable<ConnectedMinecraftPlayer>
 
     void addJoinListener(Consumer<ConnectedMinecraftPlayer> listener);
 
-    void addRemoveListener(Consumer<ConnectedMinecraftPlayer> listener);
+    void addLeaveListener(Consumer<ConnectedMinecraftPlayer> listener);
 
 
     default void sendMessage(MessageComponent<?> component){

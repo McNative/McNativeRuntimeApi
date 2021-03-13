@@ -52,15 +52,16 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     void setTablist(Tablist tablist);
 
 
-    BelowNameInfo getBelowNameInfo();
-
-    void setBelowNameInfo(BelowNameInfo info);
-
     Collection<BossBar> getActiveBossBars();
 
     void addBossBar(BossBar bossBar);
 
     void removeBossBar(BossBar bossBar);
+
+
+    BelowNameInfo getBelowNameInfo();
+
+    void setBelowNameInfo(BelowNameInfo info);
 
 
     void sendResourcePackRequest(String url);

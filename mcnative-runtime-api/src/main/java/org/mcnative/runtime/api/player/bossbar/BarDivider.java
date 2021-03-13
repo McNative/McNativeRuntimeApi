@@ -19,7 +19,7 @@
 
 package org.mcnative.runtime.api.player.bossbar;
 
-public enum BarStyle {
+public enum BarDivider {
 
     SOLID,
     NOTCHED_6,
