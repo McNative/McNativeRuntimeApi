@@ -33,10 +33,6 @@ public interface Location extends Position {
 
     void setWorld(World world);
 
-    Position toPosition();
-
-    Vector toVector();
-
     static Location of(int x, int y, int z,World world){
         return of(x, y, z,0,0, world);
     }

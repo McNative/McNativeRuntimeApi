@@ -104,6 +104,8 @@ public interface Vector extends Cloneable {
 
     double dot(Vector other);
 
+    Position toPosition();
+
     static Vector of(int x, int y, int z){
         return of((double) x, y, z);
     }
