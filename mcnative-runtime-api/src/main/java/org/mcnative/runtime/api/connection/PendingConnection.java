@@ -19,6 +19,7 @@
 
 package org.mcnative.runtime.api.connection;
 
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
 import org.mcnative.runtime.api.player.profile.GameProfile;
 
@@ -48,5 +49,5 @@ public interface PendingConnection extends MinecraftConnection {
 
     boolean isPlayerAvailable();
 
-    OnlineMinecraftPlayer getPlayer();
+    ConnectedMinecraftPlayer getPlayer();
 }
