@@ -16,6 +16,8 @@ public interface Position extends Vector {
 
     Position setDirection(Vector vector);
 
+    Position clone();
+
     static Position of(int x, int y, int z){
         return of((double) x, y, z,0,0);
     }
