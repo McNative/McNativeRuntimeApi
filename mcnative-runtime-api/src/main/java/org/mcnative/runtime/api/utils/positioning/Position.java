@@ -12,8 +12,9 @@ public interface Position extends Vector {
 
     void setYaw(float yaw);
 
-    Vector toVector();
+    Vector getDirection();
 
+    Position setDirection(Vector vector);
 
     static Position of(int x, int y, int z){
         return of((double) x, y, z,0,0);

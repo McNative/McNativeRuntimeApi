@@ -41,11 +41,11 @@ public interface Vector extends Cloneable {
         return (int) getZ();
     }
 
-    void setX(double x);
+    Vector setX(double x);
 
-    void setY(double y);
+    Vector setY(double y);
 
-    void setZ(double z);
+    Vector setZ(double z);
 
 
     Vector middle(Vector other);
@@ -57,40 +57,40 @@ public interface Vector extends Cloneable {
     float angle(Vector other);
 
 
-    void add(Vector other);
+    Vector add(Vector other);
 
-    void add(double x, double y, double z);
+    Vector add(double x, double y, double z);
 
-    void add(int adder);
+    Vector add(int adder);
 
-    void add(double adder);
-
-
-    void subtract(Vector other);
-
-    void subtract(double x, double y, double z);
-
-    void subtract(int subtractor);
-
-    void subtract(double subtractor);
+    Vector add(double adder);
 
 
-    void multiply(Vector multiplier);
+    Vector subtract(Vector other);
 
-    void multiply(double x, double y, double z);
+    Vector subtract(double x, double y, double z);
 
-    void multiply(int multiplier);
+    Vector subtract(int subtractor);
 
-    void multiply(double multiplier);
+    Vector subtract(double subtractor);
 
 
-    void divide(Vector divider);
+    Vector multiply(Vector multiplier);
 
-    void divide(double x, double y, double z);
+    Vector multiply(double x, double y, double z);
 
-    void divide(int divider);
+    Vector multiply(int multiplier);
 
-    void divide(double divider);
+    Vector multiply(double multiplier);
+
+
+    Vector divide(Vector divider);
+
+    Vector divide(double x, double y, double z);
+
+    Vector divide(int divider);
+
+    Vector divide(double divider);
 
 
     double length();
