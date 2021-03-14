@@ -22,8 +22,8 @@ package org.mcnative.runtime.api.service.world.particle;
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
 import org.mcnative.runtime.api.player.receiver.SendAble;
 import org.mcnative.runtime.api.player.receiver.LocalReceiverChannel;
-import org.mcnative.runtime.api.service.location.Location;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.service.world.location.Location;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 import java.util.ArrayList;
 import java.util.List;

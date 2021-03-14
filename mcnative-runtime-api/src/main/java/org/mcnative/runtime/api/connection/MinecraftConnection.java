@@ -19,6 +19,7 @@
 
 package org.mcnative.runtime.api.connection;
 
+import io.netty.buffer.ByteBuf;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
@@ -55,6 +56,8 @@ public interface MinecraftConnection {
     void sendPacket(MinecraftPacket packet);
 
     void sendLocalLoopPacket(MinecraftPacket packet);
+
+    void sendRawPacket(ByteBuf buffer);
 
 
     OutputStream sendData(String channel);

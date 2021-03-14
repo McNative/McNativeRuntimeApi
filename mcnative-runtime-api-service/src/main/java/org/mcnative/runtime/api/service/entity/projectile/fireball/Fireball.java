@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.entity.projectile.fireball;
 
 import org.mcnative.runtime.api.service.entity.Explosive;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 public interface Fireball extends Explosive {
 

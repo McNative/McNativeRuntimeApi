@@ -19,7 +19,7 @@
 
 package org.mcnative.runtime.api.service.world.particle;
 
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 import java.util.Collection;
 

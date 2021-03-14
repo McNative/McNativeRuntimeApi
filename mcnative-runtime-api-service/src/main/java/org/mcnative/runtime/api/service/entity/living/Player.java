@@ -27,7 +27,7 @@ import org.mcnative.runtime.api.service.advancement.AdvancementProgress;
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
-import org.mcnative.runtime.api.service.location.Location;
+import org.mcnative.runtime.api.service.world.location.Location;
 import org.mcnative.runtime.api.service.world.Effect;
 
 public interface Player extends HumanEntity, OnlineMinecraftPlayer, ConnectedMinecraftPlayer {

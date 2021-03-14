@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.location;
+package org.mcnative.runtime.api.utils.positioning;
 
-import org.mcnative.runtime.api.service.world.World;
+import org.mcnative.runtime.api.McNative;
 
 public interface Vector extends Cloneable {
 
@@ -61,18 +61,42 @@ public interface Vector extends Cloneable {
 
     void add(double x, double y, double z);
 
+    void add(int adder);
+
+    void add(double adder);
+
+
     void subtract(Vector other);
 
     void subtract(double x, double y, double z);
 
+    void subtract(int subtractor);
+
+    void subtract(double subtractor);
+
+
     void multiply(Vector multiplier);
 
+    void multiply(double x, double y, double z);
+
+    void multiply(int multiplier);
+
+    void multiply(double multiplier);
+
+
     void divide(Vector divider);
+
+    void divide(double x, double y, double z);
+
+    void divide(int divider);
+
+    void divide(double divider);
 
 
     double length();
 
     double lengthSquared();
+
 
     boolean isIn(Vector min, Vector max);
 
@@ -80,11 +104,12 @@ public interface Vector extends Cloneable {
 
     double dot(Vector other);
 
-    Location toLocation(World world);
-
+    static Vector of(int x, int y, int z){
+        return of((double) x, y, z);
+    }
 
     static Vector of(double x, double y, double z){
-        return null;
+        return McNative.getInstance().getObjectFactory().createObject(Vector.class,x,y,z);
     }
 
     static Vector min(Vector vector1, Vector vector2) {

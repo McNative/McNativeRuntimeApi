@@ -20,7 +20,6 @@
 package org.mcnative.runtime.api.service.world;
 
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.sound.Note;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.entity.living.Player;
@@ -30,8 +29,8 @@ import org.mcnative.runtime.api.service.entity.projectile.arrow.Arrow;
 import org.mcnative.runtime.api.service.inventory.item.DroppedItem;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
-import org.mcnative.runtime.api.service.location.Location;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.service.world.location.Location;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 import org.mcnative.runtime.api.service.world.block.Block;
 import org.mcnative.runtime.api.service.world.block.data.BlockData;
 import org.mcnative.runtime.api.service.world.particle.Particle;

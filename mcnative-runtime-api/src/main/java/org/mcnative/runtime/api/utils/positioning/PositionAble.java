@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.location;
+package org.mcnative.runtime.api.utils.positioning;
 
-public interface LocationAble {
+public interface PositionAble {
 
-    Location getLocation();
+    Position getPosition();
 }

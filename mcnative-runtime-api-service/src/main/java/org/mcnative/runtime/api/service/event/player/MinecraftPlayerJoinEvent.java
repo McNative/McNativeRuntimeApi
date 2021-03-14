@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.event.player;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.runtime.api.service.location.Location;
+import org.mcnative.runtime.api.service.world.location.Location;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 public interface MinecraftPlayerJoinEvent extends MinecraftEntityPlayerEvent{

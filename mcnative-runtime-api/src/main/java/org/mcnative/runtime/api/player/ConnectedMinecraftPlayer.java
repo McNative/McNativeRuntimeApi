@@ -27,10 +27,11 @@ import org.mcnative.runtime.api.player.chat.ChatChannel;
 import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
+import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
 import java.util.Collection;
 
-public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender{
+public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, PositionAble, CommandSender{
 
     PendingConnection getConnection();
 

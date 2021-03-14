@@ -21,7 +21,7 @@ package org.mcnative.runtime.api.service.loot;
 
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.entity.living.HumanEntity;
-import org.mcnative.runtime.api.service.location.Location;
+import org.mcnative.runtime.api.service.world.location.Location;
 
 public class LootContext {
 

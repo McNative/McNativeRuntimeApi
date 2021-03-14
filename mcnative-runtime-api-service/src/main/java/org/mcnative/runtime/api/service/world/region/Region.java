@@ -20,8 +20,8 @@
 package org.mcnative.runtime.api.service.world.region;
 
 import org.mcnative.runtime.api.service.entity.living.Player;
-import org.mcnative.runtime.api.service.location.Location;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.service.world.location.Location;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 import org.mcnative.runtime.api.service.world.World;
 import org.mcnative.runtime.api.service.world.WorldSequence;
 import org.mcnative.runtime.api.service.world.block.Block;
