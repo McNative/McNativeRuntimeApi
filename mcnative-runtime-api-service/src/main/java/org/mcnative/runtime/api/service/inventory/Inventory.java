@@ -125,9 +125,6 @@ public interface Inventory extends Iterable<ItemStack> {
     void fillSpaces(int startIndex, int endIndex, ItemStack item);
 
 
-    void move(int index, int destination, short speed);
-
-
     void show(HumanEntity entity);
 
     void showAllPlayers();
