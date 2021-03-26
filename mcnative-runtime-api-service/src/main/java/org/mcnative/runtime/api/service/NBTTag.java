@@ -49,17 +49,17 @@ public interface NBTTag {
 
     void setBoolean(String key, boolean value);
 
-    void setShort(String key, byte value);
+    void setShort(String key, short value);
 
-    void setInt(String key, byte value);
+    void setInt(String key, int value);
 
-    void setLong(String key, byte value);
+    void setLong(String key, long value);
 
-    void setFloat(String key, byte value);
+    void setFloat(String key, float value);
 
-    void setDouble(String key, byte value);
+    void setDouble(String key, double value);
 
-    void setString(String key, byte value);
+    void setString(String key, String value);
 
     void setByteArray(String key, byte[] value);
 
