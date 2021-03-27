@@ -19,9 +19,9 @@
 
 package org.mcnative.runtime.api.service.world;
 
-import org.mcnative.runtime.api.service.location.Location;
-import org.mcnative.runtime.api.service.location.LocationAble;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.service.world.location.Location;
+import org.mcnative.runtime.api.service.world.location.LocationAble;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 public interface WorldBorder {
 

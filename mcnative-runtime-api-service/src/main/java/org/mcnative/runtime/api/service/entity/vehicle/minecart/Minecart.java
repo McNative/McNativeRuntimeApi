@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.entity.vehicle.minecart;
 
 import org.mcnative.runtime.api.service.entity.vehicle.Vehicle;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 import org.mcnative.runtime.api.service.world.block.data.BlockData;
 
 public interface Minecart extends Vehicle {

@@ -20,28 +20,35 @@
 package org.mcnative.runtime.api.player.receiver;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
+import org.mcnative.runtime.api.McNative;
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
+public interface LocalReceiverChannel extends Iterable<ConnectedMinecraftPlayer> {
 
     String getName();
 
     void setName(String name);
 
-    Collection<OnlineMinecraftPlayer> getPlayers();
 
-    void setPlayers(Collection<OnlineMinecraftPlayer> players);
+    Collection<ConnectedMinecraftPlayer> getPlayers();
 
-    boolean containsPlayer(OnlineMinecraftPlayer player);
+    void setPlayers(Collection<ConnectedMinecraftPlayer> players);
 
-    void addPlayer(OnlineMinecraftPlayer player);
+    boolean containsPlayer(ConnectedMinecraftPlayer player);
 
-    void removePlayer(OnlineMinecraftPlayer player);
+    void addPlayer(ConnectedMinecraftPlayer player);
+
+    void removePlayer(ConnectedMinecraftPlayer player);
+
+
+    void addJoinListener(Consumer<ConnectedMinecraftPlayer> listener);
+
+    void addLeaveListener(Consumer<ConnectedMinecraftPlayer> listener);
 
 
     default void sendMessage(MessageComponent<?> component){
@@ -50,15 +57,18 @@ public interface ReceiverChannel extends Iterable<OnlineMinecraftPlayer> {
 
     void sendMessage(MessageComponent<?> component, VariableSet variables);
 
-
     void sendPacket(MinecraftPacket packet);
 
-    default void send(ReceiveAble receiveAble){
-        receiveAble.execute(this);
+    default void send(SendAble sendAble){
+        sendAble.execute(this);
     }
 
-    void addRemovalListener(Consumer<OnlineMinecraftPlayer> listener);
+    static LocalReceiverChannel create(){
+        return McNative.getInstance().getObjectFactory().createObject(LocalReceiverChannel.class);
+    }
 
-    void addAdditionListener(Consumer<OnlineMinecraftPlayer> listener);
+    static LocalReceiverChannel create(String name){
+        return McNative.getInstance().getObjectFactory().createObject(LocalReceiverChannel.class,name);
+    }
 
 }

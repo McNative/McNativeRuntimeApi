@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.location;
+package org.mcnative.runtime.api.utils.positioning;
 
-import org.mcnative.runtime.api.service.world.World;
+import org.mcnative.runtime.api.McNative;
 
 public interface Vector extends Cloneable {
 
@@ -41,11 +41,11 @@ public interface Vector extends Cloneable {
         return (int) getZ();
     }
 
-    void setX(double x);
+    Vector setX(double x);
 
-    void setY(double y);
+    Vector setY(double y);
 
-    void setZ(double z);
+    Vector setZ(double z);
 
 
     Vector middle(Vector other);
@@ -57,22 +57,46 @@ public interface Vector extends Cloneable {
     float angle(Vector other);
 
 
-    void add(Vector other);
+    Vector add(Vector other);
 
-    void add(double x, double y, double z);
+    Vector add(double x, double y, double z);
 
-    void subtract(Vector other);
+    Vector add(int adder);
 
-    void subtract(double x, double y, double z);
+    Vector add(double adder);
 
-    void multiply(Vector multiplier);
 
-    void divide(Vector divider);
+    Vector subtract(Vector other);
+
+    Vector subtract(double x, double y, double z);
+
+    Vector subtract(int subtractor);
+
+    Vector subtract(double subtractor);
+
+
+    Vector multiply(Vector multiplier);
+
+    Vector multiply(double x, double y, double z);
+
+    Vector multiply(int multiplier);
+
+    Vector multiply(double multiplier);
+
+
+    Vector divide(Vector divider);
+
+    Vector divide(double x, double y, double z);
+
+    Vector divide(int divider);
+
+    Vector divide(double divider);
 
 
     double length();
 
     double lengthSquared();
+
 
     boolean isIn(Vector min, Vector max);
 
@@ -80,11 +104,14 @@ public interface Vector extends Cloneable {
 
     double dot(Vector other);
 
-    Location toLocation(World world);
+    Position toPosition();
 
+    static Vector of(int x, int y, int z){
+        return of((double) x, y, z);
+    }
 
     static Vector of(double x, double y, double z){
-        return null;
+        return McNative.getInstance().getObjectFactory().createObject(Vector.class,x,y,z);
     }
 
     static Vector min(Vector vector1, Vector vector2) {

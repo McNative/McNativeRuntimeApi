@@ -19,7 +19,7 @@
 
 package org.mcnative.runtime.api.service.entity.living.animal;
 
-import org.mcnative.runtime.api.service.location.Location;
+import org.mcnative.runtime.api.service.world.location.Location;
 
 public interface Turtle extends Animal {
 

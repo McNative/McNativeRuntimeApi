@@ -63,39 +63,39 @@ public interface ItemStack {
     boolean hasFlag(ItemFlag flag);
 
 
-    void setMaterial(Material material);
+    ItemStack setMaterial(Material material);
 
-    void setData(ItemData data);
+    ItemStack setData(ItemData data);
 
     ItemStack setAmount(int amount);
 
-    void setDurability(int durability);
+    ItemStack setDurability(int durability);
 
-    void setDisplayName(String name);
+    ItemStack setDisplayName(String name);
 
-    void setTag(NBTTag tag);
+    ItemStack setTag(NBTTag tag);
 
-    void addEnchantment(Enchantment enchantment);
+    ItemStack addEnchantment(Enchantment enchantment);
 
-    void addEnchantment(Enchantment enchantment, int level);
+    ItemStack addEnchantment(Enchantment enchantment, int level);
 
-    void setLore(List<String> lore);
+    ItemStack setLore(List<String> lore);
 
-    void setLore(String... lore);
+    ItemStack setLore(String... lore);
 
-    void setLore(int index, String lore);
+    ItemStack setLore(int index, String lore);
 
-    void addLore(List<String> lore);
+    ItemStack addLore(List<String> lore);
 
-    void addLore(String... lore);
+    ItemStack addLore(String... lore);
 
-    void addLore(String lore);
+    ItemStack addLore(String lore);
 
-    void setFlags(ItemFlag... flags);
+    ItemStack setFlags(ItemFlag... flags);
 
-    void addFlags(ItemFlag... flags);
+    ItemStack addFlags(ItemFlag... flags);
 
-    void removeFlag(ItemFlag... flags);
+    ItemStack removeFlag(ItemFlag... flags);
 
     static ItemStack newItemStack(Material material) {
         return McNative.getInstance().getObjectFactory().createObject(ItemStack.class,material);

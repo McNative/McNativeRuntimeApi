@@ -21,9 +21,9 @@ package org.mcnative.runtime.api.protocol.packet.type;
 
 import org.mcnative.runtime.api.network.component.server.ServerStatusResponse;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 
 public class MinecraftStatusResponsePacket implements MinecraftPacket {
-
 
     private ServerStatusResponse response;
 
@@ -33,6 +33,11 @@ public class MinecraftStatusResponsePacket implements MinecraftPacket {
 
     public void setResponse(ServerStatusResponse response) {
         this.response = response;
+    }
+
+    @Override
+    public void validate() {
+        if(response == null) throw new MinecraftPacketValidationException("Response cannot be null");
     }
 
 }

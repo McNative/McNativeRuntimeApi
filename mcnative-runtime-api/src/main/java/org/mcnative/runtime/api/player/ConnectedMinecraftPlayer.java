@@ -27,10 +27,11 @@ import org.mcnative.runtime.api.player.chat.ChatChannel;
 import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
+import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
 import java.util.Collection;
 
-public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, CommandSender{
+public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, PositionAble, CommandSender{
 
     PendingConnection getConnection();
 
@@ -52,16 +53,16 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     void setTablist(Tablist tablist);
 
 
-    BelowNameInfo getBelowNameInfo();
-
-    void setBelowNameInfo(BelowNameInfo info);
-
-
     Collection<BossBar> getActiveBossBars();
 
     void addBossBar(BossBar bossBar);
 
     void removeBossBar(BossBar bossBar);
+
+
+    BelowNameInfo getBelowNameInfo();
+
+    void setBelowNameInfo(BelowNameInfo info);
 
 
     void sendResourcePackRequest(String url);

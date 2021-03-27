@@ -20,91 +20,63 @@
 package org.mcnative.runtime.api.player.bossbar;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
-import org.mcnative.runtime.api.player.receiver.ReceiverChannel;
+import org.mcnative.runtime.api.McNative;
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
+import org.mcnative.runtime.api.player.receiver.SendAble;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
-public class BossBar {
+import java.util.Collection;
+import java.util.UUID;
 
-    private MessageComponent<?> title;
-    private VariableSet variables;
+public interface BossBar extends SendAble {
 
-    private BarColor color;
-    private BarStyle style;
-    private BarFlag flag;
+    UUID getId();
 
-    private int maximum;
-    private int progress;
 
-    private ReceiverChannel receiver;
+    Collection<ConnectedMinecraftPlayer> getReceivers();
 
-    public MessageComponent<?> getTitle() {
-        return title;
-    }
 
-    public BossBar setTitle(MessageComponent<?> title) {
-        this.title = title;
-        return this;
-    }
+    MessageComponent<?> getTitle();
 
-    public VariableSet getVariables() {
-        return variables;
-    }
+    BossBar setTitle(MessageComponent<?> title);
 
-    public BossBar setVariables(VariableSet variables) {
-        this.variables = variables;
-        return this;
-    }
 
-    public BarColor getColor() {
-        return color;
-    }
+    VariableSet getVariables();
 
-    public BossBar setColor(BarColor color) {
-        this.color = color;
-        return this;
-    }
+    BossBar setVariables(VariableSet variables);
 
-    public BarStyle getStyle() {
-        return style;
-    }
 
-    public BossBar setStyle(BarStyle style) {
-        this.style = style;
-        return this;
-    }
+    BarColor getColor();
 
-    public BarFlag getFlag() {
-        return flag;
-    }
+    BossBar setColor(BarColor color);
 
-    public BossBar setFlag(BarFlag flag) {
-        this.flag = flag;
-        return this;
-    }
 
-    public int getMaximum() {
-        return maximum;
-    }
+    BarDivider getDivider();
 
-    public BossBar setMaximum(int maximum) {
-        this.maximum = maximum;
-        return this;
-    }
+    BossBar setDivider(BarDivider divider);
 
-    public int getProgress() {
-        return progress;
-    }
 
-    public BossBar setProgress(int progress) {
-        this.progress = progress;
-        return this;
-    }
+    BarFlag getFlag();
 
-    public ReceiverChannel getReceiver() {
-        return receiver;
-    }
+    BossBar setFlag(BarFlag flag);
 
-    public void setReceiver(ReceiverChannel receiver) {
-        this.receiver = receiver;
+
+    int getMaximum();
+
+    BossBar setMaximum(int maximum);
+
+
+    int getProgress();
+
+    BossBar setProgress(int progress);
+
+
+    void update();
+
+    void update(ConnectedMinecraftPlayer receiver);
+
+
+    static BossBar newBossBar(){
+        return McNative.getInstance().getObjectFactory().createObject(BossBar.class);
     }
 }

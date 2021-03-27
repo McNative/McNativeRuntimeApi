@@ -22,7 +22,7 @@ package org.mcnative.runtime.api.protocol.packet.type;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.player.bossbar.BarColor;
 import org.mcnative.runtime.api.player.bossbar.BarFlag;
-import org.mcnative.runtime.api.player.bossbar.BarStyle;
+import org.mcnative.runtime.api.player.bossbar.BarDivider;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
@@ -37,7 +37,7 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
     private VariableSet titleVariables;
     private float health;
     private BarColor color;
-    private BarStyle style;
+    private BarDivider divider;
     private BarFlag flag;
 
     public UUID getBarId() {
@@ -88,12 +88,12 @@ public class MinecraftBossBarPacket implements MinecraftPacket {
         this.color = color;
     }
 
-    public BarStyle getStyle() {
-        return style;
+    public BarDivider getDivider() {
+        return divider;
     }
 
-    public void setStyle(BarStyle style) {
-        this.style = style;
+    public void setDivider(BarDivider style) {
+        this.divider = style;
     }
 
     public BarFlag getFlag() {

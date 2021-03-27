@@ -22,6 +22,7 @@ package org.mcnative.runtime.api.protocol.packet.type;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 public class MinecraftTitlePacket implements MinecraftPacket {
@@ -64,6 +65,11 @@ public class MinecraftTitlePacket implements MinecraftPacket {
 
     public Object getRawData() {
         return data;
+    }
+
+    @Override
+    public void validate() {
+        if(action == null) throw new MinecraftPacketValidationException("Action cannot be null");
     }
 
     public enum Action {

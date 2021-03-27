@@ -24,11 +24,12 @@ import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.PlayerDesign;
+import org.mcnative.runtime.api.player.receiver.SendAble;
 
 import java.util.Collection;
 import java.util.List;
 
-public interface Tablist {
+public interface Tablist extends SendAble {
 
     Collection<ConnectedMinecraftPlayer> getReceivers();
 

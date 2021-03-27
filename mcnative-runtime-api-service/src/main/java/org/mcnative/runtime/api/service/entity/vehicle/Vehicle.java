@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.entity.vehicle;
 
 import org.mcnative.runtime.api.service.entity.Entity;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 public interface Vehicle extends Entity {
 

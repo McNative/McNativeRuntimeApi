@@ -21,6 +21,7 @@
 package org.mcnative.runtime.api.player.chat;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
@@ -30,7 +31,7 @@ public interface GroupChatFormatter extends ChatFormatter{
     MessageComponent<?> format(OnlineMinecraftPlayer sender, VariableSet variables, String message);
 
     @Override
-    default MessageComponent<?> format(OnlineMinecraftPlayer receiver, OnlineMinecraftPlayer sender, VariableSet variables, String message) {
+    default MessageComponent<?> format(ConnectedMinecraftPlayer receiver, OnlineMinecraftPlayer sender, VariableSet variables, String message) {
         return format(sender,variables,message);
     }
 }

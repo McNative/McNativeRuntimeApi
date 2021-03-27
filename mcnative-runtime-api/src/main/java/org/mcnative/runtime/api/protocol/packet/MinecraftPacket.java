@@ -24,4 +24,8 @@ package org.mcnative.runtime.api.protocol.packet;
  */
 public interface MinecraftPacket {
 
+    default void validate(){
+        //Unused, can optionally be implemented for packet validation
+    }
+
 }

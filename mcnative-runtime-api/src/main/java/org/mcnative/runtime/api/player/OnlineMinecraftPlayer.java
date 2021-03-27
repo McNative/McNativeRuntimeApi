@@ -29,7 +29,6 @@ import org.mcnative.runtime.api.network.component.server.ServerConnectResult;
 import org.mcnative.runtime.api.player.chat.ChatPosition;
 import org.mcnative.runtime.api.player.sound.Instrument;
 import org.mcnative.runtime.api.player.sound.Note;
-import org.mcnative.runtime.api.player.sound.Sound;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.player.tablist.TablistEntry;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
@@ -148,14 +147,41 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
 
     void sendPacket(MinecraftPacket packet);
 
+    default void playNote(String instrument,Note note){
+        playNote(instrument,note,3F);
+    }
 
-    void playNote(Instrument instrument, Note note);
+    default void playNote(String instrument,Note note, float volume){
+        playNote(instrument,SoundCategory.MASTER,note,volume);
+    }
 
-    void playSound(Sound sound, SoundCategory category, float volume, float pitch);
+    default void playNote(String instrument, SoundCategory category,Note note){
+        playNote(instrument,category,note,3F);
+    }
 
-    void stopSound(Sound sound);
+    default void playNote(String instrument, SoundCategory category,Note note, float volume){
+        float pitch = (float)Math.pow(2.0D, (note.getNote() - 12.0D) / 12.0D);
+        playSound("minecraft:block.note_block."+instrument,category,volume,pitch);
+    }
+
+    default void playSound(String soundName){
+        playSound(soundName,SoundCategory.MASTER);
+    }
+
+    default void playSound(String soundName, SoundCategory category){
+        playSound(soundName,category,1,1);
+    }
+
+    void playSound(String soundName, SoundCategory category, float volume, float pitch);
+
+    void stopSound();
+
+    void stopSound(String soundName);
+
+    void stopSound(SoundCategory category);
 
     void stopSound(String sound, SoundCategory category);
+
 
     default void sendMessage(Textable textable) {
         sendMessage(textable,VariableSet.newEmptySet());
@@ -178,4 +204,5 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     default boolean isPlayer() {
         return true;
     }
+
 }

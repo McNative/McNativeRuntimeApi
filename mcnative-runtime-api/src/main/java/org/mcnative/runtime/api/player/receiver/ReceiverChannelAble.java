@@ -21,8 +21,8 @@ package org.mcnative.runtime.api.player.receiver;
 
 public interface ReceiverChannelAble {
 
-    ReceiverChannel getReceiver();
+    LocalReceiverChannel getReceiver();
 
-    void setReceiver(ReceiverChannel channel);
+    void setReceiver(LocalReceiverChannel channel);
 
 }

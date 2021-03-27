@@ -20,7 +20,7 @@
 package org.mcnative.runtime.api.service.world;
 
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.sound.Sound;
+import org.mcnative.runtime.api.player.sound.Note;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.entity.living.Player;
@@ -30,8 +30,8 @@ import org.mcnative.runtime.api.service.entity.projectile.arrow.Arrow;
 import org.mcnative.runtime.api.service.inventory.item.DroppedItem;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
-import org.mcnative.runtime.api.service.location.Location;
-import org.mcnative.runtime.api.service.location.Vector;
+import org.mcnative.runtime.api.service.world.location.Location;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 import org.mcnative.runtime.api.service.world.block.Block;
 import org.mcnative.runtime.api.service.world.block.data.BlockData;
 import org.mcnative.runtime.api.service.world.particle.Particle;
@@ -148,10 +148,38 @@ public interface WorldSequence {
 
     void playEffect(Location location, Effect effect, Vector offset);
 
+    //@Todo add note
 
-    void playSound(Vector point, Sound sound, float volume, float pitch);
+    default void playNote(Vector point,String instrument, Note note){
+        playNote(point,instrument,note,3F);
+    }
 
-    void playSound(Vector point, Sound sound, SoundCategory category, float volume, float pitch);
+    default void playNote(Vector point,String instrument,Note note, float volume){
+        playNote(point,instrument,SoundCategory.MASTER,note,volume);
+    }
+
+    default void playNote(Vector point,String instrument, SoundCategory category,Note note){
+        playNote(point,instrument,category,note,3F);
+    }
+
+    default void playNote(Vector point,String instrument, SoundCategory category,Note note, float volume){
+        float pitch = (float)Math.pow(2.0D, (note.getNote() - 12.0D) / 12.0D);
+        playSound(point,"minecraft:block.note_block."+instrument,category,volume,pitch);
+    }
+
+    default void playSound(Vector point,String soundName){
+        playSound(point,soundName,SoundCategory.MASTER);
+    }
+
+    default void playSound(Vector point,String soundName, float volume){
+        playSound(point,soundName,SoundCategory.MASTER,volume,1);
+    }
+
+    default void playSound(Vector point,String soundName, SoundCategory category){
+        playSound(point,soundName,category,1,1);
+    }
+
+    void playSound(Vector point,String soundName, SoundCategory category, float volume, float pitch);
 
 
     boolean generateTree(Vector location, TreeType treeType);

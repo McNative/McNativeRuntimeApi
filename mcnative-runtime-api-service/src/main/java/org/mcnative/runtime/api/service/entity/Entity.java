@@ -19,7 +19,7 @@
 
 package org.mcnative.runtime.api.service.entity;
 
-import org.mcnative.runtime.api.service.location.Location;
+import org.mcnative.runtime.api.service.world.location.Location;
 import org.mcnative.runtime.api.service.world.World;
 
 import java.util.List;

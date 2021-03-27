@@ -17,33 +17,36 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.location;
+package org.mcnative.runtime.api.service.world.location;
 
+import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.service.world.Chunk;
 import org.mcnative.runtime.api.service.world.World;
+import org.mcnative.runtime.api.utils.positioning.Position;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
-public interface Location extends Vector {
+public interface Location extends Position {
 
     World getWorld();
 
     Chunk getChunk();
 
-    float getPitch();
-
-    float getYaw();
-
-    void setPitch(float pitch);
-
-    void setYaw(float yaw);
-
     void setWorld(World world);
 
-    static Location of(double x, double y, double z){
-        return null;
+    static Location of(int x, int y, int z,World world){
+        return of(x, y, z,0,0, world);
     }
 
-    static Location of(double x, double y, double z, float pitch, float yaw){
-        return null;
+    static Location of(double x, double y, double z,World world){
+        return of(x, y, z,0,0, world);
+    }
+
+    static Location of(int x, int y, int z, float pitch, float yaw,World world){
+        return of((double) x, y, z, pitch, yaw, world);
+    }
+
+    static Location of(double x, double y, double z, float pitch, float yaw,World world){
+        return McNative.getInstance().getObjectFactory().createObject(Location.class,x,y,z,pitch,yaw,world);
     }
 
     @Override

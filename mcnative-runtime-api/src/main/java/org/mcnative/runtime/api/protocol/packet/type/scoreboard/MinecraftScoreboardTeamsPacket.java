@@ -21,6 +21,7 @@ package org.mcnative.runtime.api.protocol.packet.type.scoreboard;
 
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
+import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 import org.mcnative.runtime.api.text.format.TextColor;
 
@@ -135,6 +136,12 @@ public class MinecraftScoreboardTeamsPacket implements MinecraftPacket {
 
     public void setVariables(VariableSet variables) {
         this.variables = variables;
+    }
+
+    @Override
+    public void validate() {
+        if(name == null) throw new MinecraftPacketValidationException("Team cannot be null");
+        if(action == null) throw new MinecraftPacketValidationException("Action cannot be null");
     }
 
     public enum Action {
