@@ -56,8 +56,6 @@ public interface ItemStack {
 
     boolean hasDisplayName();
 
-    boolean hasTag();
-
     boolean hasLore();
 
     boolean hasFlag(ItemFlag flag);
