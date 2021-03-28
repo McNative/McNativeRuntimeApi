@@ -1,6 +1,8 @@
 package org.mcnative.runtime.api.service.inventory.item.data.firework;
 
-public interface FireworkEffectItemData {
+import org.mcnative.runtime.api.service.inventory.item.data.ItemData;
+
+public interface FireworkEffectItemData extends ItemData {
 
     FireworkEffect getEffect();
 
