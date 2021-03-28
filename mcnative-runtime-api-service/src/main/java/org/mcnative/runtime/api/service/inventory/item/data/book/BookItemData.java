@@ -1,10 +1,11 @@
 package org.mcnative.runtime.api.service.inventory.item.data.book;
 
+import org.mcnative.runtime.api.service.inventory.item.data.ItemData;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.List;
 
-public interface BookItemData {
+public interface BookItemData extends ItemData {
 
     String getTitle();
 
