@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.inventory.item.potion;
+package org.mcnative.runtime.api.service.potion;
 
 import org.mcnative.runtime.api.text.format.TextColor;
 
