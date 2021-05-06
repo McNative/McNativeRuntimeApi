@@ -23,8 +23,8 @@ import org.mcnative.runtime.api.service.entity.Damageable;
 import org.mcnative.runtime.api.service.entity.Entity;
 import org.mcnative.runtime.api.service.entity.projectile.ProjectileSource;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
-import org.mcnative.runtime.api.service.inventory.item.potion.PotionEffect;
-import org.mcnative.runtime.api.service.inventory.item.potion.PotionEffectType;
+import org.mcnative.runtime.api.service.potion.PotionEffect;
+import org.mcnative.runtime.api.service.potion.PotionEffectType;
 import org.mcnative.runtime.api.service.world.location.Location;
 import org.mcnative.runtime.api.service.world.block.Block;
 

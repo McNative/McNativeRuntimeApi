@@ -39,10 +39,6 @@ public interface ItemStack {
 
     int getAmount();
 
-    boolean hasDurability();
-
-    int getDurability();
-
     String getDisplayName();
 
     NBTTag getTag();
@@ -56,8 +52,6 @@ public interface ItemStack {
 
     boolean hasDisplayName();
 
-    boolean hasTag();
-
     boolean hasLore();
 
     boolean hasFlag(ItemFlag flag);
@@ -68,8 +62,6 @@ public interface ItemStack {
     ItemStack setData(ItemData data);
 
     ItemStack setAmount(int amount);
-
-    ItemStack setDurability(int durability);
 
     ItemStack setDisplayName(String name);
 

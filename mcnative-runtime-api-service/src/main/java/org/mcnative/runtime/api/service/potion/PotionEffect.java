@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.inventory.item.potion;
+package org.mcnative.runtime.api.service.potion;
 
 public class PotionEffect {
 
