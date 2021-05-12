@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 17.08.19, 14:33
+ * @since 04.08.19 10:45
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,24 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.player.scoreboard.belowname;
+package org.mcnative.runtime.api.player.scoreboard.sidebar.module;
 
-import org.mcnative.runtime.api.McNative;
-import org.mcnative.runtime.api.text.components.MessageComponent;
+import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
+import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
+import org.mcnative.runtime.api.player.scoreboard.sidebar.SidebarEntry;
 
-public interface BelowNameEntry {
+public interface SidebarModule {
 
-    MessageComponent<?> getText();
+    String getName();
 
-    void setText(MessageComponent<?> text);
+    Sidebar getSidebar();
 
+    SidebarEntry render(OnlineMinecraftPlayer player);
 
-    int getScore();
+    void update();
 
-    void setScore(int score);
+    void update(OnlineMinecraftPlayer player);
 
-
-    boolean isNative();
-
-    boolean setNative(boolean value);
-
-
-    static BelowNameEntry newBelowNameInfo(){
-        return McNative.getInstance().getObjectFactory().createObject(BelowNameEntry.class);
-    }
+    @SuppressWarnings("Do not use this method in the api.")
+    void initialize(Sidebar scoreboard);
 }

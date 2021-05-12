@@ -19,17 +19,12 @@
 
 package org.mcnative.runtime.api.player.scoreboard.sidebar;
 
-import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
-
 public interface SidebarEntry {
 
-    Sidebar getSidebar();
+    String getPrefix();
 
-    SidebarFormatter getFormatter();
+    String getValue();
 
-    void setFormatter();
+    String getSuffix();
 
-    void update();
-
-    void update(ConnectedMinecraftPlayer player);
 }

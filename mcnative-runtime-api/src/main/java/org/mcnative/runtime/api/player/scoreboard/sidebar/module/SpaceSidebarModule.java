@@ -17,43 +17,39 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.player.scoreboard.sidebar;
+package org.mcnative.runtime.api.player.scoreboard.sidebar.module;
 
 import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.scoreboard.sidebar.module.SidebarModule;
+import org.mcnative.runtime.api.player.scoreboard.sidebar.SidebarEntry;
 
-import java.util.Collection;
+public class SpaceSidebarModule extends AbstractSidebarModule {
 
-public interface Sidebar {
+    public static SidebarEntry EMPTY = new EmptyEntry();
 
-    Collection<OnlineMinecraftPlayer> getPlayers();
-
-
-    String getTitle();
-
-    void setTitle(String title);
-
-
-    Collection<SidebarModule> getModules();
-
-    SidebarModule getModule(String name);
-
-    void addModule(SidebarModule module);
-
-    void removeModule(SidebarModule module);
-
-
-    void update();
-
-    void update(OnlineMinecraftPlayer player);
-
-    void updateModule(SidebarModule module);
-
-    void updateModule(SidebarModule module, OnlineMinecraftPlayer player);
-
-
-    static Sidebar newSidebar(){
-        return null;
+    public SpaceSidebarModule(String name) {
+        super(name);
     }
 
+    @Override
+    public SidebarEntry render(OnlineMinecraftPlayer player) {
+        return EMPTY;
+    }
+
+    private static class EmptyEntry implements SidebarEntry{
+
+        @Override
+        public String getPrefix() {
+            return null;
+        }
+
+        @Override
+        public String getValue() {
+            return null;
+        }
+
+        @Override
+        public String getSuffix() {
+            return null;
+        }
+    }
 }

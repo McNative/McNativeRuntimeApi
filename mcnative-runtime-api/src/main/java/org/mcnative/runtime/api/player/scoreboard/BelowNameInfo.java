@@ -1,9 +1,8 @@
 /*
- * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 25.04.20, 20:51
- * @web %web%
+ * @since 17.08.19, 14:33
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +17,17 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.player.scoreboard.belowname;
+package org.mcnative.runtime.api.player.scoreboard;
 
-import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
-import org.mcnative.runtime.api.text.components.MessageComponent;
+public interface BelowNameInfo {
 
-public interface TablistFormatter {
+    String getTitle();
 
-    MessageComponent<?> format(ConnectedMinecraftPlayer receiver, ConnectedMinecraftPlayer player);
+    void setTitle(String title);
+
+    void addEntry(String name, int score);
+
+    static BelowNameInfo newBelowNameInfo(){
+        return null;
+    }
 }
-
