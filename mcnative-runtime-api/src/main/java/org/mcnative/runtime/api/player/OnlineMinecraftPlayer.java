@@ -34,6 +34,7 @@ import org.mcnative.runtime.api.player.tablist.TablistEntry;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.text.Text;
 import org.mcnative.runtime.api.text.components.MessageComponent;
+import org.mcnative.runtime.api.utils.positioning.Vector;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
@@ -171,6 +172,11 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     default void playSound(String soundName, SoundCategory category){
         playSound(soundName,category,1,1);
     }
+
+    default void playSound(String soundName, float volume){
+        playSound(soundName,SoundCategory.MASTER,volume,1);
+    }
+
 
     void playSound(String soundName, SoundCategory category, float volume, float pitch);
 

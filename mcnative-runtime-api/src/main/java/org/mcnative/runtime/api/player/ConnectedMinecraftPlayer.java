@@ -24,7 +24,7 @@ import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.connection.PendingConnection;
 import org.mcnative.runtime.api.player.bossbar.BossBar;
 import org.mcnative.runtime.api.player.chat.ChatChannel;
-import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
+import org.mcnative.runtime.api.player.scoreboard.belowname.BelowNameContainer;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
 import org.mcnative.runtime.api.utils.positioning.PositionAble;
@@ -53,16 +53,16 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     void setTablist(Tablist tablist);
 
 
+    BelowNameContainer getBelowName();
+
+    void setBelowName(BelowNameContainer container);
+
+
     Collection<BossBar> getActiveBossBars();
 
     void addBossBar(BossBar bossBar);
 
     void removeBossBar(BossBar bossBar);
-
-
-    BelowNameInfo getBelowNameInfo();
-
-    void setBelowNameInfo(BelowNameInfo info);
 
 
     void sendResourcePackRequest(String url);

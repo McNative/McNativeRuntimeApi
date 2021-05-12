@@ -2,7 +2,7 @@
  * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 10.08.19, 16:42
+ * @since 17.08.19, 14:33
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,18 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.player.scoreboard.sidebar;
+package org.mcnative.runtime.api.player.scoreboard.belowname;
 
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 
-public interface SidebarEntry {
+import java.util.Collection;
+import java.util.List;
 
-    Sidebar getSidebar();
+public interface BelowNameContainer {
 
-    SidebarFormatter getFormatter();
+    Collection<ConnectedMinecraftPlayer> getReceivers();
 
-    void setFormatter();
+    List<BelowNameEntry> getEntries();
 
-    void update();
 
-    void update(ConnectedMinecraftPlayer player);
 }

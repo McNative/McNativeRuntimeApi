@@ -19,14 +19,14 @@
 
 package org.mcnative.runtime.api.player.scoreboard.sidebar;
 
-import org.mcnative.runtime.api.player.OnlineMinecraftPlayer;
-import org.mcnative.runtime.api.player.scoreboard.sidebar.module.SidebarModule;
+import org.mcnative.runtime.api.McNative;
+import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 
 import java.util.Collection;
 
 public interface Sidebar {
 
-    Collection<OnlineMinecraftPlayer> getPlayers();
+    Collection<ConnectedMinecraftPlayer> getReceivers();
 
 
     String getTitle();
@@ -34,26 +34,24 @@ public interface Sidebar {
     void setTitle(String title);
 
 
-    Collection<SidebarModule> getModules();
+    Collection<SidebarEntry> getEntries();
 
-    SidebarModule getModule(String name);
+    SidebarEntry createEntry();
 
-    void addModule(SidebarModule module);
-
-    void removeModule(SidebarModule module);
+    void removeEntry(SidebarEntry entry);
 
 
     void update();
 
-    void update(OnlineMinecraftPlayer player);
+    void update(ConnectedMinecraftPlayer player);
 
-    void updateModule(SidebarModule module);
+    void update(SidebarEntry entry);
 
-    void updateModule(SidebarModule module, OnlineMinecraftPlayer player);
+    void update(SidebarEntry entry, ConnectedMinecraftPlayer player);
 
 
     static Sidebar newSidebar(){
-        return null;
+        return McNative.getInstance().getObjectFactory().createObject(Sidebar.class);
     }
 
 }

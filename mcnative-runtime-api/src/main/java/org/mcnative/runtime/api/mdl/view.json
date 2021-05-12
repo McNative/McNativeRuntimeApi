@@ -1,0 +1,35 @@
+{
+  "namespace": "net.pretronic.test",
+  "title": "Test",
+  "components": [
+    {
+      "name": "org.mcnative.runtime.mdl.ListContainer",
+      "range": {
+        "start": 0,
+        "end": 27
+      },
+
+      "arguments": [
+        {
+          "name": "net.pretronic.dkfriends.GetFriends"
+        }
+      ]
+
+
+    },
+    {
+      "name": "org.mcnative.runtime.mdl.FillContainer",
+      "range": {
+        "start": 0,
+        "end": 27
+      },
+      "arguments": [
+        {
+          "name": "org.mcnative.runtime.mdl.StaticItem",
+          "material": "STONE",
+          "title": ""
+        }
+      ]
+    }
+  ]
+}
