@@ -27,6 +27,10 @@ public interface PermissionHandler extends Permissable, CacheStateAble<Permissio
         return this;
     }
 
+    default void onHandlerInitialized(){
+        //Unused without exception
+    }
+
     default void onPlayerLogout(){
         //Unused without exception
     }
