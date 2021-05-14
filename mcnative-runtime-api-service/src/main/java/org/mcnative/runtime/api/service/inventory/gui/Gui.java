@@ -1,11 +1,11 @@
 package org.mcnative.runtime.api.service.inventory.gui;
 
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 
 import java.util.Collection;
 
-public interface Gui<C extends Context> {
+public interface Gui<C extends GuiContext> {
 
     String getName();
 
@@ -14,7 +14,7 @@ public interface Gui<C extends Context> {
 
     Page<C,?> getPage(String name);
 
-    <P extends Context> Page<C,P> getPage(String name,Class<P> contextClass);
+    <P extends GuiContext> Page<C,P> getPage(String name, Class<P> contextClass);
 
     String getDefaultPage();
 

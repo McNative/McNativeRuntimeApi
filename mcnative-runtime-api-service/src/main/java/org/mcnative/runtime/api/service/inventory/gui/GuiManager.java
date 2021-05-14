@@ -1,7 +1,7 @@
 package org.mcnative.runtime.api.service.inventory.gui;
 
 import org.mcnative.runtime.api.service.inventory.gui.builder.GuiBuilder;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -13,10 +13,10 @@ public interface GuiManager {
 
     Gui<?> getGui(String name);
 
-    <C extends Context> Gui<C> getGui(String name, Class<C> contextClass);
+    <C extends GuiContext> Gui<C> getGui(String name, Class<C> contextClass);
 
 
-    <C extends Context> Gui<C> createGui(String name, Class<C> contextClass, Consumer<GuiBuilder<C>> builder);
+    <C extends GuiContext> Gui<C> createGui(String name, Class<C> contextClass, Consumer<GuiBuilder<C>> builder);
 
 
     boolean deleteGui(Gui<?> gui);

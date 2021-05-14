@@ -1,10 +1,10 @@
 package org.mcnative.runtime.api.service.inventory.gui.pane;
 
 import org.mcnative.runtime.api.service.inventory.Inventory;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
-public class StaticPane<C extends Context> implements Pane<C,Void> {
+public class StaticPane<C extends GuiContext> implements Pane<C,Void> {
 
     private final Element<C,Void> element;
 

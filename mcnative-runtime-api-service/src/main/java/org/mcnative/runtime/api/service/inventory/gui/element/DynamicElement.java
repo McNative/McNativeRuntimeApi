@@ -1,10 +1,10 @@
 package org.mcnative.runtime.api.service.inventory.gui.element;
 
 import org.mcnative.runtime.api.service.inventory.Inventory;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public abstract class DynamicElement<C extends Context,V> implements Element<C,V> {
+public abstract class DynamicElement<C extends GuiContext,V> implements Element<C,V> {
 
     @Override
     public void render(C context, Inventory inventory, int[] slot, V value) {

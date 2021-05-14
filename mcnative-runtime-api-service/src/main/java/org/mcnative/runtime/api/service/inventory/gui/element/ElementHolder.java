@@ -1,8 +1,8 @@
 package org.mcnative.runtime.api.service.inventory.gui.element;
 
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 
-public class ElementHolder<C extends Context,V> {
+public class ElementHolder<C extends GuiContext,V> {
 
     private final int[] slots;
     private final Element<C,V> element;

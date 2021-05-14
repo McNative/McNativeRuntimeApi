@@ -4,9 +4,10 @@ import net.pretronic.libraries.utility.Iterators;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.GuiManager;
 import org.mcnative.runtime.api.service.inventory.gui.builder.GuiBuilder;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.implemen.builder.DefaultGuiBuilder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -14,8 +15,8 @@ public class DefaultGuiManager implements GuiManager {
 
     private final Collection<Gui<?>> guis;
 
-    public DefaultGuiManager(Collection<Gui<?>> guis) {
-        this.guis = guis;
+    public DefaultGuiManager() {
+        this.guis = new ArrayList<>();
     }
 
     @Override
@@ -30,13 +31,13 @@ public class DefaultGuiManager implements GuiManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <C extends Context> Gui<C> getGui(String name, Class<C> contextClass) {
+    public <C extends GuiContext> Gui<C> getGui(String name, Class<C> contextClass) {
         return (Gui<C>) getGui(name);
     }
 
 
     @Override
-    public <C extends Context> Gui<C> createGui(String name, Class<C> contextClass, Consumer<GuiBuilder<C>> builder) {
+    public <C extends GuiContext> Gui<C> createGui(String name, Class<C> contextClass, Consumer<GuiBuilder<C>> builder) {
         DefaultGuiBuilder<C> guiBuilder = new DefaultGuiBuilder<>(contextClass);
         builder.accept(guiBuilder);
         Gui<C> gui = new DefaultGui<>(name,contextClass,guiBuilder.getPages(),guiBuilder.getDefaultPage());

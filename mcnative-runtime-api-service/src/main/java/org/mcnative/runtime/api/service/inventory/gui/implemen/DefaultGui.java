@@ -2,19 +2,19 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen;
 
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
-import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
+import org.mcnative.runtime.api.service.entity.living.Player;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefaultGui<C extends Context> implements Gui<C> {
+public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     private final String name;
     private final Constructor<C> constructor;
@@ -52,7 +52,7 @@ public class DefaultGui<C extends Context> implements Gui<C> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <P extends Context> Page<C, P> getPage(String name, Class<P> contextClass) {
+    public <P extends GuiContext> Page<C, P> getPage(String name, Class<P> contextClass) {
         return (Page<C, P>) getPage(name);
     }
 
@@ -112,6 +112,8 @@ public class DefaultGui<C extends Context> implements Gui<C> {
         }
 
         realPage.render(context.context,inventory);
+        ((Player)(player)).openInventory(inventory);
+
         return context.context;
     }
 

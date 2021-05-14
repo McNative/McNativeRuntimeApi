@@ -3,14 +3,14 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen.builder;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.builder.ElementList;
 import org.mcnative.runtime.api.service.inventory.gui.builder.GuiBuilder;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.implemen.DefaultPage;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public class DefaultGuiBuilder<C extends Context> implements GuiBuilder<C> {
+public class DefaultGuiBuilder<C extends GuiContext> implements GuiBuilder<C> {
 
     private final Class<C> rootContext;
     private final Collection<Page<C,?>> pages;
@@ -35,7 +35,7 @@ public class DefaultGuiBuilder<C extends Context> implements GuiBuilder<C> {
     }
 
     @Override
-    public <P extends Context> Page<C, P> createPage(String name, int size, Class<P> contextClass, Consumer<ElementList<P>> elements) {
+    public <P extends GuiContext> Page<C, P> createPage(String name, int size, Class<P> contextClass, Consumer<ElementList<P>> elements) {
         DefaultElementList<P> elementList = new DefaultElementList<>();
         elements.accept(elementList);
         Page<C,P> page = new DefaultPage<>(name,size,rootContext,contextClass,elementList.getElements());

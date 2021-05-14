@@ -1,9 +1,9 @@
 package org.mcnative.runtime.api.service.inventory.gui.element;
 
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public abstract class StaticElement<C extends Context> extends DynamicElement<C,Void> {
+public abstract class StaticElement<C extends GuiContext> extends DynamicElement<C,Void> {
 
     protected abstract ItemStack create(C context);
 

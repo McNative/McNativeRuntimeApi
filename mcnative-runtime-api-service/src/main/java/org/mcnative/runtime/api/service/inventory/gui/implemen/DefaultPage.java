@@ -5,16 +5,15 @@ import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
-import org.mcnative.runtime.api.service.inventory.gui.context.Context;
+import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.ElementHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Predicate;
 
-public class DefaultPage<C extends Context,P extends Context> implements Page<C,P> {
+public class DefaultPage<C extends GuiContext,P extends GuiContext> implements Page<C,P> {
 
     private final String name;
     private final int size;
