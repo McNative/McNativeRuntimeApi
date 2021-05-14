@@ -66,6 +66,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.pretronic.dkfriends</groupId>
+            <artifactId>dkfriends-api</artifactId>
+            <version>1.0.5.19-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
