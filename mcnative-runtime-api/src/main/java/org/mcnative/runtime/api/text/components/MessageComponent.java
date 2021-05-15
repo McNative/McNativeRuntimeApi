@@ -125,7 +125,7 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     @Override
     default Document toDocument() {
-        return compile(MinecraftProtocolVersion.JE_1_16_4).add("class", MessageComponent.class);
+        return Document.newDocument().add("message", compile(MinecraftProtocolVersion.JE_1_16_4)).add("class", MessageComponent.class);
     }
 
     static void registerDocumentMessageComponentConverter() {
@@ -136,7 +136,7 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
         @Override
         public MessageComponent<?> apply(Document document) {
-            return Text.decompile(document);
+            return Text.decompile(document.getDocument("message"));
         }
     }
 }
