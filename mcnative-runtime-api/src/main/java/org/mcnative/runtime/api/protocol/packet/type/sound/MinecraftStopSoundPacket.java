@@ -1,6 +1,5 @@
 package org.mcnative.runtime.api.protocol.packet.type.sound;
 
-import com.sun.tools.jdi.Packet;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;

@@ -134,7 +134,7 @@ public interface Inventory extends Iterable<ItemStack> {
     void close();
 
     static int toIndex(int x, int y){
-        return (y-1)*9+x-1;
+        return (y)*9+x;
     }
 
     static <T extends Inventory> T newInventory(Class<T> inventoryClass,InventoryOwner owner, int size, String title){
