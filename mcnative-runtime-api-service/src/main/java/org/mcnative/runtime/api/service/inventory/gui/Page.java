@@ -1,6 +1,7 @@
 package org.mcnative.runtime.api.service.inventory.gui;
 
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.ElementHolder;
@@ -21,5 +22,6 @@ public interface Page<C extends GuiContext> {
 
     void handleClick(C context, Inventory inventory, MinecraftPlayerInventoryClickEvent event);
 
+    void handleDrag(C context, Inventory inventory, MinecraftPlayerInventoryDragEvent event);
 
 }

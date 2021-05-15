@@ -5,6 +5,7 @@ import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.service.entity.living.Player;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.InventoryOwner;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
@@ -137,7 +138,17 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         }
 
         public void handleClick(MinecraftPlayerInventoryClickEvent event){
-            page.handleClick(getPageContext(),inventory,event);
+            if(event.getInventory().equals(inventory)){
+                event.setCancelled(true);
+                page.handleClick(getPageContext(),inventory,event);
+            }
+        }
+
+        public void handleDrag(MinecraftPlayerInventoryDragEvent event){
+            if(event.getInventory().equals(inventory)){
+                event.setCancelled(true);
+                page.handleDrag(getPageContext(),inventory,event);
+            }
         }
 
         @SuppressWarnings("unchecked")

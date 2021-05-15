@@ -2,6 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen;
 
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
@@ -79,7 +80,21 @@ public class DefaultPage<C extends GuiContext> implements Page<C> {
                 }
             }
         }
+    }
 
+    @Override
+    public void handleDrag(C context, Inventory inventory, MinecraftPlayerInventoryDragEvent event) {
+        for (Integer inventorySlot : event.getInventorySlots()) {
+            outer:
+            for (ElementHolder<C, ?> holder : elements) {
+                for (int slot : holder.getSlots()){
+                    if(slot == inventorySlot){
+                        holder.getElement().handleDrag(context,event,null);
+                        break outer;
+                    }
+                }
+            }
+        }
     }
 
 }

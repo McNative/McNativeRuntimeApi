@@ -11,5 +11,5 @@ public interface Element<C extends GuiContext,V> {
 
     void handleClick(C context, MinecraftPlayerInventoryClickEvent event, V value);
 
-   // void handleDrag(C context, MinecraftPlayerInventoryDragEvent event, V value);
+    void handleDrag(C context, MinecraftPlayerInventoryDragEvent event, V value);
 }
