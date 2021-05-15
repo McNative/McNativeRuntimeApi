@@ -10,11 +10,11 @@ public interface Gui<C extends GuiContext> {
     String getName();
 
 
-    Collection<Page<C,?>> getPages();
+    Collection<Page<?>> getPages();
 
-    Page<C,?> getPage(String name);
+    Page<?> getPage(String name);
 
-    <P extends GuiContext> Page<C,P> getPage(String name, Class<P> contextClass);
+    <P extends GuiContext> Page<P> getPage(String name, Class<P> contextClass);
 
     String getDefaultPage();
 

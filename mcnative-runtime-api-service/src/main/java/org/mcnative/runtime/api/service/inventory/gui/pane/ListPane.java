@@ -1,5 +1,6 @@
 package org.mcnative.runtime.api.service.inventory.gui.pane;
 
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
@@ -23,6 +24,11 @@ public class ListPane<C extends GuiContext,V> implements Pane<C,V> {
             V object = source.apply(context).get(slot);
             element.render(context,inventory, new int[]{slot},object);
         }
+    }
+
+    @Override
+    public void handleClick(C context, MinecraftPlayerInventoryClickEvent event, Void value) {
+
     }
 
     @Override

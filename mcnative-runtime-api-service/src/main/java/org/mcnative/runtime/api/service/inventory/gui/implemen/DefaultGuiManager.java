@@ -1,6 +1,8 @@
 package org.mcnative.runtime.api.service.inventory.gui.implemen;
 
 import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.GuiManager;
 import org.mcnative.runtime.api.service.inventory.gui.builder.GuiBuilder;
@@ -17,6 +19,7 @@ public class DefaultGuiManager implements GuiManager {
 
     public DefaultGuiManager() {
         this.guis = new ArrayList<>();
+        McNative.getInstance().getLocal().getEventBus().subscribe(ObjectOwner.SYSTEM,new GuiListener());
     }
 
     @Override

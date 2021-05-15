@@ -5,21 +5,15 @@ import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public class StaticElement<C extends GuiContext> implements Element<C,Void> {
-
-    private final ItemStack itemStack;
-
-    public StaticElement(ItemStack itemStack) {
-        this.itemStack = itemStack;
-    }
+public abstract class BasicElement<C extends GuiContext> implements Element<C,Void> {
 
     @Override
     public void render(C context, Inventory inventory, int[] slots, Void value) {
-        for (int slot : slots) inventory.setItem(slot,itemStack);
+        for (int slot : slots) {
+            inventory.setItem(slot,create(context));
+        }
     }
 
-    @Override
-    public void handleClick(C context, MinecraftPlayerInventoryClickEvent event, Void value) {
+    protected abstract ItemStack create(C context);
 
-    }
 }

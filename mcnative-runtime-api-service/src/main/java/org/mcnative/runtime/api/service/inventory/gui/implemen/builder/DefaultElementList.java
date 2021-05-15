@@ -18,7 +18,7 @@ public class DefaultElementList<C extends GuiContext> implements ElementList<C> 
 
     @Override
     public ElementList<C> addElement(int[] slots, Element<C, ?> element) {
-        this.elements.add(new ElementHolder<>(slots,element));
+        this.elements.add(new ElementHolder<>((byte) (elements.size()+1),slots,element));
         return this;//@Todo validate slots
     }
 }

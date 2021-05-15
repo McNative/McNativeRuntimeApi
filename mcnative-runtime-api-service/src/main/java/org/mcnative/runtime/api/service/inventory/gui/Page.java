@@ -1,25 +1,25 @@
 package org.mcnative.runtime.api.service.inventory.gui;
 
-import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.ElementHolder;
 
 import java.util.Collection;
 
-public interface Page<C extends GuiContext,P extends GuiContext> {
+public interface Page<C extends GuiContext> {
 
     String getName();
 
     int getSize();
 
-    Collection<P> getContexts();
+    Collection<ElementHolder<C,?>> getElements();
 
-    P getContext(ConnectedMinecraftPlayer player);
-
-    Collection<ElementHolder<P,?>> getElements();
+    C createContext(GuiContext rootContext);
 
     void render(C context,Inventory inventory);
 
-    void destroyContext(ConnectedMinecraftPlayer player);
+    void handleClick(C context, Inventory inventory, MinecraftPlayerInventoryClickEvent event);
+
+
 }
