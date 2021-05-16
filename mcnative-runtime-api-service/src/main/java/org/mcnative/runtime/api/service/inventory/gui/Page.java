@@ -15,14 +15,14 @@ public interface Page<C extends GuiContext, P extends PageContext<C>> {
 
     int getSize();
 
-    Collection<Element<C,?>> getElements();
+    Collection<Element<C,P,?>> getElements();
 
-    C createContext(GuiContext rootContext);
+    P createContext(C rootContext, Inventory inventory, String page);
 
-    void render(C context);
+    void render(P context);
 
-    void handleClick(C context, MinecraftPlayerInventoryClickEvent event);
+    void handleClick(P context, MinecraftPlayerInventoryClickEvent event);
 
-    void handleDrag(C context, MinecraftPlayerInventoryDragEvent event);
+    void handleDrag(P context, MinecraftPlayerInventoryDragEvent event);
 
 }

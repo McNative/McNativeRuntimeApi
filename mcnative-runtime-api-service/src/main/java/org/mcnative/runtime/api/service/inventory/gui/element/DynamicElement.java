@@ -22,25 +22,17 @@ public abstract class DynamicElement<C extends GuiContext, P extends PageContext
 
     @Override
     public void render(P context, V value) {
-        context.getInventory().setItem(getSlots()[0],create(context,value));
+        context.getLinkedInventory().setItem(getSlots()[0],create(context,value));
     }
 
     @Override
     public void handleClick(P context,  MinecraftPlayerInventoryClickEvent event, V value) {
-        handleClick(context, event, value);
+
     }
 
     @Override
     public void handleDrag(P context,  MinecraftPlayerInventoryDragEvent event, V value) {
-        handleDrag(context, event, value);
-    }
 
-    public void handleClick(C context, MinecraftPlayerInventoryClickEvent event, V value) {
-        //Unused
-    }
-
-    public void handleDrag(C context, MinecraftPlayerInventoryDragEvent event, V value) {
-        //Unused
     }
 
     protected abstract ItemStack create(P context, V value);

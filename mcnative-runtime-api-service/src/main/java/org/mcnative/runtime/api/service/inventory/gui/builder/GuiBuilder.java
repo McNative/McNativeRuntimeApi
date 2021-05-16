@@ -2,14 +2,15 @@ package org.mcnative.runtime.api.service.inventory.gui.builder;
 
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
 
 import java.util.function.Consumer;
 
 public interface GuiBuilder<C extends GuiContext> {
 
-    Page<C> createPage(String name, int size, Consumer<ElementList<C>> elements);
+    Page<C, PageContext<C>> createPage(String name, int size, Consumer<ElementList<C,PageContext<C>>> elements);
 
-    <P extends GuiContext> Page<P> createPage(String name, int size, Class<P> contextClass, Consumer<ElementList<P>> elements);
+    <P extends PageContext<C>> Page<C,P> createPage(String name, int size, Class<P> contextClass, Consumer<ElementList<C,P>> elements);
 
     void setDefaultPage(String page);
 }

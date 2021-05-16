@@ -1,49 +1,48 @@
 package org.mcnative.runtime.api.service.inventory.gui.pane;
 
-import net.pretronic.libraries.synchronisation.observer.Observable;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
-import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 
-import java.util.List;
 import java.util.function.Function;
 
-public class ListPane<C extends GuiContext,V> implements Pane<C,?,V> {
+public class ListPane<C extends GuiContext,P extends PageContext<C>,V> implements Pane<C,P,V> {
 
-    private final Function<C,ListSource<V>> sourceProvider;
-    private final Element<C,V> element;
-    private
+    private final Function<P,ListSource<V>> sourceProvider;
+    private final Element<C,P,V> element;
+    private final int[] slots;
 
-    public ListPane(Function<C,ListSource<V>> sourceProvider,Element<C,V> element){
+    public ListPane(Function<P, ListSource<V>> sourceProvider, Element<C, P, V> element, int[] slots){
         this.sourceProvider = sourceProvider;
         this.element = element;
+        this.slots = slots;
     }
 
     @Override
-    public void render(C context, Inventory inventory, int[] slots, Void unused) {
+    public Element<C,P,V> getElement() {
+        return this.element;
+    }
+
+    @Override
+    public int[] getSlots() {
+        return this.slots;
+    }
+
+    @Override
+    public void render(P context, Void value) {
         ListSource<V> source = sourceProvider.apply(context);
-        if(source instanceof Observable<?, ?>) {
-
-            context.subsribe(element,Observable)
-
-            Observable<?, V> observable = (Observable<?, V>) source;
-            observable.subscribeObserver((vObservable, v) -> {
-
-            });
-        }
         int index = 0;
         for (V object : source.get()) {
             if(index >= slots.length) return;
-            element.render(context,inventory, new int[]{slots[index]},object);
+            element.render(context,object);
             index++;
         }
     }
 
     @Override
-    public void handleClick(C context, int[] slots, MinecraftPlayerInventoryClickEvent event, Void value) {
+    public void handleClick(P context, MinecraftPlayerInventoryClickEvent event, Void value) {
         ListSource<V> source = sourceProvider.apply(context);
 
         int index = 0;
@@ -53,16 +52,11 @@ public class ListPane<C extends GuiContext,V> implements Pane<C,?,V> {
         }
 
         V object = source.getItem(index);
-        element.handleClick(context, new int[]{event.getRawSlot()},event,object);
+        element.handleClick(context,event,object);
     }
 
     @Override
-    public void handleDrag(C context, int[] slots, MinecraftPlayerInventoryDragEvent event, Void value) {
+    public void handleDrag(P context, MinecraftPlayerInventoryDragEvent event, Void value) {
 
-    }
-
-    @Override
-    public Element<C,V> getElement() {
-        return this.element;
     }
 }

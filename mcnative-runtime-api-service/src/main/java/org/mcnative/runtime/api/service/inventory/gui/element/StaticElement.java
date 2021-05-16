@@ -24,7 +24,7 @@ public class StaticElement<C extends GuiContext, P extends PageContext<C>> imple
 
     @Override
     public void render(P context, Void value) {
-        for (int slot : slots) context.getInventory().setItem(slot,itemStack);
+        for (int slot : slots) context.getLinkedInventory().setItem(slot,itemStack);
     }
 
     @Override

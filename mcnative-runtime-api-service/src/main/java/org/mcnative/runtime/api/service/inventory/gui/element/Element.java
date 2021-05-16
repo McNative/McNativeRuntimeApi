@@ -14,8 +14,4 @@ public interface Element<C extends GuiContext, P extends PageContext<C>,V> {
     void handleClick(P context, MinecraftPlayerInventoryClickEvent event, V value);
 
     void handleDrag(P context, MinecraftPlayerInventoryDragEvent event, V value);
-
-    <T> handleStream(Stream<T> yy)
-
-    void onUpdate(P context);
 }

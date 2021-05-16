@@ -4,15 +4,11 @@ import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.service.entity.living.Player;
-import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
-import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
-import org.mcnative.runtime.api.service.inventory.InventoryOwner;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
-import org.mcnative.runtime.api.service.inventory.type.PlayerInventory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -57,7 +53,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <P extends GuiContext> Page<C, P> getPage(String name, Class<P> contextClass) {
+    public <P extends PageContext<C>> Page<C, P> getPage(String name, Class<P> contextClass) {
         return (Page<C, P>) getPage(name);
     }
 
@@ -88,7 +84,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public C open(ConnectedMinecraftPlayer player, String page) {
-        GuiContext context = getContext(player);
+        C context = getContext(player);
         if(context == null){
             try {
                 context = constructor.newInstance(player);
@@ -97,25 +93,31 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
             }
         }
 
-        PageContext<C> nextPage;
-        if(page != null) nextPage = getPage(page);
-        else if(context.getPageContext() != null) nextPage = context.getPageContext();
-        else nextPage = getPage(defaultPage);
+        Page<C,?> nextPage;
+        PageContext<? extends GuiContext> pageContext = null;
+        if(page != null) {
+            nextPage = getPage(page);
+
+        } else if(context.getPageContext() != null) {
+            nextPage = (Page<C, ?>) context.getPageContext().getPage();
+            pageContext = context.getPageContext();
+        } else {
+            nextPage = getPage(defaultPage);
+        }
 
         if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
 
-        Inventory inventory = context.inventory;
-        if(inventory == null || inventory.getSize() != nextPage.getSize()) {
-            inventory = Inventory.newInventory(Inventory.class,context, nextPage.getSize(), "Hallo");
-            context.inventory = inventory;
+        if(pageContext == null) {
+            Inventory inventory = Inventory.newInventory(Inventory.class, null, nextPage.getSize(), "Hallo");
+
+            pageContext = nextPage.createContext(context, inventory, nextPage.getName());
+            context.setPageContext(pageContext);
+
+            nextPage.render(pageContext.getRawPageContext());
         }
-        context.page = nextPage;
 
-        context.createPageContext();
-        nextPage.render(context.getPageContext(),inventory);
-        ((Player)(player)).openInventory(inventory);
-
-        return context.context;
+        ((Player)(player)).openInventory(pageContext.getLinkedInventory());
+        return context;
     }
 
     /*public final class PlayerContextHolder implements InventoryOwner {
