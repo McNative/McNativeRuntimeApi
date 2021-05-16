@@ -11,6 +11,8 @@ import org.mcnative.runtime.api.service.inventory.InventoryOwner;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.type.PlayerInventory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -21,11 +23,11 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     private final String name;
     private final Constructor<C> constructor;
-    private final Collection<Page<?>> pages;
-    private final Collection<PlayerContextHolder> contexts;
+    private final Collection<Page<C, ?>> pages;
+    private final Collection<C> contexts;
     private final String defaultPage;
 
-    public DefaultGui(String name,Class<C> rootClass, Collection<Page<?>> pages, String defaultPage) {
+    public DefaultGui(String name,Class<C> rootClass, Collection<Page<C, ?>> pages, String defaultPage) {
         this.name = name;
         this.pages = pages;
         this.contexts = new ArrayList<>();
@@ -44,19 +46,19 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
     }
 
     @Override
-    public Collection<Page<?>> getPages() {
+    public Collection<Page<C, ?>> getPages() {
         return pages;
     }
 
     @Override
-    public Page<?> getPage(String name) {
+    public Page<C, ?> getPage(String name) {
         return Iterators.findOne(this.pages, page -> page.getName().equalsIgnoreCase(name));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <P extends GuiContext> Page<P> getPage(String name, Class<P> contextClass) {
-        return (Page<P>) getPage(name);
+    public <P extends GuiContext> Page<C, P> getPage(String name, Class<P> contextClass) {
+        return (Page<C, P>) getPage(name);
     }
 
     @Override
@@ -66,22 +68,17 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public Collection<C> getContexts() {
-        return Iterators.map(this.contexts, playerContextHolder -> playerContextHolder.context);
+        return this.contexts;
     }
 
     @Override
     public C getContext(ConnectedMinecraftPlayer player) {
-        PlayerContextHolder contextHolder = getRawContext(player);
-        return contextHolder != null ? contextHolder.context : null;
-    }
-
-    public PlayerContextHolder getRawContext(ConnectedMinecraftPlayer player) {
-        return Iterators.findOne(this.contexts, c -> c.context.getPlayer().equals(player));
+        return Iterators.findOne(this.contexts, c -> c.getPlayer().equals(player));
     }
 
     @Override
     public void destroyContext(ConnectedMinecraftPlayer player) {
-        Iterators.removeOne(this.contexts, c -> c.context.getPlayer().equals(player));
+        Iterators.removeOne(this.contexts, c -> c.getPlayer().equals(player));
     }
 
     @Override
@@ -91,18 +88,18 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public C open(ConnectedMinecraftPlayer player, String page) {
-        PlayerContextHolder context = getRawContext(player);
+        GuiContext context = getContext(player);
         if(context == null){
             try {
-                context = new PlayerContextHolder(constructor.newInstance(player));
+                context = constructor.newInstance(player);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectException(e);
             }
         }
 
-        Page<?> nextPage;
+        PageContext<C> nextPage;
         if(page != null) nextPage = getPage(page);
-        else if(context.page != null) nextPage = context.page;
+        else if(context.getPageContext() != null) nextPage = context.getPageContext();
         else nextPage = getPage(defaultPage);
 
         if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
@@ -121,7 +118,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         return context.context;
     }
 
-    public final class PlayerContextHolder implements InventoryOwner {
+    /*public final class PlayerContextHolder implements InventoryOwner {
 
         private final C context;
         private Page<?> page;
@@ -138,16 +135,19 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         }
 
         public void handleClick(MinecraftPlayerInventoryClickEvent event){
-            if(event.getInventory().equals(inventory)){
+            if(event.isTopInventory()){
                 event.setCancelled(true);
-                page.handleClick(getPageContext(),inventory,event);
+                page.handleClick(getPageContext(),event);
             }
         }
 
         public void handleDrag(MinecraftPlayerInventoryDragEvent event){
-            if(event.getInventory().equals(inventory)){
-                event.setCancelled(true);
-                page.handleDrag(getPageContext(),inventory,event);
+            for (Integer rawSlot : event.getRawSlots()) {
+                if(rawSlot < event.getInventory().getSize()) {
+                    event.setCancelled(true);
+                    page.handleDrag(getPageContext(),event);
+                    return;
+                }
             }
         }
 
@@ -159,5 +159,5 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         private void createPageContext(){
             pageContext = page.createContext(context);
         }
-    }
+    }*/
 }

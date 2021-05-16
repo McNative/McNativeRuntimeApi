@@ -25,9 +25,11 @@ import org.mcnative.runtime.api.service.NBTTag;
 import org.mcnative.runtime.api.service.inventory.item.data.ItemData;
 import org.mcnative.runtime.api.service.inventory.item.material.Enchantment;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
+import org.mcnative.runtime.api.service.inventory.item.material.MaterialData;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface ItemStack {
 
@@ -36,6 +38,8 @@ public interface ItemStack {
     Material getMaterial();
 
     ItemData getData();
+
+    <T extends MaterialData> ItemStack getData(Class<T> dataClass, Consumer<T> materialData);
 
     int getAmount();
 

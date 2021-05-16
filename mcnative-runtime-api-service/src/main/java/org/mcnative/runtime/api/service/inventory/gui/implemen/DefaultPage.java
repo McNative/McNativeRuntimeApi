@@ -6,7 +6,7 @@ import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerIn
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.element.ElementHolder;
+import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,9 +17,9 @@ public class DefaultPage<C extends GuiContext> implements Page<C> {
     private final String name;
     private final int size;
     private final Constructor<C> constructor;
-    private final Collection<ElementHolder<C,?>> elements;
+    private final Collection<Element<C,?>> elements;
 
-    public DefaultPage(String name, int size, Class<?> rootContextClass, Class<C> contextClass, Collection<ElementHolder<C, ?>> elements) {
+    public DefaultPage(String name, int size, Class<?> rootContextClass, Class<C> contextClass, Collection<Element<C, ?>> elements) {
         this.name = name;
         this.size = size;
         this.elements = elements;
@@ -46,7 +46,7 @@ public class DefaultPage<C extends GuiContext> implements Page<C> {
     }
 
     @Override
-    public Collection<ElementHolder<C, ?>> getElements() {
+    public Collection<Element<C, ?>> getElements() {
         return elements;
     }
 
@@ -64,18 +64,18 @@ public class DefaultPage<C extends GuiContext> implements Page<C> {
     }
 
     @Override
-    public void render(C context, Inventory inventory) {
-        for (ElementHolder<C, ?> element : elements) {
-            element.getElement().render(context,inventory,element.getSlots(),null);
+    public void render(C context) {
+        for (Element<C, ?> element : elements) {
+            element.render(context, null);
         }
     }
 
     @Override
-    public void handleClick(C context, Inventory inventory, MinecraftPlayerInventoryClickEvent event) {
-        for (ElementHolder<C, ?> holder : elements) {
-            for (int slot : holder.getSlots()){
-                if(slot == event.getSlot()){
-                    holder.getElement().handleClick(context,event,null);
+    public void handleClick(C context, MinecraftPlayerInventoryClickEvent event) {
+        for (Element<C, ?> element : elements) {
+            for (int slot : element.getSlots()){
+                if(slot == event.getRawSlot()){
+                    element.handleClick(context,event,null);
                     return;
                 }
             }
@@ -83,13 +83,13 @@ public class DefaultPage<C extends GuiContext> implements Page<C> {
     }
 
     @Override
-    public void handleDrag(C context, Inventory inventory, MinecraftPlayerInventoryDragEvent event) {
-        for (Integer inventorySlot : event.getInventorySlots()) {
+    public void handleDrag(C context, MinecraftPlayerInventoryDragEvent event) {
+        for (Integer inventorySlot : event.getRawSlots()) {
             outer:
-            for (ElementHolder<C, ?> holder : elements) {
-                for (int slot : holder.getSlots()){
+            for (Element<C, ?> element : elements) {
+                for (int slot : element.getSlots()){
                     if(slot == inventorySlot){
-                        holder.getElement().handleDrag(context,event,null);
+                        element.handleDrag(context,event,null);
                         break outer;
                     }
                 }

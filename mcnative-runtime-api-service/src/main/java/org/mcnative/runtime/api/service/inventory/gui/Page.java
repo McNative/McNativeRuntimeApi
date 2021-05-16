@@ -4,24 +4,25 @@ import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerIn
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.element.ElementHolder;
+import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 import java.util.Collection;
 
-public interface Page<C extends GuiContext> {
+public interface Page<C extends GuiContext, P extends PageContext<C>> {
 
     String getName();
 
     int getSize();
 
-    Collection<ElementHolder<C,?>> getElements();
+    Collection<Element<C,?>> getElements();
 
     C createContext(GuiContext rootContext);
 
-    void render(C context,Inventory inventory);
+    void render(C context);
 
-    void handleClick(C context, Inventory inventory, MinecraftPlayerInventoryClickEvent event);
+    void handleClick(C context, MinecraftPlayerInventoryClickEvent event);
 
-    void handleDrag(C context, Inventory inventory, MinecraftPlayerInventoryDragEvent event);
+    void handleDrag(C context, MinecraftPlayerInventoryDragEvent event);
 
 }
