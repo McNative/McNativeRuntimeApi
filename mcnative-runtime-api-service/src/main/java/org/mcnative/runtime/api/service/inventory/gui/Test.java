@@ -38,19 +38,19 @@ public class Test {
         GuiManager manager = new DefaultGuiManager();
         Gui<TestContext> gui = manager.createGui("Test", TestContext.class, builder -> {
             builder.setDefaultPage("test");
-            builder.createPage("test", 36, elements -> {
+            builder.createPage("test", 54, elements -> {
 
                 elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.line(0)) {
 
                     @Override
                     protected ItemStack create(PageContext<TestContext> context) {
-                        return ItemStack.newItemStack(Material.ACACIA_BUTTON)
+                        return ItemStack.newItemStack(Material.STONE)
                                 .setDisplayName(context.root().getPlayer().getName());
                     }
                 });
 
 
-                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.line(0)) {
+                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.line(1)) {
                     @Override
                     public void handleClick(PageContext<TestContext> context, MinecraftPlayerInventoryClickEvent event) {
                         event.setCancelled(true);
@@ -64,7 +64,7 @@ public class Test {
                     }
                 });
 
-                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.slot(9)) {
+                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.slot(18)) {
 
                     @Override
                     public void handleClick(PageContext<TestContext> context, MinecraftPlayerInventoryClickEvent event) {
@@ -79,7 +79,7 @@ public class Test {
                     }
                 });
 
-                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.slot(10)) {
+                elements.addElement(new BasicElement<TestContext, PageContext<TestContext>>(Slots.slot(19)) {
 
                     @Override
                     public void handleClick(PageContext<TestContext> context, MinecraftPlayerInventoryClickEvent event) {
@@ -96,7 +96,7 @@ public class Test {
                 });
 
                 elements.addElement(new ListPane<>(testContextPageContext -> new ArrayListSource<>(Arrays.asList(1, 5, 4, 2, 8)),
-                        new DynamicElement<TestContext, PageContext<TestContext>, Integer>(Slots.lines(2,3)) {
+                        new DynamicElement<TestContext, PageContext<TestContext>, Integer>(Slots.lines(3,4)) {
                     @Override
                     protected ItemStack create(PageContext<TestContext> context, Integer value) {
                         return ItemStack.newItemStack(Material.CAKE)
@@ -107,7 +107,7 @@ public class Test {
                     public void handleClick(PageContext<TestContext> context, MinecraftPlayerInventoryClickEvent event, Integer value) {
                         context.root().getPlayer().sendMessage("Int " + value + " is online");
                     }
-                }, Slots.lines(2,3)));
+                }, null));
 
 
                 /*elements.addElement(new ListPane<TestContext, PageContext<TestContext>>(TestContext::getOnlinePlayers ,new DynamicElement<TestContext, OnlineMinecraftPlayer>() {

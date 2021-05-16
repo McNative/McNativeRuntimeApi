@@ -108,10 +108,11 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
 
         if(pageContext == null) {
-            Inventory inventory = Inventory.newInventory(Inventory.class, null, nextPage.getSize(), "Hallo");
-
-            pageContext = nextPage.createContext(context, inventory, nextPage.getName());
+            pageContext = nextPage.createContext(context);
             context.setPageContext(pageContext);
+
+            Inventory inventory = Inventory.newInventory(Inventory.class, pageContext, nextPage.getSize(), "Hallo");
+            pageContext.setInventory(inventory);
 
             nextPage.render(pageContext.getRawPageContext());
         }

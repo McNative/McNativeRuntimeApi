@@ -11,6 +11,7 @@ import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implements Page<C,P> {
@@ -20,20 +21,17 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     private final Constructor<P> constructor;
     private final Collection<Element<C,P,?>> elements;
 
-    public DefaultPage(String name, int size, Class<?> rootContextClass, Class<P> contextClass, Collection<Element<C,P, ?>> elements) {
+    public DefaultPage(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P, ?>> elements) {
         this.name = name;
         this.size = size;
         this.elements = elements;
 
-        if(contextClass == null){
-            constructor = null;
-        }else{
-            try {
-                constructor = contextClass.getDeclaredConstructor(rootContextClass, Inventory.class, String.class);
-            } catch (NoSuchMethodException e) {
-                throw new IllegalArgumentException("A McNative page context ("+contextClass+") requires an constructor with "+rootContextClass+" as parameter");
-            }
+        try {
+            constructor = contextClass.getDeclaredConstructor(GuiContext.class, Page.class);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("A McNative page context ("+contextClass+") requires an constructor with "+rootContextClass+" as parameter");
         }
+
     }
 
     @Override
@@ -52,9 +50,9 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     }
 
     @Override
-    public P createContext(C rootContext, Inventory inventory, String page) {
+    public P createContext(C rootContext) {
         try {
-            return constructor.newInstance(rootContext, inventory, page);
+            return constructor.newInstance(rootContext, this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new ReflectException(e);
         }

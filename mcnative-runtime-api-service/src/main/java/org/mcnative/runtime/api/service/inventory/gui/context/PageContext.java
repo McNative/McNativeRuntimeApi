@@ -7,12 +7,11 @@ import org.mcnative.runtime.api.service.inventory.gui.Page;
 public class PageContext<C extends GuiContext> implements InventoryOwner {
 
     private final C guiContext;
-    private final Inventory inventory;
+    private Inventory inventory;
     private final Page<C, ?> page;
 
-    public PageContext(C guiContext, Inventory inventory, Page<C, ?> page) {
+    public PageContext(C guiContext, Page<C, ?> page) {
         this.guiContext = guiContext;
-        this.inventory = inventory;
         this.page = page;
     }
 
@@ -32,5 +31,9 @@ public class PageContext<C extends GuiContext> implements InventoryOwner {
     @Override
     public Inventory getLinkedInventory() {
         return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }

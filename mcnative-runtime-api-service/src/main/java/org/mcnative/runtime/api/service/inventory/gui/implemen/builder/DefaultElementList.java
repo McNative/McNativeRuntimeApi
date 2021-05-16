@@ -18,6 +18,7 @@ public class DefaultElementList<C extends GuiContext,P extends PageContext<C>> i
 
     @Override
     public ElementList<C, P> addElement(Element<C, P, ?> element) {
-        return null;
+        this.elements.add(element);
+        return this;
     }
 }

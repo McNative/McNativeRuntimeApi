@@ -10,10 +10,9 @@ public abstract class BasicElement<C extends GuiContext, P extends PageContext<C
 
     private final int[] slots;
 
-    protected BasicElement(int[] slots) {
+    public BasicElement(int[] slots) {
         this.slots = slots;
     }
-
 
     @Override
     public int[] getSlots() {

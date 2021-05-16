@@ -17,7 +17,7 @@ public interface Page<C extends GuiContext, P extends PageContext<C>> {
 
     Collection<Element<C,P,?>> getElements();
 
-    P createContext(C rootContext, Inventory inventory, String page);
+    P createContext(C rootContext);
 
     void render(P context);
 

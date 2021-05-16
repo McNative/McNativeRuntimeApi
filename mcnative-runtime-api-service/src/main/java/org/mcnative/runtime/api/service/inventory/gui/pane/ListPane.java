@@ -33,11 +33,11 @@ public class ListPane<C extends GuiContext,P extends PageContext<C>,V> implement
     @Override
     public void render(P context, Void value) {
         ListSource<V> source = sourceProvider.apply(context);
-        int index = 0;
+        //int index = 0;
         for (V object : source.get()) {
-            if(index >= slots.length) return;
+            //if(index >= slots.length) return;
             element.render(context,object);
-            index++;
+            //index++;
         }
     }
 
