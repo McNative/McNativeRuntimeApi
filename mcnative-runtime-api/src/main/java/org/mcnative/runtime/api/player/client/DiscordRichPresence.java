@@ -1,36 +1,23 @@
 package org.mcnative.runtime.api.player.client;
 
-import net.pretronic.libraries.utility.annonations.NotNull;
+import java.util.UUID;
 
-public class DiscordRichPresence {
+public interface DiscordRichPresence {
 
-    private final String domain;
-    private final String matchSecret;
-    private final String spectateSecret;
-    private final String joinSecret;
+    void sendGameSecrets(String secret);
 
-    public DiscordRichPresence(@NotNull String domain, String matchSecret, String spectateSecret, String joinSecret) {
-        this.domain = domain;
-        this.matchSecret = matchSecret;
-        this.spectateSecret = spectateSecret;
-        this.joinSecret = joinSecret;
-    }
+    void sendSpectateSecret(String secret);
 
-    public String getDomain() {
-        return domain;
-    }
+    void sendJoinSecret(String secret);
 
-    public String getMatchSecret() {
-        return matchSecret;
-    }
 
-    public String getSpectateSecret() {
-        return spectateSecret;
-    }
+    void sendGameInfo(String gamemode, long startTime, long endTime);
 
-    public String getJoinSecret() {
-        return joinSecret;
-    }
+
+    void sendPartyInfo(UUID partyId, int size, int maxMembers);
+
+    void sendRemovePartyInfo();
+
 
 
 }
