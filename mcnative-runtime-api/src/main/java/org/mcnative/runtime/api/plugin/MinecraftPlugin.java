@@ -23,13 +23,18 @@ import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.plugin.service.ServiceRegistry;
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.runtime.api.LocalService;
 import org.mcnative.runtime.api.McNative;
+import org.mcnative.runtime.api.Setting;
 import org.mcnative.runtime.api.network.Network;
+import org.mcnative.runtime.api.player.PlayerSetting;
 import org.mcnative.runtime.api.plugin.configuration.Configuration;
 import org.mcnative.runtime.api.plugin.configuration.ConfigurationProvider;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Set;
 
 public class MinecraftPlugin extends Plugin<McNative> {
 
@@ -75,6 +80,38 @@ public class MinecraftPlugin extends Plugin<McNative> {
 
     public DatabaseDriver getDatabaseDriver(String name){
         return getConfigurationProvider().getDatabaseDriver(name);
+    }
+
+    public Collection<Setting> getSettings(){
+        return getConfigurationProvider().getSettings(this);
+    }
+
+    public Setting getSetting(String key){
+        return getConfigurationProvider().getSetting(this,key);
+    }
+
+    public Setting setSetting(String key, Object value){
+        Setting setting = getSetting(key);
+        if(setting == null){
+            setting = getConfigurationProvider().createSetting(this,key,value);
+        }else{
+            setting.setValue(value);
+            getConfigurationProvider().updateSetting(this,setting);
+        }
+        return setting;
+    }
+
+    public boolean hasSetting(String key){
+        return getSetting(key) != null;
+    }
+
+    public boolean hasSetting(String key,Object value){
+        Setting settings = getSetting(key);
+        return settings != null && settings.equalsValue(value);
+    }
+
+    public void deleteSetting(String key){
+        getConfigurationProvider().deleteSetting(this,key);
     }
 
     private ConfigurationProvider getConfigurationProvider(){

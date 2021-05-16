@@ -21,7 +21,7 @@ package org.mcnative.runtime.api.player;
 
 public class DeviceInfo {
 
-    public static DeviceInfo JAVA = new DeviceInfo("Java","Java",OperatingSystem.UNKNOWN, UIType.JAVA);
+    public static DeviceInfo JAVA = new DeviceInfo("Java","java",OperatingSystem.UNKNOWN, UIType.JAVA);
 
     private final String name, id;
     private final OperatingSystem operatingSystem;

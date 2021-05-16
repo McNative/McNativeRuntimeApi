@@ -24,18 +24,33 @@ import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.connection.PendingConnection;
 import org.mcnative.runtime.api.player.bossbar.BossBar;
 import org.mcnative.runtime.api.player.chat.ChatChannel;
+import org.mcnative.runtime.api.player.client.CustomClient;
 import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
+import org.mcnative.runtime.api.text.components.MessageComponent;
 import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, PositionAble, CommandSender{
 
     PendingConnection getConnection();
 
     PlayerClientSettings getClientSettings();
+
+    CustomClient getCustomClient();
+
+    <T extends CustomClient> T getCustomClient(Class<T> clazz);
+
+    boolean isCustomClient();
+
+    boolean isCustomClient(String name);
+
+    boolean isCustomClient(Class<? extends CustomClient> clazz);
 
 
     ChatChannel getPrimaryChatChannel();
@@ -68,6 +83,9 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     void sendResourcePackRequest(String url);
 
     void sendResourcePackRequest(String url, String hash);
+
+
+    <T> void requestTextInput(String label, String placeholder, Function<String, MessageComponent<?>> validCheck, Consumer<T> callback);
 
 
     @Override

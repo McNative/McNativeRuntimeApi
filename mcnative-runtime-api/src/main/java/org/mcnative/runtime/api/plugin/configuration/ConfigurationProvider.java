@@ -23,6 +23,7 @@ import net.pretronic.databasequery.api.Database;
 import net.pretronic.databasequery.api.driver.DatabaseDriver;
 import net.pretronic.libraries.plugin.Plugin;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.runtime.api.Setting;
 
 import java.io.File;
 import java.util.Collection;
@@ -32,6 +33,18 @@ public interface ConfigurationProvider {
     File getPluginDataFolder(ObjectOwner owner);
 
     Configuration getConfiguration(ObjectOwner owner, String name);
+
+    Collection<Setting> getSettings(ObjectOwner owner);
+
+    Setting getSetting(ObjectOwner owner, String name);
+
+    Setting createSetting(ObjectOwner owner, String key, Object value);
+
+    void updateSetting(ObjectOwner owner,Setting setting);
+
+    void deleteSetting(ObjectOwner owner,Setting setting);
+
+    void deleteSetting(ObjectOwner owner,String key);
 
 
     default Database getDatabase(ObjectOwner owner){
