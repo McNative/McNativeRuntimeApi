@@ -40,9 +40,9 @@ public interface ConfigurationProvider {
 
     Setting createSetting(String owner, String key, Object value);
 
-    void updateSetting(String owner,Setting setting);
+    void updateSetting(Setting setting);
 
-    void deleteSetting(String owner,Setting setting);
+    void deleteSetting(Setting setting);
 
     void deleteSetting(String owner,String key);
 

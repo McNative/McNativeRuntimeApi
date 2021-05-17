@@ -96,7 +96,7 @@ public class MinecraftPlugin extends Plugin<McNative> {
             setting = getConfigurationProvider().createSetting(this.getName(),key,value);
         }else{
             setting.setValue(value);
-            getConfigurationProvider().updateSetting(this.getName(),setting);
+            getConfigurationProvider().updateSetting(setting);
         }
         return setting;
     }
