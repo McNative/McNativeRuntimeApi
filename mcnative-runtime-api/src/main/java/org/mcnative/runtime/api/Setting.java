@@ -35,4 +35,6 @@ public interface Setting {
     long getCreated();
 
     long getUpdated();
+
+    void setUpdated(long updated);
 }
