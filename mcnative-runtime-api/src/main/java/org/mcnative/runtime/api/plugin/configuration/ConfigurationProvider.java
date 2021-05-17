@@ -34,17 +34,17 @@ public interface ConfigurationProvider {
 
     Configuration getConfiguration(ObjectOwner owner, String name);
 
-    Collection<Setting> getSettings(ObjectOwner owner);
+    Collection<Setting> getSettings(String owner);
 
-    Setting getSetting(ObjectOwner owner, String name);
+    Setting getSetting(String owner, String name);
 
-    Setting createSetting(ObjectOwner owner, String key, Object value);
+    Setting createSetting(String owner, String key, Object value);
 
-    void updateSetting(ObjectOwner owner,Setting setting);
+    void updateSetting(String owner,Setting setting);
 
-    void deleteSetting(ObjectOwner owner,Setting setting);
+    void deleteSetting(String owner,Setting setting);
 
-    void deleteSetting(ObjectOwner owner,String key);
+    void deleteSetting(String owner,String key);
 
 
     default Database getDatabase(ObjectOwner owner){

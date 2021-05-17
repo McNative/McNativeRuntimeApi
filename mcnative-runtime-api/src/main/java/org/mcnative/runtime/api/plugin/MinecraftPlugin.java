@@ -83,20 +83,20 @@ public class MinecraftPlugin extends Plugin<McNative> {
     }
 
     public Collection<Setting> getSettings(){
-        return getConfigurationProvider().getSettings(this);
+        return getConfigurationProvider().getSettings(this.getName());
     }
 
     public Setting getSetting(String key){
-        return getConfigurationProvider().getSetting(this,key);
+        return getConfigurationProvider().getSetting(this.getName(),key);
     }
 
     public Setting setSetting(String key, Object value){
         Setting setting = getSetting(key);
         if(setting == null){
-            setting = getConfigurationProvider().createSetting(this,key,value);
+            setting = getConfigurationProvider().createSetting(this.getName(),key,value);
         }else{
             setting.setValue(value);
-            getConfigurationProvider().updateSetting(this,setting);
+            getConfigurationProvider().updateSetting(this.getName(),setting);
         }
         return setting;
     }
@@ -111,7 +111,7 @@ public class MinecraftPlugin extends Plugin<McNative> {
     }
 
     public void deleteSetting(String key){
-        getConfigurationProvider().deleteSetting(this,key);
+        getConfigurationProvider().deleteSetting(this.getName(),key);
     }
 
     private ConfigurationProvider getConfigurationProvider(){
