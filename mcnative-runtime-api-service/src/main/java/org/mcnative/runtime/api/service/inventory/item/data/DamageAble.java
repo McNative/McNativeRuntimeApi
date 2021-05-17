@@ -1,6 +1,6 @@
 package org.mcnative.runtime.api.service.inventory.item.data;
 
-public interface DamageAble {
+public interface DamageAble extends ItemData {
 
     int getDamage();
 

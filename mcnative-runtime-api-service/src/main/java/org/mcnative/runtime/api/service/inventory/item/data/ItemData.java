@@ -21,5 +21,12 @@ package org.mcnative.runtime.api.service.inventory.item.data;
 
 import org.mcnative.runtime.api.service.inventory.item.material.MaterialData;
 
+/*
+@Todo
+    - KnowledgeBook
+    - SuspiciousStew
+    - Potion finish
+    - TropicalFish
+ */
 public interface ItemData extends MaterialData {
 }

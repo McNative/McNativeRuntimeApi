@@ -93,6 +93,8 @@ public interface ItemStack {
 
     ItemStack removeFlag(ItemFlag... flags);
 
+    ItemStack setGlowing(boolean glowing);
+
     static ItemStack newItemStack(Material material) {
         return McNative.getInstance().getObjectFactory().createObject(ItemStack.class,material);
     }
