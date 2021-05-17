@@ -71,9 +71,20 @@ public interface ItemStack {
 
     ItemStack setTag(NBTTag tag);
 
+
     ItemStack addEnchantment(Enchantment enchantment);
 
     ItemStack addEnchantment(Enchantment enchantment, int level);
+
+    ItemStack removeEnchantment(Enchantment enchantment);
+
+    /**
+     *
+     * @param enchantment
+     * @return old enchantment level or 0
+     */
+    int removeEnchantmentSafe(Enchantment enchantment);
+
 
     ItemStack setLore(List<String> lore);
 
