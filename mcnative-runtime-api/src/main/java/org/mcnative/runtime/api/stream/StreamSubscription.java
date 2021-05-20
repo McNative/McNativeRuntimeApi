@@ -1,10 +1,12 @@
 package org.mcnative.runtime.api.stream;
 
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public interface StreamSubscription<T> {
 
-    Stream<T> getStream();
+    StreamOptional<T> getStream();
+
+    Consumer<T> getCallback();
 
     void cancel();
 

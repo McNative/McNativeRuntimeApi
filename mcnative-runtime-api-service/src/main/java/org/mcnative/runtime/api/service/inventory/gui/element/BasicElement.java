@@ -6,7 +6,7 @@ import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public abstract class BasicElement<C extends GuiContext, P extends PageContext<C>> implements Element<C,P,Void> {
+public abstract class BasicElement<C extends GuiContext, P extends PageContext<C>> implements Element<C,P> {
 
     private final int[] slots;
 
@@ -20,29 +20,21 @@ public abstract class BasicElement<C extends GuiContext, P extends PageContext<C
     }
 
     @Override
-    public void render(P context, Void value) {
+    public void render(P context) {
         for (int slot : getSlots()) {
             context.getLinkedInventory().setItem(slot,create(context));
         }
     }
 
-    protected abstract ItemStack create(P context);
-
     @Override
-    public void handleClick(P context, MinecraftPlayerInventoryClickEvent event, Void value) {
-        handleClick(context,event);
-    }
-
-    @Override
-    public void handleDrag(P context, MinecraftPlayerInventoryDragEvent event, Void value) {
-        handleDrag(context, event);
-    }
-
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
-        //Unused
+        //unused
     }
 
+    @Override
     public void handleDrag(P context, MinecraftPlayerInventoryDragEvent event) {
-        //Unused
+        //unused
     }
+
+    protected abstract ItemStack create(P context);
 }

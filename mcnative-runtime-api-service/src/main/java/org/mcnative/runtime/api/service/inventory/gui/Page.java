@@ -15,7 +15,7 @@ public interface Page<C extends GuiContext, P extends PageContext<C>> {
 
     int getSize();
 
-    Collection<Element<C,P,?>> getElements();
+    Collection<Element<C,P>> getElements();
 
     P createContext(C rootContext);
 
@@ -25,4 +25,5 @@ public interface Page<C extends GuiContext, P extends PageContext<C>> {
 
     void handleDrag(P context, MinecraftPlayerInventoryDragEvent event);
 
+    String createPageTitle(P context);
 }

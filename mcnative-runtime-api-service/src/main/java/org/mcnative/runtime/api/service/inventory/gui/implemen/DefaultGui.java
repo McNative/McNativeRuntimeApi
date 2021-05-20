@@ -111,7 +111,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
             pageContext = nextPage.createContext(context);
             context.setPageContext(pageContext);
 
-            Inventory inventory = Inventory.newInventory(Inventory.class, pageContext, nextPage.getSize(), "Hallo");
+            Inventory inventory = Inventory.newInventory(Inventory.class, pageContext, nextPage.getSize(), nextPage.createPageTitle(pageContext.getRawPageContext()));
             pageContext.setInventory(inventory);
 
             nextPage.render(pageContext.getRawPageContext());

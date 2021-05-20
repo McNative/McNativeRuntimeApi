@@ -1,5 +1,7 @@
 package org.mcnative.runtime.api.service.inventory.gui.pane;
 
+import org.mcnative.runtime.api.stream.StreamOptional;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,8 +20,8 @@ public class ArrayListSource<V> extends ArrayList<V> implements ListSource<V>{
     }
 
     @Override
-    public List<V> get() {
-        return this;
+    public StreamOptional<List<V>> get() {
+        return null;
     }
 
     @Override

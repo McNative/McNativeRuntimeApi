@@ -10,14 +10,14 @@ import java.util.Collection;
 
 public class DefaultElementList<C extends GuiContext,P extends PageContext<C>> implements ElementList<C,P> {
 
-    private final Collection<Element<C,P,?>> elements = new ArrayList<>();
+    private final Collection<Element<C,P>> elements = new ArrayList<>();
 
-    public Collection<Element<C, P, ?>> getElements() {
+    public Collection<Element<C, P>> getElements() {
         return elements;
     }
 
     @Override
-    public ElementList<C, P> addElement(Element<C, P, ?> element) {
+    public ElementList<C, P> addElement(Element<C, P> element) {
         this.elements.add(element);
         return this;
     }

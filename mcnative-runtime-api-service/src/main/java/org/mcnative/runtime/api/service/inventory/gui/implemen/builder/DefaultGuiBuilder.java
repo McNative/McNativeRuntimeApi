@@ -1,6 +1,5 @@
 package org.mcnative.runtime.api.service.inventory.gui.implemen.builder;
 
-import net.pretronic.libraries.utility.reflect.TypeReference;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
 import org.mcnative.runtime.api.service.inventory.gui.builder.ElementList;
 import org.mcnative.runtime.api.service.inventory.gui.builder.GuiBuilder;
@@ -11,6 +10,7 @@ import org.mcnative.runtime.api.service.inventory.gui.implemen.DefaultPage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DefaultGuiBuilder<C extends GuiContext> implements GuiBuilder<C> {
 
@@ -32,19 +32,19 @@ public class DefaultGuiBuilder<C extends GuiContext> implements GuiBuilder<C> {
     }
 
     @Override
-    public Page<C, PageContext<C>> createPage(String name, int size, Consumer<ElementList<C, PageContext<C>>> elements) {
-        return createPage(name,size, null, elements);
+    public Page<C, PageContext<C>> createPage(String name, int size, Function<PageContext<C>, String> titleCreator, Consumer<ElementList<C, PageContext<C>>> elements) {
+        return createPage(name,size, null, titleCreator, elements);
     }
 
     @Override
-    public <P extends PageContext<C>> Page<C, P> createPage(String name, int size, Class<P> contextClass0, Consumer<ElementList<C, P>> elements) {
+    public <P extends PageContext<C>> Page<C, P> createPage(String name, int size, Class<P> contextClass0, Function<P, String> titleCreator, Consumer<ElementList<C, P>> elements) {
         Class<P> contextClass = contextClass0;
         if(contextClass == null) {
            contextClass = getClazz( PageContext.class);
         }
         DefaultElementList<C,P> elementList = new DefaultElementList<>();
         elements.accept(elementList);
-        Page<C,P> page = new DefaultPage<>(name,size,rootContext,contextClass,elementList.getElements());
+        Page<C,P> page = new DefaultPage<>(name,size,rootContext,contextClass,elementList.getElements(), titleCreator);
         this.pages.add(page);
         return page;
     }

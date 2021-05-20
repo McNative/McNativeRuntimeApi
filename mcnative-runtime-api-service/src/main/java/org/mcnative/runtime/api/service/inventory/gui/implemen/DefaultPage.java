@@ -13,18 +13,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Function;
 
 public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implements Page<C,P> {
 
     private final String name;
     private final int size;
     private final Constructor<P> constructor;
-    private final Collection<Element<C,P,?>> elements;
+    private final Collection<Element<C,P>> elements;
+    private final Function<P, String> titleCreator;
 
-    public DefaultPage(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P, ?>> elements) {
+    public DefaultPage(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P>> elements, Function<P, String> titleCreator) {
         this.name = name;
         this.size = size;
         this.elements = elements;
+        this.titleCreator = titleCreator;
 
         try {
             constructor = contextClass.getDeclaredConstructor(GuiContext.class, Page.class);
@@ -45,7 +48,7 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     }
 
     @Override
-    public Collection<Element<C,P,?>> getElements() {
+    public Collection<Element<C,P>> getElements() {
         return elements;
     }
 
@@ -60,17 +63,18 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
 
     @Override
     public void render(P context) {
-        for (Element<C,P,?> element : elements) {
-            element.render(context, null);
+        for (Element<C,P> element : elements) {
+            element.render(context);
         }
     }
 
     @Override
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
-        for (Element<C,P,?> element : elements) {
+        for (Element<C,P> element : elements) {
             for (int slot : element.getSlots()){
                 if(slot == event.getRawSlot()){
-                    element.handleClick(context,event,null);
+                    event.setCancelled(true);
+                    element.handleClick(context,event);
                     return;
                 }
             }
@@ -81,14 +85,20 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     public void handleDrag(P context, MinecraftPlayerInventoryDragEvent event) {
         for (Integer inventorySlot : event.getRawSlots()) {
             outer:
-            for (Element<C,P,?> element : elements) {
+            for (Element<C,P> element : elements) {
                 for (int slot : element.getSlots()){
                     if(slot == inventorySlot){
-                        element.handleDrag(context,event,null);
+                        event.setCancelled(true);
+                        element.handleDrag(context,event);
                         break outer;
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public String createPageTitle(P context) {
+        return this.titleCreator.apply(context);
     }
 }

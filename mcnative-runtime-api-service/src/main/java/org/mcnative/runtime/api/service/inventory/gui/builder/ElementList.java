@@ -6,6 +6,6 @@ import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 public interface ElementList<C extends GuiContext, P extends PageContext<C>> {
 
-    ElementList<C,P> addElement(Element<C,P,?> element);
+    ElementList<C,P> addElement(Element<C,P> element);
 
 }
