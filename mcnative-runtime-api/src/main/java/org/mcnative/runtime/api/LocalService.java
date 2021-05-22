@@ -19,10 +19,12 @@
 
 package org.mcnative.runtime.api;
 
+import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.runtime.api.network.component.ConnectableNetworkComponent;
 import org.mcnative.runtime.api.network.component.server.ServerStatusResponse;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.chat.ChatChannel;
+import org.mcnative.runtime.api.player.client.CustomPluginMessageListener;
 import org.mcnative.runtime.api.player.tablist.Tablist;
 import org.mcnative.runtime.api.protocol.packet.PacketManager;
 
@@ -66,5 +68,10 @@ public interface LocalService extends ConnectableNetworkComponent {
     void setStatusResponse(ServerStatusResponse status);
 
     ServerPerformance getServerPerformance();
+
+
+    void registerCustomPluginMessageListener(ObjectOwner owner, String channel,CustomPluginMessageListener listener);
+
+    void unregisterCustomPluginMessageListener(CustomPluginMessageListener listener);
 
 }
