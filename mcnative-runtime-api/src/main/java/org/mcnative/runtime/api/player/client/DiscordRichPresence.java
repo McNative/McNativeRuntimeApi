@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface DiscordRichPresence {
 
-    void sendGameSecrets(String domain,String secret);
+    void sendMatchSecrets(String domain,String secret);
 
     void sendSpectateSecret(String domain,String secret);
 
