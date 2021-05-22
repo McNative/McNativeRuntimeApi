@@ -45,20 +45,20 @@ public enum MinecraftProtocolVersion {
     JE_1_13_2(404,"1.13.2",MinecraftEdition.JAVA),
     JE_1_13_1(401,"1.13.1",MinecraftEdition.JAVA),
     JE_1_13(393,"1.13",MinecraftEdition.JAVA),
-    JE_1_12_2(340,"1.12.2",MinecraftEdition.JAVA),
-    JE_1_12_1(338,"1.12.1",MinecraftEdition.JAVA),
-    JE_1_12(335,"1.12",MinecraftEdition.JAVA),
-    JE_1_11_2(316,"1.11.2",MinecraftEdition.JAVA),
-    JE_1_11(315,"1.11",MinecraftEdition.JAVA),
-    JE_1_10(210,"1.10",MinecraftEdition.JAVA),
-    JE_1_9_4(110,"1.9.4",MinecraftEdition.JAVA),
-    JE_1_9_2(109,"1.9.2",MinecraftEdition.JAVA),
-    JE_1_9_1(108,"1.9.1",MinecraftEdition.JAVA),
-    JE_1_9(107,"1.9",MinecraftEdition.JAVA),
-    JE_1_8(47,"1.8",MinecraftEdition.JAVA),
-    JE_1_7_10(5,"1.7.10",MinecraftEdition.JAVA),
-    JE_1_7_5(4,"1.7.5",MinecraftEdition.JAVA),
-    JE_1_7(3,"1.7",MinecraftEdition.JAVA),
+    JE_1_12_2(340,"1.12.2",MinecraftEdition.JAVA, true),
+    JE_1_12_1(338,"1.12.1",MinecraftEdition.JAVA, true),
+    JE_1_12(335,"1.12",MinecraftEdition.JAVA, true),
+    JE_1_11_2(316,"1.11.2",MinecraftEdition.JAVA, true),
+    JE_1_11(315,"1.11",MinecraftEdition.JAVA, true),
+    JE_1_10(210,"1.10",MinecraftEdition.JAVA, true),
+    JE_1_9_4(110,"1.9.4",MinecraftEdition.JAVA, true),
+    JE_1_9_2(109,"1.9.2",MinecraftEdition.JAVA, true),
+    JE_1_9_1(108,"1.9.1",MinecraftEdition.JAVA, true),
+    JE_1_9(107,"1.9",MinecraftEdition.JAVA, true),
+    JE_1_8(47,"1.8",MinecraftEdition.JAVA, true),
+    JE_1_7_10(5,"1.7.10",MinecraftEdition.JAVA, true),
+    JE_1_7_5(4,"1.7.5",MinecraftEdition.JAVA, true),
+    JE_1_7(3,"1.7",MinecraftEdition.JAVA, true),
 
     /** Bedrock Edition */
 
@@ -71,11 +71,17 @@ public enum MinecraftProtocolVersion {
     private final int number;
     private final String name;
     private final MinecraftEdition edition;
+    private final boolean legacy;
 
     MinecraftProtocolVersion(int number, String name, MinecraftEdition edition) {
+        this(number, name, edition, false);
+    }
+
+    MinecraftProtocolVersion(int number, String name, MinecraftEdition edition, boolean legacy) {
         this.number = number;
         this.name = name;
         this.edition = edition;
+        this.legacy = legacy;
     }
 
     public int getNumber() {
@@ -108,6 +114,10 @@ public enum MinecraftProtocolVersion {
 
     public boolean isOlderOrSame(MinecraftProtocolVersion newerVersion){
         return isSameEdition(newerVersion) && newerVersion.getNumber() >= getNumber();
+    }
+
+    public boolean isLegacy() {
+        return this.legacy;
     }
 
     public static MinecraftProtocolVersion of(MinecraftEdition edition, int number){
