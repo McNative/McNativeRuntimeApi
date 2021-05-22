@@ -21,8 +21,6 @@ package org.mcnative.runtime.api.event.player;
 
 public interface MinecraftPlayerDiscordRichPresenceReceiveEvent extends MinecraftOnlinePlayerEvent {
 
-    String getMatchSecret();
-
     String getSpectateSecret();
 
     String getJoinSecret();
