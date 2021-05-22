@@ -28,6 +28,8 @@ public interface LabyModClient extends CustomClient {
     void sendToServer(String title, String address, boolean preview, Consumer<Boolean> callback);
 
 
+    void enableVoiceChat();
+
     void disableVoiceChat();
 
     void sendVoiceChatMuteInfo(UUID playerId,boolean muted);
