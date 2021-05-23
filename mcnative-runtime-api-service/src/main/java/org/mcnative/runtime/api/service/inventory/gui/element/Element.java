@@ -4,6 +4,7 @@ import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerIn
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.stream.StreamOptional;
 
 public interface Element<C extends GuiContext, P extends PageContext<C>> {
 
@@ -14,4 +15,8 @@ public interface Element<C extends GuiContext, P extends PageContext<C>> {
     void handleClick(P context, MinecraftPlayerInventoryClickEvent event);
 
     void handleDrag(P context, MinecraftPlayerInventoryDragEvent event);
+
+    default <O> O subscribeAndGet(P context, StreamOptional<O> stream){
+        return context.subscribeAndGet(this, stream, o -> render(context));
+    }
 }

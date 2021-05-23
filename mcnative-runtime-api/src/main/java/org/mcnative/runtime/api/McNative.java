@@ -22,6 +22,7 @@ package org.mcnative.runtime.api;
 import net.pretronic.libraries.command.sender.CommandSender;
 import net.pretronic.libraries.concurrent.TaskScheduler;
 import net.pretronic.libraries.dependency.DependencyManager;
+import net.pretronic.libraries.event.injection.InjectorService;
 import net.pretronic.libraries.logging.PretronicLogger;
 import net.pretronic.libraries.plugin.description.PluginVersion;
 import net.pretronic.libraries.plugin.manager.PluginManager;
@@ -80,7 +81,10 @@ public interface McNative extends ObjectOwner {
 
     PlayerManager getPlayerManager();
 
+
     ExecutorService getExecutorService();
+
+    InjectorService getInjector();
 
     /**
      * Check if this service instance belongs to a network.

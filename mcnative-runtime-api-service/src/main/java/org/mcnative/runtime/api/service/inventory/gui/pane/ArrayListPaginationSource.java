@@ -10,7 +10,7 @@ public class ArrayListPaginationSource<V> extends ArrayList<V> implements ListSo
     private final List<V> source;
     private final int pageSize;
     private int page;
-    private StreamController<List<V>> controller;
+    private final StreamController<List<V>> controller;
 
     public ArrayListPaginationSource(List<V> source, int pageSize) {
         this.source = source;

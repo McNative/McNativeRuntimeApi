@@ -1,8 +1,8 @@
 package org.mcnative.runtime.api.service.inventory.gui;
 
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
-import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
@@ -24,6 +24,8 @@ public interface Page<C extends GuiContext, P extends PageContext<C>> {
     void handleClick(P context, MinecraftPlayerInventoryClickEvent event);
 
     void handleDrag(P context, MinecraftPlayerInventoryDragEvent event);
+
+    void handleClose(P context, MinecraftPlayerInventoryCloseEvent event);
 
     String createPageTitle(P context);
 }
