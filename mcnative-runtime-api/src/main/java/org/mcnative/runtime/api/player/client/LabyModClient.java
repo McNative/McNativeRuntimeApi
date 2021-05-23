@@ -1,6 +1,7 @@
 package org.mcnative.runtime.api.player.client;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.UUID;
@@ -18,9 +19,13 @@ public interface LabyModClient extends CustomClient {
     void updateBalanceDisplay(EnumBalanceType type, int balance);
 
 
-    void sendSubtitle(UUID playerId, int size, String value );
+    void sendSubtitle(UUID playerId, double size, String value );
 
-    void sendSubtitle(UUID playerId, int size, MessageComponent<?> component);
+    default void sendSubtitle(UUID playerId, double size, MessageComponent<?> component){
+        sendSubtitle(playerId,size,component,VariableSet.newEmptySet());
+    }
+
+    void sendSubtitle(UUID playerId, double size, MessageComponent<?> component, VariableSet variables);
 
 
     void sendToServer(String title, String address, boolean preview);
