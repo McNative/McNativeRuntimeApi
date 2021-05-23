@@ -16,7 +16,10 @@ public class ArrayListPaginationSource<V> extends ArrayList<V> implements ListSo
         this.source = source;
         this.pageSize = pageSize;
         page = 0;
-        controller = new StreamController<>(source.subList(0,pageSize));
+
+        int end = pageSize;
+        if(end >= source.size()) end = source.size();
+        controller = new StreamController<>(source.subList(0,end));
     }
 
     @Override
