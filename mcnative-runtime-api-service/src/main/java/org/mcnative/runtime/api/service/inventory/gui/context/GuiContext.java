@@ -19,6 +19,10 @@ public class GuiContext {
         return pageContext;
     }
 
+    public boolean hasPageOpen(){
+        return pageContext != null;
+    }
+
     public void setPageContext(PageContext<?> pageContext) {
         this.pageContext = pageContext;
     }

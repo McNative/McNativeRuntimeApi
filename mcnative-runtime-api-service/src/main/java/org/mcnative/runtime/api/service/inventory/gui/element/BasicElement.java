@@ -21,8 +21,9 @@ public abstract class BasicElement<C extends GuiContext, P extends PageContext<C
 
     @Override
     public void render(P context) {
+        ItemStack stack = create(context);
         for (int slot : getSlots()) {
-            context.getLinkedInventory().setItem(slot,create(context));
+            context.getLinkedInventory().setItem(slot,stack);
         }
     }
 

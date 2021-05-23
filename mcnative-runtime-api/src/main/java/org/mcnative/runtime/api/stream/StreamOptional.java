@@ -7,7 +7,6 @@ import java.util.function.Function;
 public interface StreamOptional<T> extends Optional<T>{
 
     T get(Runnable runnable);
-
     StreamSubscription<T> subscribe(Consumer<T> callback);
 
     StreamSubscription<T> subscribeAndGet(Consumer<T> callback);
@@ -20,5 +19,9 @@ public interface StreamOptional<T> extends Optional<T>{
 
     void unsubscribe(StreamSubscription<T> subscription);
 
+
+    default boolean belongsTogether(StreamOptional<?> optional){
+        return equals(optional);
+    }
 
 }

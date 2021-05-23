@@ -2,6 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen;
 
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
+import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
@@ -95,6 +96,12 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
                 }
             }
         }
+    }
+
+    @Override
+    public void handleClose(P context, MinecraftPlayerInventoryCloseEvent event) {
+        context.destroy();
+        context.root().setPageContext(null);
     }
 
     @Override

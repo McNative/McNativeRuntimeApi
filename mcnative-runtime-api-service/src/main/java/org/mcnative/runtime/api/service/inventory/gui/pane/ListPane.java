@@ -6,7 +6,12 @@ import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
+import org.mcnative.runtime.api.stream.StreamOptional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> implements Element<C,P> {
@@ -14,9 +19,12 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
     private final Function<P,ListSource<V>> sourceProvider;
     private final int[] slots;
 
+    private final Map<P,Integer> temporarySlots;
+
     public ListPane(Function<P, ListSource<V>> sourceProvider, int[] slots){
         this.sourceProvider = sourceProvider;
         this.slots = slots;
+        this.temporarySlots = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -24,28 +32,37 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
         return this.slots;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void render(P context) {
+        context.clear(this);
         ListSource<V> source = sourceProvider.apply(context);
+        StreamOptional<List<V>> stream = source.get();
+        List<V> result = context.subscribeAndGet(this,stream, (Consumer) o -> renderInternal(context, (List<V>) o));
+        renderInternal(context,result);
+    }
 
-        source.get().subscribeAndGet(entries -> {
-            System.out.println("Render " + entries);
-            int index = 0;
-            for (V object : entries) {
+    private void renderInternal(P context,List<V> entries){
+        int index = 0;
+        for (V object : entries) {
+            int slot = slots[index];
+            this.temporarySlots.put(context,slot);
+            context.getLinkedInventory().setItem(slot,create(context,slot,object));
+            index++;
+        }
 
-                //if(index >= slots.length) return;
-                int slot = slots[index];
-                context.getLinkedInventory().setItem(slot,create(context,slot,object));
-                index++;
+        this.temporarySlots.remove(context);
+
+        if(index < slots.length){
+            for (int i = index; i < slots.length; i++) {
+                int slot = slots[i];
+                context.getLinkedInventory().setItem(slot,null);
             }
+        }
+    }
 
-            if(index < slots.length){
-                for (int i = index; i < slots.length; i++) {
-                    int slot = slots[i];
-                    context.getLinkedInventory().setItem(slot,null);
-                }
-            }
-        });
+    private void renderSlot(P context, int slot){
+        context.getLinkedInventory().setItem(slot,null);
     }
 
     @Override
@@ -64,6 +81,12 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
     @Override
     public void handleDrag(P context, MinecraftPlayerInventoryDragEvent event) {
         //Unused
+    }
+
+    @Override
+    public <O> O subscribeAndGet(P context, StreamOptional<O> stream) {
+        int slot = this.temporarySlots.get(context);
+        return context.subscribeAndGet(this, stream, o -> renderSlot(context,slot));
     }
 
     protected abstract ItemStack create(P context, int slot, V value);
