@@ -33,13 +33,6 @@ import java.util.function.Function;
 
 public interface MessageComponent<T extends MessageComponent<?>> extends Textable {
 
-    Collection<MessageComponent<?>> getExtras();
-
-    T addExtra(MessageComponent<?> component);
-
-    T removeExtra(MessageComponent<?> component);
-
-
     default String toPlainText(){
         return toPlainText(VariableSet.newEmptySet());
     }

@@ -63,21 +63,6 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     }
 
     @Override
-    public Collection<MessageComponent<?>> getExtras() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public MessageKeyComponent addExtra(MessageComponent<?> component) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public MessageKeyComponent removeExtra(MessageComponent<?> component) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void toPlainText(StringBuilder builder, VariableSet variables, Language language) {
         String result = McNative.getInstance().getRegistry().getService(MessageProvider.class).buildMessage(key,variables,language);
         builder.append(result);

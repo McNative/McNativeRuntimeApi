@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MessageComponentSet implements MessageComponent<MessageComponentSet> {
+public class MessageComponentSet implements MessageComponent<MessageComponentSet>, ExtraAbleComponent<MessageComponentSet> {
 
     private final List<MessageComponent<?>> components;
 

@@ -28,7 +28,7 @@ import org.mcnative.runtime.api.text.format.MessageFormatAble;
 
 import java.util.function.Consumer;
 
-public interface ChatComponent<T extends ChatComponent<?>> extends MessageComponent<T>, MessageFormatAble<T>, Castable<ChatComponent<?>> {
+public interface ChatComponent<T extends ChatComponent<?>> extends MessageComponent<T>, MessageFormatAble<T>,ExtraAbleComponent<T>, Castable<ChatComponent<?>> {
 
     TextEvent<ClickAction> getClickEvent();
 
