@@ -36,7 +36,7 @@ public class TextBuilder {
     private TextColor color;
     private Set<TextStyle> styling;
     private MessageComponent<?> currentComponent;
-    private MessageComponent<?>  mainComponent;
+    private ExtraAbleComponent<?>  mainComponent;
 
     private TextBuilder parent;
 
@@ -44,7 +44,7 @@ public class TextBuilder {
         this(new MessageComponentSet(),null);
     }
 
-    public TextBuilder(MessageComponent<?>  mainComponent, TextBuilder parent) {
+    public TextBuilder(ExtraAbleComponent<?>  mainComponent, TextBuilder parent) {
         this.mainComponent = mainComponent;
         this.parent = parent;
     }
