@@ -28,6 +28,8 @@ public class MinecraftPlayerTabCompleteResponsePacket implements MinecraftPacket
 
     private int transactionId;
     private Collection<String> suggestions;
+    private int start;
+    private int length;
 
     public int getTransactionId() {
         return transactionId;
@@ -43,5 +45,21 @@ public class MinecraftPlayerTabCompleteResponsePacket implements MinecraftPacket
 
     public void setSuggestions(Collection<String> suggestions) {
         this.suggestions = suggestions;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 }
