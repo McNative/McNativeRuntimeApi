@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.event.server;
+package org.mcnative.runtime.api.event.service;
 
 import net.pretronic.libraries.event.Cancellable;
 import net.pretronic.libraries.event.network.NetworkEvent;
