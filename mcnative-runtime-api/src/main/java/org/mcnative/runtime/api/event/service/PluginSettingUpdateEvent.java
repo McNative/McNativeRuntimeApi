@@ -19,15 +19,12 @@
 
 package org.mcnative.runtime.api.event.service;
 
-import net.pretronic.libraries.event.Cancellable;
 import net.pretronic.libraries.event.network.NetworkEvent;
-import net.pretronic.libraries.event.network.NetworkEventType;
 import org.mcnative.runtime.api.Setting;
 import org.mcnative.runtime.api.event.MinecraftEvent;
-import org.mcnative.runtime.api.network.component.server.MinecraftServer;
 
 @NetworkEvent(ignoreNetworkException = true)
-public interface PluginSettingUpdateEvent extends MinecraftEvent, Cancellable {
+public interface PluginSettingUpdateEvent extends MinecraftEvent {
 
     String getOwner();
 
