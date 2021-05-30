@@ -19,9 +19,13 @@
 
 package org.mcnative.runtime.api.event.player;
 
+import net.pretronic.libraries.event.Cancellable;
+
 import java.util.List;
 
-public interface MinecraftPlayerTabCompleteResponseEvent extends MinecraftPlayerTabCompleteEvent {
+public interface MinecraftPlayerTabCompleteResponseEvent extends MinecraftOnlinePlayerEvent, Cancellable {
+
+    String getCursor();
 
     List<String> getSuggestions();
 
