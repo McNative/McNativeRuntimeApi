@@ -22,12 +22,12 @@ package org.mcnative.runtime.api.protocol.packet.type.player.complete;
 
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 
-import java.util.Collection;
+import java.util.List;
 
 public class MinecraftPlayerTabCompleteResponsePacket implements MinecraftPacket {
 
     private int transactionId;
-    private Collection<String> suggestions;
+    private List<String> suggestions;
     private int start;
     private int length;
 
@@ -39,11 +39,11 @@ public class MinecraftPlayerTabCompleteResponsePacket implements MinecraftPacket
         this.transactionId = transactionId;
     }
 
-    public Collection<String> getSuggestions() {
+    public List<String> getSuggestions() {
         return suggestions;
     }
 
-    public void setSuggestions(Collection<String> suggestions) {
+    public void setSuggestions(List<String> suggestions) {
         this.suggestions = suggestions;
     }
 

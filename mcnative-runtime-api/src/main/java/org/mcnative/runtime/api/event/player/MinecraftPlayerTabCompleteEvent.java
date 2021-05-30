@@ -27,6 +27,6 @@ public interface MinecraftPlayerTabCompleteEvent extends MinecraftOnlinePlayerEv
 
     String getCursor();
 
-    List<String> getSuggestions();
+    void setCursor(String cursor);
 
 }
