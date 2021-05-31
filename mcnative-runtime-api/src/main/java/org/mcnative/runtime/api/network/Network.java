@@ -47,6 +47,8 @@ public interface Network extends ConnectableNetworkComponent {
 
     NetworkIdentifier getIdentifier(String name);
 
+    NetworkIdentifier getIdentifier(UUID id);
+
 
     Collection<ProxyServer> getProxies();
 

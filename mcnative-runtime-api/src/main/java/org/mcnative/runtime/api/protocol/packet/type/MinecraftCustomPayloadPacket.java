@@ -27,6 +27,5 @@ public class MinecraftCustomPayloadPacket implements MinecraftPacket {
     @Override
     public void validate() {
         if(channel == null) throw new MinecraftPacketValidationException("Channel cannot be null");
-        if(content == null) throw new MinecraftPacketValidationException("Content cannot be null");
     }
 }

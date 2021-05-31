@@ -24,18 +24,40 @@ import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.connection.PendingConnection;
 import org.mcnative.runtime.api.player.bossbar.BossBar;
 import org.mcnative.runtime.api.player.chat.ChatChannel;
+import org.mcnative.runtime.api.player.client.CustomClient;
+import org.mcnative.runtime.api.player.input.ConfirmResult;
+import org.mcnative.runtime.api.player.input.PlayerTextInputValidator;
+import org.mcnative.runtime.api.player.input.YesNoResult;
 import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
+import org.mcnative.runtime.api.text.components.MessageComponent;
+import org.mcnative.runtime.api.text.format.TextColor;
 import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, MinecraftConnection, PositionAble, CommandSender{
 
     PendingConnection getConnection();
 
     PlayerClientSettings getClientSettings();
+
+    CustomClient getCustomClient();
+
+
+    <T extends CustomClient> T getCustomClient(Class<T> clazz);
+
+    boolean isCustomClient();
+
+    boolean isCustomClient(String name);
+
+    boolean isCustomClient(Class<? extends CustomClient> clazz);
+
+    void setCustomClient(CustomClient client);
 
 
     ChatChannel getPrimaryChatChannel();
@@ -69,6 +91,27 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
 
     void sendResourcePackRequest(String url, String hash);
 
+
+    void requestTextInput(String label, String placeholder, Consumer<String> callback, PlayerTextInputValidator... validators);
+
+    void requestBooleanInput(String label, String placeholder, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+
+    void requestNumberInput(String label, String placeholder, Consumer<Long> callback, PlayerTextInputValidator... validators);
+
+    void requestDecimalInput(String label, String placeholder, Consumer<Double> callback, PlayerTextInputValidator... validators);
+
+    void requestColorInput(String label, String placeholder, Consumer<TextColor> callback, PlayerTextInputValidator... validators);
+
+    <T> void requestObjectInput(String label, String placeholder, Function<String, T> converter, Consumer<T> callback, PlayerTextInputValidator... validators);
+
+
+    void requestConfirmInput(String label, Consumer<ConfirmResult> callback, PlayerTextInputValidator... validators);
+
+    void requestYesNoInput(String label, Consumer<YesNoResult> callback, PlayerTextInputValidator... validators);
+
+    void requestOkInput(String label, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+
+    void requestButtonInput(String label, String buttonText, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
 
     @Override
     default boolean isPlayer(){

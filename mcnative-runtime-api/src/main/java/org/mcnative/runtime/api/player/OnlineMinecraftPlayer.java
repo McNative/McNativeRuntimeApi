@@ -27,7 +27,6 @@ import org.mcnative.runtime.api.network.component.server.ProxyServer;
 import org.mcnative.runtime.api.network.component.server.ServerConnectReason;
 import org.mcnative.runtime.api.network.component.server.ServerConnectResult;
 import org.mcnative.runtime.api.player.chat.ChatPosition;
-import org.mcnative.runtime.api.player.sound.Instrument;
 import org.mcnative.runtime.api.player.sound.Note;
 import org.mcnative.runtime.api.player.sound.SoundCategory;
 import org.mcnative.runtime.api.player.tablist.TablistEntry;

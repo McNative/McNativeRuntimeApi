@@ -197,7 +197,16 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
             Document[] extras = new Document[this.extras.size()];
             int index = 0;
             for (MessageComponent<?> extra : this.extras) {
-                extras[index] = extra.compile("value",connection,version, variables,language);
+                Document extraDocument = extra.compile("value",connection,version, variables,language);
+
+                if(extraDocument.isArray()){
+                    Document wrapped = Document.newDocument();
+                    wrapped.set("text","");
+                    wrapped.set("extra",extraDocument);
+                    extraDocument = wrapped;
+                }
+
+                extras[index] = extraDocument;
                 index++;
             }
             document.set("extra",extras);

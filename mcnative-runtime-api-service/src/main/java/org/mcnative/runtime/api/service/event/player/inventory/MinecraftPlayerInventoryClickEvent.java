@@ -24,6 +24,7 @@ import org.mcnative.runtime.api.service.inventory.ClickType;
 import org.mcnative.runtime.api.service.inventory.InventoryAction;
 import org.mcnative.runtime.api.service.inventory.SlotType;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
+import org.mcnative.runtime.api.service.inventory.type.PlayerInventory;
 
 public interface MinecraftPlayerInventoryClickEvent extends MinecraftPlayerInventoryInteractEvent {
 
@@ -48,4 +49,8 @@ public interface MinecraftPlayerInventoryClickEvent extends MinecraftPlayerInven
     boolean isRightClick();
 
     boolean isShiftClick();
+
+    default boolean isTopInventory(){
+        return getRawSlot() < getInventory().getSize();
+    }
 }

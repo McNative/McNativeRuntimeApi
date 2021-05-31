@@ -24,6 +24,7 @@ import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
+import org.mcnative.runtime.api.Setting;
 import org.mcnative.runtime.api.network.component.server.ServerStatusResponse;
 import org.mcnative.runtime.api.player.profile.GameProfile;
 import org.mcnative.runtime.api.serviceprovider.permission.Permissable;
@@ -59,7 +60,6 @@ public interface MinecraftPlayer extends Permissable, ServerStatusResponse.Playe
     PlayerDesign getDesign(MinecraftPlayer player);
 
     void setDesign(PlayerDesign design);
-
 
 
     Collection<PlayerSetting> getSettings();

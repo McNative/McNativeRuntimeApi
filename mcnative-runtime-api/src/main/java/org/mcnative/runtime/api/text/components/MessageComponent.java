@@ -20,22 +20,18 @@
 package org.mcnative.runtime.api.text.components;
 
 import net.pretronic.libraries.document.Document;
+import net.pretronic.libraries.message.DocumentTextableConverterFactory;
 import net.pretronic.libraries.message.Textable;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.language.Language;
 import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
+import org.mcnative.runtime.api.text.Text;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public interface MessageComponent<T extends MessageComponent<?>> extends Textable {
-
-    Collection<MessageComponent<?>> getExtras();
-
-    T addExtra(MessageComponent<?> component);
-
-    T removeExtra(MessageComponent<?> component);
-
 
     default String toPlainText(){
         return toPlainText(VariableSet.newEmptySet());
@@ -118,5 +114,22 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     default String toText(VariableSet variables){
         return toPlainText(variables);
+    }
+
+    @Override
+    default Document toDocument() {
+        return Document.newDocument().add("message", compile(MinecraftProtocolVersion.JE_1_16_4)).add("class", MessageComponent.class);
+    }
+
+    static void registerDocumentMessageComponentConverter() {
+        DocumentTextableConverterFactory.registerConverter(MessageComponent.class, new DocumentMessageComponentConverter());
+    }
+
+    class DocumentMessageComponentConverter implements Function<Document, MessageComponent<?>> {
+
+        @Override
+        public MessageComponent<?> apply(Document document) {
+            return Text.decompile(document.getDocument("message"));
+        }
     }
 }

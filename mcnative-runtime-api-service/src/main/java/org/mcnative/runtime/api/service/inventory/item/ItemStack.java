@@ -25,9 +25,11 @@ import org.mcnative.runtime.api.service.NBTTag;
 import org.mcnative.runtime.api.service.inventory.item.data.ItemData;
 import org.mcnative.runtime.api.service.inventory.item.material.Enchantment;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
+import org.mcnative.runtime.api.service.inventory.item.material.MaterialData;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface ItemStack {
 
@@ -36,6 +38,8 @@ public interface ItemStack {
     Material getMaterial();
 
     ItemData getData();
+
+    <T extends MaterialData> ItemStack getData(Class<T> dataClass, Consumer<T> materialData);
 
     int getAmount();
 
@@ -67,9 +71,20 @@ public interface ItemStack {
 
     ItemStack setTag(NBTTag tag);
 
+
     ItemStack addEnchantment(Enchantment enchantment);
 
     ItemStack addEnchantment(Enchantment enchantment, int level);
+
+    ItemStack removeEnchantment(Enchantment enchantment);
+
+    /**
+     *
+     * @param enchantment
+     * @return old enchantment level or 0
+     */
+    int removeEnchantmentSafe(Enchantment enchantment);
+
 
     ItemStack setLore(List<String> lore);
 
@@ -88,6 +103,8 @@ public interface ItemStack {
     ItemStack addFlags(ItemFlag... flags);
 
     ItemStack removeFlag(ItemFlag... flags);
+
+    ItemStack setGlowing(boolean glowing);
 
     static ItemStack newItemStack(Material material) {
         return McNative.getInstance().getObjectFactory().createObject(ItemStack.class,material);

@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupMessageComponent implements MessageComponent<GroupMessageComponent>{
+public class GroupMessageComponent implements MessageComponent<GroupMessageComponent>, ExtraAbleComponent<GroupMessageComponent>{
 
     private final Map<MessageComponent<?>,VariableSet> components;
 

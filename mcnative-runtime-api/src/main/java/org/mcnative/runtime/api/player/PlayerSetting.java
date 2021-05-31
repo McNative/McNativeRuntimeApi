@@ -21,35 +21,51 @@
 package org.mcnative.runtime.api.player;
 
 import net.pretronic.libraries.document.Document;
+import org.mcnative.runtime.api.Setting;
 
-public interface PlayerSetting {
+@Deprecated
+public interface PlayerSetting extends Setting {
 
+    @Deprecated
     int getId();
 
+    @Deprecated
     String getOwner();
 
+    @Deprecated
     String getKey();
 
+    @Deprecated
     String getValue();
 
+    @Deprecated
     Object getObjectValue();
 
+    @Deprecated
     byte getByteValue();
 
+    @Deprecated
     int getIntValue();
 
+    @Deprecated
     long getLongValue();
 
+    @Deprecated
     double getDoubleValue();
 
+    @Deprecated
     float getFloatValue();
 
+    @Deprecated
     boolean getBooleanValue();
 
+    @Deprecated
     Document getDocumentValue();
 
+    @Deprecated
     void setValue(Object value);
 
+    @Deprecated
     boolean equalsValue(Object value);
 
 }
