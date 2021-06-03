@@ -7,4 +7,11 @@ public interface PotionData {
     boolean isExtended();
 
     boolean isUpgraded();
+
+
+    PotionData setType(PotionEffectType effectType);
+
+    PotionData setExtended(boolean extended);
+
+    PotionData setUpgraded(boolean upgraded);
 }

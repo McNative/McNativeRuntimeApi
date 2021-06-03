@@ -1,10 +1,10 @@
 package org.mcnative.runtime.api.service.inventory.item.data;
 
-import java.awt.*;
+import org.mcnative.runtime.api.text.format.TextColor;
 
 public interface LeatherArmorItemData extends ItemData {
 
-    Color getColor();
+    TextColor getColor();
 
-    LeatherArmorItemData setColor(Color color);
+    LeatherArmorItemData setColor(TextColor color);
 }

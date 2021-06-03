@@ -26,6 +26,7 @@ import org.mcnative.runtime.api.service.inventory.item.data.ItemData;
 import org.mcnative.runtime.api.service.inventory.item.material.Enchantment;
 import org.mcnative.runtime.api.service.inventory.item.material.Material;
 import org.mcnative.runtime.api.service.inventory.item.material.MaterialData;
+import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public interface ItemStack {
 
     ItemStack setAmount(int amount);
 
-    ItemStack setDisplayName(String name);
+    ItemStack setDisplayName(MessageComponent<?> name);
 
     ItemStack setTag(NBTTag tag);
 
@@ -86,17 +87,17 @@ public interface ItemStack {
     int removeEnchantmentSafe(Enchantment enchantment);
 
 
-    ItemStack setLore(List<String> lore);
+    ItemStack setLore(List<MessageComponent<?>> lore);
 
-    ItemStack setLore(String... lore);
+    ItemStack setLore(MessageComponent<?>... lore);
 
-    ItemStack setLore(int index, String lore);
+    ItemStack setLore(int index, MessageComponent<?> lore);
 
-    ItemStack addLore(List<String> lore);
+    ItemStack addLore(List<MessageComponent<?>> lore);
 
-    ItemStack addLore(String... lore);
+    ItemStack addLore(MessageComponent<?>... lore);
 
-    ItemStack addLore(String lore);
+    ItemStack addLore(MessageComponent<?> lore);
 
     ItemStack setFlags(ItemFlag... flags);
 
