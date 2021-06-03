@@ -19,17 +19,23 @@
 
 package org.mcnative.runtime.api.player.profile;
 
+import java.net.URI;
 import java.util.UUID;
 
 public interface GameProfileLoader {
 
     GameProfileInfo getGameProfileInfo(String name);
 
+
     GameProfile getGameProfile(UUID uniqueId);
 
     GameProfile getGameProfileUncached(UUID uniqueId);
 
 
-    void clearCache();
+    GameProfile getGameProfile(URI url);
 
+    GameProfile getGameProfileUncached(URI url);
+
+
+    void clearCache();
 }
