@@ -20,6 +20,8 @@
 package org.mcnative.runtime.api.player;
 
 import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.connection.PendingConnection;
 import org.mcnative.runtime.api.player.bossbar.BossBar;
@@ -32,6 +34,7 @@ import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
 import org.mcnative.runtime.api.text.components.MessageComponent;
+import org.mcnative.runtime.api.text.components.SpecifiedPlayerMessageComponent;
 import org.mcnative.runtime.api.text.format.TextColor;
 import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
@@ -118,4 +121,12 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
         return true;
     }
 
+    default MessageComponent<?> toSpecifiedMessageComponent(MessageComponent<?> component, VariableSet variables) {
+        Validate.notNull(component, variables);
+        return new SpecifiedPlayerMessageComponent(this, component, variables);
+    }
+
+    default MessageComponent<?> toSpecifiedMessageComponent(MessageComponent<?> component) {
+        return toSpecifiedMessageComponent(component, VariableSet.createEmpty());
+    }
 }
