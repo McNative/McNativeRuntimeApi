@@ -203,5 +203,4 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     default boolean isPlayer() {
         return true;
     }
-
 }
