@@ -69,12 +69,12 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public C getContext(ConnectedMinecraftPlayer player) {
-        return Iterators.findOne(this.contexts, c -> c.getPlayer().equals(player));
+        return Iterators.findOne(this.contexts, c -> c.getPlayer().getUniqueId().equals(player.getUniqueId()));
     }
 
     @Override
     public void destroyContext(ConnectedMinecraftPlayer player) {
-        Iterators.removeOne(this.contexts, c -> c.getPlayer().equals(player));
+        Iterators.removeOne(this.contexts, c -> c.getPlayer().getUniqueId().equals(player.getUniqueId()));
     }
 
     @Override
@@ -116,6 +116,8 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
             nextPage.render(pageContext.getRawPageContext());
         }
+
+        this.contexts.add(context);
 
         ((Player)(player)).openInventory(pageContext.getLinkedInventory());
         return context;
