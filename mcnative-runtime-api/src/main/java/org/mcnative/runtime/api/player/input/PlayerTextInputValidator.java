@@ -6,6 +6,6 @@ public interface PlayerTextInputValidator {
 
     boolean isValid(String input);
 
-    MessageComponent<?> getErrorMessage(String message);
+    MessageComponent<?> getErrorMessage();
 
 }
