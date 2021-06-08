@@ -29,9 +29,9 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         this.contexts = new ArrayList<>();
 
         try {
-            constructor = rootClass.getDeclaredConstructor(ConnectedMinecraftPlayer.class);
+            constructor = rootClass.getDeclaredConstructor(Gui.class, ConnectedMinecraftPlayer.class);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("A McNative page context ("+rootClass+") requires an constructor with "+ConnectedMinecraftPlayer.class+" as parameter");
+            throw new IllegalArgumentException("A McNative page context ("+rootClass+") requires an constructor with "+Gui.class+ " and " + ConnectedMinecraftPlayer.class+" as parameter");
         }
         this.defaultPage = defaultPage;
     }
@@ -69,12 +69,12 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public C getContext(ConnectedMinecraftPlayer player) {
-        return Iterators.findOne(this.contexts, c -> c.getPlayer().equals(player));
+        return Iterators.findOne(this.contexts, c -> c.getPlayer().getUniqueId().equals(player.getUniqueId()));
     }
 
     @Override
     public void destroyContext(ConnectedMinecraftPlayer player) {
-        Iterators.removeOne(this.contexts, c -> c.getPlayer().equals(player));
+        Iterators.removeOne(this.contexts, c -> c.getPlayer().getUniqueId().equals(player.getUniqueId()));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         C context = getContext(player);
         if(context == null){
             try {
-                context = constructor.newInstance(player);
+                context = constructor.newInstance(this, player);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectException(e);
             }
@@ -116,6 +116,8 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
             nextPage.render(pageContext.getRawPageContext());
         }
+
+        this.contexts.add(context);
 
         ((Player)(player)).openInventory(pageContext.getLinkedInventory());
         return context;

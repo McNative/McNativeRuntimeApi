@@ -19,7 +19,6 @@ public class DefaultGuiManager implements GuiManager {
 
     public DefaultGuiManager() {
         this.guis = new ArrayList<>();
-        McNative.getInstance().getLocal().getEventBus().subscribe(ObjectOwner.SYSTEM,new GuiListener());
     }
 
     @Override
