@@ -6,18 +6,18 @@ import org.mcnative.runtime.api.text.Text;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 import org.mcnative.runtime.api.text.components.VariableSetMessageComponent;
 
-public class StringLengthPlayerTextInputValidator extends TextPlayerTextInputValidator {
+public class MaxStringLengthPlayerTextInputValidator extends TextPlayerTextInputValidator {
 
     private final int maxLength;
 
-    public StringLengthPlayerTextInputValidator(int maxLength, MessageComponent<?> errorMessage) {
+    public MaxStringLengthPlayerTextInputValidator(int maxLength, MessageComponent<?> errorMessage) {
         super(input -> input.length() <= maxLength, errorMessage);
         Validate.isTrue(maxLength > 0, "Max length must be greater then 0");
         this.maxLength = maxLength;
     }
 
-    public StringLengthPlayerTextInputValidator(int maxLength) {
-        this(maxLength, Text.ofMessageKey("mcnative.textinput.validator.error.stringLength"));
+    public MaxStringLengthPlayerTextInputValidator(int maxLength) {
+        this(maxLength, Text.ofMessageKey("mcnative.textinput.validator.error.stringLength.min"));
     }
 
     @Override
