@@ -17,7 +17,7 @@ public class MaxStringLengthPlayerTextInputValidator extends TextPlayerTextInput
     }
 
     public MaxStringLengthPlayerTextInputValidator(int maxLength) {
-        this(maxLength, Text.ofMessageKey("mcnative.textinput.validator.error.stringLength.min"));
+        this(maxLength, Text.ofMessageKey("mcnative.textinput.validator.error.stringLength.max"));
     }
 
     @Override
