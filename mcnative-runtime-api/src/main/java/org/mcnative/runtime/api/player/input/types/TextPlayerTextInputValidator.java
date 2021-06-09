@@ -8,8 +8,8 @@ import java.util.function.Predicate;
 
 public class TextPlayerTextInputValidator implements PlayerTextInputValidator {
 
-    private final Predicate<String> validator;
-    private final MessageComponent<?> errorMessage;
+    protected final Predicate<String> validator;
+    protected final MessageComponent<?> errorMessage;
 
     public TextPlayerTextInputValidator(Predicate<String> validator, MessageComponent<?> errorMessage) {
         Validate.notNull(validator, errorMessage);
