@@ -24,4 +24,8 @@ public class StringLengthPlayerTextInputValidator extends TextPlayerTextInputVal
     public MessageComponent<?> getErrorMessage() {
         return new VariableSetMessageComponent(this.errorMessage, VariableSet.create().add("maxLength", this.maxLength));
     }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
 }
