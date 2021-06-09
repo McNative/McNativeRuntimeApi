@@ -46,6 +46,7 @@ public interface LabyModClient extends CustomClient {
 
     void sendLabyModData(String message, Document document);
 
+    void sendInput(String label, String placeholder, String defaultValue, int maxLength, Consumer<String> callback);
 
     enum EnumBalanceType {
         CASH("cash"),
