@@ -4,6 +4,7 @@ import net.pretronic.libraries.document.Document;
 import net.pretronic.libraries.message.bml.variable.VariableSet;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.player.MinecraftPlayer;
+import org.mcnative.runtime.api.player.client.labymod.LabyModWidgetScreen;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.UUID;
@@ -44,9 +45,12 @@ public interface LabyModClient extends CustomClient {
     void sendVoiceChatMuteInfo(UUID playerId,boolean muted);
 
 
-    void sendLabyModData(String message, Document document);
-
     void sendInput(String label, String placeholder, String defaultValue, int maxLength, Consumer<String> callback);
+
+    void sendWidgetScreen(Consumer<LabyModWidgetScreen> widgetScreen);
+
+
+    void sendLabyModData(String message, Document document);
 
     enum EnumBalanceType {
         CASH("cash"),
