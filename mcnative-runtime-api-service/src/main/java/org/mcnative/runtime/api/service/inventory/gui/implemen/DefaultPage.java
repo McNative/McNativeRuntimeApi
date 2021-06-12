@@ -31,7 +31,7 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
         this.titleCreator = titleCreator;
 
         try {
-            constructor = contextClass.getDeclaredConstructor(GuiContext.class, Page.class);
+            constructor = contextClass.getDeclaredConstructor(rootContextClass, Page.class);
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("A McNative page context ("+contextClass+") requires an constructor with "+rootContextClass+" as parameter");
         }

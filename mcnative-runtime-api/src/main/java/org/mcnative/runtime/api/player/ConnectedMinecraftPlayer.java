@@ -20,6 +20,8 @@
 package org.mcnative.runtime.api.player;
 
 import net.pretronic.libraries.command.sender.CommandSender;
+import net.pretronic.libraries.message.bml.variable.VariableSet;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.runtime.api.connection.MinecraftConnection;
 import org.mcnative.runtime.api.connection.PendingConnection;
 import org.mcnative.runtime.api.player.bossbar.BossBar;
@@ -32,6 +34,7 @@ import org.mcnative.runtime.api.player.scoreboard.BelowNameInfo;
 import org.mcnative.runtime.api.player.scoreboard.sidebar.Sidebar;
 import org.mcnative.runtime.api.player.tablist.Tablist;
 import org.mcnative.runtime.api.text.components.MessageComponent;
+import org.mcnative.runtime.api.text.components.SpecifiedPlayerMessageComponent;
 import org.mcnative.runtime.api.text.format.TextColor;
 import org.mcnative.runtime.api.utils.positioning.PositionAble;
 
@@ -105,17 +108,25 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     <T> void requestObjectInput(String label, String placeholder, Function<String, T> converter, Consumer<T> callback, PlayerTextInputValidator... validators);
 
 
-    void requestConfirmInput(String label, Consumer<ConfirmResult> callback, PlayerTextInputValidator... validators);
+    void requestConfirmInput(String label, Consumer<ConfirmResult> callback);
 
-    void requestYesNoInput(String label, Consumer<YesNoResult> callback, PlayerTextInputValidator... validators);
+    void requestYesNoInput(String label, Consumer<YesNoResult> callback);
 
-    void requestOkInput(String label, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+    void requestOkInput(String label, Consumer<Boolean> callback);
 
-    void requestButtonInput(String label, String buttonText, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+    void requestButtonInput(String label, String buttonText, Consumer<Boolean> callback);
 
     @Override
     default boolean isPlayer(){
         return true;
     }
 
+    default MessageComponent<?> toSpecifiedMessageComponent(MessageComponent<?> component, VariableSet variables) {
+        Validate.notNull(component, variables);
+        return new SpecifiedPlayerMessageComponent(this, component, variables);
+    }
+
+    default MessageComponent<?> toSpecifiedMessageComponent(MessageComponent<?> component) {
+        return toSpecifiedMessageComponent(component, VariableSet.createEmpty());
+    }
 }

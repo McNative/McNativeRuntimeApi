@@ -96,7 +96,7 @@ public class GameProfile {
         public Property(String name, String value, String signature) {
             this.name = Objects.requireNonNull(name, "name");
             this.value = Objects.requireNonNull(value, "value");
-            this.signature = Objects.requireNonNull(signature, "signature");
+            this.signature = signature;
         }
 
         public String getName() {
