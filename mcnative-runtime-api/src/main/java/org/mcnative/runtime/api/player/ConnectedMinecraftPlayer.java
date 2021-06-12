@@ -108,13 +108,13 @@ public interface ConnectedMinecraftPlayer extends OnlineMinecraftPlayer, Minecra
     <T> void requestObjectInput(String label, String placeholder, Function<String, T> converter, Consumer<T> callback, PlayerTextInputValidator... validators);
 
 
-    void requestConfirmInput(String label, Consumer<ConfirmResult> callback, PlayerTextInputValidator... validators);
+    void requestConfirmInput(String label, Consumer<ConfirmResult> callback);
 
-    void requestYesNoInput(String label, Consumer<YesNoResult> callback, PlayerTextInputValidator... validators);
+    void requestYesNoInput(String label, Consumer<YesNoResult> callback);
 
-    void requestOkInput(String label, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+    void requestOkInput(String label, Consumer<Boolean> callback);
 
-    void requestButtonInput(String label, String buttonText, Consumer<Boolean> callback, PlayerTextInputValidator... validators);
+    void requestButtonInput(String label, String buttonText, Consumer<Boolean> callback);
 
     @Override
     default boolean isPlayer(){
