@@ -6,7 +6,7 @@ import org.mcnative.runtime.api.player.client.labymod.widget.Widget;
 
 public interface LabyModWidgetScreen {
 
-    <T extends Widget<T>> LabyModWidgetScreen addWidget(Class<T> widgetClass, Consumer<T> widget);
+    <T extends Widget<T>> LabyModWidgetScreen addWidget(String alias, Class<T> widgetClass, Consumer<T> widget);
 
     LabyModWidgetScreen getLayout(Consumer<WidgetScreenLayout> layout);
 
