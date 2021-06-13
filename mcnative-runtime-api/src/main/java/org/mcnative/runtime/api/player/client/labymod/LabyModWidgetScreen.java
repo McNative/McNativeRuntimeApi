@@ -11,4 +11,8 @@ public interface LabyModWidgetScreen {
     LabyModWidgetScreen getLayout(Consumer<WidgetScreenLayout> layout);
 
     List<Widget<?>> getWidgets();
+
+    void open();
+
+    void close();
 }
