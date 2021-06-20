@@ -2,7 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui;
 
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 
 import java.util.Collection;
 
@@ -11,11 +11,16 @@ public interface Gui<C extends GuiContext> {
     String getName();
 
 
-    Collection<Page<C,?>> getPages();
+    Collection<Screen<C,?>> getScreens();
 
-    Page<C,?> getPage(String name);
+    Screen<C,?> getScreen(String name);
 
-    <P extends PageContext<C>> Page<C,P> getPage(String name, Class<P> contextClass);
+    <P extends ScreenContext<C>> Screen<C,P> getScreen(String name, Class<P> contextClass);
+
+
+    Collection<Page<C>> getPages();
+
+    Page<C> getPage(String name);
 
     String getDefaultPage();
 
@@ -31,4 +36,5 @@ public interface Gui<C extends GuiContext> {
 
     C open(ConnectedMinecraftPlayer player,String page);
 
+    C openScreen(ConnectedMinecraftPlayer player, String screen, Object... arguments);
 }

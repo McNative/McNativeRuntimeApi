@@ -42,7 +42,7 @@ public class DefaultGuiManager implements GuiManager {
     public <C extends GuiContext> Gui<C> createGui(String name, Class<C> contextClass, Consumer<GuiBuilder<C>> builder) {
         DefaultGuiBuilder<C> guiBuilder = new DefaultGuiBuilder<>(contextClass);
         builder.accept(guiBuilder);
-        Gui<C> gui = new DefaultGui<>(name,contextClass,guiBuilder.getPages(),guiBuilder.getDefaultPage());
+        Gui<C> gui = new DefaultGui<>(name,contextClass,guiBuilder.getPages(),guiBuilder.getScreens(), guiBuilder.getDefaultPage());
         this.guis.add(gui);
         return gui;
     }

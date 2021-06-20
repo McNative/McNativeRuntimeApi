@@ -2,7 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui.context;
 
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.InventoryOwner;
-import org.mcnative.runtime.api.service.inventory.gui.Page;
+import org.mcnative.runtime.api.service.inventory.gui.Screen;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.stream.StreamOptional;
 import org.mcnative.runtime.api.stream.StreamSubscription;
@@ -14,16 +14,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class PageContext<C extends GuiContext> implements InventoryOwner {
+public class ScreenContext<C extends GuiContext> implements InventoryOwner {
 
     private final static Function<Element<?, ?>,Collection<StreamSubscription<?>>> CREATOR = element -> new ArrayList<>();
 
     private final C guiContext;
     private Inventory inventory;
-    private final Page<C, ?> page;
+    private final Screen<C, ?> page;
     private final Map<Element<C,?>,Collection<StreamSubscription<?>>> subscriptions;
 
-    public PageContext(C guiContext, Page<C, ?> page) {
+    public ScreenContext(C guiContext, Screen<C, ?> page) {
         this.guiContext = guiContext;
         this.page = page;
         this.subscriptions = new ConcurrentHashMap<>();
@@ -34,11 +34,11 @@ public class PageContext<C extends GuiContext> implements InventoryOwner {
     }
 
     @SuppressWarnings("unchecked")
-    public  <T extends PageContext<?>> T getRawPageContext() {
+    public  <T extends ScreenContext<?>> T getRawPageContext() {
         return (T) this;
     }
 
-    public Page<C, ?> getPage() {
+    public Screen<C, ?> getPage() {
         return page;
     }
 

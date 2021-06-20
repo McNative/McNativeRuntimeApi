@@ -6,39 +6,39 @@ import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerIn
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.InventoryOwner;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 
 public class GuiListener {
 
     @Listener(priority = EventPriority.LOW)
     public void onClick(MinecraftPlayerInventoryClickEvent event){
         InventoryOwner owner = event.getInventory().getOwner();
-        if(owner instanceof PageContext<?>){
-            PageContext<?> pageContext = (PageContext<?>) owner;
-            pageContext.getPage().handleClick(pageContext.getRawPageContext(), event);
+        if(owner instanceof ScreenContext<?>){
+            ScreenContext<?> screenContext = (ScreenContext<?>) owner;
+            screenContext.getPage().handleClick(screenContext.getRawPageContext(), event);
         }
     }
 
     @Listener(priority = EventPriority.LOW)
     public void onDrag(MinecraftPlayerInventoryDragEvent event){
         InventoryOwner owner = event.getInventory().getOwner();
-        if(owner instanceof PageContext<?>){
-            PageContext<?> pageContext = (PageContext<?>) owner;
-            pageContext.getPage().handleDrag(pageContext.getRawPageContext(), event);
+        if(owner instanceof ScreenContext<?>){
+            ScreenContext<?> screenContext = (ScreenContext<?>) owner;
+            screenContext.getPage().handleDrag(screenContext.getRawPageContext(), event);
         }
     }
 
     @Listener(priority = EventPriority.LOW)
     public void onDrag(MinecraftPlayerInventoryCloseEvent event){
         InventoryOwner owner = event.getInventory().getOwner();
-        if(owner instanceof PageContext<?>){
-            PageContext<?> pageContext = (PageContext<?>) owner;
-            pageContext.getPage().handleClose(pageContext.getRawPageContext(), event);
+        if(owner instanceof ScreenContext<?>){
+            ScreenContext<?> screenContext = (ScreenContext<?>) owner;
+            screenContext.getPage().handleClose(screenContext.getRawPageContext(), event);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends PageContext<?>> T getPageContext(PageContext<?> context) {
+    private <T extends ScreenContext<?>> T getPageContext(ScreenContext<?> context) {
         return (T) context;
     }
 }

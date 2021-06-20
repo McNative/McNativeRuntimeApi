@@ -2,7 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui.pane;
 
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> implements Element<C,P> {
+public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V> implements Element<C,P> {
 
     private final Function<P,ListSource<V>> sourceProvider;
     private final int[] slots;

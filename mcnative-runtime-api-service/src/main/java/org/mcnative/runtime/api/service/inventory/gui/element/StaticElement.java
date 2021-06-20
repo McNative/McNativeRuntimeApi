@@ -3,10 +3,10 @@ package org.mcnative.runtime.api.service.inventory.gui.element;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public class StaticElement<C extends GuiContext, P extends PageContext<C>> implements Element<C,P> {
+public class StaticElement<C extends GuiContext, P extends ScreenContext<C>> implements Element<C,P> {
 
     private final ItemStack itemStack;
     private final int[] slots;

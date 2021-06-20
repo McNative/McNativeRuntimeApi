@@ -4,38 +4,33 @@ import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryCloseEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
-import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
+import org.mcnative.runtime.api.service.inventory.gui.Screen;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 
-public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implements Page<C,P> {
+public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> implements Screen<C,P> {
 
     private final String name;
     private final int size;
-    private final Constructor<P> constructor;
     private final Collection<Element<C,P>> elements;
     private final Function<P, String> titleCreator;
+    private final Class<?> rootContextClass;
+    private final Class<?> contextClass;
 
-    public DefaultPage(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P>> elements, Function<P, String> titleCreator) {
+    public DefaultScreen(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P>> elements, Function<P, String> titleCreator) {
         this.name = name;
         this.size = size;
         this.elements = elements;
         this.titleCreator = titleCreator;
-
-        try {
-            constructor = contextClass.getDeclaredConstructor(rootContextClass, Page.class);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("A McNative page context ("+contextClass+") requires an constructor with "+rootContextClass+" as parameter");
-        }
-
+        this.rootContextClass = rootContextClass;
+        this.contextClass = contextClass;
     }
 
     @Override
@@ -54,12 +49,32 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     }
 
     @Override
-    public P createContext(C rootContext) {
+    public P createContext(C rootContext, Object... arguments) {
         try {
-            return constructor.newInstance(rootContext, this);
+            return getConstructor(arguments).newInstance(rootContext, this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new ReflectException(e);
         }
+    }
+
+    private Constructor<P> getConstructor(Object[] arguments) {
+        outer:
+        for (Constructor<?> constructor : contextClass.getDeclaredConstructors()) {
+            int index = 0;
+            for (Class<?> parameterType : constructor.getParameterTypes()) {
+                if(index == 0 && parameterType != rootContextClass) {
+                    continue outer;
+                } else if(index == 1 && parameterType != Page.class) {
+                    continue outer;
+                } else {
+                   Class<?> argumentType = arguments[index-2].getClass();
+                   if(!argumentType.equals(parameterType)) continue outer;
+                }
+                index++;
+            }
+            return (Constructor<P>) constructor;
+        }
+        throw new IllegalArgumentException("A McNative page context ("+contextClass+") requires an constructor with "+rootContextClass+" as parameter");
     }
 
     @Override
@@ -101,7 +116,7 @@ public class DefaultPage<C extends GuiContext,P extends PageContext<C>> implemen
     @Override
     public void handleClose(P context, MinecraftPlayerInventoryCloseEvent event) {
         context.destroy();
-        context.root().setPageContext(null);
+        //context.root().setScreenContext(null);
     }
 
     @Override
