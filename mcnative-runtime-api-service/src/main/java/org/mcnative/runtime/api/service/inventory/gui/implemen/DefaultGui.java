@@ -98,8 +98,11 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
     @Override
     public C open(ConnectedMinecraftPlayer player, String page) {
         C context = getOrCreateContext(player);
+        if(page == null) {
+            page = getDefaultPage();
+        }
 
-        Page<C> nextPage = getNextPage(page);
+        Page<C> nextPage = getPage(page);
         if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
 
         String screenName = nextPage.open(context);
@@ -138,9 +141,5 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         screen.render(screenContext.getRawPageContext());
 
         ((Player)(player)).openInventory(screenContext.getLinkedInventory());
-    }
-
-    private Page<C> getNextPage(String pageName) {//last check
-        return getPage(pageName != null ? pageName : getDefaultPage());
     }
 }
