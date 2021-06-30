@@ -3,6 +3,7 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
+import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
 import org.mcnative.runtime.api.service.entity.living.Player;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
@@ -136,7 +137,7 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
         if(screen == null) throw new IllegalArgumentException("Screen "+screenName+" does not exist");
         ScreenContext<C> screenContext = screen.createContext(context, arguments);
 
-        Inventory inventory = Inventory.newInventory(Inventory.class, screenContext, screen.getSize(), screen.createPageTitle(screenContext.getRawPageContext()));
+        Inventory inventory = Inventory.newInventory(Inventory.class, screenContext, screen.getSize(), screen.createPageTitle(screenContext.getRawPageContext()).compileToString(MinecraftProtocolVersion.JE_1_7));
         screenContext.setInventory(inventory);
         screen.render(screenContext.getRawPageContext());
 

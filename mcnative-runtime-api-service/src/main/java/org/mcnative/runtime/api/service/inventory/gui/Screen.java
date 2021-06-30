@@ -6,6 +6,7 @@ import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerIn
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
+import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.Collection;
 
@@ -27,5 +28,5 @@ public interface Screen<C extends GuiContext, P extends ScreenContext<C>> {
 
     void handleClose(P context, MinecraftPlayerInventoryCloseEvent event);
 
-    String createPageTitle(P context);
+    MessageComponent<?> createPageTitle(P context);
 }
