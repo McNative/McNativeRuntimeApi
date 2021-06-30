@@ -109,7 +109,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
     @Override
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
         for (Element<C,P> element : elements) {
-            for (int slot : element.getSlots()){
+            for (int slot : element.getSlots(context)){
                 if(slot == event.getRawSlot()){
                     event.setCancelled(true);
                     element.handleClick(context,event);
@@ -124,7 +124,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
         for (Integer inventorySlot : event.getRawSlots()) {
             outer:
             for (Element<C,P> element : elements) {
-                for (int slot : element.getSlots()){
+                for (int slot : element.getSlots(context)){
                     if(slot == inventorySlot){
                         event.setCancelled(true);
                         element.handleDrag(context,event);
