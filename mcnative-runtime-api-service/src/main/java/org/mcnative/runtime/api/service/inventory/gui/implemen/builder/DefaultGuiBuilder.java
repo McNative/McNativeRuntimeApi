@@ -9,6 +9,7 @@ import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.implemen.DefaultScreen;
 import org.mcnative.runtime.api.service.inventory.gui.implemen.FunctionPage;
 import org.mcnative.runtime.api.service.inventory.gui.implemen.SimplePage;
+import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,12 +42,12 @@ public class DefaultGuiBuilder<C extends GuiContext> implements GuiBuilder<C> {
     }
 
     @Override
-    public Screen<C, ScreenContext<C>> createScreen(String name, int size, Function<ScreenContext<C>, String> titleCreator, Consumer<ElementList<C, ScreenContext<C>>> elements) {
+    public Screen<C, ScreenContext<C>> createScreen(String name, int size, Function<ScreenContext<C>, MessageComponent<?>> titleCreator, Consumer<ElementList<C, ScreenContext<C>>> elements) {
         return createScreen(name,size, null, titleCreator, elements);
     }
 
     @Override
-    public <P extends ScreenContext<C>> Screen<C, P> createScreen(String name, int size, Class<P> contextClass0, Function<P, String> titleCreator, Consumer<ElementList<C, P>> elements) {
+    public <P extends ScreenContext<C>> Screen<C, P> createScreen(String name, int size, Class<P> contextClass0, Function<P, MessageComponent<?>> titleCreator, Consumer<ElementList<C, P>> elements) {
         Class<P> contextClass = contextClass0;
         if(contextClass == null) {
            contextClass = getClazz( ScreenContext.class);
