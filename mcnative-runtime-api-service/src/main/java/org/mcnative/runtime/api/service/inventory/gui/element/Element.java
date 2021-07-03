@@ -8,7 +8,7 @@ import org.mcnative.runtime.api.stream.StreamOptional;
 
 public interface Element<C extends GuiContext, P extends ScreenContext<C>> {
 
-    int[] getSlots();
+    int[] getSlots(P context);
 
     void render(P context);
 

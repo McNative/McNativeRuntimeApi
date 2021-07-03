@@ -8,6 +8,7 @@ import org.mcnative.runtime.api.service.inventory.gui.Screen;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
+import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -20,11 +21,11 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
     private final String name;
     private final int size;
     private final Collection<Element<C,P>> elements;
-    private final Function<P, String> titleCreator;
+    private final Function<P, MessageComponent<?>> titleCreator;
     private final Class<?> rootContextClass;
     private final Class<?> contextClass;
 
-    public DefaultScreen(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P>> elements, Function<P, String> titleCreator) {
+    public DefaultScreen(String name, int size, Class<C> rootContextClass, Class<P> contextClass, Collection<Element<C,P>> elements, Function<P, MessageComponent<?>> titleCreator) {
         this.name = name;
         this.size = size;
         this.elements = elements;
@@ -109,7 +110,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
     @Override
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
         for (Element<C,P> element : elements) {
-            for (int slot : element.getSlots()){
+            for (int slot : element.getSlots(context)){
                 if(slot == event.getRawSlot()){
                     event.setCancelled(true);
                     element.handleClick(context,event);
@@ -124,7 +125,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
         for (Integer inventorySlot : event.getRawSlots()) {
             outer:
             for (Element<C,P> element : elements) {
-                for (int slot : element.getSlots()){
+                for (int slot : element.getSlots(context)){
                     if(slot == inventorySlot){
                         event.setCancelled(true);
                         element.handleDrag(context,event);
@@ -142,7 +143,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
     }
 
     @Override
-    public String createPageTitle(P context) {
+    public MessageComponent<?> createPageTitle(P context) {
         return this.titleCreator.apply(context);
     }
 }

@@ -11,20 +11,19 @@ public class StaticElement<C extends GuiContext, P extends ScreenContext<C>> imp
     private final ItemStack itemStack;
     private final int[] slots;
 
-
     public StaticElement(ItemStack itemStack, int[] slots) {
         this.itemStack = itemStack;
         this.slots = slots;
     }
 
     @Override
-    public int[] getSlots() {
+    public int[] getSlots(P context) {
         return this.slots;
     }
 
     @Override
     public void render(P context) {
-        for (int slot : slots) context.getLinkedInventory().setItem(slot,itemStack);
+        for (int slot : getSlots(context)) context.getLinkedInventory().setItem(slot,itemStack);
     }
 
     @Override

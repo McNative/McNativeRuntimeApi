@@ -28,7 +28,7 @@ public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V
     }
 
     @Override
-    public int[] getSlots() {
+    public int[] getSlots(P context) {
         return this.slots;
     }
 
@@ -45,7 +45,7 @@ public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V
     private void renderInternal(P context,List<V> entries){
         int index = 0;
         for (V object : entries) {
-            int slot = slots[index];
+            int slot = getSlots(context)[index];
             this.temporarySlots.put(context,slot);
             context.getLinkedInventory().setItem(slot,create(context,slot,object));
             index++;
@@ -53,9 +53,9 @@ public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V
 
         this.temporarySlots.remove(context);
 
-        if(index < slots.length){
-            for (int i = index; i < slots.length; i++) {
-                int slot = slots[i];
+        if(index < getSlots(context).length){
+            for (int i = index; i < getSlots(context).length; i++) {
+                int slot = getSlots(context)[i];
                 context.getLinkedInventory().setItem(slot,null);
             }
         }
@@ -69,7 +69,7 @@ public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
         ListSource<V> source = sourceProvider.apply(context);
         int index = 0;
-        for (int slot : slots) {
+        for (int slot : getSlots(context)) {
             if(slot == event.getRawSlot()) break;
             index++;
         }

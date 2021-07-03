@@ -26,7 +26,7 @@
     <groupId>org.mcnative.runtime.api</groupId>
     <artifactId>McNativeRuntimeApi</artifactId>
     <packaging>pom</packaging>
-    <version>1.6.6.190-SNAPSHOT</version>
+    <version>1.6.10.196-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -50,7 +50,7 @@
         <dependency.placeholderapi.version>2.10.9</dependency.placeholderapi.version>
         <dependency.cloudnet.v2.version>2.1.17</dependency.cloudnet.v2.version>
 
-        <dependency.pretronic.libraries>1.2.102.246-SNAPSHOT</dependency.pretronic.libraries>
+        <dependency.pretronic.libraries>1.2.108.252-SNAPSHOT</dependency.pretronic.libraries>
         <dependency.pretronic.databasequery>1.2.62.90-SNAPSHOT</dependency.pretronic.databasequery>
 
         <dependency.hikaricp>3.4.1</dependency.hikaricp>
