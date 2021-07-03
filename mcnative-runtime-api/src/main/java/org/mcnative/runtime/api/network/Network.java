@@ -59,6 +59,11 @@ public interface Network extends ConnectableNetworkComponent {
     ProxyServer getProxy(UUID uniqueId);
 
 
+    ProxyServer getLeaderProxy();
+
+    boolean isLeaderProxy(ProxyServer server);
+
+
     Collection<MinecraftServer> getServers();
 
     Collection<MinecraftServer> getServers(String group);

@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 29.12.19, 15:03
+ * @since 03.01.20, 23:31
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,15 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.network.component.server;
+package org.mcnative.runtime.api.event.server;
 
-import org.mcnative.runtime.api.McNative;
-import org.mcnative.runtime.api.network.component.ConnectableNetworkComponent;
+import net.pretronic.libraries.event.Cancellable;
+import org.mcnative.runtime.api.event.MinecraftEvent;
+import org.mcnative.runtime.api.network.component.server.MinecraftServer;
+import org.mcnative.runtime.api.network.component.server.ProxyServer;
 
-import java.net.InetSocketAddress;
+public interface ProxyLeaderElectEvent extends MinecraftEvent, Cancellable {
 
-public interface ProxyServer extends ConnectableNetworkComponent {
-
-    InetSocketAddress getAddress();
-
-    default boolean isLeader(){
-        return McNative.getInstance().getNetwork().isLeaderProxy(this);
-    }
+    ProxyServer getProxy();
 
 }
