@@ -19,5 +19,24 @@
 
 package org.mcnative.runtime.api.service.world.block;
 
-public interface BlockDirection {
+public enum BlockDirection {
+
+    DOWN,
+    EAST,
+    EAST_NORTH_EAST,
+    EAST_SOUTH_EAST,
+    NORTH,
+    NORTH_EAST,
+    NORTH_NORTH_EAST,
+    NORTH_NORTH_WEST,
+    NORTH_WEST,
+    SELF,
+    SOUTH,
+    SOUTH_EAST,
+    SOUTH_SOUTH_EAST,
+    SOUTH_SOUTH_WEST,
+    SOUTH_WEST,
+    UP,
+    WEST_NORTH_WEST,
+    WEST_SOUTH_WEST
 }
