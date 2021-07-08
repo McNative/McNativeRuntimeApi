@@ -37,6 +37,7 @@ public enum BlockDirection {
     SOUTH_SOUTH_WEST,
     SOUTH_WEST,
     UP,
+    WEST,
     WEST_NORTH_WEST,
     WEST_SOUTH_WEST
 }
