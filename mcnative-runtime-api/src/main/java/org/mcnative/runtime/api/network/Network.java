@@ -92,10 +92,6 @@ public interface Network extends ConnectableNetworkComponent {
         sendBroadcastMessage(channel,request);
     }
 
-    default CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        throw new UnsupportedOperationException("It is not possible to broadcast a query message");
-    }
-
 
     Collection<NetworkSynchronisationCallback> getStatusCallbacks();
 
