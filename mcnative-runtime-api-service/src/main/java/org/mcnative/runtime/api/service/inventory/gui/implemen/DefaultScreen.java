@@ -139,7 +139,7 @@ public class DefaultScreen<C extends GuiContext,P extends ScreenContext<C>> impl
     @Override
     public void handleClose(P context, MinecraftPlayerInventoryCloseEvent event) {
         context.destroy();
-        //context.root().setScreenContext(null);
+        context.root().setScreenContext(null);
     }
 
     @Override
