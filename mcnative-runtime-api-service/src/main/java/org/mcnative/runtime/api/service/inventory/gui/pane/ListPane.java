@@ -2,7 +2,7 @@ package org.mcnative.runtime.api.service.inventory.gui.pane;
 
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> implements Element<C,P> {
+public abstract class ListPane<C extends GuiContext,P extends ScreenContext<C>,V> implements Element<C,P> {
 
     private final Function<P,ListSource<V>> sourceProvider;
     private final int[] slots;
@@ -28,7 +28,7 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
     }
 
     @Override
-    public int[] getSlots() {
+    public int[] getSlots(P context) {
         return this.slots;
     }
 
@@ -45,7 +45,7 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
     private void renderInternal(P context,List<V> entries){
         int index = 0;
         for (V object : entries) {
-            int slot = slots[index];
+            int slot = getSlots(context)[index];
             this.temporarySlots.put(context,slot);
             context.getLinkedInventory().setItem(slot,create(context,slot,object));
             index++;
@@ -53,9 +53,9 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
 
         this.temporarySlots.remove(context);
 
-        if(index < slots.length){
-            for (int i = index; i < slots.length; i++) {
-                int slot = slots[i];
+        if(index < getSlots(context).length){
+            for (int i = index; i < getSlots(context).length; i++) {
+                int slot = getSlots(context)[i];
                 context.getLinkedInventory().setItem(slot,null);
             }
         }
@@ -69,7 +69,7 @@ public abstract class ListPane<C extends GuiContext,P extends PageContext<C>,V> 
     public void handleClick(P context, MinecraftPlayerInventoryClickEvent event) {
         ListSource<V> source = sourceProvider.apply(context);
         int index = 0;
-        for (int slot : slots) {
+        for (int slot : getSlots(context)) {
             if(slot == event.getRawSlot()) break;
             index++;
         }

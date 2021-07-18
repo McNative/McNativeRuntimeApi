@@ -3,12 +3,14 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen;
 import net.pretronic.libraries.utility.Iterators;
 import net.pretronic.libraries.utility.reflect.ReflectException;
 import org.mcnative.runtime.api.player.ConnectedMinecraftPlayer;
+import org.mcnative.runtime.api.protocol.MinecraftProtocolVersion;
 import org.mcnative.runtime.api.service.entity.living.Player;
 import org.mcnative.runtime.api.service.inventory.Inventory;
 import org.mcnative.runtime.api.service.inventory.gui.Gui;
 import org.mcnative.runtime.api.service.inventory.gui.Page;
+import org.mcnative.runtime.api.service.inventory.gui.Screen;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,13 +21,15 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     private final String name;
     private final Constructor<C> constructor;
-    private final Collection<Page<C, ?>> pages;
+    private final Collection<Page<C>> pages;
+    private final Collection<Screen<C, ?>> screens;
     private final Collection<C> contexts;
     private final String defaultPage;
 
-    public DefaultGui(String name,Class<C> rootClass, Collection<Page<C, ?>> pages, String defaultPage) {
+    public DefaultGui(String name, Class<C> rootClass, Collection<Page<C>> pages, Collection<Screen<C, ?>> screens, String defaultPage) {
         this.name = name;
         this.pages = pages;
+        this.screens = screens;
         this.contexts = new ArrayList<>();
 
         try {
@@ -42,19 +46,29 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
     }
 
     @Override
-    public Collection<Page<C, ?>> getPages() {
-        return pages;
+    public Collection<Screen<C, ?>> getScreens() {
+        return this.screens;
     }
 
     @Override
-    public Page<C, ?> getPage(String name) {
-        return Iterators.findOne(this.pages, page -> page.getName().equalsIgnoreCase(name));
+    public Screen<C, ?> getScreen(String name) {
+        return Iterators.findOne(this.screens, screen -> screen.getName().equalsIgnoreCase(name));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <P extends PageContext<C>> Page<C, P> getPage(String name, Class<P> contextClass) {
-        return (Page<C, P>) getPage(name);
+    public <P extends ScreenContext<C>> Screen<C, P> getScreen(String name, Class<P> contextClass) {
+        return (Screen<C, P>) getScreen(name);
+    }
+
+    @Override
+    public Collection<Page<C>> getPages() {
+        return pages;
+    }
+
+    @Override
+    public Page<C> getPage(String name) {
+        return Iterators.findOne(this.pages, page -> page.getName().equalsIgnoreCase(name));
     }
 
     @Override
@@ -84,85 +98,49 @@ public class DefaultGui<C extends GuiContext> implements Gui<C> {
 
     @Override
     public C open(ConnectedMinecraftPlayer player, String page) {
+        C context = getOrCreateContext(player);
+        if(page == null) {
+            page = getDefaultPage();
+        }
+
+        Page<C> nextPage = getPage(page);
+        if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
+
+        String screenName = nextPage.open(context);
+        openScreen(player, screenName, context);
+
+        return context;
+    }
+
+    @Override
+    public C openScreen(ConnectedMinecraftPlayer player, String screenName, Object... arguments) {
+        C context = getOrCreateContext(player);
+        openScreen(player, screenName, context, arguments);
+        return context;
+    }
+
+    private C getOrCreateContext(ConnectedMinecraftPlayer player) {
         C context = getContext(player);
         if(context == null){
             try {
                 context = constructor.newInstance(this, player);
+                this.contexts.add(context);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new ReflectException(e);
             }
         }
-
-        Page<C,?> nextPage;
-        PageContext<? extends GuiContext> pageContext = null;
-        if(page != null) {
-            nextPage = getPage(page);
-
-        } else if(context.getPageContext() != null) {
-            nextPage = (Page<C, ?>) context.getPageContext().getPage();
-            pageContext = context.getPageContext();
-        } else {
-            nextPage = getPage(defaultPage);
-        }
-
-        if(nextPage == null) throw new IllegalArgumentException("Page "+page+" does not exist");
-
-        if(pageContext == null) {
-            pageContext = nextPage.createContext(context);
-            context.setPageContext(pageContext);
-
-            Inventory inventory = Inventory.newInventory(Inventory.class, pageContext, nextPage.getSize(), nextPage.createPageTitle(pageContext.getRawPageContext()));
-            pageContext.setInventory(inventory);
-
-            nextPage.render(pageContext.getRawPageContext());
-        }
-
-        this.contexts.add(context);
-
-        ((Player)(player)).openInventory(pageContext.getLinkedInventory());
         return context;
     }
 
-    /*public final class PlayerContextHolder implements InventoryOwner {
+    private void openScreen(ConnectedMinecraftPlayer player, String screenName, C context, Object... arguments) {
+        Screen<C, ?> screen = getScreen(screenName);
+        if(screen == null) throw new IllegalArgumentException("Screen "+screenName+" does not exist");
+        ScreenContext<C> screenContext = screen.createContext(context, arguments);
 
-        private final C context;
-        private Page<?> page;
-        private GuiContext pageContext;
-        private Inventory inventory;
+        Inventory inventory = Inventory.newInventory(Inventory.class, screenContext, screen.getSize(), screen.createPageTitle(screenContext.getRawPageContext()).compileToString(MinecraftProtocolVersion.JE_1_7));
+        screenContext.setInventory(inventory);
+        screen.render(screenContext.getRawPageContext());
 
-        public PlayerContextHolder(C context) {
-            this.context = context;
-        }
-
-        @Override
-        public Inventory getLinkedInventory() {
-            return inventory;
-        }
-
-        public void handleClick(MinecraftPlayerInventoryClickEvent event){
-            if(event.isTopInventory()){
-                event.setCancelled(true);
-                page.handleClick(getPageContext(),event);
-            }
-        }
-
-        public void handleDrag(MinecraftPlayerInventoryDragEvent event){
-            for (Integer rawSlot : event.getRawSlots()) {
-                if(rawSlot < event.getInventory().getSize()) {
-                    event.setCancelled(true);
-                    page.handleDrag(getPageContext(),event);
-                    return;
-                }
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private  <P extends GuiContext > P getPageContext() {
-            return (P) pageContext;
-        }
-
-        private void createPageContext(){
-            pageContext = page.createContext(context);
-        }
-    }*/
+        ((Player)(player)).openInventory(screenContext.getLinkedInventory());
+    }
 }

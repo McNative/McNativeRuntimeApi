@@ -3,12 +3,12 @@ package org.mcnative.runtime.api.service.inventory.gui.element;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.stream.StreamOptional;
 
-public interface Element<C extends GuiContext, P extends PageContext<C>> {
+public interface Element<C extends GuiContext, P extends ScreenContext<C>> {
 
-    int[] getSlots();
+    int[] getSlots(P context);
 
     void render(P context);
 

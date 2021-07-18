@@ -47,7 +47,7 @@ public interface LabyModClient extends CustomClient {
 
     void sendInput(String label, String placeholder, String defaultValue, int maxLength, Consumer<String> callback);
 
-    void sendWidgetScreen(Consumer<LabyModWidgetScreen> widgetScreen);
+    LabyModWidgetScreen newWidgetScreen();
 
 
     void sendLabyModData(String message, Document document);

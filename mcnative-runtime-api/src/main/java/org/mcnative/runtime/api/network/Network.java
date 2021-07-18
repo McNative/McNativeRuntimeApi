@@ -59,6 +59,11 @@ public interface Network extends ConnectableNetworkComponent {
     ProxyServer getProxy(UUID uniqueId);
 
 
+    ProxyServer getLeaderProxy();
+
+    boolean isLeaderProxy(ProxyServer server);
+
+
     Collection<MinecraftServer> getServers();
 
     Collection<MinecraftServer> getServers(String group);
@@ -85,10 +90,6 @@ public interface Network extends ConnectableNetworkComponent {
 
     default void sendMessage(String channel, Document request){
         sendBroadcastMessage(channel,request);
-    }
-
-    default CompletableFuture<Document> sendQueryMessageAsync(String channel, Document request) {
-        throw new UnsupportedOperationException("It is not possible to broadcast a query message");
     }
 
 

@@ -7,7 +7,7 @@ public class GuiContext {
 
     private final Gui<?> gui;
     private final ConnectedMinecraftPlayer player;
-    private PageContext<?> pageContext;
+    private ScreenContext<?> screenContext;
 
     public GuiContext(Gui<?> gui, ConnectedMinecraftPlayer player) {
         this.gui = gui;
@@ -22,15 +22,15 @@ public class GuiContext {
         return this.player;
     }
 
-    public PageContext<?> getPageContext() {
-        return pageContext;
+    public ScreenContext<?> getScreenContext() {
+        return screenContext;
     }
 
     public boolean hasPageOpen(){
-        return pageContext != null;
+        return screenContext != null;
     }
 
-    public void setPageContext(PageContext<?> pageContext) {
-        this.pageContext = pageContext;
+    public void setScreenContext(ScreenContext<?> screenContext) {
+        this.screenContext = screenContext;
     }
 }

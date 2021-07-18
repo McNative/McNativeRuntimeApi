@@ -2,13 +2,13 @@ package org.mcnative.runtime.api.service.inventory.gui.implemen.builder;
 
 import org.mcnative.runtime.api.service.inventory.gui.builder.ElementList;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.gui.element.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefaultElementList<C extends GuiContext,P extends PageContext<C>> implements ElementList<C,P> {
+public class DefaultElementList<C extends GuiContext,P extends ScreenContext<C>> implements ElementList<C,P> {
 
     private final Collection<Element<C,P>> elements = new ArrayList<>();
 

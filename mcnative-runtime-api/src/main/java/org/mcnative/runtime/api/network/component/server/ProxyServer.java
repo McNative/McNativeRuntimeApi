@@ -19,6 +19,7 @@
 
 package org.mcnative.runtime.api.network.component.server;
 
+import org.mcnative.runtime.api.McNative;
 import org.mcnative.runtime.api.network.component.ConnectableNetworkComponent;
 
 import java.net.InetSocketAddress;
@@ -26,5 +27,9 @@ import java.net.InetSocketAddress;
 public interface ProxyServer extends ConnectableNetworkComponent {
 
     InetSocketAddress getAddress();
+
+    default boolean isLeader(){
+        return McNative.getInstance().getNetwork().isLeaderProxy(this);
+    }
 
 }

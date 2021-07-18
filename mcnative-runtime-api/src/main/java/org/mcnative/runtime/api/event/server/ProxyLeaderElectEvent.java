@@ -1,8 +1,8 @@
 /*
- * (C) Copyright 2019 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
+ * (C) Copyright 2020 The McNative Project (Davide Wietlisbach & Philipp Elvin Friedhoff)
  *
  * @author Davide Wietlisbach
- * @since 04.08.19 10:45
+ * @since 03.01.20, 23:31
  *
  * The McNative Project is under the Apache License, version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,15 @@
  * under the License.
  */
 
-package org.mcnative.runtime.api.service.world.block;
+package org.mcnative.runtime.api.event.server;
 
-public enum BlockDirection {
+import net.pretronic.libraries.event.Cancellable;
+import org.mcnative.runtime.api.event.MinecraftEvent;
+import org.mcnative.runtime.api.network.component.server.MinecraftServer;
+import org.mcnative.runtime.api.network.component.server.ProxyServer;
 
-    DOWN,
-    EAST,
-    EAST_NORTH_EAST,
-    EAST_SOUTH_EAST,
-    NORTH,
-    NORTH_EAST,
-    NORTH_NORTH_EAST,
-    NORTH_NORTH_WEST,
-    NORTH_WEST,
-    SELF,
-    SOUTH,
-    SOUTH_EAST,
-    SOUTH_SOUTH_EAST,
-    SOUTH_SOUTH_WEST,
-    SOUTH_WEST,
-    UP,
-    WEST,
-    WEST_NORTH_WEST,
-    WEST_SOUTH_WEST
+public interface ProxyLeaderElectEvent extends MinecraftEvent, Cancellable {
+
+    ProxyServer getProxy();
+
 }

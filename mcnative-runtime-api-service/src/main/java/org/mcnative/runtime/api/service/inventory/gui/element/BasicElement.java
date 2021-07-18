@@ -3,10 +3,10 @@ package org.mcnative.runtime.api.service.inventory.gui.element;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryClickEvent;
 import org.mcnative.runtime.api.service.event.player.inventory.MinecraftPlayerInventoryDragEvent;
 import org.mcnative.runtime.api.service.inventory.gui.context.GuiContext;
-import org.mcnative.runtime.api.service.inventory.gui.context.PageContext;
+import org.mcnative.runtime.api.service.inventory.gui.context.ScreenContext;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
 
-public abstract class BasicElement<C extends GuiContext, P extends PageContext<C>> implements Element<C,P> {
+public abstract class BasicElement<C extends GuiContext, P extends ScreenContext<C>> implements Element<C,P> {
 
     private final int[] slots;
 
@@ -15,14 +15,14 @@ public abstract class BasicElement<C extends GuiContext, P extends PageContext<C
     }
 
     @Override
-    public int[] getSlots() {
+    public int[] getSlots(P context) {
         return this.slots;
     }
 
     @Override
     public void render(P context) {
         ItemStack stack = create(context);
-        for (int slot : getSlots()) {
+        for (int slot : getSlots(context)) {
             context.getLinkedInventory().setItem(slot,stack);
         }
     }
