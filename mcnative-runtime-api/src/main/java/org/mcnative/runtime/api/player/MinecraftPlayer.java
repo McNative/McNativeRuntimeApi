@@ -19,17 +19,14 @@
 
 package org.mcnative.runtime.api.player;
 
-import net.pretronic.libraries.message.bml.variable.VariableSet;
 import net.pretronic.libraries.message.bml.variable.describer.VariableObjectToString;
 import net.pretronic.libraries.message.language.Language;
 import net.pretronic.libraries.message.language.LanguageAble;
 import net.pretronic.libraries.utility.annonations.Nullable;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
-import org.mcnative.runtime.api.Setting;
 import org.mcnative.runtime.api.network.component.server.ServerStatusResponse;
 import org.mcnative.runtime.api.player.profile.GameProfile;
 import org.mcnative.runtime.api.serviceprovider.permission.Permissable;
-import org.mcnative.runtime.api.text.components.MessageComponent;
 
 import java.util.Collection;
 import java.util.UUID;

@@ -21,6 +21,14 @@ package org.mcnative.runtime.api.serviceprovider.placeholder;
 
 import org.mcnative.runtime.api.player.MinecraftPlayer;
 
+/*
+
+
+
+EventStream(()=>Function,"xy")
+
+ */
+
 public interface PlaceholderHook {
 
     Object onRequest(MinecraftPlayer player, String parameter);

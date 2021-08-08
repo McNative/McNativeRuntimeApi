@@ -55,7 +55,7 @@ public class ScreenContext<C extends GuiContext> implements InventoryOwner {
         Collection<StreamSubscription<?>> subscriptions = this.subscriptions.computeIfAbsent(element, CREATOR);
 
         for (StreamSubscription<?> subscription : subscriptions) {
-            if(subscription.getStream().belongsTogether(stream)){
+            if(subscription.getStream().belongTogether(stream)){
                 return stream.get();
             }
         }

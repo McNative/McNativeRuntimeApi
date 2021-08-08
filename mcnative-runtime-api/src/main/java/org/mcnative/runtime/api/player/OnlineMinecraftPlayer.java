@@ -81,6 +81,20 @@ public interface OnlineMinecraftPlayer extends MinecraftPlayer, CommandSender, T
     void kick(MessageComponent<?> message,VariableSet variables);
 
 
+    default void kickLocal(){
+        kickLocal("Kicked by an operator.");
+    }
+
+    default void kickLocal(String reason){
+        kickLocal(Text.of(reason));
+    }
+
+    default void kickLocal(MessageComponent<?> message){
+        kickLocal(message,VariableSet.newEmptySet());
+    }
+
+    void kickLocal(MessageComponent<?> message,VariableSet variables);
+
     void performCommand(String command);
 
     void chat(String message);
