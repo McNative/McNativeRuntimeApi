@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.mcnative.runtime.api</groupId>
         <artifactId>McNativeRuntimeApi</artifactId>
-        <version>1.7.1.210-SNAPSHOT</version>
+        <version>1.7.2.211-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
