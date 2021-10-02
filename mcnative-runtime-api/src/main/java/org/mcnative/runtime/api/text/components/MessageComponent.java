@@ -108,6 +108,32 @@ public interface MessageComponent<T extends MessageComponent<?>> extends Textabl
 
     void compileToString(StringBuilder builder,MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
 
+
+    default String compileToRawString(MinecraftProtocolVersion version){
+        return compileToRawString(version,VariableSet.newEmptySet(),null);
+    }
+
+    default String compileToRawString(MinecraftProtocolVersion version,VariableSet variables){
+        return compileToRawString(version,variables,null);
+    }
+
+    default String compileToRawString(MinecraftProtocolVersion version,VariableSet variables,Language language){
+        return compileToRawString(null,version,variables,language);
+    }
+
+    default String compileToRawString(MinecraftConnection connection,VariableSet variables,Language language){
+        return compileToRawString(connection,connection.getProtocolVersion(),variables,language);
+    }
+
+    default String compileToRawString(MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language){
+        StringBuilder builder = new StringBuilder();
+        compileToString(builder,connection,version,variables,language);
+        return builder.toString();
+    }
+
+    void compileToRawString(StringBuilder builder,MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
+
+
     void decompile(Document data);
 
     T copy();

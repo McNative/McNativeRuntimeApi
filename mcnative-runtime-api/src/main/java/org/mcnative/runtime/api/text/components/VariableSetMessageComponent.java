@@ -35,6 +35,11 @@ public class VariableSetMessageComponent implements MessageComponent<VariableSet
     }
 
     @Override
+    public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        wrappedComponent.compileToRawString(builder, connection, version, mergeVariables(variables), language);
+    }
+
+    @Override
     public void decompile(Document data) {
         this.wrappedComponent.decompile(data);
     }

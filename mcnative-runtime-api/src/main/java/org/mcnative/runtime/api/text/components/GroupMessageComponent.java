@@ -108,6 +108,17 @@ public class GroupMessageComponent implements MessageComponent<GroupMessageCompo
     }
 
     @Override
+    public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables0, Language language) {
+        boolean first = true;
+        for (Map.Entry<MessageComponent<?>, VariableSet> entry : components.entrySet()) {
+            if(first) first = false;
+            else builder.append("\n");
+            VariableSet variables = entry.getValue() != null ? entry.getValue() : variables0;
+            entry.getKey().compileToRawString(builder,connection,version,variables,language);
+        }
+    }
+
+    @Override
     public void decompile(Document data) {
         for (MessageComponent<?> messageComponent : Text.decompileArray(data)) {
             this.components.put(messageComponent,VariableSet.newEmptySet());

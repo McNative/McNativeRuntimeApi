@@ -105,6 +105,11 @@ public class MessageComponentSet implements MessageComponent<MessageComponentSet
     }
 
     @Override
+    public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        components.forEach(component -> component.compileToRawString(builder, connection,version,variables,language));
+    }
+
+    @Override
     public void decompile(Document data) {
         this.components.addAll(Text.decompileArray(data));
     }

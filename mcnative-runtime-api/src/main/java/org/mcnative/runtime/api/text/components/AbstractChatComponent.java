@@ -235,6 +235,22 @@ public abstract class AbstractChatComponent<T extends AbstractChatComponent<?>> 
         }
     }
 
+    @Override
+    public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        if(color != null) builder.append(color.compileColor(version));
+        if(isBold()) builder.append(Text.FORMAT_CHAR).append(TextStyle.BOLD.getCode());
+        if(isItalic()) builder.append(Text.FORMAT_CHAR).append(TextStyle.ITALIC.getCode());
+        if(isUnderlined()) builder.append(Text.FORMAT_CHAR).append(TextStyle.UNDERLINE.getCode());
+        if(isStrikeThrough()) builder.append(Text.FORMAT_CHAR).append(TextStyle.STRIKETHROUGH.getCode());
+        if(isObfuscated()) builder.append(Text.FORMAT_CHAR).append(TextStyle.OBFUSCATED.getCode());
+
+        compileLegacyText(builder,connection,version,variables,language);
+
+        for (MessageComponent<?> extra : extras) {
+            extra.compileToRawString(builder, connection,version, variables, language);
+        }
+    }
+
     abstract void compileLegacyText(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language);
 
     @Override
