@@ -24,6 +24,7 @@ public enum  TextBuildType {
 
     PLAIN(),
     LEGACY(),
-    COMPILE();
+    COMPILE(),
+    COMPILE_RAW();
 
 }
