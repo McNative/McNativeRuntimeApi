@@ -106,7 +106,7 @@ public final class TextColor {
             if(version.isNewerOrSame(MinecraftProtocolVersion.JE_1_16)){
                 StringBuilder builder = new StringBuilder();
                 builder.append(Text.FORMAT_CHAR).append("x");
-                for (char c : toHexString().toCharArray()) {
+                for (char c : toHexString().substring(1).toCharArray()) {
                     builder.append(Text.FORMAT_CHAR).append(c);
                 }
                 return builder.toString();
