@@ -37,6 +37,11 @@ public class SpecifiedPlayerMessageComponent implements MessageComponent<Specifi
     }
 
     @Override
+    public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
+        wrappedComponent.compileToRawString(builder, this.player, version, this.variables, this.player.getLanguage());
+    }
+
+    @Override
     public void decompile(Document data) {
         this.wrappedComponent.decompile(data);
     }
