@@ -101,8 +101,7 @@ public class MessageKeyComponent implements MessageComponent<MessageKeyComponent
     @Override
     public void compileToRawString(StringBuilder builder, MinecraftConnection connection, MinecraftProtocolVersion version, VariableSet variables, Language language) {
         OnlineMinecraftPlayer player = getPlayer(connection, language);
-        Document result = compile(new MinecraftTextBuildContext(language, variables,version, player, TextBuildType.COMPILE_RAW));
-        builder.append(DocumentFileType.JSON.getWriter().write(result,false));
+        builder.append(message.build(new MinecraftTextBuildContext(language,variables,version,player, TextBuildType.COMPILE_RAW)).toString());
     }
 
     public Document compile(BuildContext context){
