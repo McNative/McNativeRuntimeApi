@@ -111,7 +111,7 @@ public final class TextColor {
                 }
                 return builder.toString();
             }else{
-                return ""+ Text.FORMAT_CHAR + toLegacyColor().getName();
+                return ""+ Text.FORMAT_CHAR + toLegacyColor().getCode();
             }
         }
         return ""+ Text.FORMAT_CHAR + getCode();
