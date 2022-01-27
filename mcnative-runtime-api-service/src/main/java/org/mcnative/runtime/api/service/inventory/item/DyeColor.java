@@ -1,5 +1,7 @@
 package org.mcnative.runtime.api.service.inventory.item;
 
+import net.pretronic.libraries.utility.Validate;
+
 public enum DyeColor {
 
     WHITE,
@@ -17,5 +19,13 @@ public enum DyeColor {
     BROWN,
     GREEN,
     RED,
-    BLACK
+    BLACK;
+
+    public static DyeColor parse(String name) {
+        Validate.notNull(name);
+        for (DyeColor value : values()) {
+            if(value.toString().equalsIgnoreCase(name)) return value;
+        }
+        throw new IllegalArgumentException("DyeColor with name " + name + " doesn't exist");
+    }
 }

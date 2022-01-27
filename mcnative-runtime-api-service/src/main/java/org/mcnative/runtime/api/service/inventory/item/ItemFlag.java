@@ -19,6 +19,8 @@
 
 package org.mcnative.runtime.api.service.inventory.item;
 
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.runtime.api.McNative;
 
@@ -74,5 +76,16 @@ public class ItemFlag {
 
     public static ItemFlag createAndRegister(String name) {
         return register(create(name));
+    }
+
+    public static Collection<ItemFlag> getItemFlags() {
+        return ITEM_FLAGS;
+    }
+
+    public static ItemFlag getItemFlag(String name) {
+        Validate.notNull(name);
+        ItemFlag flag = Iterators.findOne(getItemFlags(), itemFlag -> itemFlag.getName().equalsIgnoreCase(name));
+        if(flag == null) throw new IllegalArgumentException("ItemFlag with name " + name + " doesn't exist");
+        return flag;
     }
 }

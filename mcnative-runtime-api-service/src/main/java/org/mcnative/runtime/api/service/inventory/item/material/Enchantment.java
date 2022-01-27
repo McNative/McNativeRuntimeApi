@@ -19,6 +19,8 @@
 
 package org.mcnative.runtime.api.service.inventory.item.material;
 
+import net.pretronic.libraries.utility.Iterators;
+import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.interfaces.ObjectOwner;
 import org.mcnative.runtime.api.service.NamespacedKey;
 import org.mcnative.runtime.api.service.inventory.item.ItemStack;
@@ -119,6 +121,17 @@ public class Enchantment implements NamespacedKey {
 
     public static Enchantment register(Enchantment enchantment) {
         ENCHANTMENTS.add(enchantment);
+        return enchantment;
+    }
+
+    public static Collection<Enchantment> getEnchantments() {
+        return ENCHANTMENTS;
+    }
+
+    public static Enchantment getEnchantment(String name) {
+        Validate.notNull(name);
+        Enchantment enchantment = Iterators.findOne(getEnchantments(), findEnchantment -> findEnchantment.getName().equalsIgnoreCase(name));
+        if(enchantment == null) throw new IllegalArgumentException("Enchantment with name " + name + " doesn't exist");
         return enchantment;
     }
 
