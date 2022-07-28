@@ -25,6 +25,7 @@ import org.mcnative.runtime.api.protocol.packet.MinecraftPacket;
 import org.mcnative.runtime.api.protocol.packet.MinecraftPacketValidationException;
 import org.mcnative.runtime.api.text.components.MessageComponent;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class MinecraftChatPacket implements MinecraftPacket {
@@ -33,6 +34,12 @@ public class MinecraftChatPacket implements MinecraftPacket {
     private VariableSet variables;
     private ChatPosition position;
     private UUID sender;
+
+    private Instant timestamp;
+    private long salt;
+    private int signatureLength;
+    private byte[] Signature;
+    private boolean signedPreview;
 
     public MessageComponent<?> getMessage() {
         return message;
@@ -64,6 +71,46 @@ public class MinecraftChatPacket implements MinecraftPacket {
 
     public void setSender(UUID sender) {
         this.sender = sender;
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public long getSalt() {
+        return salt;
+    }
+
+    public void setSalt(long salt) {
+        this.salt = salt;
+    }
+
+    public int getSignatureLength() {
+        return signatureLength;
+    }
+
+    public void setSignatureLength(int signatureLength) {
+        this.signatureLength = signatureLength;
+    }
+
+    public byte[] getSignature() {
+        return Signature;
+    }
+
+    public void setSignature(byte[] signature) {
+        Signature = signature;
+    }
+
+    public boolean isSignedPreview() {
+        return signedPreview;
+    }
+
+    public void setSignedPreview(boolean signedPreview) {
+        this.signedPreview = signedPreview;
     }
 
     @Override
