@@ -29,7 +29,7 @@ public enum MinecraftProtocolVersion {
 
     /** Java Edition */
 
-    JE_1_19_1(760, "1.19", MinecraftEdition.JAVA),
+    JE_1_19_1(760, "1.19.1", MinecraftEdition.JAVA),
     JE_1_19(759, "1.19", MinecraftEdition.JAVA),
     JE_1_18_2(758,"1.18.2",MinecraftEdition.JAVA),
     JE_1_18_1(757,"1.18.1",MinecraftEdition.JAVA),
